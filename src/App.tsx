@@ -6,8 +6,10 @@ import './App.css';
 
 function App() {
   useEffect(() => {
-    const messages = await getMessages();
-    console.log('messages', messages.message);
+    getMessages().then((messages)=> {
+      console.log('messages', messages.message);
+      return messages.message;
+    });
   });
   return (
     <div className="App">
