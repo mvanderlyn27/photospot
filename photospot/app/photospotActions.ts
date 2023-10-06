@@ -20,7 +20,7 @@ export async function uploadPhotoSpot(prevState: any, formData: FormData) {
     const bucket = "photospot_pictures"
     const {data, error}= await supabase.storage
       .from(bucket)
-      .upload('/public/'+input.name, input.photospot_picture);
+      .upload(input.name, input.photospot_picture);
 
     if(error) {
         if((error as any).error == 'Duplicate'){
@@ -36,7 +36,7 @@ export async function uploadPhotoSpot(prevState: any, formData: FormData) {
       .insert([{
             name: input.name,
             description: input.description,
-            photo_path: ['/public/'+input.name]
+            photo_path: [input.name]
         }]);
 
     if(resp.error){
@@ -53,4 +53,24 @@ export async function uploadPhotoSpot(prevState: any, formData: FormData) {
 export async function deletePhotoSpot(prevState: any, formData: FormData){
 
 }
+export async function listPhotoSpots(){
+    const supabase = createRouteHandlerClient({ cookies });
+    const bucket = "photospot_pictures";
+    const resp = await supabase.from ('photospots').select('*');
+    if(resp.error){
+        console.log(resp.error);
+        return {data: null, error: resp.error}
+    } 
+    //todo add photospot type
+    let photospot_list: object[] = [];
+        resp.data.forEach((photospot: any) => {
+        const url = supabase.storage.from(bucket).getPublicUrl(photospot.photo_path)
+        console.log('url',url);
+        photospot_list.push({
+            ...photospot,
+            photo_path: url.data.publicUrl
+        })
+    });
+    return {data: photospot_list, error: null};
+} 
 
