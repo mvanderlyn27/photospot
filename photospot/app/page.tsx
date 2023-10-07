@@ -40,7 +40,7 @@ export default async function Index() {
       <h1>HOMESCREEN</h1>
       <ul className="my-auto text-foreground">
       {
-      error ? <li>Error loading photospots</li> : 
+      error ? <li>Error loading photospots {error.message}</li> : 
       data?.map((photospot: any) => (
         <li key={photospot.id}><h3>{photospot.name}</h3><Image width={300} height={300} alt={photospot.name} src={photospot.photo_path}/></li>
       ))}
