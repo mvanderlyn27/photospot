@@ -11,7 +11,7 @@ export default async function Index() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  let env = process.env.toString(); 
+  let env = JSON.stringify(process.env); 
   console.log('ENV: ',env);
 
   const {data, error} = await listPhotoSpots();
