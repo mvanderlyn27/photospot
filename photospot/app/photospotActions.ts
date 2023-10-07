@@ -54,7 +54,6 @@ export async function deletePhotoSpot(prevState: any, formData: FormData){
 
 }
 export async function listPhotoSpots(){
-    let envs = JSON.stringify(process.env);
     const supabase = createServerActionClient({ cookies });
     const bucket = "photospot_pictures";
     const resp = await supabase.from ('photospots').select('*');
@@ -71,6 +70,6 @@ export async function listPhotoSpots(){
             photo_path: url.data.publicUrl
         })
     });
-    return {data: photospot_list, error: null, cli: supabase};
+    return {data: photospot_list, error: null};
 } 
 

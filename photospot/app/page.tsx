@@ -11,7 +11,7 @@ export default async function Index() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  const {data, error, cli} = await listPhotoSpots();
+  const {data, error} = await listPhotoSpots();
   return (
     <div className="w-full flex flex-col items-center">
       <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
@@ -38,7 +38,6 @@ export default async function Index() {
       </nav>
       <h1>HOMESCREEN</h1>
       <ul className="my-auto text-foreground">
-        <li>{JSON.stringify(cli)}</li>
       {
       error ? <li>Error loading photospots {error.message}</li> : 
       data?.map((photospot: any) => (
