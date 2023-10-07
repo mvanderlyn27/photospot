@@ -65,7 +65,6 @@ export async function listPhotoSpots(){
     let photospot_list: object[] = [];
         resp.data.forEach((photospot: any) => {
         const url = supabase.storage.from(bucket).getPublicUrl(photospot.photo_path)
-        console.log('url',url);
         photospot_list.push({
             ...photospot,
             photo_path: url.data.publicUrl

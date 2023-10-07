@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   const email = String(formData.get('email'))
   const password = String(formData.get('password'))
   const supabase = createRouteHandlerClient({ cookies })
-
+  console.log('info',email, password);
   const { error } = await supabase.auth.signUp({
     email,
     password,
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       emailRedirectTo: `${requestUrl.origin}/auth/callback`,
     },
   })
-
+  console.log('signup error');
   if (error) {
     return NextResponse.redirect(
       `${requestUrl.origin}/login?error=Could not authenticate user`,
