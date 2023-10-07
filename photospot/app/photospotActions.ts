@@ -1,11 +1,11 @@
 "use server"
 import { z } from 'zod'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
 export async function uploadPhotoSpot(prevState: any, formData: FormData) {
 
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createServerActionClient({ cookies })
     const schema = z.object({
         name: z.string().min(1),
         description: z.string().min(1),
@@ -54,7 +54,8 @@ export async function deletePhotoSpot(prevState: any, formData: FormData){
 
 }
 export async function listPhotoSpots(){
-    const supabase = createRouteHandlerClient({ cookies });
+    let envs = JSON.stringify(process.env);
+    const supabase = createServerActionClient({ cookies });
     const bucket = "photospot_pictures";
     const resp = await supabase.from ('photospots').select('*');
     if(resp.error){
@@ -70,6 +71,6 @@ export async function listPhotoSpots(){
             photo_path: url.data.publicUrl
         })
     });
-    return {data: photospot_list, error: null};
+    return {data: photospot_list, error: null, cli: supabase};
 } 
 
