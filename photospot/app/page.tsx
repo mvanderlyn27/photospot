@@ -11,9 +11,6 @@ export default async function Index() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  let env = JSON.stringify(process.env); 
-  console.log('ENV: ',env);
-
   const {data, error} = await listPhotoSpots();
   return (
     <div className="w-full flex flex-col items-center">
@@ -41,7 +38,6 @@ export default async function Index() {
       </nav>
       <h1>HOMESCREEN</h1>
       <ul className="my-auto text-foreground">
-        <li>environment vars: {env}</li>
       {
       error ? <li>Error loading photospots {error.message}</li> : 
       data?.map((photospot: any) => (
