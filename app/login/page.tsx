@@ -30,6 +30,15 @@ export default function Login() {
         action="/auth/sign-in"
         method="post"
       >
+        <label className="text-md" htmlFor="username">
+          Username
+        </label>
+        <input
+          className="rounded-md px-4 py-2 bg-inherit border mb-6"
+          name="username"
+          placeholder="cool username"
+          required
+        />
         <label className="text-md" htmlFor="email">
           Email
         </label>

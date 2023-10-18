@@ -2,9 +2,10 @@
 import UploadPhotospot from "@/components/UploadPhotospot";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import Image from 'next/image'
 import Link from "next/link";
 import { listPhotoSpots } from '../photospotActions'
+import PhotoSpotGrid from "@/components/PhotoSpotGrid";
+
 
 export default async function Index() {
 const supabase = createServerComponentClient({ cookies });
@@ -22,20 +23,11 @@ return (
   </svg>{' '}
   Back
   </Link>
-      <div className=" -m-2 flex flex-wrap md:-m-3 w-full p-24">
-
+  
     {
-    error ? <li>Error loading photospots {error.message}</li> :
-    data?.map((photospot: any) => (
-        <div className="flex w-1/4 flex-wrap">
-          <div className="w-full p-1 md:p-2">
-            <h3 className="w-full">{photospot.name}</h3>
-            <Image className="w-full" width={300} height={300} alt={photospot.name} src={photospot.photo_path} />
-          </div>
-      </div>
-      ))}
-    </div>
-      <UploadPhotospot />
+    error ? <li>Error loading photospots {error.message}</li> : <PhotoSpotGrid photospots={data}/>
+    }
+    <UploadPhotospot />
 </div>
 );
 }

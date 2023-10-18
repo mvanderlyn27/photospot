@@ -9,6 +9,7 @@ export async function POST(request: Request) {
   const formData = await request.formData()
   const email = String(formData.get('email'))
   const password = String(formData.get('password'))
+  const username = String(formData.get('username'))
   const supabase = createRouteHandlerClient({ cookies })
   console.log('info',email, password);
   const { error } = await supabase.auth.signUp({
@@ -16,6 +17,9 @@ export async function POST(request: Request) {
     password,
     options: {
       emailRedirectTo: `${requestUrl.origin}/auth/callback`,
+      data: {
+        username: username 
+      }
     },
   })
   console.log('signup error', error);

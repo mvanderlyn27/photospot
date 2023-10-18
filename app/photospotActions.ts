@@ -2,6 +2,7 @@
 import { z } from 'zod'
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
+import { revalidatePath } from 'next/cache'
 
 export async function uploadPhotoSpot(prevState: any, formData: FormData) {
 
@@ -36,14 +37,14 @@ export async function uploadPhotoSpot(prevState: any, formData: FormData) {
       .insert([{
             name: input.name,
             description: input.description,
-            photo_path: [input.name]
+            photo_paths: [input.name]
         }]);
 
     if(resp.error){
         console.log("insert error: ",resp.error);
         return { message: `Failed saving data ${input.name},`+resp.error }
     }
- 
+    revalidatePath('/')
 
     //if no error upload photospot data to row, and link picture to new row entry 
     
@@ -58,13 +59,12 @@ export async function listPhotoSpots(){
     const bucket = "photospot_pictures";
     const resp = await supabase.from ('photospots').select('*');
     if(resp.error){
-        console.log(resp.error);
         return {data: null, error: resp.error}
     } 
     //todo add photospot type
     let photospot_list: object[] = [];
         resp.data.forEach((photospot: any) => {
-        const url = supabase.storage.from(bucket).getPublicUrl(photospot.photo_path)
+        const url = supabase.storage.from(bucket).getPublicUrl(photospot.photo_paths[0]) //only using first photo for now 
         photospot_list.push({
             ...photospot,
             photo_path: url.data.publicUrl

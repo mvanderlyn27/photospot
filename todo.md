@@ -18,6 +18,8 @@
     - users profile page for viewing/updating user details
 - photobooks (photolist?)
     - allow users to curate list of photospots 
+# Code Improvement
+- Add types for all tables in DB 
 # Bugs
 - fix data revalidation for photospots, and loading state for uploading pics (maybe optimistic photo upload )
 # Future Ideas
