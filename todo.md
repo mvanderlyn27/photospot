@@ -1,4 +1,6 @@
 # Features
+- overall 
+    - nav bar across all pages
 - explore page
     - view photospots on a map
     - add photospots via location
@@ -19,7 +21,7 @@
 - photobooks (photolist?)
     - allow users to curate list of photospots 
 # Code Improvement
-- Add types for all tables in DB 
+- Add trigger to photospot table on deletes to also delete its picture from storage 
 # Bugs
 - fix data revalidation for photospots, and loading state for uploading pics (maybe optimistic photo upload )
 # Future Ideas

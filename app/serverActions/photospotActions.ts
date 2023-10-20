@@ -3,20 +3,25 @@ import { z } from 'zod'
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
+import { Database } from '../../types/supabase'
+import { PostgrestError } from '@supabase/supabase-js'
 
 export async function uploadPhotoSpot(prevState: any, formData: FormData) {
 
-    const supabase = createServerActionClient({ cookies })
+    const supabase = createServerActionClient<Database>({ cookies });
     const schema = z.object({
         name: z.string().min(1),
         description: z.string().min(1),
-        photospot_picture: z.custom<File>()
+        photospot_picture: z.custom<File>(),
+        lat: z.number().gte(-90).and(z.number().lte(90)),
+        lng: z.number().gte(-180).and(z.number().lte(180))
     })
     const input = schema.parse({
         name: formData.get("name"),
         description: formData.get("description"),
-        photospot_picture: formData.get("photospot_picture")
-
+        photospot_picture: formData.get("photospot_picture"), 
+        lat: formData.get("lat"),
+        lng: formData.get("lng")
     });
     const bucket = "photospot_pictures"
     const {data, error}= await supabase.storage
@@ -37,7 +42,8 @@ export async function uploadPhotoSpot(prevState: any, formData: FormData) {
       .insert([{
             name: input.name,
             description: input.description,
-            photo_paths: [input.name]
+            photo_paths: [input.name],
+            location: `POINT(${input.lat},${input.lng}`
         }]);
 
     if(resp.error){
@@ -50,12 +56,14 @@ export async function uploadPhotoSpot(prevState: any, formData: FormData) {
     
     return { message: `Uploaded picture ${input.name}` }
 }
-
-export async function deletePhotoSpot(prevState: any, formData: FormData){
-
+//delete based on id & photo_paths
+export async function deletePhotoSpot(id: number, photo_paths: string[]){
+    const supabase = createServerActionClient<Database>({ cookies });
+    supabase.storage.from('photospots_pictures').remove(photo_paths);
+    supabase.from('photospots').delete().eq('id',id);
 }
 export async function listPhotoSpots(){
-    const supabase = createServerActionClient({ cookies });
+    const supabase = createServerActionClient<Database>({ cookies });
     const bucket = "photospot_pictures";
     const resp = await supabase.from ('photospots').select('*');
     if(resp.error){
@@ -73,3 +81,27 @@ export async function listPhotoSpots(){
     return {data: photospot_list, error: null};
 } 
 
+async function searchPhotospotsByName(search_string: string){
+    //search by string
+    const supabase = createServerActionClient<Database>({ cookies });
+    const {data, error} = await supabase.from('photospots').select("*").textSearch('name',search_string); //defaults to websearch and english
+    if(error){
+        throwError(error);
+        return error;
+     }
+    return data;
+}
+async function searchPhotospotsByLocation(lat: number, lng: number, maxDistance: number){ //in meters
+    const supabase = createServerActionClient<Database>({ cookies });
+    //@ts-expect-error
+    const {data, error} = await supabase.rpc("nearby_restaurants", { lat: lat, long: lng, }).select("*").lte('distance_meters', maxDistance);
+    if(error){
+       throwError(error);
+       return error;
+    }
+    return data;
+    
+}
+function throwError(error:PostgrestError){
+    console.log("error searching data", error);
+}

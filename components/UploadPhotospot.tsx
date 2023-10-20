@@ -1,5 +1,5 @@
 "use client";
-import { uploadPhotoSpot } from "@/app/photospotActions"
+import { uploadPhotoSpot } from "@/app/serverActions/photospotActions"
 //@ts-expect-error
 import { experimental_useFormState as useFormState } from 'react-dom'
 import { experimental_useFormStatus as useFormStatus } from 'react-dom'

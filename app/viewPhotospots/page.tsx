@@ -3,7 +3,7 @@ import UploadPhotospot from "@/components/UploadPhotospot";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { listPhotoSpots } from '../photospotActions'
+import { listPhotoSpots } from '../serverActions/photospotActions'
 import PhotoSpotGrid from "@/components/PhotoSpotGrid";
 
 
