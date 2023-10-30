@@ -1,6 +1,11 @@
 # Features
 - overall 
     - nav bar across all pages
+- home page
+    - need to figure out what to put here for MVP
+        - maybe photo inspo feed?
+        - maybe heatmap of photo locations 
+        - need to narrow down target audiance/needs for them
 - explore page
     - view photospots on a map
     - add photospots via location
@@ -22,8 +27,19 @@
     - allow users to curate list of photospots 
 # Code Improvement
 - Add trigger to photospot table on deletes to also delete its picture from storage 
+- Add new function to delete user from auth table upon deleting user profile
+- ADD REVIEW RATING FUNCTIONALITY for photospots and photolists
+- ADD ability to upload photo for user profile
 # Bugs
 - fix data revalidation for photospots, and loading state for uploading pics (maybe optimistic photo upload )
 # Future Ideas
 - have a "placeholder" person to put into a photo for photospots where a user don't want to upload their face, or have a way to blur out the user
 - have notification for users how many people liked their photospot they uploaded
+- add cool tagging feature for photos
+- add cool tagging feature for videos as well
+- maybe have whole social media platform, adding friends, messaging, etc
+    - need to think through how to make the MVP have most value to users in the beginning
+    - setup user feed of photos 
+        - show new photos posted at your photospots
+        - show new photos posted at tags you like
+        - maybe have mapview of your feed, showing hotspots of locations 

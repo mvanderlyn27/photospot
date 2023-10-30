@@ -109,4 +109,24 @@ export async function updatePhotolistReview(review_id: number, update_data: any)
     }
     return data;
 }
+//get average rating for photospot
+export async function getPhotospotRatings(photospot_id: number){
+//get all ratings for a photospot, and average their rating field
+    const supabase = createServerActionClient({ cookies });
+    const {data, error} = await supabase.from('photospot_reviews').select('rating').eq('review_target',photospot_id);
+    if(error){
+        console.log(error);
+        return error;
+    }
+    return  data.reduce( ( p, c ) => p + c.rating, 0 ) / data.length;
 
+}
+export async function getPhotolistRatings(photolist_id: number){
+    const supabase = createServerActionClient({ cookies });
+    const {data, error} = await supabase.from('photolist_reviews').select('rating').eq('review_target',photolist_id);
+    if(error){
+        console.log(error);
+        return error;
+    }
+    return  data.reduce( ( p, c ) => p + c.rating, 0 ) / data.length;
+}

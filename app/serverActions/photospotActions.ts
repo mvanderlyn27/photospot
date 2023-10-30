@@ -94,7 +94,7 @@ async function searchPhotospotsByName(search_string: string){
 async function searchPhotospotsByLocation(lat: number, lng: number, maxDistance: number){ //in meters
     const supabase = createServerActionClient<Database>({ cookies });
     //@ts-expect-error
-    const {data, error} = await supabase.rpc("nearby_restaurants", { lat: lat, long: lng, }).select("*").lte('distance_meters', maxDistance);
+    const {data, error} = await supabase.rpc("nearby_photospots", { lat: lat, long: lng, }).select("*").lte('distance_meters', maxDistance);
     if(error){
        throwError(error);
        return error;
