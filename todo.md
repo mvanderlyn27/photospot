@@ -27,11 +27,20 @@
     - allow users to curate list of photospots 
 # Code Improvement
 - Add trigger to photospot table on deletes to also delete its picture from storage 
-- Add new function to delete user from auth table upon deleting user profile
+- Add new function and trigger to delete user from auth table upon deleting user profile
 - ADD REVIEW RATING FUNCTIONALITY for photospots and photolists
 - ADD ability to upload photo for user profile
+- ADD proper migration for supabase dbs, for local testing
 # Bugs
-- fix data revalidation for photospots, and loading state for uploading pics (maybe optimistic photo upload )
+- fix error handeling in apis
+- fix search by location for photolists
+- test photospot, photolist bridge api calls
+- fix types for api to have db types for input/results of api calls
+
+
+
+
+
 # Future Ideas
 - have a "placeholder" person to put into a photo for photospots where a user don't want to upload their face, or have a way to blur out the user
 - have notification for users how many people liked their photospot they uploaded

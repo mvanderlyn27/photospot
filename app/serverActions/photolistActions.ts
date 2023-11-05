@@ -3,19 +3,32 @@ import { cookies } from 'next/headers'
 import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from '@/types/supabase';
 import { PostgrestError } from '@supabase/supabase-js';
+
 //get all photolists
 export async function getPhotolist(){
     const supabase = createServerActionClient<Database>({ cookies });
     const {data, error} = await supabase.from('photolists').select('*');
-    if(error){}
+    if(error){
+        throwError(error);
+     }
+    return data;
 
 }
+
 //get photolist by id
 export async function getPhotolistById(photolist_id: number){
     const supabase = createServerActionClient<Database>({ cookies });
     const {data, error} = await supabase.from('photolists').select('*').eq('id',photolist_id);
+    if(error){
+        throwError(error);
+        return error;
+     }
+    return data;
+
 }
-async function searchPhotolistsByName(search_string: string){
+
+//Search via name (works)
+export async function searchPhotolistsByName(search_string: string){
     //search by string
     const supabase = createServerActionClient<Database>({ cookies });
     const {data, error} = await supabase.from('photolists').select("*").textSearch('name',search_string); //defaults to websearch and english
@@ -25,63 +38,56 @@ async function searchPhotolistsByName(search_string: string){
      }
     return data;
 }
-async function searchPhotolistsByLocation(lat: number, lng: number, maxDistance: number){ //in meters
+
+//search via location, DOESN'T WORK YET
+export async function searchPhotolistsByLocation(lat: number, lng: number, maxDistance: number){ //in meters
     const supabase = createServerActionClient<Database>({ cookies });
     //@ts-expect-error
-    //need to make this function in supabase, to select on photolists table
+    //need to make this function in supabase, to select on photolists table, probably average distance away from user for all photospots
     const {data, error} = await supabase.rpc("nearby_photolists", { lat: lat, long: lng, }).select("*").lte('distance_meters', maxDistance);
     if(error){
        throwError(error);
        return error;
     }
     return data;
-    
 }
+
+//update photolist fields
 export async function updatePhotolist(photolist_id: number, update_data: any){
     const supabase = createServerActionClient<Database>({ cookies });
-    const {data, error} = await supabase.from('photolists').update(update_data).eq('id',photolist_id);
+    const {error} = await supabase.from('photolists').update(update_data).eq('id',photolist_id);
     if(error){
         console.log(error);
         return error;
     }
-    return data;
 }
 //create photolist
 export async function createPhotolist(photolist_data: any){
     const supabase = createServerActionClient<Database>({ cookies });
-    const {data, error} = await supabase.from('photolists').insert(photolist_data);
+    const {data, error} = await supabase.from('photolists').upsert(photolist_data);
     if(error){
         console.log(error);
-        return error;
     }
-    return data;
+    return {id: data?.id, error: error};;
 }
+
 //delete photolist
 export async function deletePhotolist(photolist_id: number){
     const supabase = createServerActionClient({ cookies });
-    const {data, error} = await supabase.from('photolists').delete().eq('id',photolist_id);
-    if(error){
-        console.log(error);
-        return error;
+    const res1 = await supabase.from('photolists').delete().eq('id',photolist_id);
+    if(res1.error){
+        console.log(res1.error);
+        return res1.error;
     }
-    return data;
-}
-//get photospots from a photolist id
-export async function getPhotospotsFromPhotolist(photolist_id: number){
-    const supabase = createServerActionClient<Database>({ cookies });
-    const {data, error} = await supabase.from('photolists').select('photospots').eq('id', photolist_id);
-    if(error){
-        throwError(error);
-        return error;
+    const res2 = await supabase.from('photolist_photospots').delete().eq('photolist',photolist_id);
+    if(res2.error){
+        console.log(res2.error);
+        return res2.error;
     }
-    let photospots_response = await supabase.from('photospots').select('*').containedBy('id', data);
-    if(photospots_response.error){
-        throwError(photospots_response.error);
-        return photospots_response.error;
-    }
-    return photospots_response.data;
+    return null;
 }
 
+//tbd better error handeling 
 function throwError(error:PostgrestError){
     console.log("error searching data", error);
 }

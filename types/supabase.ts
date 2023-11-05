@@ -9,6 +9,24 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      photolist_photospots: {
+        Row: {
+          created_at: string
+          photolist: number
+          photospot: number
+        }
+        Insert: {
+          created_at?: string
+          photolist: number
+          photospot: number
+        }
+        Update: {
+          created_at?: string
+          photolist?: number
+          photospot?: number
+        }
+        Relationships: []
+      }
       photolist_reviews: {
         Row: {
           created_at: string
@@ -41,12 +59,14 @@ export interface Database {
           {
             foreignKeyName: "photolist_reviews_created_by_fkey"
             columns: ["created_by"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "photolist_reviews_review_target_fkey"
             columns: ["review_target"]
+            isOneToOne: false
             referencedRelation: "photospots"
             referencedColumns: ["id"]
           }
@@ -58,21 +78,21 @@ export interface Database {
           created_by: string | null
           description: string | null
           id: number
-          photospots: number[] | null
+          name: string
         }
         Insert: {
           created_at?: string
           created_by?: string | null
           description?: string | null
           id?: number
-          photospots?: number[] | null
+          name: string
         }
         Update: {
           created_at?: string
           created_by?: string | null
           description?: string | null
           id?: number
-          photospots?: number[] | null
+          name?: string
         }
         Relationships: []
       }
@@ -83,7 +103,7 @@ export interface Database {
           id: number
           photo_paths: string[] | null
           rating: number | null
-          review_target: number
+          review_target: number | null
           text: string | null
         }
         Insert: {
@@ -92,7 +112,7 @@ export interface Database {
           id?: number
           photo_paths?: string[] | null
           rating?: number | null
-          review_target: number
+          review_target?: number | null
           text?: string | null
         }
         Update: {
@@ -101,19 +121,21 @@ export interface Database {
           id?: number
           photo_paths?: string[] | null
           rating?: number | null
-          review_target?: number
+          review_target?: number | null
           text?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "photospot_reviews_created_by_fkey"
             columns: ["created_by"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "photospot_reviews_review_target_fkey"
             columns: ["review_target"]
+            isOneToOne: false
             referencedRelation: "photospots"
             referencedColumns: ["id"]
           }
@@ -184,6 +206,7 @@ export interface Database {
           {
             foreignKeyName: "profiles_id_fkey"
             columns: ["id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
