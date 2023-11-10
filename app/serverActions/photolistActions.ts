@@ -2,16 +2,13 @@
 import { cookies } from 'next/headers'
 import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from '@/types/supabase';
-import { PostgrestError } from '@supabase/supabase-js';
+import {  PostgrestError } from '@supabase/supabase-js';
 
 //get all photolists
-export async function getPhotolist(){
+export async function getPhotolists(){
     const supabase = createServerActionClient<Database>({ cookies });
     const {data, error} = await supabase.from('photolists').select('*');
-    if(error){
-        throwError(error);
-     }
-    return data;
+    return {data: data, error: error};
 
 }
 
@@ -19,11 +16,7 @@ export async function getPhotolist(){
 export async function getPhotolistById(photolist_id: number){
     const supabase = createServerActionClient<Database>({ cookies });
     const {data, error} = await supabase.from('photolists').select('*').eq('id',photolist_id);
-    if(error){
-        throwError(error);
-        return error;
-     }
-    return data;
+    return {data: data, error: error};
 
 }
 
@@ -32,11 +25,7 @@ export async function searchPhotolistsByName(search_string: string){
     //search by string
     const supabase = createServerActionClient<Database>({ cookies });
     const {data, error} = await supabase.from('photolists').select("*").textSearch('name',search_string); //defaults to websearch and english
-    if(error){
-        throwError(error);
-        return error;
-     }
-    return data;
+    return {data: data, error: error};
 }
 
 //search via location, DOESN'T WORK YET
@@ -45,11 +34,7 @@ export async function searchPhotolistsByLocation(lat: number, lng: number, maxDi
     //@ts-expect-error
     //need to make this function in supabase, to select on photolists table, probably average distance away from user for all photospots
     const {data, error} = await supabase.rpc("nearby_photolists", { lat: lat, long: lng, }).select("*").lte('distance_meters', maxDistance);
-    if(error){
-       throwError(error);
-       return error;
-    }
-    return data;
+    return {data: data, error: error};
 }
 
 //update photolist fields
@@ -64,11 +49,13 @@ export async function updatePhotolist(photolist_id: number, update_data: any){
 //create photolist
 export async function createPhotolist(photolist_data: any){
     const supabase = createServerActionClient<Database>({ cookies });
-    const {data, error} = await supabase.from('photolists').upsert(photolist_data);
-    if(error){
-        console.log(error);
+    const {data, error} = await supabase.from('photolists').upsert(photolist_data).select('*');
+    //NEED TO ALSO SETUP THE BRIDGE TABLE HERE
+    let id;
+    if(data){
+        id = data[0].id;
     }
-    return {id: data?.id, error: error};;
+    return {id: id, error: error};;
 }
 
 //delete photolist
@@ -84,10 +71,5 @@ export async function deletePhotolist(photolist_id: number){
         console.log(res2.error);
         return res2.error;
     }
-    return null;
-}
-
-//tbd better error handeling 
-function throwError(error:PostgrestError){
-    console.log("error searching data", error);
+    console.log('successfully deleted', photolist_id);
 }

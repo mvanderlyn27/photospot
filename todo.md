@@ -31,6 +31,7 @@
 - ADD REVIEW RATING FUNCTIONALITY for photospots and photolists
 - ADD ability to upload photo for user profile
 - ADD proper migration for supabase dbs, for local testing
+- Add better unit testing/ e2e 
 # Bugs
 - fix error handeling in apis
 - fix search by location for photolists
