@@ -4,11 +4,9 @@ import Link from 'next/link'
 import LogoutButton from '../components/LogoutButton'
 export default async function Index() {
   const supabase = createServerComponentClient({ cookies })
-
   const {
     data: { user },
   } = await supabase.auth.getUser()
-
   return (
     <div className="w-full flex flex-col h-screen">
       <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
@@ -37,7 +35,6 @@ export default async function Index() {
         <h1 className="text-2xl font-bold sm:text-4xl">PhotoSpot</h1>
         <p className="mt-3 text-lg">Find the best places for pics in NYC.</p>
       </div>
-      
     </div>
-  )
+    )
 }

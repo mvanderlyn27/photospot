@@ -6,7 +6,7 @@ import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { PostgrestError } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
-export async function updatePhotospots(photolist_id: number, desired_photospot_list: number[]){
+export async function updatePhotolistsPhotospots(photolist_id: number, desired_photospot_list: number[]){
     //select all photolist-> photospot pairings
     //find differences between input, update updates, remove old things
     const supabase = createServerActionClient<Database>({ cookies });
@@ -31,7 +31,7 @@ export async function updatePhotospots(photolist_id: number, desired_photospot_l
     let photospots_to_add =  desired_photospot_list;
     //need to figure out error handling here
     await addPhotospots(photolist_id, photospots_to_add);
-    await removePhotospots(photolist_id, photospots_to_delete);
+    await deletePhotolistPhotospotsLinks(photolist_id, photospots_to_delete);
 } 
 
 export async function addPhotospots(photolist_id: number, photospot_ids: number[]){
@@ -47,7 +47,7 @@ export async function addPhotospots(photolist_id: number, photospot_ids: number[
     });
 }
 
-export async function removePhotospots(photolist_id: number, photospot_ids: number[]){
+export async function deletePhotolistPhotospotsLinks(photolist_id: number, photospot_ids: number[]){
     const supabase = createServerActionClient<Database>({ cookies });
     const {data, error} = await supabase.from('photolist_photospots').delete().eq('photolist', photolist_id).in('photospot', photospot_ids);
     if(error){
@@ -56,6 +56,22 @@ export async function removePhotospots(photolist_id: number, photospot_ids: numb
     }
     return data;
 }
+
+export async function deletePhotolistLinks(photolist_id: number){
+    const supabase = createServerActionClient<Database>({ cookies });
+    const {error} = await supabase.from('photolist_photospots').delete().eq('photolist', photolist_id)
+    if(error){
+        return error;
+    }
+}
+export async function deletePhotospotLinks(photospot_id: number){
+    const supabase = createServerActionClient<Database>({ cookies });
+    const {error} = await supabase.from('photolist_photospots').delete().eq('photospot', photospot_id)
+    if(error){
+        return error;
+    }
+}
+
 
 export async function getPhotospotsFromPhotolist(photolist_id: number){
     const supabase = createServerActionClient<Database>({ cookies });
