@@ -21,21 +21,20 @@ export const deletePhotolistOptions = (id: number, photolists: Photolist[] | und
 
 export const createPhotolistMutation = async (photolist: PhotolistInput, photolists: Photolist[] | undefined) => {
     const raw_resp = await fetch('http://localhost:3000/data/photolists/create', {method: 'POST', body: JSON.stringify(photolist)});
-    const resp = await raw_resp.json();
     if(!raw_resp.ok)
     {
       console.log('error deleting photolist')
       return photolists
     }
-    photolists?.push(resp.body);
-    return photolists;
+    const data = await raw_resp.json();
+    console.log('create data: ',data);
+    return photolists ? [...photolists, data] : [data];
 }
-export const createPhotolistOptions = (photolist: PhotolistInput, photolists: Photolist[] | undefined) => {
+export const createPhotolistOptions = (photolist: Photolist, photolists: Photolist[] | undefined) => {
     //eventually id should be fixed, but if you update before it corrects, will error
-    const temp_photoslist = {id: -1, ...photolist}
-    photolists?.push(temp_photoslist);
+    
     const options = {
-      optimisticData: photolists,
+      optimisticData: photolists? [...photolists, photolist] : [photolist],
       rollBackOnError: true
     }
     return options;

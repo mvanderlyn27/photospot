@@ -15,6 +15,7 @@ export default function PhotoListActionsTest(){
     const [photospots, setUpdatePhotospots] = useState('');
     const [name2, setUpdateName] = useState('');
     const [description2, setUpdateDescription] = useState('');
+    //maybe modify to store both db object, and just important values?
     const { data: photolists, error, isLoading, mutate: refreshPhotolists } = useSWR<Photolist[], {error:PostgrestError, message:number}, any>("/data/photolists/" , fetcher);
 
     const handleDelete = async (id: number) => {
@@ -24,9 +25,15 @@ export default function PhotoListActionsTest(){
       //format formdata here
       e.preventDefault();
       const photolist = {name: name, description: description}
+      let max_id = -1;
+      if(photolists){
+        max_id = Math.max(...photolists.map(photolist => {return photolist.id}));
+      }
       //chicken and egg issue here, need id, and created by etc info, but can't get until we make the new object
       //maybe for now don't use 
-      await refreshPhotolists(createPhotolistMutation(photolist, photolists), createPhotolistOptions(photolist,photolists));
+      await refreshPhotolists(createPhotolistMutation(photolist, photolists), createPhotolistOptions({...photolist, id: max_id+1},photolists));
+      console.log(photolist);
+      console.log('optimistic create');
       //add photospots here, maybe make it a supabse function 
       //need to pass in as props from server comp to be able to revalidate
     }
@@ -34,6 +41,10 @@ export default function PhotoListActionsTest(){
       e.preventDefault();
       console.log('updating');
       const photolist = {name: name2, description: description2}
+      let max_id = -1;
+      if(photolists){
+        max_id = Math.max(...photolists.map(photolist => {return photolist.id}));
+      }
       const raw_resp = await fetch('http://localhost:3000/data/photolists/update', {method: 'POST', body: JSON.stringify({id: id, photolist: photolist})});
       const resp = await raw_resp.json();
       if(!raw_resp.ok){
@@ -55,7 +66,7 @@ export default function PhotoListActionsTest(){
             photolists ? photolists.map(photolist=> {
               return <div>
                 <h1 key={photolist.id}>{photolist.id}  : {photolist.name}</h1>
-                <button onClick={()=>handleDelete(photolist.id)}>Delete</button>
+                <button disabled={photolist.id === -1} onClick={()=>handleDelete(photolist.id)}>Delete</button>
                 </div>
             }) : <h1>no data</h1> 
           }
