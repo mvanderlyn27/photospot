@@ -5,7 +5,7 @@ import Loading from "../Loading";
 import { MouseEvent, useEffect, useState } from "react";
 import { fetcher } from "@/app/swr-provider";
 import { PostgrestError } from "@supabase/supabase-js";
-import { createPhotolistMutation, createPhotolistOptions, deletePhotolistMutation, deletePhotolistOptions } from "@/app/data/photolistReviews/photolistHelpers";
+import { createPhotolistMutation, createPhotolistOptions, deletePhotolistMutation, deletePhotolistOptions, updatePhotolistMutation, updatePhotolistOptions } from "@/app/data/photolists/photolistHelpers";
 import { createPhotolist } from "@/app/serverActions/photolistActions";
 export default function PhotoListActionsTest(){
     //use state here to track form info
@@ -40,18 +40,15 @@ export default function PhotoListActionsTest(){
     const handleUpdate = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
       e.preventDefault();
       console.log('updating');
-      const photolist = {name: name2, description: description2}
-      let max_id = -1;
-      if(photolists){
-        max_id = Math.max(...photolists.map(photolist => {return photolist.id}));
-      }
-      const raw_resp = await fetch('http://localhost:3000/data/photolists/update', {method: 'POST', body: JSON.stringify({id: id, photolist: photolist})});
-      const resp = await raw_resp.json();
-      if(!raw_resp.ok){
-        throw new Error('error updating: '+resp.error);
-      }
-      console.log('update finished');
-      refreshPhotolists();
+      const photolist = {id: id, name: name2, description: description2}
+      await refreshPhotolists(updatePhotolistMutation(id, photolist, photolists), updatePhotolistOptions(id, photolist ,photolists));
+      // const raw_resp = await fetch('http://localhost:3000/data/photolists/update', {method: 'POST', body: JSON.stringify({id: id, photolist: photolist})});
+      // const resp = await raw_resp.json();
+      // if(!raw_resp.ok){
+        // throw new Error('error updating: '+resp.error);
+      // }
+      // console.log('update finished');
+      // refreshPhotolists();
   }
 
       if(error){

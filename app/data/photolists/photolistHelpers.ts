@@ -41,20 +41,29 @@ export const createPhotolistOptions = (photolist: Photolist, photolists: Photoli
 }
 
 export const updatePhotolistMutation = async (id:number, photolist: Photolist, photolists: Photolist[] | undefined) => {
-    const updated_photolist = photolists?.filter((photolist)=>{if(photolist.id!=id)return photolist});
-    const response = await fetch('http://localhost:3000/data/photolists/update', {method: 'POST', body: JSON.stringify({id: id})})
-    if(!response.ok)
+    const raw_resp = await fetch('http://localhost:3000/data/photolists/update', {method: 'POST', body: JSON.stringify({id: id, photolist:photolist})});
+    if(!raw_resp.ok)
     {
       console.log('error deleting photolist')
-      return photolists
     }
-    return updated_photolist
+    else if(photolists){
+        const old_index = photolists.map(e => e.id).indexOf(id);
+        console.log('old index', photolists,old_index);
+        photolists[old_index] = photolist;
+    }
+    return photolists
 }
 export const updatePhotolistOptions = (id: number, photolist: Photolist, photolists: Photolist[] | undefined) => {
-  const updated_photolist = photolists?.filter((photolist)=>{if(photolist.id!=id)return photolist});
+    console.log('before',photolists);
+    if(photolists){
+        const old_index = photolists.map(e => e.id).indexOf(id);
+        photolists[old_index] = photolist;
+    }
+    console.log('after',photolists);
   const options = {
-      optimisticData: updated_photolist,
+      optimisticData: photolists, 
       rollBackOnError: true
     }
+    console.log('options',options)
     return options;
 }
