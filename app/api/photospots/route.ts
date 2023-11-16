@@ -8,7 +8,7 @@ export async function GET() {
     const cookieStore = cookies()
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
     const res = await supabase.from('photospots').select('*');
-    console.log('res', res);
+    // console.log('res', res);
     if(res.error){
         console.log('error', res.error);
         return NextResponse.json({error: res.error},{status: 500});

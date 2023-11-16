@@ -1,18 +1,19 @@
-export interface Photolist {
+export type Photolist = {
     created_at?: string;
     created_by?: string | null;
     description?: string | null;
     id: number;
     name: string;
+    photospots?: number[];
 }
-export interface PhotolistInput {
+export type PhotolistInput = {
     created_at?: string; 
     created_by?: string;
     description?: string;
     name: string;
 }
 
-export interface Photospot {
+export type Photospot  = {
     created_at?: string;
     created_by?: string;
     description?: string;

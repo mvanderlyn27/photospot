@@ -1,6 +1,7 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { deletePhotolistLinks, deletePhotolistPhotospotsLinks } from "../photolistHelpers";
 
 export const dynamic = 'force-dynamic'
 
@@ -14,6 +15,11 @@ export async function POST(request: NextResponse) {
     if(error){
         console.log('error', error);
         return NextResponse.json({error: error},{status: 500});
+    }
+    const error2 = await deletePhotolistLinks(body.id, supabase);
+    if (error2){
+        console.log('error', error2);
+        return NextResponse.json(error2,{status: 500});
     }
     return NextResponse.json({status: 200})
 }
