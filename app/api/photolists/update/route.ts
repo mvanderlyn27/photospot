@@ -3,7 +3,7 @@ import { Database } from "@/types/supabase";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { updatePhotolistsPhotospots } from "../photolistHelpers";
+import { updatePhotolistsPhotospots } from "../helpers/photolistHelpers";
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextResponse) {

@@ -68,10 +68,30 @@ export const updatePhotolistOptions = (id: number, photolist: Photolist, photoli
     return options;
 }
 
+// searchById
+export async function searchById(url : string,  {arg} : {arg: {id: number}}) {
+  return fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(arg)
+  }).then(res => res.json())
+}
+
+// searchById
+export async function searchByName(url : string,  {arg} : {arg: {search_string: string}}) {
+  return fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(arg)
+  }).then(res => res.json())
+}
+
+// searchById
+export async function getPhotolistsPhotospots(url : string,  {arg} : {arg: {id: number}}) {
+  return fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(arg)
+  }).then(res => res.json())
+}
 
 
 
-
-
-//// ROUTE HANDLER HELPERS
 

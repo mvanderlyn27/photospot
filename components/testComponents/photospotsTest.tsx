@@ -7,7 +7,20 @@ import { PostgrestError } from "@supabase/supabase-js";
 import { createPhotolistMutation, createPhotolistOptions, deletePhotolistMutation, deletePhotolistOptions, updatePhotolistMutation, updatePhotolistOptions, searchById, searchByName, getPhotolistsPhotospots } from "../../app/api/photolists/helpers/optimisticMutationHelpers";
 import { fetcher } from "@/app/swr-provider";
 import useSWRMutation from 'swr/mutation'
-export default function PhotoListsTests(){
+
+
+/*Things to test
+    creation w/ photo upload/ optional photolist 
+    Update data
+    delete w/ auto delete of photolist links
+    search by name
+    search by location
+    search within a box
+    review location (just number, number + text, number + text + pic)
+
+*/
+
+export default function PhotoSpotTests(){
     //use state here to track form info
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');

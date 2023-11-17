@@ -16,5 +16,12 @@ export async function POST(request: NextResponse) {
         return NextResponse.json(error, {status: 500})
     }
     let photospots = data.map(row=>{return row.photospot});
-    return NextResponse.json(photospots, {status: 200})
+    const {data: photospotInfo, error:photospotError} = await supabase.from('photospots').select('*').in('id',photospots);
+    if(photospotError){
+        console.log('error: ',photospotError);
+        return NextResponse.json(photospotError, {status: 500})
+    }
+
+    
+    return NextResponse.json(photospotInfo, {status: 200})
 }
