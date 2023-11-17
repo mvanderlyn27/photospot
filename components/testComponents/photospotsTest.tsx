@@ -13,8 +13,12 @@ import useSWRMutation from 'swr/mutation'
     creation w/ photo upload/ optional photolist 
     Update data
     delete w/ auto delete of photolist links
-    search by name
-    search by location
+    search w/ filters
+        search by name
+        search by location
+        search by time (new photospots)
+        search by rating
+        search by "hot'"
     search within a box
     review location (just number, number + text, number + text + pic)
 

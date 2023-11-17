@@ -1,4 +1,4 @@
-# Features
+# Planned Features
 - overall 
     - nav bar across all pages
 - home page
@@ -19,30 +19,39 @@
     - allow users to update, and delete photospots
     - figure out more of what we want to allow for photospots
         - should they be owned by a user, or by the community? 
+    - maybe make it so owner of photospot can be transfered
 - users
     - add user table, add triggers to fill out fields after authenticating new user
 - profile
     - users profile page for viewing/updating user details
 - photobooks (photolist?)
     - allow users to curate list of photospots 
+
+
+# features needed still for MVP
+- 
 # Code Improvement
 - Add trigger to photospot table on deletes to also delete its picture from storage 
 - Add new function and trigger to delete user from auth table upon deleting user profile
 - ADD REVIEW RATING FUNCTIONALITY for photospots and photolists
 - ADD ability to upload photo for user profile
 - ADD proper migration for supabase dbs, for local testing
+    - need to have multiple env for db, so we're not working against prod data
 - Add better unit testing/ e2e 
-# Bugs
-- fix error handeling in apis
+    - rn using a test page to do testing, not super comprehensive
+- improve error handeling/loggin in apis/frontend
 - fix search by location for photolists
-- test photospot, photolist bridge api calls
-- fix types for api to have db types for input/results of api calls
+- layout better, cleaner types for use throughout the app 
+# Bugs
 
 
 
 
 
 # Future Ideas
+- add shadows for photospots, see if you're photospot will be in shadow when you want a shot
+- have weather included as well to findout when is the perfect time to take a photo
+    - maybe could be the main focus of product to sell to photographers
 - have a "placeholder" person to put into a photo for photospots where a user don't want to upload their face, or have a way to blur out the user
 - have notification for users how many people liked their photospot they uploaded
 - add cool tagging feature for photos
@@ -53,3 +62,15 @@
         - show new photos posted at your photospots
         - show new photos posted at tags you like
         - maybe have mapview of your feed, showing hotspots of locations 
+- offline
+- Could focus in a few areas
+    - social media part, finding other photographers near you, seeing their pics, sharing yours
+    - planning photography shoots for professionals
+    - mainly the "photo trip" planning, focusing on either traveling somewhere, or exploring your own city, multiple locations, focusing more on the photo trip, than just the one location
+
+
+# Intended audiance
+- pro photographers?
+- amatuer photographers?
+- travelers?
+- influencers?
