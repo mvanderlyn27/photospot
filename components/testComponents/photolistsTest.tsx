@@ -7,8 +7,16 @@ import { PostgrestError } from "@supabase/supabase-js";
 import { createPhotolistMutation, createPhotolistOptions, deletePhotolistMutation, deletePhotolistOptions, updatePhotolistMutation, updatePhotolistOptions, searchById, searchByName, getPhotolistsPhotospots } from "../../app/api/photolists/helpers/optimisticMutationHelpers";
 import { fetcher } from "@/app/swr-provider";
 import useSWRMutation from 'swr/mutation'
+
+/*
+  TESTS STILL NEEDED:
+    test private/unprivate functionality
+    maybe more tests on photos for photolists?, do we want photos for photolsits
+    
+*/
+
 export default function PhotoListsTests(){
-    //use state here to track form info
+
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [id, setUpdateId] = useState(-1);

@@ -4,7 +4,7 @@ const nextConfig = {
     serverActions: true,
   },
   images: {
-      domains: ['vkfbzrfveygdqsqyiggk.supabase.co']
+      domains: ['vkfbzrfveygdqsqyiggk.supabase.co', 'images.pexels.com']
   },
 }
 

@@ -13,7 +13,6 @@ export async function GET() {
         console.log('error', res.error);
         return NextResponse.json({error: res.error},{status: 500});
     }
-    await new Promise(r => setTimeout(r, 2000));
     return NextResponse.json(res.data, {status: 200})
 
 }

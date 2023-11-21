@@ -2,6 +2,8 @@
 //figure out later a better way to unit test functions 
 
 import PhotoSpotsTests from '@/components/testComponents/photospotsTest';
+import ContactForm from '@/components/testComponents/testForm';
+import { ModeToggle } from '@/components/themeToggle';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -19,7 +21,9 @@ export default async function Index() {
   }
   return (
     <div className="w-full flex flex-col h-screen">
+      <ModeToggle/>
       <PhotoSpotsTests />
+      {/* <ContactForm/> */}
     </div>
   )
 }

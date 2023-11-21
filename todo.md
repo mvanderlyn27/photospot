@@ -49,7 +49,8 @@
 
 
 # Future Ideas
-- add shadows for photospots, see if you're photospot will be in shadow when you want a shot
+- realtime for reviews? 
+add shadows for photospots, see if you're photospot will be in shadow when you want a shot
 - have weather included as well to findout when is the perfect time to take a photo
     - maybe could be the main focus of product to sell to photographers
 - have a "placeholder" person to put into a photo for photospots where a user don't want to upload their face, or have a way to blur out the user
