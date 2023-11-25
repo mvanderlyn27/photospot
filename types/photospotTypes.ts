@@ -16,8 +16,9 @@ export type PhotolistInput = {
 export type PhotospotInput = {
     description?: string;
     name?: string;
-    location?: LatLng;
+    location?: string;
     draft?: boolean;
+    photo_paths?: string[];
 }
 
 export type Photospot  = {
@@ -27,12 +28,17 @@ export type Photospot  = {
     id: number;
     name: string;
     photo_paths: string[];
-    location: LatLng;
+    location: string;
     draft?: boolean;
+    photo_placeholder?: "blur" | "empty" | `data:image/${string}` | undefined;
 }
-export type LatLng = {
-    latitude: number;
-    longitude: number;
+
+export type PhotospotInsert  = {
+    description?: string;
+    name: string;
+    photo_paths: string[];
+    location: string;
+    draft?: boolean;
 }
 
 export type PhotoGridInput = {

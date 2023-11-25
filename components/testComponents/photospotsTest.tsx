@@ -1,10 +1,10 @@
 "use client"
 import useSWR from "swr";
-import {Photolist, LatLng, PhotolistInput, Photospot} from "../../types/photospotTypes"
+import {Photolist, PhotolistInput, Photospot} from "../../types/photospotTypes"
 import Loading from "../Loading";
 import { MouseEvent, useEffect, useState } from "react";
 import { PostgrestError } from "@supabase/supabase-js";
-import { createPhotolistMutation, createPhotolistOptions, deletePhotolistMutation, deletePhotolistOptions, updatePhotolistMutation, updatePhotolistOptions, searchById, searchByName, getPhotolistsPhotospots } from "../../app/api/photolists/helpers/optimisticMutationHelpers";
+import { createPhotospotMutation, createPhotospotOptions, updatePhotospotMutation, updatePhotospotOptions } from "@/app/api/photospots/helpers/optimisticMutationHelpers";
 import { fetcher } from "@/app/swr-provider";
 import useSWRMutation from 'swr/mutation'
 import { FaPlus, FaEdit, FaSearch, FaTrashAlt, FaList  } from "react-icons/fa";
@@ -38,6 +38,7 @@ import PhotospotGrid from "../PhotoSpotGrid";
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { Checkbox } from "../ui/checkbox";
 
 /*Things to test
     creation w/ photo upload/ optional photolist 
@@ -59,12 +60,28 @@ import { useForm } from "react-hook-form"
 */
 
 export default function PhotoSpotTests(){
+  //STATE COMPONENT STATE
+  //use state here to track form info
+  // const [name, setName] = useState('');
+  // const [description, setDescription] = useState('');
+  // const [location, setLocation]: [LatLng | null, any] = useState(null);
+  // const [id, setUpdateId] = useState(-1);
+  // const [photolistById, setPhotolistById] = useState(-1);
+  // const [photolistByName, setPhotolistByName] = useState('');
+  // const [photolistsPhotospotsId, setphotolistsPhotospotsId] = useState(-1);
+  const { data: photospots, error, isLoading, mutate: refreshPhotospots } = useSWR<Photospot[], {error:PostgrestError, message:number}, any>("/api/photospots/" , fetcher);
+  // const { data: photolistByIdInfo, trigger: getPhotolistById }: {data: Photolist, trigger: any} = useSWRMutation('/api/photospots/getById', searchById);
+  // const { data: photolistByNameResults, trigger: getPhotolistByName }: {data: Photolist[], trigger: any} = useSWRMutation('/api/photolists/search/byName', searchByName);
+
+
+
 //FORM VALIDATION SECTION
 
 // CAN DO FILE UPLOAD BY EITHER USING A FILEREF like in the testForm.tsx, or by modifying onchange as seen here
   const MAX_FILE_SIZE = 5242880; //5MB
   const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-  const formSchema = z.object({
+
+  const createFormSchema = z.object({
     name: z.string().min(2).max(50),
     description: z.string(),
     photospot_pictures : z
@@ -84,55 +101,112 @@ export default function PhotoSpotTests(){
       "Only these types are allowed .jpg, .jpeg, .png and .webp"
     ),
     latitude: z.coerce.number().gt(-90, {message:"latitude is too small" }).lt(90, {message:"latitude is too big" }),
-    longitude: z.coerce.number().gt(-180, {message: "longitude is too small"}).lt(180, {message:"longitude is too big"})
+    longitude: z.coerce.number().gt(-180, {message: "longitude is too small"}).lt(180, {message:"longitude is too big"}),
+    draft: z.boolean().default(false).optional(),
   })
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const createForm = useForm<z.infer<typeof createFormSchema>>({
+    resolver: zodResolver(createFormSchema),
     defaultValues: {
       name: "",
       description: "",
       photospot_pictures: undefined,
       latitude: undefined,
-      longitude: undefined 
+      longitude: undefined,
+      draft: false
     },
     mode: 'onChange',
   });
-  const fileRef = form.register('photospot_pictures', { required: true });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const handleCreate = async (values: z.infer<typeof createFormSchema>) => {
     console.log('create new photospot',JSON.stringify(values));
     console.log('photos',values.photospot_pictures);
-  };
-    //use state here to track form info
-    // const [name, setName] = useState('');
-    // const [description, setDescription] = useState('');
-    // const [location, setLocation]: [LatLng | null, any] = useState(null);
-    // const [id, setUpdateId] = useState(-1);
-    // const [photolistById, setPhotolistById] = useState(-1);
-    // const [photolistByName, setPhotolistByName] = useState('');
-    // const [photolistsPhotospotsId, setphotolistsPhotospotsId] = useState(-1);
-    const { data: photospots, error, isLoading, mutate: refreshPhotospots } = useSWR<Photospot[], {error:PostgrestError, message:number}, any>("/api/photospots/" , fetcher);
-    // const { data: photolistByIdInfo, trigger: getPhotolistById }: {data: Photolist, trigger: any} = useSWRMutation('/api/photospots/getById', searchById);
-    // const { data: photolistByNameResults, trigger: getPhotolistByName }: {data: Photolist[], trigger: any} = useSWRMutation('/api/photolists/search/byName', searchByName);
+    let formData = new FormData();
+    const location_str = `POINT(${values.latitude} ${values.longitude})`;
+    let photospotInfo: any = { name: values.name, description: values?.description, location: location_str, draft: values?.draft, photo_paths: []} 
+    formData.append("photospot_info",JSON.stringify(photospotInfo));
+    formData.append("photospot_pictures",values.photospot_pictures[0]);
+    photospotInfo.id = -1
+    photospotInfo.photo_paths = [];    
+    await refreshPhotospots(createPhotospotMutation(formData, photospots), createPhotospotOptions(photospotInfo, photospots));
+  }
 
-    // console.log(photospots);
+  const updateFormSchema = z.object({
+    updateId: z.coerce.number({required_error: "Please select a photospot to update via id"}),
+    updateName: z.string().min(2).max(50).optional(),
+    updateDescription: z.string().optional(),
+    updatePhotospot_pictures : z
+    .custom<FileList>((val) => val instanceof FileList, "Required")
+    .refine((files) => files.length > 0, `Required`)
+    .refine((files) => files.length <= 5, `Maximum of 5 images are allowed.`)
+    .refine(
+      (files) =>
+        Array.from(files).every((file) => file.size <= MAX_FILE_SIZE),
+      `Each file size should be less than 5 MB.`
+    )
+    .refine(
+      (files) =>
+        Array.from(files).every((file) =>
+        ACCEPTED_IMAGE_TYPES.includes(file.type)
+        ),
+      "Only these types are allowed .jpg, .jpeg, .png and .webp"
+    ).optional(),
+    updateLatitude: z.coerce.number().gt(-90, {message:"latitude is too small" }).lt(90, {message:"latitude is too big" }).optional(),
+    updateLongitude: z.coerce.number().gt(-180, {message: "longitude is too small"}).lt(180, {message:"longitude is too big"}).optional(),
+    updateDraft:z.boolean().default(false).optional(),
+  })
+  const updateForm = useForm<z.infer<typeof updateFormSchema>>({
+    resolver: zodResolver(updateFormSchema),
+    defaultValues: {
+      updateId: undefined,
+      updateName: undefined,
+      updateDescription: undefined,
+      updatePhotospot_pictures: undefined,
+      updateLatitude: undefined,
+      updateLongitude: undefined,
+      updateDraft: false
+    },
+    mode: 'onChange',
+  });
+  const getUpdateInfo = (values: z.infer<typeof updateFormSchema>) => {
+    let out: any = {};
+    if(values.updateName){
+      out.name = values.updateName
+    }
+    if(values.updateDescription){
+      out.description = values.updateDescription
+    }
+    if(values.updateLatitude && values.updateLongitude){
+      const location_str = `POINT(${values.updateLatitude} ${values.updateLongitude})`;
+      out.location = location_str 
+    }
+    if(values.updateDraft){
+      out.draft = values.updateDraft
+    }
+    return out;
+  }
+  const handleUpdate = async (values: z.infer<typeof updateFormSchema>) => {
+    console.log('update photospot',JSON.stringify(values));
+    let formData = new FormData();
+    const updateTime = Date.now();
+    formData.append('update_time', String(updateTime));
+    formData.append("id", String(values.updateId))
+    //create object with entries for update
+    let photospotInfo: any = getUpdateInfo(values);
+    if(Object.entries(photospotInfo).length >0){
+      formData.append("photospot_info",JSON.stringify(photospotInfo));
+    }
+    if(values.updatePhotospot_pictures){
+      formData.append("photospot_pictures",values.updatePhotospot_pictures[0]);
+    }
+    photospotInfo.id = values.updateId;
+    photospotInfo.photo_paths = [];
+    console.log('updating: ', formData);
+    await refreshPhotospots(updatePhotospotMutation(formData, photospots), updatePhotospotOptions( photospotInfo, photospots));
+  }
+
     const handleDelete = async (id: number) => {
       // await refreshPhotospots(deletePhotospotMutation(id, photolists), deletePhotospotOptions(id, photolists));
     }
-
-    // const handleCreate = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-    //   e.preventDefault();
-    //   const photolist = {name: name, description: description}
-    //   let max_id = -1;
-    //   if(photolists){
-    //     max_id = Math.max(...photolists.map(photolist => {return photolist.id}));
-    //   }
-    //   //chicken and egg issue here, need id, and created by etc info, but can't get until we make the new object
-    //   //maybe for now don't use 
-    //   const photospots_ar =  photospots.split(`,`).map(x => Number(x));
-    //   await refreshPhotolists(createPhotolistMutation(photolist, photolists, photospots_ar), createPhotolistOptions({...photolist, id: max_id+1},photolists));
-    // }
 
     // const handleUpdate = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     //   e.preventDefault();
@@ -170,10 +244,8 @@ export default function PhotoSpotTests(){
     //     console.log(photolistsPhotospotsResults);
     //   }
     //   else{
-    //     console.log('please enter id before loading photospots');
-    //   }
     // }
-    
+   
     if(error){
       return <h1>error: {error.message}</h1>
     }
@@ -189,11 +261,8 @@ export default function PhotoSpotTests(){
         <TabsTrigger value="search">Search</TabsTrigger>
         <TabsTrigger value="delete">Delete</TabsTrigger>
       </TabsList>
-
       <TabsContent value="create">
-      
        <Card>
-        
           <CardHeader>
             <CardTitle>Create Photospot</CardTitle>
             <CardDescription>
@@ -201,10 +270,10 @@ export default function PhotoSpotTests(){
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <Form {...createForm}>
+      <form onSubmit={createForm.handleSubmit(handleCreate)} className="space-y-8">
         <FormField
-          control={form.control}
+          control={createForm.control}
           name="name"
           render={({ field }) => (
             <FormItem>
@@ -220,7 +289,7 @@ export default function PhotoSpotTests(){
           )}
         />
          <FormField
-          control={form.control}
+          control={createForm.control}
           name="description"
           render={({ field }) => (
             <FormItem>
@@ -236,13 +305,13 @@ export default function PhotoSpotTests(){
           )}
         />
          <FormField
-          control={form.control}
+          control={createForm.control}
           name="photospot_pictures"
           render={({ field: {onChange}, ...field }) => (
             <FormItem>
               <FormLabel>Photos</FormLabel>
               <FormControl>
-                <Input {...field} type="file" onChange={(e) => {console.log(e.target.files); onChange(e.target.files)}}/>
+                <Input {...field} type="file" onChange={(e) => {onChange(e.target.files)}}/>
               </FormControl>
               <FormDescription>
                 Upload pictures from the spot
@@ -253,7 +322,7 @@ export default function PhotoSpotTests(){
         />
        
          <FormField
-          control={form.control}
+          control={createForm.control}
           name="latitude"
           render={({ field }) => (
             <FormItem>
@@ -269,7 +338,7 @@ export default function PhotoSpotTests(){
           )}
         />
             <FormField
-          control={form.control}
+          control={createForm.control}
           name="longitude"
           render={({ field }) => (
             <FormItem>
@@ -284,6 +353,21 @@ export default function PhotoSpotTests(){
             </FormItem>
           )}
         />
+             <FormField
+          control={createForm.control}
+          name="draft"
+          render={({ field }) => (
+            <FormItem className="flex items-center space-x-2">
+              <FormLabel htmlFor="draft" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                Draft:
+              </FormLabel>
+              <FormControl>
+                <Checkbox checked={field.value} onCheckedChange={field.onChange}/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
           <Button type="submit">Create</Button>
          </form>
           </Form>
@@ -293,16 +377,130 @@ export default function PhotoSpotTests(){
       <TabsContent value="update">
       <Card>
           <CardHeader>
-            <CardTitle>All Photospots</CardTitle>
+            <CardTitle>Update Photospots</CardTitle>
             <CardDescription>
-              Make changes to your account here. Click save when you're done.
+             update a photospot via id 
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
+            <Form {...updateForm}>
+      <form onSubmit={updateForm.handleSubmit(handleUpdate)} className="space-y-8">
+      <FormField
+          control={updateForm.control}
+          name="updateId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Id</FormLabel>
+              <FormControl>
+                <Input {...field} type="number" />
+              </FormControl>
+              <FormDescription>
+               ID for photospot 
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={updateForm.control}
+          name="updateName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="name" {...field} />
+              </FormControl>
+              <FormDescription>
+               Name for photospot 
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+         <FormField
+          control={updateForm.control}
+          name="updateDescription"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Input placeholder="why is it a good location?" {...field} />
+              </FormControl>
+              <FormDescription>
+                Tells us a bit about the location
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+         <FormField
+          control={updateForm.control}
+          name="updatePhotospot_pictures"
+          render={({ field: {onChange}, ...field }) => (
+            <FormItem>
+              <FormLabel>Photos</FormLabel>
+              <FormControl>
+                <Input {...field} type="file" onChange={(e) => { console.log('updated file',e.target.files); onChange(e.target.files)}}/>
+              </FormControl>
+              <FormDescription>
+                Upload pictures from the spot
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+       
+         <FormField
+          control={updateForm.control}
+          name="updateLatitude"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Latitude</FormLabel>
+              <FormControl>
+                <Input {...field} type="number" />
+              </FormControl>
+              <FormDescription>
+                should be between -180, 180
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+            <FormField
+          control={updateForm.control}
+          name="updateLongitude"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Longitude</FormLabel>
+              <FormControl>
+                <Input {...field} type="number"  />
+              </FormControl>
+              <FormDescription>
+                should be between -90,90
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+             <FormField
+          control={updateForm.control}
+          name="updateDraft"
+          render={({ field }) => (
+            <FormItem className="flex items-center space-x-2">
+              <FormLabel htmlFor="draft" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                Draft:
+              </FormLabel>
+              <FormControl>
+                <Checkbox  id="draft"  checked={field.value} onCheckedChange={field.onChange}/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+          <Button type="submit">Save Changes</Button>
+         </form>
+          </Form>
           </CardContent>
-          <CardFooter>
-            <Button>Save changes</Button>
-          </CardFooter>
         </Card>
       </TabsContent>
       <TabsContent value="search">
