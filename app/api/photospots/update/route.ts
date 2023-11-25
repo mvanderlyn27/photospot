@@ -31,8 +31,9 @@ export async function POST(request: NextResponse) {
         if(photospot_info_raw){
             photospot_data = JSON.parse(photospot_info_raw.toString());
         }
-        
-        photospot_data = {...photospot_data, photo_paths: [public_url+"?t="+formData.get('update_time')]};
+        if(public_url){
+            photospot_data = {...photospot_data, photo_paths: [public_url+"?t="+formData.get('update_time')]};
+        }
         console.log('updated path: ',photospot_data);
         const {data: photospotWithPhotoPath, error: updateError} = await supabase.from('photospots').update(photospot_data).eq('id', photospot_id).select('*');    
         if(updateError){
