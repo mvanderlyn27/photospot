@@ -6,14 +6,18 @@ import { NextResponse } from "next/server";
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextResponse) {
+    console.log('looking for name on backend');
     const cookieStore = cookies()
     const body = await request.json();
+    console.log('body', body);
     const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
-    const {data, error} = await supabase.from('photospots').select('*').eq('created_by',body.uuid);
+    // const {data, error} = await supabase.rpc("nearby_photospots", { lat: body.lat, long: body.lng, }).lte('distance_meters', body.maxDistance);
+    const {data, error} = await supabase.rpc("nearby_photospots", { lat: body.lat, long: body.lng, }).lte('dist_meters', body.maxDistance);
     if(error){
         console.log('error', error);
         return NextResponse.json({error: error},{status: 500});
     }
-    return NextResponse.json(data[0],{status: 200})
+    console.log('return data', data);
+    return NextResponse.json(data,{status: 200})
 }
 

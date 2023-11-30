@@ -2,7 +2,8 @@ import { Photospot, PhotospotInput } from "@/types/photospotTypes";
 
 export const deletePhotospottMutation = async (id:number, photolists: Photospot[] | undefined) => {
     const updated_photolist = photolists?.filter((photolist)=>{if(photolist.id!=id)return photolist});
-    const response = await fetch('/api/photospot/delete', {method: 'POST', body: JSON.stringify({id: id})})
+    const response = await fetch('/api/photospots/delete', {method: 'POST', body: JSON.stringify({id: id})})
+    console.log('resp: ',response);
     if(!response.ok)
     {
       console.log('error deleting photolist')
@@ -73,4 +74,31 @@ export const updatePhotospotOptions = (photoSpotInfo:any, photospots: Photospot[
       rollBackOnError: true
     }
     return options;
+}
+
+
+// FETCHERS
+export const searchByName = (url : string,  {arg} : {arg: {name: string}}) => {
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(arg)
+      }).then(res => res.json())
+}
+export const searchById = (url : string,  {arg} : {arg: {id: number}}) =>{
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(arg)
+      }).then(res => res.json())
+}
+export const searchByLocation = (url : string,  {arg} : {arg: {location: string}}) =>{
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(arg)
+      }).then(res => res.json()) 
+}
+export const searchByTime = (url : string,  {arg} : {arg: {start: number, end: number, ascending: boolean}}) =>{
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(arg)
+      }).then(res => res.json()) 
 }

@@ -4,7 +4,7 @@ import {Photolist, PhotolistInput, Photospot} from "../../types/photospotTypes"
 import Loading from "../Loading";
 import { MouseEvent, useEffect, useState } from "react";
 import { PostgrestError } from "@supabase/supabase-js";
-import { createPhotospotMutation, createPhotospotOptions, updatePhotospotMutation, updatePhotospotOptions } from "@/app/api/photospots/helpers/optimisticMutationHelpers";
+import { createPhotospotMutation, createPhotospotOptions, deletePhotospotOptions, deletePhotospottMutation, searchById, searchByLocation, searchByName, searchByTime, updatePhotospotMutation, updatePhotospotOptions } from "@/app/api/photospots/helpers/optimisticMutationHelpers";
 import { fetcher } from "@/app/swr-provider";
 import useSWRMutation from 'swr/mutation'
 import { FaPlus, FaEdit, FaSearch, FaTrashAlt, FaList  } from "react-icons/fa";
@@ -62,22 +62,15 @@ import { Checkbox } from "../ui/checkbox";
 export default function PhotoSpotTests(){
   //STATE COMPONENT STATE
   //use state here to track form info
-  // const [name, setName] = useState('');
-  // const [description, setDescription] = useState('');
-  // const [location, setLocation]: [LatLng | null, any] = useState(null);
-  // const [id, setUpdateId] = useState(-1);
-  // const [photolistById, setPhotolistById] = useState(-1);
-  // const [photolistByName, setPhotolistByName] = useState('');
-  // const [photolistsPhotospotsId, setphotolistsPhotospotsId] = useState(-1);
   const { data: photospots, error, isLoading, mutate: refreshPhotospots } = useSWR<Photospot[], {error:PostgrestError, message:number}, any>("/api/photospots/" , fetcher);
-  // const { data: photolistByIdInfo, trigger: getPhotolistById }: {data: Photolist, trigger: any} = useSWRMutation('/api/photospots/getById', searchById);
-  // const { data: photolistByNameResults, trigger: getPhotolistByName }: {data: Photolist[], trigger: any} = useSWRMutation('/api/photolists/search/byName', searchByName);
-
+  const { data: photospotsByName, trigger: searchPhotospotsByName}: {data: Photospot[], trigger: any} = useSWRMutation('/api/photospots/search/byName', searchByName);
+  const { data: photospotsById, trigger: searchPhotospotsById}: {data: Photospot[], trigger: any} = useSWRMutation('/api/photospots/search/byId', searchById);
+  const { data: photospotsByLocation, trigger: searchPhotospotsByLocation}: {data: Photospot[], trigger: any} = useSWRMutation('/api/photospots/search/byLocation', searchByLocation);
+  const { data: photospotsByTime, trigger: searchPhotospotsByTime}: {data: Photospot[], trigger: any} = useSWRMutation('/api/photospots/search/byTime', searchByTime);
 
 
 //FORM VALIDATION SECTION
 
-// CAN DO FILE UPLOAD BY EITHER USING A FILEREF like in the testForm.tsx, or by modifying onchange as seen here
   const MAX_FILE_SIZE = 5242880; //5MB
   const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
@@ -204,48 +197,75 @@ export default function PhotoSpotTests(){
     await refreshPhotospots(updatePhotospotMutation(formData, photospots), updatePhotospotOptions( photospotInfo, photospots));
   }
 
-    const handleDelete = async (id: number) => {
-      // await refreshPhotospots(deletePhotospotMutation(id, photolists), deletePhotospotOptions(id, photolists));
-    }
+  const handleDelete = async (id: number) => {
+    await refreshPhotospots(deletePhotospottMutation(id, photospots), deletePhotospotOptions(id, photospots));
+  }
 
-    // const handleUpdate = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-    //   e.preventDefault();
-    //   const photolist = {id: id, name: name2, description: description2, }
-    //   const photospots_ar =  photospots2.split(`,`).map(x => Number(x));
-    //   await refreshPhotolists(updatePhotolistMutation(id, photolist, photolists, photospots_ar), updatePhotolistOptions(id, photolist ,photolists));
-    // }
+  
+  const searchByIdFormSchema = z.object({
+    searchId: z.coerce.number({required_error: "Please select a photospot to update via id"}),
+  });
+  const searchByIdForm = useForm<z.infer<typeof searchByIdFormSchema>>({
+    resolver: zodResolver(searchByIdFormSchema),
+    defaultValues: {
+      searchId: undefined,
+    },
+    mode: 'onChange',
+  });  
+  const handleSearchById = async (values: z.infer<typeof searchByIdFormSchema>) => {
+    await searchPhotospotsById({id: values.searchId});
+  }
+  
+ 
+  const searchByNameFormSchema = z.object({
+    searchName: z.string().min(2).max(50),
+  });
+  const searchByNameForm = useForm<z.infer<typeof searchByNameFormSchema>>({
+    resolver: zodResolver(searchByNameFormSchema),
+    defaultValues: {
+      searchName: undefined,
+    },
+    mode: 'onChange',
+  }); 
+  const handleSearchByName = async (values: z.infer<typeof searchByNameFormSchema>) => {
+    console.log('searching by name', values.searchName);
+    await searchPhotospotsByName({name: values.searchName });
+}
+ 
+  const searchByLocationFormSchema = z.object({
+    searchLatitude: z.coerce.number().gt(-90, {message:"latitude is too small" }).lt(90, {message:"latitude is too big" }),
+    searchLongitude: z.coerce.number().gt(-180, {message: "longitude is too small"}).lt(180, {message:"longitude is too big"}),
+  });
+  const searchByLocationForm = useForm<z.infer<typeof searchByLocationFormSchema>>({
+    resolver: zodResolver(searchByLocationFormSchema),
+    defaultValues: {
+      searchLatitude: undefined,
+      searchLongitude: undefined,
+    },
+    mode: 'onChange',
+  }); 
+  const handleSearchByLocation = async (values: z.infer<typeof searchByLocationFormSchema>) => {
+    await searchPhotospotsByLocation({lat: values.searchLatitude, lng: values.searchLongitude, maxDistance: 500 });
+  }
 
-    // const handleSearchById = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-    //   e.preventDefault();
-    //   if(photolistById){
-    //     await getPhotolistById({id: photolistById});
-    //     console.log(photolistByIdInfo)
-    //   }
-    //   else{
-    //     console.log('please enter id before searching');
-    //   }
-    // }
+  const searchByTimeFormSchema = z.object({
+    start: z.coerce.number(),
+    end: z.coerce.number().optional(),
+    ascending: z.boolean()
+  }).refine(({start, end}) => {if(end){return start <= end} else {return true}}, "invalid range, from is greater than thru");
+  const searchByTimeForm = useForm<z.infer<typeof searchByTimeFormSchema>>({
+    resolver: zodResolver(searchByTimeFormSchema),
+    defaultValues: {
+      start: undefined,
+      end: undefined,
+      ascending: true,
+    },
+    mode: 'onChange',
+  }); 
+  const handleSearchByTime = async (values: z.infer<typeof searchByTimeFormSchema>) => {
+    await searchPhotospotsByTime({location: values.start});
+  }
 
-    // const handleSearchByName = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-    //   e.preventDefault();
-    //   if(photolistByName){
-    //     await getPhotolistByName({search_string: photolistByName});
-    //     console.log(photolistByNameResults);
-    //   }
-    //   else{
-    //     console.log('please enter name before searching');
-    //   }
-    // }
-
-    // const handleGetPhotolistsPhotospots = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-    //   e.preventDefault();
-    //   if(photolistsPhotospotsId){
-    //     await getPhotolistsFromPhotospots({id: photolistsPhotospotsId});
-    //     console.log(photolistsPhotospotsResults);
-    //   }
-    //   else{
-    // }
-   
     if(error){
       return <h1>error: {error.message}</h1>
     }
@@ -460,7 +480,7 @@ export default function PhotoSpotTests(){
                 <Input {...field} type="number" />
               </FormControl>
               <FormDescription>
-                should be between -180, 180
+                should be between -90, 90 
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -476,7 +496,7 @@ export default function PhotoSpotTests(){
                 <Input {...field} type="number"  />
               </FormControl>
               <FormDescription>
-                should be between -90,90
+                should be between -180, 180
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -512,9 +532,124 @@ export default function PhotoSpotTests(){
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
+          <Tabs defaultValue="title" className="w-[400px]">
+      <TabsList className="grid w-full grid-cols-3">
+        <TabsTrigger value="title">Title</TabsTrigger>
+        <TabsTrigger value="id">By ID</TabsTrigger>
+        <TabsTrigger value="location">Location</TabsTrigger>
+      </TabsList> 
+      <TabsContent value="title">
+      <Form {...searchByNameForm}>
+      <form onSubmit={searchByNameForm.handleSubmit(handleSearchByName)} className="space-y-8">
+        <FormField
+          control={searchByNameForm.control}
+          name="searchName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="name" {...field} />
+              </FormControl>
+              <FormDescription>
+               Name for photospot 
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Search</Button>
+        </form>
+        </Form>
+        {
+          photospotsByName ? photospotsByName.map(photospot=> {
+            return <div key={photospot.id} className="flex w-full max-w-sm items-center space-x-2">
+              <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={photospot.id}>ID: {photospot.id}, Name: {photospot.name}</h1>
+              <Button disabled={photospot.id === -1} onClick={()=>handleDelete(photospot.id)}>Delete</Button>
+              </div>
+          }) : <h1>no data yet</h1> 
+        }
+      </TabsContent>
+      <TabsContent value="id">
+      <Form {...searchByIdForm}>
+      <form onSubmit={searchByIdForm.handleSubmit(handleSearchById)} className="space-y-8">
+        <FormField
+          control={searchByIdForm.control}
+          name="searchId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="ID" {...field} />
+              </FormControl>
+              <FormDescription>
+               ID for photospot 
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Search</Button>
+        </form>
+        </Form>
+        {
+          photospotsById ? photospotsById.map(photospot=> {
+            return <div key={photospot.id} className="flex w-full max-w-sm items-center space-x-2">
+              <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={photospot.id}>ID: {photospot.id}, Name: {photospot.name}</h1>
+              <Button disabled={photospot.id === -1} onClick={()=>handleDelete(photospot.id)}>Delete</Button>
+              </div>
+          }) : <h1>no data yet</h1> 
+        }
+      </TabsContent>
+      <TabsContent value="location">
+      <Form {...searchByLocationForm}>
+      <form onSubmit={searchByLocationForm.handleSubmit(handleSearchByLocation)} className="space-y-8">
+        <FormField
+          control={searchByLocationForm.control}
+          name="searchLatitude"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Latitude</FormLabel>
+              <FormControl>
+                <Input placeholder="latitude" {...field} />
+              </FormControl>
+              <FormDescription>
+               Latitude for photospot 
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+         <FormField
+          control={searchByLocationForm.control}
+          name="searchLongitude"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Longitude</FormLabel>
+              <FormControl>
+                <Input placeholder="longitude" {...field} />
+              </FormControl>
+              <FormDescription>
+               Longitude for photospot 
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Search</Button>
+        </form>
+        </Form>
+        {
+          photospotsByLocation ? photospotsByLocation.map(photospot=> {
+            return <div key={photospot.id} className="flex w-full max-w-sm items-center space-x-2">
+              <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={photospot.id}>ID: {photospot.id}, Name: {photospot.name}</h1>
+              <Button disabled={photospot.id === -1} onClick={()=>handleDelete(photospot.id)}>Delete</Button>
+              </div>
+          }) : <h1>no data yet</h1> 
+        }
+      </TabsContent>
+      </Tabs>
           </CardContent>
           <CardFooter>
-            <Button>Search</Button>
           </CardFooter>
         </Card>
       </TabsContent>
@@ -535,68 +670,8 @@ export default function PhotoSpotTests(){
           </CardContent>
         </Card>
       </TabsContent>
-
     </Tabs>
    <PhotospotGrid photospots={photospots}/> 
-
-        {/* <form >
-          <div className="mb-6">
-            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photolist name:</label>
-            <input type="text" onChange={(e)=>setName(e.target.value)} id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="test" required/>
-          </div>
-          <div className="mb-6">
-            <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photolist description:</label>
-            <input type="text" onChange={(e)=>setDescription(e.target.value)} id="description" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required/>
-          </div>
-          <div className="mb-6">
-            <label htmlFor="photospots" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photospots:</label>
-            <input type="text" id="photospots"  onChange={(e)=>setUpdatePhotospots(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required/>
-          </div>
-          <button type="submit" onClick={(e)=>handleCreate(e)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-        </form>
-
-        <form >
-        <div className="mb-6">
-            <label htmlFor="id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photolist id:</label>
-            <input type="number" onChange={(e)=>setUpdateId(Number(e.target.value))} id="id" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="id" required/>
-          </div>
-          <div className="mb-6">
-            <label htmlFor="name2" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photolist name:</label>
-            <input type="text" onChange={(e)=>setUpdateName(e.target.value)} id="name2" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name" required/>
-          </div>
-          <div className="mb-6">
-            <label htmlFor="description2" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photolist description:</label>
-            <input type="text" onChange={(e)=>setUpdateDescription(e.target.value)} id="description2" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required/>
-          </div>
-          <div className="mb-6">
-            <label htmlFor="photospots2" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photospots:</label>
-            <input type="text" id="photospots2"  onChange={(e)=>setUpdatePhotospots2(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required/>
-          </div>
-          <button type="submit" onClick={(e)=>handleUpdate(e)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-        </form> 
-        {
-          photolistByNameResults && 
-          photolistByNameResults.map(photolistByNameInfo => {
-          return <h2 key={photolistByNameInfo.id}>photospot info: {JSON.stringify(photolistByNameInfo)}</h2>
-          }) 
-        }
-        <form>
-        <div className="mb-6">
-            <label htmlFor="searchByName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Search by name:</label>
-            <input type="string" onChange={(e)=>setPhotolistByName(e.target.value)} id="searchByName" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="search name" required/>
-          </div>
-          <button type="submit" onClick={(e)=>handleSearchByName(e)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-        </form>
-      {
-          photolistByIdInfo && <h2>photospot info: {JSON.stringify(photolistByIdInfo)}</h2>
-        }
-        <form>
-        <div className="mb-6">
-            <label htmlFor="searchById" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photolist id:</label>
-            <input type="number" onChange={(e)=>setPhotolistById(Number(e.target.value))} id="searchById" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="id" required/>
-          </div>
-          <button type="submit" onClick={(e)=>handleSearchById(e)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-        </form> */}
     </div>
     );
 }
