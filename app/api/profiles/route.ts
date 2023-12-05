@@ -1,19 +1,24 @@
+import { Database } from "@/types/supabase"
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic';
+export const bucket = "profile_pictures";
 
 export async function GET() {
+    //maybe only get your profile
     const cookieStore = cookies()
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
-    const res = await supabase.from('profiles').select('*');
-    console.log('res', res);
-    if(res.error){
-        console.log('error', res.error);
-        return NextResponse.json({error: res.error},{status: 500});
+    const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
+    //not sure if we need some other checks here
+    const {data, error} = await supabase.from('profiles').select('*').eq('private', false);
+    if(error) {
+        console.log('error', error);
+        return NextResponse.json({error: error},{status: 500});
     }
-    await new Promise(r => setTimeout(r, 2000));
-    return NextResponse.json(res.data, {status: 200})
-
+    data.map(profile => {
+        const { data : url_data} = supabase.storage.from(bucket).getPublicUrl(profile.id)
+        return {...profile, profile_pic_url: url_data.publicUrl }
+    });
+    return NextResponse.json(data,{status: 200});
 }

@@ -4,20 +4,22 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 export const dynamic = 'force-dynamic'
 
+//create test account with auth signup, and public profile account too 
+//check to see if user role is admin
 export async function POST(request: NextResponse) {
+    //upload user image too, figure out shape of preferences section
     console.log('creating');
     const cookieStore = cookies()
     const body = await request.json();
     console.log("body", body);
     const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
     //we really want to have create/update/delete to control this
-    const {data, error} = await supabase.from('profiles').insert(body).select('*');
+    const { error } = await supabase.rpc('create_test_user', {email: body.email, password: body.password});
     if(error){
         console.log('error', error);
         return NextResponse.json(error,{status: 500});
     }
-
-    return NextResponse.json(data[0], {status: 200})
+    return NextResponse.json({status: 200})
 }
 
 

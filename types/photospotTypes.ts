@@ -44,3 +44,12 @@ export type PhotospotInsert  = {
 export type PhotoGridInput = {
     photospots: Photospot[] | undefined
 }
+
+export type PublicProfile = {
+    id: number;
+    username: string;
+    private?: boolean;
+    role?: string;
+    theme?: string;
+    profile_pic_url?: string;
+}

@@ -25,7 +25,22 @@ export interface Database {
           photolist?: number
           photospot?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "photolist_photospots_photolist_fkey"
+            columns: ["photolist"]
+            isOneToOne: false
+            referencedRelation: "photolists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photolist_photospots_photospot_fkey"
+            columns: ["photospot"]
+            isOneToOne: false
+            referencedRelation: "photospots"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       photolist_reviews: {
         Row: {
@@ -79,6 +94,7 @@ export interface Database {
           description: string | null
           id: number
           name: string
+          private: boolean
         }
         Insert: {
           created_at?: string
@@ -86,6 +102,7 @@ export interface Database {
           description?: string | null
           id?: number
           name: string
+          private?: boolean
         }
         Update: {
           created_at?: string
@@ -93,6 +110,7 @@ export interface Database {
           description?: string | null
           id?: number
           name?: string
+          private?: boolean
         }
         Relationships: []
       }
@@ -146,67 +164,90 @@ export interface Database {
           created_at: string
           created_by: string
           description: string | null
-          draft: boolean | null
           id: number
           location: unknown | null
           name: string
           photo_paths: string[]
+          private: boolean | null
           tags: string[] | null
         }
         Insert: {
           created_at?: string
           created_by?: string
           description?: string | null
-          draft?: boolean | null
           id?: number
           location?: unknown | null
           name: string
           photo_paths: string[]
+          private?: boolean | null
           tags?: string[] | null
         }
         Update: {
           created_at?: string
           created_by?: string
           description?: string | null
-          draft?: boolean | null
           id?: number
           location?: unknown | null
           name?: string
           photo_paths?: string[]
+          private?: boolean | null
           tags?: string[] | null
         }
         Relationships: []
       }
       profiles: {
         Row: {
-          avatar_url: string | null
           created_at: string
-          id: string | null
-          preferences: Json | null
-          role: string | null
+          id: string
+          private: boolean
           username: string | null
         }
         Insert: {
-          avatar_url?: string | null
           created_at?: string
-          id?: string | null
-          preferences?: Json | null
-          role?: string | null
+          id: string
+          private?: boolean
           username?: string | null
         }
         Update: {
-          avatar_url?: string | null
           created_at?: string
-          id?: string | null
-          preferences?: Json | null
-          role?: string | null
+          id?: string
+          private?: boolean
           username?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "profiles_id_fkey"
             columns: ["id"]
-            isOneToOne: false
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      profiles_priv: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["db_roles"]
+          theme: Database["public"]["Enums"]["themes"]
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          role?: Database["public"]["Enums"]["db_roles"]
+          theme?: Database["public"]["Enums"]["themes"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["db_roles"]
+          theme?: Database["public"]["Enums"]["themes"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_priv_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -217,6 +258,17 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      create_test_user: {
+        Args: {
+          email: string
+          password: string
+        }
+        Returns: undefined
+      }
+      delete_current_user: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       delete_storage_object: {
         Args: {
           bucket: string
@@ -253,10 +305,91 @@ export interface Database {
       }
     }
     Enums: {
-      [_ in never]: never
+      db_roles: "user" | "admin"
+      themes: "dark" | "light" | "device"
     }
     CompositeTypes: {
       [_ in never]: never
     }
   }
 }
+
+export type Tables<
+  PublicTableNameOrOptions extends
+    | keyof (Database["public"]["Tables"] & Database["public"]["Views"])
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+        Database[PublicTableNameOrOptions["schema"]]["Views"])
+    : never = never
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : PublicTableNameOrOptions extends keyof (Database["public"]["Tables"] &
+      Database["public"]["Views"])
+  ? (Database["public"]["Tables"] &
+      Database["public"]["Views"])[PublicTableNameOrOptions] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : never
+
+export type TablesInsert<
+  PublicTableNameOrOptions extends
+    | keyof Database["public"]["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
+  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : never
+
+export type TablesUpdate<
+  PublicTableNameOrOptions extends
+    | keyof Database["public"]["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
+  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : never
+
+export type Enums<
+  PublicEnumNameOrOptions extends
+    | keyof Database["public"]["Enums"]
+    | { schema: keyof Database },
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+    : never = never
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
+  ? Database["public"]["Enums"][PublicEnumNameOrOptions]
+  : never

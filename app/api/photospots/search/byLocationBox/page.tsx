@@ -6,17 +6,18 @@ import { NextResponse } from "next/server";
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextResponse) {
+    console.log('looking for name on backend');
     const cookieStore = cookies()
     const body = await request.json();
-    console.log('body',body);
+    console.log('body', body);
     const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
-    //get photospots in a range of creation time, then sort
-    const {data, error} = await supabase.from('photospots').select("*").gte('created_at', body.start).lte('created_at',body.end).order('created_at', {ascending: body.ascending});
+    // const {data, error} = await supabase.rpc("nearby_photospots", { lat: body.lat, long: body.lng, }).lte('distance_meters', body.maxDistance);
+    const {data, error} = await supabase.rpc("photospots_in_view", { min_lat: body.min_lat, min_long: body.min_lng, max_lat: body.max_lat, max_long: body.max_lng,}).lte('dist_meters', body.maxDistance);
     if(error){
         console.log('error', error);
         return NextResponse.json({error: error},{status: 500});
     }
-    console.log('data',data);
+    console.log('return data', data);
     return NextResponse.json(data,{status: 200})
 }
 
