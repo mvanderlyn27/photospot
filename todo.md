@@ -42,6 +42,14 @@
 - improve error handeling/loggin in apis/frontend
 - fix search by location for photolists
 - layout better, cleaner types for use throughout the app 
+- Move a lot of db functions to db triggers
+    - delete photospot, and profile picture on delete of auth.row
+    - delete old photospots pictures on new entry
+- rewrite all route handler code to have as much parallelism as possible
+- need to update GET profiles route to only have access to public profiles via RLS/Functions
+- update trigger so users can't give themselves admin
+- also give admin more abilities 
+- properly enforce private user profiles
 # Bugs
 
 
