@@ -92,6 +92,7 @@ export interface Database {
           created_at: string
           created_by: string | null
           description: string | null
+          edited: boolean
           id: number
           name: string
           private: boolean
@@ -100,6 +101,7 @@ export interface Database {
           created_at?: string
           created_by?: string | null
           description?: string | null
+          edited?: boolean
           id?: number
           name: string
           private?: boolean
@@ -108,6 +110,7 @@ export interface Database {
           created_at?: string
           created_by?: string | null
           description?: string | null
+          edited?: boolean
           id?: number
           name?: string
           private?: boolean
@@ -164,6 +167,7 @@ export interface Database {
           created_at: string
           created_by: string
           description: string | null
+          edited: boolean
           id: number
           location: unknown | null
           name: string
@@ -175,6 +179,7 @@ export interface Database {
           created_at?: string
           created_by?: string
           description?: string | null
+          edited?: boolean
           id?: number
           location?: unknown | null
           name: string
@@ -186,6 +191,7 @@ export interface Database {
           created_at?: string
           created_by?: string
           description?: string | null
+          edited?: boolean
           id?: number
           location?: unknown | null
           name?: string
@@ -259,6 +265,14 @@ export interface Database {
     }
     Functions: {
       create_test_user: {
+        Args: {
+          email: string
+          password: string
+          metadata: Json
+        }
+        Returns: undefined
+      }
+      create_test_user_old: {
         Args: {
           email: string
           password: string

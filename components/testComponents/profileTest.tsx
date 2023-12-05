@@ -72,53 +72,27 @@ export default function ProfileTests(){
   const MAX_FILE_SIZE = 5242880; //5MB
   const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
   const createFormSchema = z.object({
-    name: z.string().min(2).max(50),
-    description: z.string(),
-    photospot_pictures : z
-    .custom<FileList>((val) => val instanceof FileList, "Required")
-    .refine((files) => files.length > 0, `Required`)
-    .refine((files) => files.length <= 5, `Maximum of 5 images are allowed.`)
-    .refine(
-      (files) =>
-        Array.from(files).every((file) => file.size <= MAX_FILE_SIZE),
-      `Each file size should be less than 5 MB.`
-    )
-    .refine(
-      (files) =>
-        Array.from(files).every((file) =>
-        ACCEPTED_IMAGE_TYPES.includes(file.type)
-        ),
-      "Only these types are allowed .jpg, .jpeg, .png and .webp"
-    ),
-    latitude: z.coerce.number().gt(-90, {message:"latitude is too small" }).lt(90, {message:"latitude is too big" }),
-    longitude: z.coerce.number().gt(-180, {message: "longitude is too small"}).lt(180, {message:"longitude is too big"}),
-    private: z.boolean().default(false).optional(),
+    email: z.string(),
+    password: z.string(),
+    username: z.string()
   })
-//   const createForm = useForm<z.infer<typeof createFormSchema>>({
-//     resolver: zodResolver(createFormSchema),
-//     defaultValues: {
-//       name: "",
-//       description: "",
-//       photospot_pictures: undefined,
-//       latitude: undefined,
-//       longitude: undefined,
-//       private: false
-//     },
-//     mode: 'onChange',
-//   });
+  const createForm = useForm<z.infer<typeof createFormSchema>>({
+    resolver: zodResolver(createFormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      username: undefined,
+    },
+    mode: 'onChange',
+  });
 
-//   const handleCreate = async (values: z.infer<typeof createFormSchema>) => {
-//     console.log('create new photospot',JSON.stringify(values));
-//     console.log('photos',values.photospot_pictures);
-//     let formData = new FormData();
-//     const location_str = `POINT(${values.latitude} ${values.longitude})`;
-//     let photospotInfo: any = { name: values.name, description: values?.description, location: location_str, private: values?.private, photo_paths: []} 
-//     formData.append("photospot_info",JSON.stringify(photospotInfo));
-//     formData.append("photospot_pictures",values.photospot_pictures[0]);
-//     photospotInfo.id = -1
-//     photospotInfo.photo_paths = [];    
-//     await refreshPhotospots(createPhotospotMutation(formData, profiles), createPhotospotOptions(photospotInfo, profiles));
-//   }
+  const handleCreate = async (values: z.infer<typeof createFormSchema>) => {
+    console.log('create new photospot',JSON.stringify(values));
+    const resp = await fetch('/api/profiles/createTestAccount', {method: 'POST', body: JSON.stringify(values)});
+    console.log('create test user resp: ',resp);
+    await refreshPublicProfile();
+    await refreshPrivateProfile();
+  }
 
 //   const updateFormSchema = z.object({
 //     updateId: z.coerce.number({required_error: "Please select a photospot to update via id"}),
@@ -288,8 +262,9 @@ export default function ProfileTests(){
           {
           profiles ? profiles.map(profile=> {
             return <div key={profile.id} className="flex w-full max-w-sm items-center space-x-2">
-              <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={profile.id}>ID: {profile.id}, Name: {profile.username}</h1>
-              </div>
+                <Image key={profile.id} width={100} height={100} src={profile.profile_pic_url ? profile.profile_pic_url : ""}  alt={profile.id ? profile.id+"" : "no pic"}/>
+                <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={profile.id}>ID: {profile.id}, Name: {profile.username}</h1>
+                </div>
           }) : <h1>no data yet</h1> 
         }
           </CardContent>
@@ -298,7 +273,7 @@ export default function ProfileTests(){
       <TabsContent value="privateProfile">
         <Card>
           <CardHeader>
-            <CardTitle className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">List of Public Users</CardTitle>
+            <CardTitle className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">My Porfile Info!</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
           {
@@ -311,7 +286,7 @@ export default function ProfileTests(){
           </CardContent>
         </Card>
       </TabsContent>
-      {/* <TabsContent value="create">
+      <TabsContent value="create">
        <Card>
           <CardHeader>
             <CardTitle>Create Photospot</CardTitle>
@@ -324,15 +299,15 @@ export default function ProfileTests(){
       <form onSubmit={createForm.handleSubmit(handleCreate)} className="space-y-8">
         <FormField
           control={createForm.control}
-          name="name"
+          name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="name" {...field} />
+                <Input placeholder="email" {...field} />
               </FormControl>
               <FormDescription>
-               Name for photospot 
+               Email for test user 
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -340,15 +315,15 @@ export default function ProfileTests(){
         />
          <FormField
           control={createForm.control}
-          name="description"
+          name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="why is it a good location?" {...field} />
+                <Input placeholder="password"  type="password" {...field} />
               </FormControl>
               <FormDescription>
-                Tells us a bit about the location
+               Test user's password 
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -356,64 +331,16 @@ export default function ProfileTests(){
         />
          <FormField
           control={createForm.control}
-          name="photospot_pictures"
-          render={({ field: {onChange}, ...field }) => (
-            <FormItem>
-              <FormLabel>Photos</FormLabel>
-              <FormControl>
-                <Input {...field} type="file" onChange={(e) => {onChange(e.target.files)}}/>
-              </FormControl>
-              <FormDescription>
-                Upload pictures from the spot
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-       
-         <FormField
-          control={createForm.control}
-          name="latitude"
+          name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Latitude</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input {...field} type="number" />
+                <Input placeholder="username" {...field} />
               </FormControl>
               <FormDescription>
-                should be between -180, 180
+               Enter username 
               </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-            <FormField
-          control={createForm.control}
-          name="longitude"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Longitude</FormLabel>
-              <FormControl>
-                <Input {...field} type="number"  />
-              </FormControl>
-              <FormDescription>
-                should be between -90,90
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-             <FormField
-          control={createForm.control}
-          name="private"
-          render={({ field }) => (
-            <FormItem className="flex items-center space-x-2">
-              <FormLabel htmlFor="private" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Private:
-              </FormLabel>
-              <FormControl>
-                <Checkbox checked={field.value} onCheckedChange={field.onChange}/>
-              </FormControl>
               <FormMessage />
             </FormItem>
           )}
@@ -424,7 +351,7 @@ export default function ProfileTests(){
           </CardContent>
         </Card>
       </TabsContent>
-      <TabsContent value="update">
+      {/* <TabsContent value="update">
       <Card>
           <CardHeader>
             <CardTitle>Update Photospots</CardTitle>

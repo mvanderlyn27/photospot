@@ -14,11 +14,21 @@ export async function POST(request: NextResponse) {
     console.log("body", body);
     const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
     //we really want to have create/update/delete to control this
-    const { error } = await supabase.rpc('create_test_user', {email: body.email, password: body.password});
+    // const { error } = await supabase.rpc('create_test_user', {email: body.email, password: body.password, metadata: {"username" : body.username }});
+    const { data, error } = await supabase.auth.signUp({
+        email:body.email,
+        password: body.password,
+        options: {
+            data: {
+                username: body.username
+            }
+        }
+    });
     if(error){
         console.log('error', error);
         return NextResponse.json(error,{status: 500});
     }
+    //update storage to have default avatar
     return NextResponse.json({status: 200})
 }
 

@@ -16,9 +16,10 @@ export async function GET() {
         console.log('error', error);
         return NextResponse.json({error: error},{status: 500});
     }
-    data.map(profile => {
+    const output = data.map(profile => {
         const { data : url_data} = supabase.storage.from(bucket).getPublicUrl(profile.id)
         return {...profile, profile_pic_url: url_data.publicUrl }
     });
-    return NextResponse.json(data,{status: 200});
+    console.log('data', output);
+    return NextResponse.json(output ,{status: 200});
 }
