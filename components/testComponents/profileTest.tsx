@@ -93,6 +93,13 @@ export default function ProfileTests(){
     await refreshPublicProfile();
     await refreshPrivateProfile();
   }
+  const handleCreateRandomUser = async () => {
+    console.log('creating random user');
+    const resp = await fetch('/api/profiles/createTestAccountRandom', {method: 'POST'});
+    console.log('create random test user resp: ',resp);
+    await refreshPublicProfile();
+  }
+  
 
 //   const updateFormSchema = z.object({
 //     updateId: z.coerce.number({required_error: "Please select a photospot to update via id"}),
@@ -168,9 +175,12 @@ export default function ProfileTests(){
 //     await refreshPhotospots(updatePhotospotMutation(formData, photospots), updatePhotospotOptions( photospotInfo, photospots));
 //   }
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async () => {
     // await refreshPhotospots(deletePhotospottMutation(id, profiles), deletePhotospotOptions(id, profiles));
-    console.log('delete');
+    const resp = await fetch('/api/profiles/delete', {method: 'POST'});
+    console.log('delete', resp);
+    //need a better way to do htis
+    location.reload();
   }
   
 //   const searchByIdFormSchema = z.object({
@@ -268,6 +278,9 @@ export default function ProfileTests(){
           }) : <h1>no data yet</h1> 
         }
           </CardContent>
+          <CardFooter>
+            <Button onClick={()=>handleCreateRandomUser()}>Create Random User</Button>
+          </CardFooter>
         </Card>
       </TabsContent>
       <TabsContent value="privateProfile">
@@ -736,14 +749,7 @@ export default function ProfileTests(){
             <CardTitle className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">Delete a user</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-          {
-          profiles ? profiles.map(profile=> {
-            return <div key={profile.id} className="flex w-full max-w-sm items-center space-x-2">
-              <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={profile.id}>ID: {profile.id}, Name: {profile.username}</h1>
-              <Button disabled={profile.id === -1} onClick={()=>handleDelete(profile.id)}>Delete</Button>
-              </div>
-          }) : <h1>no data yet</h1> 
-        }
+              <Button  onClick={()=>handleDelete()}>Delete</Button>
           </CardContent>
         </Card>
       </TabsContent>

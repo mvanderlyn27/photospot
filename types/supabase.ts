@@ -264,6 +264,10 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      create_random_user: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       create_test_user: {
         Args: {
           email: string
@@ -272,12 +276,13 @@ export interface Database {
         }
         Returns: undefined
       }
-      create_test_user_old: {
+      create_user_metadata: {
         Args: {
           email: string
           password: string
+          user_meta_data: Json
         }
-        Returns: undefined
+        Returns: string
       }
       delete_current_user: {
         Args: Record<PropertyKey, never>
@@ -289,6 +294,16 @@ export interface Database {
           object: string
         }
         Returns: Record<string, unknown>
+      }
+      generate_random_password: {
+        Args: {
+          length: number
+        }
+        Returns: string
+      }
+      get_random_user: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
       nearby_photospots: {
         Args: {

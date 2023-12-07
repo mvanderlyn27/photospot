@@ -20,6 +20,6 @@ export async function GET() {
         const { data : url_data} = supabase.storage.from(bucket).getPublicUrl(profile.id)
         return {...profile, profile_pic_url: url_data.publicUrl }
     });
-    console.log('data', output);
+    // console.log('data', output);
     return NextResponse.json(output ,{status: 200});
 }

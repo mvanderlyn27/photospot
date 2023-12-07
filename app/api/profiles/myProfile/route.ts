@@ -45,6 +45,6 @@ export async function GET() {
     });
     const { data: url_data } = supabase.storage.from(bucket).getPublicUrl(output.id)
     output = {...output, profile_pic_url: url_data.publicUrl }
-    console.log('out',output);
+    // console.log('out',output);
     return NextResponse.json(output,{status: 200});
 }
