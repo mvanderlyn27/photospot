@@ -1,11 +1,11 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic'
 const bucket = "photospot_pictures"
 
-export async function POST(request: NextResponse) {
+export async function POST(request: NextRequest) {
     console.log('deleting');
     //need to modify to remove the entry in the db too
     const cookieStore = cookies()

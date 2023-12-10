@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic'
 export async function POST(request: NextResponse) {
     const cookieStore = cookies()
     const body = await request.json();
+    console.log('searching by id',body.id);
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
     const {data, error} = await supabase.from('profiles').select('*').eq('id',body.id);
     if(error){

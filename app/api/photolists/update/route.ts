@@ -12,7 +12,7 @@ export async function POST(request: NextResponse) {
     console.log("body", body);
     const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
     //we really want to have create/update/delete to control this
-    const {data, error} = await supabase.from('photolists').update(body.photolist).eq('id',body.id).select('*');
+    const {data, error} = await supabase.from('photolists').update({...body.photolist, updated: true}).eq('id',body.id).select('*');
     if(error){
         console.log('error', error);
         return NextResponse.json(error,{status: 500});

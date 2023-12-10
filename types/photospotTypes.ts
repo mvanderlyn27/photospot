@@ -52,4 +52,6 @@ export type PublicProfile = {
     role?: string;
     theme?: string;
     profile_pic_url?: string;
+    email?: string;
+    password?: string;
 }

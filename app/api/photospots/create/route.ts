@@ -2,10 +2,10 @@ import { Photospot, PhotospotInput, PhotospotInsert } from "@/types/photospotTyp
 import { Database } from "@/types/supabase";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 export const dynamic = 'force-dynamic'
 const bucket = "photospot_pictures"
-export async function POST(request: NextResponse) {
+export async function POST(request: NextRequest) {
     //handle uploading the picture first, afterwards we can store the rest of the info
     //only handles a single photo per photospot right now
     const cookieStore = cookies()

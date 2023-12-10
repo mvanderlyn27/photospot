@@ -50,6 +50,10 @@
 - update trigger so users can't give themselves admin
 - also give admin more abilities 
 - properly enforce private user profiles
+- add better searching for all text searches, using some type of substring search 
+    - username
+    - photospot
+    - photolist
 # Bugs
 
 

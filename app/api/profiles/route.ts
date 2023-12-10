@@ -17,8 +17,8 @@ export async function GET() {
         return NextResponse.json({error: error},{status: 500});
     }
     const output = data.map(profile => {
-        const { data : url_data} = supabase.storage.from(bucket).getPublicUrl(profile.id)
-        return {...profile, profile_pic_url: url_data.publicUrl }
+        const profile_pic_url = supabase.storage.from(bucket).getPublicUrl(profile.id).data.publicUrl+'?t='+Date.now();
+        return {...profile, profile_pic_url: profile_pic_url }
     });
     // console.log('data', output);
     return NextResponse.json(output ,{status: 200});
