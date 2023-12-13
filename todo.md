@@ -54,6 +54,12 @@
     - username
     - photospot
     - photolist
+- need to update auth signup/login/signin/password reset/magic link to work better, janky rn
+- add admin edge functions for managing users/testing
+    - create random user
+    - create random review
+    - modify user/ ownership of diff db entities
+- add admin panel to app
 # Bugs
 
 
