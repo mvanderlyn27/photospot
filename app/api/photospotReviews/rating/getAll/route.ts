@@ -14,13 +14,14 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({error: 'No photospot_id  sent'},{status: 500});
     }
     console.log('getting all reviews of', body.photospot_id)
-    const {data, error }= await supabase.from('photospot_reviews').select('rating').eq('photospot_id', body.photospot_id);
+    const {data, error }= await supabase.from('photospot_rating_stats').select('*').eq('photospot_id', body.photospot_id);
     if(error){
         console.log('error', error);
         return NextResponse.json({error: error},{status: 500});
     }
     console.log('res', data);
-    const avg = data.reduce((partialSum, a) => partialSum + a.rating, 0)/data.length || 0;
-    return NextResponse.json(avg, {status: 200});
-
-}
+    
+    if(data.length <=0){
+        return NextResponse.json({},{status: 200});
+    }
+    return NextResponse.json(data[0], {status: 200});}

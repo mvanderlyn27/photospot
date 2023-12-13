@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
-
+const bucket = "profile_pictures";
 export async function POST(request: Request) {
   const requestUrl = new URL(request.url)
   const formData = await request.formData()
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   const username = String(formData.get('username'))
   const supabase = createRouteHandlerClient({ cookies })
   console.log('info',email, password);
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -32,7 +32,14 @@ export async function POST(request: Request) {
       }
     )
   }
-
+  if(data.user)
+  {
+    const { error: storagePicError } = await supabase.storage.from(bucket).copy('default.jpg', data.user.id );
+    if(storagePicError){
+        console.log('storage error', storagePicError);
+        return NextResponse.json(storagePicError,{status: 500});
+    }
+  }
   return NextResponse.redirect(
     `${requestUrl.origin}/login?message=Check email to continue sign in process`,
     {

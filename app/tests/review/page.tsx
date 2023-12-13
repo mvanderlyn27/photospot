@@ -21,7 +21,7 @@ export default async function Index() {
   return (
     <div className="w-full flex flex-col h-screen">
       <ModeToggle/>
-      <ReviewTests />
+      <ReviewTests user={session.user}/>
     </div>
   )
 }

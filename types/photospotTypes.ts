@@ -55,3 +55,16 @@ export type PublicProfile = {
     email?: string;
     password?: string;
 }
+export type Review = {
+    created_by: string;
+    photospot_id: number;
+    photo_paths?: string[];
+    rating?: number;
+    text?: string;
+    edited?: boolean;
+}
+export type RatingStat = {
+    id: number;
+    rating_count?: number;
+    rating_average?: number;
+}
