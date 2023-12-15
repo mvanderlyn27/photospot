@@ -5,6 +5,9 @@ export type Photolist = {
     id: number;
     name: string;
     photospots?: number[];
+    photo_paths: string[];
+    rating_average?: number;
+    rating_count?: number;
 }
 export type PhotolistInput = {
     created_at?: string; 
@@ -12,7 +15,6 @@ export type PhotolistInput = {
     description?: string;
     name: string;
 }
-
 export type PhotospotInput = {
     description?: string;
     name?: string;
@@ -55,9 +57,17 @@ export type PublicProfile = {
     email?: string;
     password?: string;
 }
-export type Review = {
+export type PhotospotReview = {
     created_by: string;
     photospot_id: number;
+    photo_paths?: string[];
+    rating?: number;
+    text?: string;
+    edited?: boolean;
+}
+export type PhotolistReview = {
+    created_by: string;
+    photolist_id: number;
     photo_paths?: string[];
     rating?: number;
     text?: string;

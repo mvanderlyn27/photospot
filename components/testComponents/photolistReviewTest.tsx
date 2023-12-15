@@ -1,6 +1,6 @@
 "use client"
 import useSWR from "swr";
-import {Photolist, PhotolistInput, Photospot, PublicProfile, RatingStat, Review} from "../../types/photospotTypes"
+import {Photolist, PhotolistInput, PhotolistReview, Photospot, PublicProfile, RatingStat} from "../../types/photospotTypes"
 import Loading from "../Loading";
 import { MouseEvent, useEffect, useState } from "react";
 import { PostgrestError, User } from "@supabase/supabase-js";
@@ -41,7 +41,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import PhotospotGrid from "../PhotoSpotGrid";
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -49,7 +48,7 @@ import { Checkbox } from "../ui/checkbox";
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { searchByPhotospot, searchByUser } from "@/app/api/photospotReviews/helpers/optimisticMutationHelpers";
+import { searchByPhotolist, searchByUser } from "@/app/api/photolistReviews/helpers/optimisticMutationHelpers";
 /*Things to test
     Create test user
     Update data
@@ -61,23 +60,23 @@ import { searchByPhotospot, searchByUser } from "@/app/api/photospotReviews/help
         - search by username
 */
 
-export default function ReviewTests({user}: {user:User}){
+export default function PhotolistReviewTests({user}: {user:User}){
 //GET USER INFO
 
 
   //STATE COMPONENT STATE
-  const { data: reviews, error, isLoading, mutate: refreshMyReviews} = useSWR<Review[], {error:PostgrestError, message:number}, any>("/api/photospotReviews/" , fetcher);
-  const { data: photospots, error: photospotError, isLoading: photospotLoading, mutate: refreshPhotospots } = useSWR<Photospot[], {error:PostgrestError, message:number}, any>("/api/photospots/" , fetcher);
-  const { data: reviewsByUser, trigger: searchReviewsByUser}: {data: Review[], trigger: any} = useSWRMutation('/api/photospotReviews/search/byUser', searchByUser);
-  const { data: reviewsByPhotospot, trigger: searchReviewsByPhotospot}: {data: Review[], trigger: any} = useSWRMutation('/api/photospotReviews/search/byPhotospot', searchByPhotospot);
-  const { data: averageRatingOfPhotospot, trigger: getRatingAverage}: {data: RatingStat, trigger: any} = useSWRMutation('/api/photospotReviews/rating/getAverage', searchByPhotospot);
-  const { data: ratingCountOfPhotospot, trigger: getRatingCount}: {data: RatingStat, trigger: any} = useSWRMutation('/api/photospotReviews/rating/getCount', searchByPhotospot);
+  const { data: reviews, error, isLoading, mutate: refreshMyReviews} = useSWR<PhotolistReview[], {error:PostgrestError, message:number}, any>("/api/photolistReviews/" , fetcher);
+  const { data: photolists, error: photolistError, isLoading: photolistLoading, mutate: refreshPhotolists } = useSWR<Photolist[], {error:PostgrestError, message:number}, any>("/api/photolists/" , fetcher);
+  const { data: reviewsByUser, trigger: searchReviewsByUser}: {data: PhotolistReview[], trigger: any} = useSWRMutation('/api/photolistReviews/search/byUser', searchByUser);
+  const { data: reviewsByPhotolist, trigger: searchReviewsByPhotolist}: {data: PhotolistReview[] | undefined, trigger: any} = useSWRMutation('/api/photolistReviews/search/byPhotolist', searchByPhotolist);
+  const { data: averageRatingOfPhotolist, trigger: getRatingAverage}: {data: RatingStat, trigger: any} = useSWRMutation('/api/photolistReviews/rating/getAverage', searchByPhotolist);
+  const { data: ratingCountOfPhotolist, trigger: getRatingCount}: {data: RatingStat, trigger: any} = useSWRMutation('/api/photolistReviews/rating/getCount', searchByPhotolist);
 
 //FORM VALIDATION SECTION
   const MAX_FILE_SIZE = 5242880; //5MB
   const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
   const createFormSchema = z.object({
-    photospot_id: z.coerce.number(),
+    photolist_id: z.coerce.number(),
     rating: z.coerce.number().gte(0).lte(5),
     text: z.string(),
     photos: z
@@ -100,7 +99,7 @@ export default function ReviewTests({user}: {user:User}){
   const createForm = useForm<z.infer<typeof createFormSchema>>({
     resolver: zodResolver(createFormSchema),
     defaultValues: {
-      photospot_id: undefined,
+      photolist_id: undefined,
       rating: undefined,
       text: undefined,
       photos: undefined
@@ -110,13 +109,13 @@ export default function ReviewTests({user}: {user:User}){
   const handleCreate = async (values: z.infer<typeof createFormSchema>) => {
     const formData = new FormData();
     const id = user.id;
-    const output: Review= {photospot_id:values.photospot_id, created_by: id, rating: values.rating, text: values.text};
+    const output: PhotolistReview= {photolist_id:values.photolist_id, created_by: id, rating: values.rating, text: values.text};
     formData.append('review_info', JSON.stringify(output));
     if(values.photos){
         formData.append('timestamp', Date.now().toString());
         formData.append('photos', values.photos[0]);
     }
-    const resp = await fetch('/api/photospotReviews/create', {method: 'POST', body: formData});
+    const resp = await fetch('/api/photolistReviews/create', {method: 'POST', body: formData});
     await refreshMyReviews();
   }
 //   const handleCreateRandomReview = async () => {
@@ -125,7 +124,7 @@ export default function ReviewTests({user}: {user:User}){
 //   }
 
 const updateFormSchema = z.object({
-    photospot_id: z.coerce.number(),
+    photolist_id: z.coerce.number(),
     rating: z.coerce.number().gte(0).lte(5).optional(),
     text: z.string().optional(),
     photos: z
@@ -148,7 +147,7 @@ const updateFormSchema = z.object({
 const updateForm = useForm<z.infer<typeof updateFormSchema>>({
 resolver: zodResolver(updateFormSchema),
 defaultValues: {
-    photospot_id: undefined,
+    photolist_id: undefined,
     rating: undefined,
     text: undefined,
     photos: undefined
@@ -169,7 +168,7 @@ const handleUpdate = async (values: z.infer<typeof updateFormSchema>) => {
     //need to update this properly
     console.log('update review',JSON.stringify(values));
     let formData = new FormData();
-    formData.append('photospot_id', values.photospot_id.toString());
+    formData.append('photolist_id', values.photolist_id.toString());
     formData.append('timestamp', Date.now().toString());
     //create object with entries for update
     let reviewInfo: any = getReviewUpdateInfo(values);
@@ -179,7 +178,7 @@ const handleUpdate = async (values: z.infer<typeof updateFormSchema>) => {
     if(values.photos){
         formData.append("review_pictures",values.photos[0]);
     }
-    const updateResponse = await fetch('/api/photospotReviews/update', {method: 'POST', body: formData});
+    const updateResponse = await fetch('/api/photolistReviews/update', {method: 'POST', body: formData});
 
     if(!updateResponse.ok){
         console.log('error updating profile', updateResponse);
@@ -187,24 +186,24 @@ const handleUpdate = async (values: z.infer<typeof updateFormSchema>) => {
     console.log('successful update',updateResponse);
     await refreshMyReviews();
 }
-const handleDelete = async (photospot_id: number) => {
-// await refreshPhotospots(deletePhotospottMutation(id, profiles), deletePhotospotOptions(id, profiles));
-const resp = await fetch('/api/photospotReviews/delete', {method: 'POST', body: JSON.stringify({photospot_id: photospot_id})});
+const handleDelete = async (photolist_id: number) => {
+// await refreshphotolists(deletephotolisttMutation(id, profiles), deletephotolistOptions(id, profiles));
+const resp = await fetch('/api/photolistReviews/delete', {method: 'POST', body: JSON.stringify({photolist_id: photolist_id})});
 await refreshMyReviews();
 }
-const searchByPhotospotFormSchema = z.object({
-    photospot_id: z.coerce.number({required_error: "Please select a photospot to lookup reviews of via id"}),
+const searchByPhotolistFormSchema = z.object({
+    photolist_id: z.coerce.number({required_error: "Please select a photolist to lookup reviews of via id"}),
 });
-const searchByPhotospotForm = useForm<z.infer<typeof searchByPhotospotFormSchema>>({
-resolver: zodResolver(searchByPhotospotFormSchema),
+const searchByPhotolistForm = useForm<z.infer<typeof searchByPhotolistFormSchema>>({
+resolver: zodResolver(searchByPhotolistFormSchema),
 defaultValues: {
-    photospot_id: undefined,
+    photolist_id: undefined,
 },
 mode: 'onChange',
 });  
-const handleSearchByPhotospot = async (values: z.infer<typeof searchByPhotospotFormSchema>) => {
-    console.log('searching by photospot', values.photospot_id);
-    await searchReviewsByPhotospot({photospot_id: values.photospot_id});
+const handleSearchByPhotolist = async (values: z.infer<typeof searchByPhotolistFormSchema>) => {
+    console.log('searching by photolist', values.photolist_id);
+    await searchReviewsByPhotolist({photolist_id: values.photolist_id});
 }
 
 const searchByUserFormSchema = z.object({
@@ -223,37 +222,37 @@ const handleSearchByUser = async (values: z.infer<typeof searchByUserFormSchema>
 }
 
 const getRatingAverageFormSchema = z.object({
-    photospot_id: z.coerce.number({required_error: "Please select a photospot to lookup reviews of via id"}),
+    photolist_id: z.coerce.number({required_error: "Please select a photolist to lookup reviews of via id"}),
 });
 const getRatingAverageForm = useForm<z.infer<typeof getRatingAverageFormSchema>>({
 resolver: zodResolver(getRatingAverageFormSchema),
 defaultValues: {
-    photospot_id: undefined,
+    photolist_id: undefined,
 },
 mode: 'onChange',
 });  
 const handleGetAverageRating = async (values: z.infer<typeof getRatingAverageFormSchema>) => {
-    console.log('getting average for photospot', values.photospot_id);
-    await getRatingAverage({photospot_id: values.photospot_id});
+    console.log('getting average for photolist', values.photolist_id);
+    await getRatingAverage({photolist_id: values.photolist_id});
 } 
 const getRatingCountFormSchema = z.object({
-    photospot_id: z.coerce.number({required_error: "Please select a photospot to lookup reviews of via id"}),
+    photolist_id: z.coerce.number({required_error: "Please select a photolist to lookup reviews of via id"}),
 });
 const getRatingCountForm = useForm<z.infer<typeof getRatingCountFormSchema>>({
 resolver: zodResolver(getRatingCountFormSchema),
 defaultValues: {
-    photospot_id: undefined,
+    photolist_id: undefined,
 },
 mode: 'onChange',
 });  
 const handlegetRatingCount = async (values: z.infer<typeof getRatingCountFormSchema>) => {
-    console.log('getting count for  photospot', values.photospot_id);
-    await getRatingCount({photospot_id: values.photospot_id});
+    console.log('getting count for  photolist', values.photolist_id);
+    await getRatingCount({photolist_id: values.photolist_id});
 }
-if(error || photospotError){
-    return <h1>error: {error?.message} photospot error: {photospotError?.message}</h1>
+if(error || photolistError){
+    return <h1>error: {error?.message} photolist error: {photolistError?.message}</h1>
 }
-if(isLoading || photospotLoading){
+if(isLoading || photolistLoading){
     return <Loading/>
 }
 return(
@@ -270,14 +269,14 @@ return(
     <TabsContent value="list">
     <Card>
         <CardHeader>
-        <CardTitle className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">List of Public Users</CardTitle>
+        <CardTitle className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">Your Reviews</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
         {
         reviews ? reviews.map(review=> {
-        return <div key={review.created_by+' '+review.photospot_id} className="flex w-full max-w-sm items-center space-x-2">
-            <Image key={review.created_by+' '+review.photospot_id} width={100} height={100} src={review.photo_paths ? review.photo_paths[0] : ""}  alt={review.created_by ? review.created_by+"" : "no pic"}/>
-            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={review.created_by+' '+review.photospot_id}>created by: {review.created_by}, content: {review.text}</h1>
+        return <div key={review.created_by+' '+review.photolist_id} className="flex w-full max-w-sm items-center space-x-2">
+            <Image key={review.created_by+' '+review.photolist_id} width={100} height={100} src={review.photo_paths ? review.photo_paths[0] : ""}  alt={review.created_by ? review.created_by+"" : "no pic"}/>
+            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={review.created_by+' '+review.photolist_id}>created by: {review.created_by}, content: {review.text}</h1>
             </div>
         }) : <h1>no data yet</h1> 
     }
@@ -289,9 +288,9 @@ return(
     <TabsContent value="create">
     <Card>
         <CardHeader>
-        <CardTitle>Create Photospot</CardTitle>
+        <CardTitle>Create photolist</CardTitle>
         <CardDescription>
-            Add a new photospot with info below 
+            Add a new photolist with info below 
         </CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
@@ -299,10 +298,10 @@ return(
     <form onSubmit={createForm.handleSubmit(handleCreate)} className="space-y-8">
     <FormField
         control={createForm.control}
-        name="photospot_id"
+        name="photolist_id"
         render={({ field }) => (
         <FormItem>
-            <FormLabel>Photospot ID</FormLabel>
+            <FormLabel>photolist ID</FormLabel>
             <FormControl>
             <Input placeholder="id" type="number" {...field} />
             </FormControl>
@@ -365,11 +364,11 @@ return(
         <Button type="submit">Create</Button>
         </form>
         </Form>
-        <h1>Photospots:</h1>
+        <h1>photolists:</h1>
         {
-        photospots ? photospots.map(photospot=> {
-        return <div key={photospot.id} className="flex w-full max-w-sm items-center space-x-2">
-            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={photospot.id}>Id: {photospot.id}, Name: {photospot.name}</h1>
+        photolists ? photolists.map(photolist=> {
+        return <div key={photolist.id} className="flex w-full max-w-sm items-center space-x-2">
+            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={photolist.id}>Id: {photolist.id}, Name: {photolist.name}</h1>
             </div>
         }) : <h1>no data yet</h1> 
         }
@@ -389,7 +388,7 @@ return(
     <form onSubmit={updateForm.handleSubmit(handleUpdate)} className="space-y-8">
     <FormField
         control={updateForm.control}
-        name="photospot_id"
+        name="photolist_id"
         render={({ field }) => (
         <FormItem>
             <FormLabel>ID:</FormLabel>
@@ -397,7 +396,7 @@ return(
             <Input placeholder="ID" {...field} />
             </FormControl>
             <FormDescription>
-                white photospot's review to update
+                white photolist's review to update
             </FormDescription>
             <FormMessage />
         </FormItem>
@@ -455,8 +454,8 @@ return(
         </form>
         {
         reviews ? reviews.map(review=> {
-        return <div key={review.created_by+' '+review.photospot_id} className="flex w-full max-w-sm items-center space-x-2">
-            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={review.created_by+' '+review.photospot_id}>review info:  {JSON.stringify(review)} </h1>
+        return <div key={review.created_by+' '+review.photolist_id} className="flex w-full max-w-sm items-center space-x-2">
+            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={review.created_by+' '+review.photolist_id}>review info:  {JSON.stringify(review)} </h1>
             </div>
         }) : <h1>no data yet</h1> 
     }
@@ -467,18 +466,18 @@ return(
     <TabsContent value="search">
     <Card>
         <CardHeader>
-        <CardTitle>Search for a photospot here</CardTitle>
+        <CardTitle>Search for a photolist here</CardTitle>
         <CardDescription>
-            Search for photospots using the filters below
+            Search for photolists using the filters below
         </CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
-        <Tabs defaultValue="username" className="w-[600px]">
+        <Tabs defaultValue="user" className="w-[600px]">
     <TabsList className="grid w-full grid-cols-2">
-    <TabsTrigger value="username">Username</TabsTrigger>
+    <TabsTrigger value="user">By User</TabsTrigger>
     <TabsTrigger value="id">By ID</TabsTrigger>
     </TabsList> 
-    <TabsContent value="username">
+    <TabsContent value="user">
     <Form {...searchByUserForm}>
     <form onSubmit={searchByUserForm.handleSubmit(handleSearchByUser)} className="space-y-8">
     <FormField
@@ -502,18 +501,18 @@ return(
     </Form>
     {
         reviewsByUser ? reviewsByUser.map(review=> {
-        return <div key={review.created_by+' '+review.photospot_id} className="flex w-full max-w-sm items-center space-x-2">
-            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={review.created_by+' '+review.photospot_id}>Created By: {review.created_by}, Content: {review.text}, Rating: {review.rating}</h1>
+        return <div key={review.created_by+' '+review.photolist_id} className="flex w-full max-w-sm items-center space-x-2">
+            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={review.created_by+' '+review.photolist_id}>Created By: {review.created_by}, Content: {review.text}, Rating: {review.rating}</h1>
             </div>
         }) : <h1>no data yet</h1> 
     }
     </TabsContent>
     <TabsContent value="id">
-    <Form {...searchByPhotospotForm}>
-    <form onSubmit={searchByPhotospotForm.handleSubmit(handleSearchByPhotospot)} className="space-y-8">
+    <Form {...searchByPhotolistForm}>
+    <form onSubmit={searchByPhotolistForm.handleSubmit(handleSearchByPhotolist)} className="space-y-8">
     <FormField
-        control={searchByPhotospotForm.control}
-        name="photospot_id"
+        control={searchByPhotolistForm.control}
+        name="photolist_id"
         render={({ field }) => (
         <FormItem>
             <FormLabel>Name</FormLabel>
@@ -521,7 +520,7 @@ return(
             <Input placeholder="ID" {...field} />
             </FormControl>
             <FormDescription>
-            ID for photospot 
+            ID for photolist 
             </FormDescription>
             <FormMessage />
         </FormItem>
@@ -531,9 +530,9 @@ return(
     </form>
     </Form>
     {
-       reviewsByPhotospot ? reviewsByPhotospot.map(review=> {
-        return <div key={review.created_by+' '+review.photospot_id} className="flex w-full max-w-sm items-center space-x-2">
-            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={review.created_by+' '+review.photospot_id}>Created By: {review.created_by}, Content: {review.text}, Rating: {review.rating}</h1>
+       reviewsByPhotolist ? reviewsByPhotolist.map(review=> {
+        return <div key={review.created_by+' '+review.photolist_id} className="flex w-full max-w-sm items-center space-x-2">
+            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={review.created_by+' '+review.photolist_id}>Created By: {review.created_by}, Content: {review.text}, Rating: {review.rating}</h1>
             </div>
         }) : <h1>no data yet</h1> 
     }
@@ -547,7 +546,7 @@ return(
     <TabsContent value="rating">
     <Card>
         <CardHeader>
-        <CardTitle>Find ratings for photospots based on photspot id</CardTitle>
+        <CardTitle>Find ratings for photolists based on photspot id</CardTitle>
         <CardDescription>
            Find stats using the options below 
         </CardDescription>
@@ -563,15 +562,15 @@ return(
     <form onSubmit={getRatingAverageForm.handleSubmit(handleGetAverageRating)} className="space-y-8">
     <FormField
         control={getRatingAverageForm.control}
-        name="photospot_id"
+        name="photolist_id"
         render={({ field }) => (
         <FormItem>
-            <FormLabel>Photospot ID:</FormLabel>
+            <FormLabel>photolist ID:</FormLabel>
             <FormControl>
-            <Input placeholder="photospot id" {...field} />
+            <Input placeholder="photolist id" {...field} />
             </FormControl>
             <FormDescription>
-            select photospot ID to use 
+            select photolist ID to use 
             </FormDescription>
             <FormMessage />
         </FormItem>
@@ -581,8 +580,8 @@ return(
     </form>
     </Form>
     {
-        averageRatingOfPhotospot?.rating_average ?  
-            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight">Average:{averageRatingOfPhotospot.rating_average }</h1>
+        averageRatingOfPhotolist?.rating_average ?  
+            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight">Average:{averageRatingOfPhotolist.rating_average }</h1>
          : <h1>no reviews yet</h1> 
     }
     </TabsContent>
@@ -591,7 +590,7 @@ return(
     <form onSubmit={getRatingCountForm.handleSubmit(handlegetRatingCount)} className="space-y-8">
     <FormField
         control={getRatingCountForm.control}
-        name="photospot_id"
+        name="photolist_id"
         render={({ field }) => (
         <FormItem>
             <FormLabel>Name</FormLabel>
@@ -599,7 +598,7 @@ return(
             <Input placeholder="ID" {...field} />
             </FormControl>
             <FormDescription>
-            ID for photospot 
+            ID for photolist 
             </FormDescription>
             <FormMessage />
         </FormItem>
@@ -609,8 +608,8 @@ return(
     </form>
     </Form>
     {
-        ratingCountOfPhotospot?.rating_count ?  
-            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight">count:{ratingCountOfPhotospot.rating_count}</h1>
+        ratingCountOfPhotolist?.rating_count ?  
+            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight">count:{ratingCountOfPhotolist.rating_count}</h1>
          : <h1>no reviews yet</h1> 
     }
     </TabsContent>
@@ -628,10 +627,10 @@ return(
         <CardContent className="space-y-2">
         {
         reviews ? reviews.map(review=> {
-        return <div key={review.created_by+' '+review.photospot_id} className="flex w-full max-w-sm items-center space-x-2">
-            <Image key={review.created_by+' '+review.photospot_id} width={100} height={100} src={review.photo_paths ? review.photo_paths[0] : ""}  alt={review.created_by ? review.created_by+"" : "no pic"}/>
-            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={review.created_by+' '+review.photospot_id}>created by: {review.created_by}, content: {review.text}</h1>
-            <Button  onClick={()=>handleDelete(review.photospot_id)}>Delete</Button>
+        return <div key={review.created_by+' '+review.photolist_id} className="flex w-full max-w-sm items-center space-x-2">
+            <Image key={review.created_by+' '+review.photolist_id} width={100} height={100} src={review.photo_paths ? review.photo_paths[0] : ""}  alt={review.created_by ? review.created_by+"" : "no pic"}/>
+            <h1 className="scroll-m-20 text-xl font-semibold tracking-tight" key={review.created_by+' '+review.photolist_id}>created by: {review.created_by}, content: {review.text}</h1>
+            <Button  onClick={()=>handleDelete(review.photolist_id)}>Delete</Button>
             </div>
         }) : <h1>no data yet</h1> 
     }

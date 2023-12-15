@@ -4,21 +4,19 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic'
-
-//works, but could be improved to include fuzzy searching, and similar sounding search
-// links on how to do so 
-// https://www.postgresql.org/docs/9.1/fuzzystrmatch.html
-// https://supabase.com/docs/guides/database/full-text-search
+//sort by avg rating, default to descending
 export async function POST(request: NextResponse) {
     const cookieStore = cookies()
     const body = await request.json();
+    console.log('body',body);
     const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
-    const {data, error} = await supabase.from('photolists').select("*").textSearch('name',body.name); //defaults to websearch and english
+    //get photospots in a range of creation time, then sort
+    const {data, error} = await supabase.from('photolist_rating_stats').select("*").order('rating_average', {ascending: body.ascending ? body.ascending : false, nullsFirst: false});
     if(error){
         console.log('error', error);
         return NextResponse.json({error: error},{status: 500});
     }
-    console.log('search: ', body.name, 'res: ', data);
+    console.log('data',data);
     return NextResponse.json(data,{status: 200})
 }
 

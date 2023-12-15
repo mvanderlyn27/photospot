@@ -13,7 +13,7 @@ export async function POST(request: NextResponse) {
     const cookieStore = cookies()
     const body = await request.json();
     const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
-    const {data, error} = await supabase.from('photolists').select("*").textSearch('name',body.name); //defaults to websearch and english
+    const {data, error} = await supabase.from('photolists').select("*").eq('id',body.id); //defaults to websearch and english
     if(error){
         console.log('error', error);
         return NextResponse.json({error: error},{status: 500});

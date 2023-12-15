@@ -5,23 +5,21 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic'
 //select via a user_id
-export async function GET(request: NextRequest) {
-    console.log('getting users responses');
+export async function POST(request: NextRequest) {
     const cookieStore = cookies()
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
-    const { data: { user } } = await supabase.auth.getUser();
-    if(!user?.id){
+    const body = await request.json();
+    if(!body.user_id){
         console.log('error no user id sent');
         return NextResponse.json({error: 'No user id sent'},{status: 500});
     }
-    // console.log('getting all reviews of', user.id)
-    const res = await supabase.from('photolist_reviews').select('*').eq('created_by', user.id);
-    // console.log('res', res);
+    console.log('getting all reviews of', body.user_id)
+    const res = await supabase.from('photolist_reviews').select('*').eq('created_by', body.user_id);
+    console.log('res', res);
     if(res.error){
         console.log('error', res.error);
         return NextResponse.json({error: res.error},{status: 500});
     }
-    // console.log('users responses: ',res.data);
     return NextResponse.json(res.data, {status: 200})
 
 }

@@ -1,7 +1,7 @@
 //need to have test page to test all the db functions 
 //figure out later a better way to unit test functions 
 
-import ReviewTests from '@/components/testComponents/reviewTest';
+import PhotolistReviewTests from '@/components/testComponents/photolistReviewTest';
 import { ModeToggle } from '@/components/themeToggle';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
@@ -21,7 +21,7 @@ export default async function Index() {
   return (
     <div className="w-full flex flex-col h-screen">
       <ModeToggle/>
-      <ReviewTests user={session.user}/>
+      <PhotolistReviewTests user={session.user}/>
     </div>
   )
 }

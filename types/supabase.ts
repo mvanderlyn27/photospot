@@ -30,8 +30,22 @@ export interface Database {
             foreignKeyName: "photolist_photospots_photolist_fkey"
             columns: ["photolist"]
             isOneToOne: false
+            referencedRelation: "photolist_rating_stats"
+            referencedColumns: ["photolist_id"]
+          },
+          {
+            foreignKeyName: "photolist_photospots_photolist_fkey"
+            columns: ["photolist"]
+            isOneToOne: false
             referencedRelation: "photolists"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photolist_photospots_photospot_fkey"
+            columns: ["photospot"]
+            isOneToOne: false
+            referencedRelation: "photospot_rating_stats"
+            referencedColumns: ["photospot_id"]
           },
           {
             foreignKeyName: "photolist_photospots_photospot_fkey"
@@ -46,28 +60,28 @@ export interface Database {
         Row: {
           created_at: string
           created_by: string
-          id: number
+          edited: boolean
           photo_paths: string[] | null
-          rating: number | null
-          review_target: number
+          photolist_id: number
+          rating: number
           text: string | null
         }
         Insert: {
           created_at?: string
           created_by?: string
-          id?: number
+          edited?: boolean
           photo_paths?: string[] | null
-          rating?: number | null
-          review_target: number
+          photolist_id: number
+          rating: number
           text?: string | null
         }
         Update: {
           created_at?: string
           created_by?: string
-          id?: number
+          edited?: boolean
           photo_paths?: string[] | null
-          rating?: number | null
-          review_target?: number
+          photolist_id?: number
+          rating?: number
           text?: string | null
         }
         Relationships: [
@@ -79,10 +93,17 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "photolist_reviews_review_target_fkey"
-            columns: ["review_target"]
+            foreignKeyName: "photolist_reviews_photolist_id_fkey"
+            columns: ["photolist_id"]
             isOneToOne: false
-            referencedRelation: "photospots"
+            referencedRelation: "photolist_rating_stats"
+            referencedColumns: ["photolist_id"]
+          },
+          {
+            foreignKeyName: "photolist_reviews_photolist_id_fkey"
+            columns: ["photolist_id"]
+            isOneToOne: false
+            referencedRelation: "photolists"
             referencedColumns: ["id"]
           }
         ]
@@ -95,6 +116,7 @@ export interface Database {
           edited: boolean
           id: number
           name: string
+          photo_paths: string[] | null
           private: boolean
         }
         Insert: {
@@ -104,6 +126,7 @@ export interface Database {
           edited?: boolean
           id?: number
           name: string
+          photo_paths?: string[] | null
           private?: boolean
         }
         Update: {
@@ -113,6 +136,7 @@ export interface Database {
           edited?: boolean
           id?: number
           name?: string
+          photo_paths?: string[] | null
           private?: boolean
         }
         Relationships: []
@@ -121,28 +145,28 @@ export interface Database {
         Row: {
           created_at: string
           created_by: string
-          id: number
+          edited: boolean
           photo_paths: string[] | null
-          rating: number | null
-          review_target: number | null
+          photospot_id: number
+          rating: number
           text: string | null
         }
         Insert: {
           created_at?: string
           created_by?: string
-          id?: number
+          edited?: boolean
           photo_paths?: string[] | null
-          rating?: number | null
-          review_target?: number | null
+          photospot_id: number
+          rating: number
           text?: string | null
         }
         Update: {
           created_at?: string
           created_by?: string
-          id?: number
+          edited?: boolean
           photo_paths?: string[] | null
-          rating?: number | null
-          review_target?: number | null
+          photospot_id?: number
+          rating?: number
           text?: string | null
         }
         Relationships: [
@@ -154,8 +178,15 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "photospot_reviews_review_target_fkey"
-            columns: ["review_target"]
+            foreignKeyName: "photospot_reviews_photospot_id_fkey"
+            columns: ["photospot_id"]
+            isOneToOne: false
+            referencedRelation: "photospot_rating_stats"
+            referencedColumns: ["photospot_id"]
+          },
+          {
+            foreignKeyName: "photospot_reviews_photospot_id_fkey"
+            columns: ["photospot_id"]
             isOneToOne: false
             referencedRelation: "photospots"
             referencedColumns: ["id"]
@@ -261,7 +292,22 @@ export interface Database {
       }
     }
     Views: {
-      [_ in never]: never
+      photolist_rating_stats: {
+        Row: {
+          photolist_id: number | null
+          rating_average: number | null
+          rating_count: number | null
+        }
+        Relationships: []
+      }
+      photospot_rating_stats: {
+        Row: {
+          photospot_id: number | null
+          rating_average: number | null
+          rating_count: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       create_random_user: {

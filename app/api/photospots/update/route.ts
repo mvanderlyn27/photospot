@@ -13,7 +13,7 @@ export async function POST(request: NextResponse) {
     if(photospot_id != null && (photos || photospot_info_raw)) {
         const cookieStore = cookies()
         const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
-        let photospot_data: any= {updated: true}
+        let photospot_data: any= {edited: true}
         let public_url = undefined; 
         if(photos!= null){
             const { error: storageError }= await supabase.storage.from(bucket).upload(String(photospot_id), photos, {upsert: true});

@@ -26,6 +26,7 @@
     - users profile page for viewing/updating user details
 - photobooks (photolist?)
     - allow users to curate list of photospots 
+- Update search to be one route that adds all filters into one query 
 
 
 # features needed still for MVP
