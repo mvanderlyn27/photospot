@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({error: 'No photospot_id  sent'},{status: 500});
     }
     console.log('getting all reviews of', body.photolist_id)
-    const {data, error }= await supabase.from('photolist_rating_stats').select('*').eq('photolist_id', body.photolist_id);
+    const {data, error }= await supabase.from('photolist_rating_stats').select('*').eq('id', body.photolist_id);
     if(error){
         console.log('error', error);
         return NextResponse.json({error: error},{status: 500});
