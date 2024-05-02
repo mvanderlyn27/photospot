@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import Messages from './messages'
 
+import { login, signup } from './actions'
 export default function Login() {
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
@@ -25,50 +25,37 @@ export default function Login() {
         Back
       </Link>
 
-      <form
-        className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-        action="/auth/sign-in"
-        method="post"
-      >
-        <label className="text-md" htmlFor="username">
-          Username
-        </label>
-        <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
-          name="username"
-          placeholder="cool username"
-          required
-        />
-        <label className="text-md" htmlFor="email">
-          Email
-        </label>
-        <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
-          name="email"
-          placeholder="you@example.com"
-          required
-        />
-        <label className="text-md" htmlFor="password">
-          Password
-        </label>
-        <input
+      <form>
+        <label htmlFor="email">Email:</label>
+        <input id="email" name="email" type="email" className="rounded-md px-4 py-2 bg-inherit border mb-6" required />
+
+        <label htmlFor="password">Password:</label>
+        <input id="password" name="password" type="password" className="rounded-md px-4 py-2 bg-inherit border mb-6" required />
+        <Link
+          href="/forgotPassword"
+          className="underline cursor-pointerunderline text-blue-601 hover:text-blue-800 visited:text-purple-600"
+        >forgot password</Link>
+        <button formAction={login} className="bg-zinc-950 rounded px-4 py-2 text-white mb-2">Log in</button>
+        <button formAction={signup} className="bg-zinc-950 rounded px-4 py-2 text-white mb-2">Sign up</button>
+      </form>
+    </div >
+  )
+}
+
+/*
+ <input
           className="rounded-md px-4 py-2 bg-inherit border mb-6"
           type="password"
           name="password"
           placeholder="••••••••"
           required
         />
+<Link
+          href="/forgotPassword"
+          className="underline cursor-pointerunderline text-blue-601 hover:text-blue-800 visited:text-purple-600"
+        > forgot password</Link>
+
         <button className="bg-zinc-950 rounded px-4 py-2 text-white mb-2">
           Sign In
         </button>
-        <button
-          formAction="/auth/sign-up"
-          className="border border-gray-700 rounded px-4 py-2 text-black mb-2"
-        >
-          Sign Up
-        </button>
-        <Messages />
-      </form>
-    </div>
-  )
-}
+*/

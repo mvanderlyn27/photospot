@@ -62,7 +62,11 @@
     - modify user/ ownership of diff db entities
 - add admin panel to app
 # Bugs
-
+- need to finish fixing login to use the supabase/ssr library, to enable login/logout/signup/password update/ email confirmation
+    - rn just have login/logout, no email confirmation, or 
+    - https://www.mailinator.com/v4/public/inboxes.jsp?to=12012665909 <- use for testing emails
+    - fix login page aesthetics, and functionality, figure out last link for the reset link to work properly
+- fix local dev url env variable setting: https://supabase.com/docs/guides/auth/concepts/redirect-urls#vercel-preview-urls, updated, but need to test for password change redirect, need to update env var on supabase side still to use redirectTo instead of siteurl 
 
 
 
@@ -87,7 +91,8 @@ add shadows for photospots, see if you're photospot will be in shadow when you w
     - social media part, finding other photographers near you, seeing their pics, sharing yours
     - planning photography shoots for professionals
     - mainly the "photo trip" planning, focusing on either traveling somewhere, or exploring your own city, multiple locations, focusing more on the photo trip, than just the one location
-
+- Add ability to track when doing a photolist tour, keep track of photos you're trying to take, and whats next, where to go
+- focus more on the type of photo you want to take, figure out how to seperate planning taking a specific type of photo, vs going to a photospot
 
 # Intended audiance
 - pro photographers?

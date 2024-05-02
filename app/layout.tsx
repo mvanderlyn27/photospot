@@ -28,7 +28,7 @@ export default function RootLayout({
         <main className="min-h-screen bg-background flex flex-col items-center">
         <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="light"
             enableSystem
             disableTransitionOnChange
           >
