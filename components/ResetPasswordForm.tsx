@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link";
 import { resetPassword } from '@/app/resetPassword/actions';
-export default async function ResetPasswordForm() {
+export default function ResetPasswordForm() {
     /*    
     should add in validation, and make prettier 
     */
