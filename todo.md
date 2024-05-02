@@ -67,7 +67,10 @@
     - https://www.mailinator.com/v4/public/inboxes.jsp?to=12012665909 <- use for testing emails
     - fix login page aesthetics, and functionality, figure out last link for the reset link to work properly
 - fix local dev url env variable setting: https://supabase.com/docs/guides/auth/concepts/redirect-urls#vercel-preview-urls, updated, but need to test for password change redirect, need to update env var on supabase side still to use redirectTo instead of siteurl 
-
+- test the local vs prod env vars in vercel
+- fix issues pushing to prod in vercel rn
+- update screens to have basic functionality for photospots
+- update homepage to look betterlogout
 
 
 
