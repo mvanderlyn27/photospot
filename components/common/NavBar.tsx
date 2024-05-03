@@ -1,15 +1,10 @@
 import Link from "next/link";
 import LogoutButton from "../auth/LogoutButton";
 import { Button } from '@/components/ui/button';
-import { createClient } from '@/utils/supabase/server'
 
-export default async function NavBar() {
+export default function NavBar({ user }: { user: any }) {
     //get user logged in, render navbar
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser()
     const username = user?.user_metadata?.username
-    // const pathname = usePathname()
-    console.log(user);
     return (
         <nav className="w-full flex justify-center h-16">
             <div className="w-full  flex justify-between items-center p-3 pl-10 pr-10 text-foreground">

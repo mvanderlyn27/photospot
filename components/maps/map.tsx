@@ -13,7 +13,7 @@ export default function Map() {
                     zoom: 13
                 }}
                 style={{ flex: '1 1 0' }}
-                mapStyle="mapbox://styles/mvanderlyn27/clc8gyohu000114pl9hy6zzdt/draft"
+                mapStyle="mapbox://styles/mvanderlyn27/clc8gyohu000114pl9hy6zzdt"
                 mapboxAccessToken={mapBoxToken}
             >
                 <GeolocateControl position="top-left" />

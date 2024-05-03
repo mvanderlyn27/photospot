@@ -17,7 +17,7 @@ export default async function Index() {
             fill
             src="https://vkfbzrfveygdqsqyiggk.supabase.co/storage/v1/object/public/website_pictures/4knyc.jpg?t=2024-05-03T00%3A03%3A32.909Z"
             alt="Title Pic"
-            objectFit="cover"
+            style={{ objectFit: "cover" }}
             className="rounded-lg"
           />
         </div>

@@ -3,6 +3,7 @@ import { Inter as FontSans } from "next/font/google"
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/common/theme-provider"
 import NavBar from '@/components/common/NavBar'
+import { createClient } from '@/utils/supabase/server'
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -15,11 +16,14 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser()
   return (
     <html lang="en">
       <body className={cn(
@@ -33,7 +37,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <NavBar />
+            <NavBar user={user} />
             {children}
           </ThemeProvider>
         </main>
