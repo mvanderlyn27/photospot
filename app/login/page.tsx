@@ -105,8 +105,8 @@ export default function Login() {
         </svg>{' '}
         Back
       </Link>
-      <Tabs defaultValue="signin" className="w-[400px]">
-        <TabsList className="grid w-full grid-cols-2">
+      <Tabs defaultValue="signin" className="w-[400px] ">
+        <TabsList className="grid w-full grid-cols-2 text-foreground background">
           <TabsTrigger value="signin">Sign In</TabsTrigger>
           <TabsTrigger value="signup">Sign Up</TabsTrigger>
         </TabsList>
@@ -114,8 +114,7 @@ export default function Login() {
         <TabsContent value="signin">
           <Card className="w-[400px]">
             <CardHeader>
-              <CardTitle>Create project</CardTitle>
-              <CardDescription>Deploy your new project in one-click.</CardDescription>
+              <CardTitle>Sign in to your account</CardTitle>
             </CardHeader>
             <CardContent>
               <Form {...signinForm}>
@@ -156,7 +155,7 @@ export default function Login() {
 
 
                   <CardFooter className="flex justify-center">
-                    <Button type="submit">Log in</Button>
+                    <Button type="submit">Sign In</Button>
                   </CardFooter>
                 </form>
               </Form>
@@ -166,8 +165,7 @@ export default function Login() {
         <TabsContent value="signup">
           <Card className="w-[400px]">
             <CardHeader>
-              <CardTitle>Create project</CardTitle>
-              <CardDescription>Deploy your new project in one-click.</CardDescription>
+              <CardTitle>Sign up for an account</CardTitle>
             </CardHeader>
             <CardContent>
               <Form {...signupForm}>

@@ -33,12 +33,13 @@
 - 
 # Code Improvement
 - Most important
-- Update/fix server actions for all profile/photospot things
-- add ability to create photospots, and view a map of photospots
-- make all screens beautiful
-- setup email service so I don't get rate limited on user signup
-    - need to look into smtp providers mayeb smtp2go
-    - reenable email on account creation after this
+    - Update/fix server actions for all profile/photospot things
+    - add ability to create photospots, and view a map of photospots
+    - fix page loading so theres no flash between routing, maybe don't use links, or theres something else needed to not have the nav bar flash between page routes (https://stackoverflow.com/questions/55624695/loading-screen-on-next-js-page-transition)
+    - make all screens beautiful
+    - setup email service so I don't get rate limited on user signup
+        - need to look into smtp providers mayeb smtp2go
+        - reenable email on account creation after this
 - For later
     - better photospot searching
     - photospot rating

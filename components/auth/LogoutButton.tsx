@@ -1,10 +1,11 @@
 import { logout } from '@/app/serverActions/auth/logout';
+import { Button } from '../ui/button';
 export default function LogoutButton() {
   return (
     <form action={logout} method="post">
-      <button className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
+      <Button variant="outline">
         Logout
-      </button>
+      </Button>
     </form>
   )
 }
