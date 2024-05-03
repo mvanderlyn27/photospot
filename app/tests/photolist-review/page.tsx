@@ -2,7 +2,7 @@
 //figure out later a better way to unit test functions 
 
 import PhotolistReviewTests from '@/components/testComponents/photolistReviewTest';
-import { ModeToggle } from '@/components/themeToggle';
+import { ModeToggle } from '@/components/common/themeToggle';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -14,14 +14,14 @@ export default async function Index() {
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  
+
   if (!session) {
     redirect("/login");
   }
   return (
     <div className="w-full flex flex-col h-screen">
-      <ModeToggle/>
-      <PhotolistReviewTests user={session.user}/>
+      <ModeToggle />
+      <PhotolistReviewTests user={session.user} />
     </div>
   )
 }

@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
  
+/*
+good colors:
+#FF934F - warm orange that goes well with background
+  - good for markers
+#6A8EAE - map water
+#57A773 - green on map
+
+*/
 @layer base {
   :root {
     /* --background: 0 0% 100%; */

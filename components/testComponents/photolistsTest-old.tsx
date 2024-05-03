@@ -1,7 +1,7 @@
 "use client"
 import useSWR from "swr";
 import { Photolist, PhotolistInput, Photospot } from "../../types/photospotTypes"
-import Loading from "../Loading";
+import Loading from "../common/Loading";
 import { MouseEvent, useEffect, useState } from "react";
 import { PostgrestError } from "@supabase/supabase-js";
 // import { createPhotolistMutation, createPhotolistOptions, deletePhotolistMutation, deletePhotolistOptions, updatePhotolistMutation, updatePhotolistOptions, searchById, searchByName, getPhotolistsPhotospots } from "../../app/api/photolists/helpers/optimisticMutationHelpers";

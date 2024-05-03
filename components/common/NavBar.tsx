@@ -13,7 +13,10 @@ export default async function NavBar() {
     return (
         <nav className="w-full flex justify-center h-16">
             <div className="w-full  flex justify-between items-center p-3 pl-10 pr-10 text-foreground">
-                <h3 className="text-3xl font-semibold ">PhotoSpot</h3>
+                <Link href="/">
+                    <h3 className="text-3xl font-semibold ">PhotoSpot</h3>
+                </Link>
+
                 {user ? (
                     <div className="flex items-center gap-4">
                         Hey, <b>{username ? username : user.email}!</b>
