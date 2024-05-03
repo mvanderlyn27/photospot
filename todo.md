@@ -32,45 +32,46 @@
 # features needed still for MVP
 - 
 # Code Improvement
-- Add trigger to photospot table on deletes to also delete its picture from storage 
-- Add new function and trigger to delete user from auth table upon deleting user profile
-- ADD REVIEW RATING FUNCTIONALITY for photospots and photolists
-- ADD ability to upload photo for user profile
-- ADD proper migration for supabase dbs, for local testing
-    - need to have multiple env for db, so we're not working against prod data
-- Add better unit testing/ e2e 
-    - rn using a test page to do testing, not super comprehensive
-- improve error handeling/loggin in apis/frontend
-- fix search by location for photolists
-- layout better, cleaner types for use throughout the app 
-- Move a lot of db functions to db triggers
-    - delete photospot, and profile picture on delete of auth.row
-    - delete old photospots pictures on new entry
-- rewrite all route handler code to have as much parallelism as possible
-- need to update GET profiles route to only have access to public profiles via RLS/Functions
-- update trigger so users can't give themselves admin
-- also give admin more abilities 
-- properly enforce private user profiles
-- add better searching for all text searches, using some type of substring search 
-    - username
-    - photospot
-    - photolist
-- need to update auth signup/login/signin/password reset/magic link to work better, janky rn
-- add admin edge functions for managing users/testing
-    - create random user
-    - create random review
-    - modify user/ ownership of diff db entities
-- add admin panel to app
-# Bugs
-- need to finish fixing login to use the supabase/ssr library, to enable login/logout/signup/password update/ email confirmation
-    - rn just have login/logout, no email confirmation, or 
-    - https://www.mailinator.com/v4/public/inboxes.jsp?to=12012665909 <- use for testing emails
-    - fix login page aesthetics, and functionality, figure out last link for the reset link to work properly
-- fix local dev url env variable setting: https://supabase.com/docs/guides/auth/concepts/redirect-urls#vercel-preview-urls, updated, but need to test for password change redirect, need to update env var on supabase side still to use redirectTo instead of siteurl 
-- test the local vs prod env vars in vercel
-- fix issues pushing to prod in vercel rn
-- update screens to have basic functionality for photospots
-- update homepage to look betterlogout
+- Most important
+- Update/fix server actions for all profile/photospot things
+- add ability to create photospots, and view a map of photospots
+- make all screens beautiful
+- setup email service so I don't get rate limited on user signup
+    - need to look into smtp providers mayeb smtp2go
+    - reenable email on account creation after this
+- For later
+    - better photospot searching
+    - photospot rating
+    - Add trigger to photospot table on deletes to also delete its picture from storage 
+    - Add new function and trigger to delete user from auth table upon deleting user profile
+    - ADD REVIEW RATING FUNCTIONALITY for photospots and photolists
+    - ADD ability to upload photo for user profile
+    - ADD proper migration for supabase dbs, for local testing
+        - need to have multiple env for db, so we're not working against prod data
+    - Add better unit testing/ e2e 
+        - rn using a test page to do testing, not super comprehensive
+    - improve error handeling/loggin in apis/frontend
+    - fix search by location for photolists
+    - layout better, cleaner types for use throughout the app 
+    - Move a lot of db functions to db triggers
+        - delete photospot, and profile picture on delete of auth.row
+        - delete old photospots pictures on new entry
+    - rewrite all route handler code to have as much parallelism as possible
+    - need to update GET profiles route to only have access to public profiles via RLS/Functions
+    - update trigger so users can't give themselves admin
+    - also give admin more abilities 
+    - properly enforce private user profiles
+    - add better searching for all text searches, using some type of substring search 
+        - username
+        - photospot
+        - photolist
+    - need to update auth signup/login/signin/password reset/magic link to work better, janky rn
+    - add admin edge functions for managing users/testing
+        - create random user
+        - create random review
+        - modify user/ ownership of diff db entities
+    - add admin panel to app
+# Bugs 
 
 
 

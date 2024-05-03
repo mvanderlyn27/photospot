@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link";
-import { resetPassword } from '@/app/resetPassword/actions';
+import { resetPassword } from '@/app/serverActions/auth/resetPassword';
 export default function ResetPasswordForm() {
     /*    
     should add in validation, and make prettier 
