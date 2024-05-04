@@ -40,7 +40,9 @@
     - setup email service so I don't get rate limited on user signup
         - need to look into smtp providers mayeb smtp2go
         - reenable email on account creation after this
+    Geolocation for searching a location when creating a photospot
 - For later
+    - would be cool to have photospot view rotate slowly around a point
     - better photospot searching
     - photospot rating
     - Add trigger to photospot table on deletes to also delete its picture from storage 
@@ -73,8 +75,9 @@
         - modify user/ ownership of diff db entities
     - add admin panel to app
 # Bugs 
-
-
+- create photospot page, reseting the form doesn't clear the file input
+- having the watched photos lags the thing out, rn commenting it out 
+- updating location on the left bar is kind of broken, text breaks it, and can't enter text over 2 digits
 
 # Future Ideas
 - realtime for reviews? 
