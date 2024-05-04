@@ -12,15 +12,15 @@ export default function CreatePage() {
                     longitude: -73.961321,
                     latitude: 40.766676,
     */
-    const [location, setLocation] = useState({ lat: 40.766676, lng: -73.961321 });
+    const [location, setLocation] = useState();
     console.log('parent loc', location)
     return (
         <div className="h-[calc(100vh-64px)] w-screen">
             <div className="absolute top-[64px] left-0 w-96 max-h-[calc(100vh-64px)] pl-4 pt-4 z-50">
-                <LeftWindow location={location} setLocation={setLocation} />
+                <LeftWindow location={location ? location : null} setLocation={setLocation} />
             </div>
             <div className="h-full w-full">
-                <Map location={location} setLocation={setLocation} />
+                <Map location={location ? location : null} setLocation={setLocation} />
             </div>
         </div>
 

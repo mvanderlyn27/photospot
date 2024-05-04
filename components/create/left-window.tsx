@@ -24,7 +24,7 @@ const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 export const createPhotospotSchema = z.object({
     //should add some better requirements for the location
-    location: z.string(),
+    location_name: z.string().optional(),
     name: z.string().min(3, {
         message: "name must be atleast 3 letters",
     }),
@@ -47,32 +47,37 @@ export const createPhotospotSchema = z.object({
         )
 })
 
-export default function LeftWindow({ location, setLocation }: { location: { lat: number, lng: number }, setLocation: any }) {
+export default function LeftWindow({ location, setLocation }: { location: { lat: number, lng: number } | null, setLocation: any }) {
 
     const [photos, setPhotos] = useState<FileList | null>(null)
     const createPhotospotForm = useForm<z.infer<typeof createPhotospotSchema>>({
         resolver: zodResolver(createPhotospotSchema),
         defaultValues: {
-            location: '',
+            location_name: '',
             name: "",
             description: "",
             photos: null
         },
     })
-    useEffect(() => {
-        if (location) {
-            createPhotospotForm.setValue("location", `${round(location.lat, 5)} ${round(location.lng, 5)}`);
-        }
-    })
 
     const onCreate = (data: z.infer<typeof createPhotospotSchema>) => {
-        createPhotospot(data, location);
+        //need to ensure a location when submitting form 
+        if (location) {
+            createPhotospot(data, location);
+        }
+        else {
+            console.log('setting error');
+            createPhotospotForm.setError('location_name', { message: 'Please select a location on the map, or search here' });
+        }
     }
     const clearForm = () => {
         //need to figure out how to properly clear the photos section
-        createPhotospotForm.reset()
-        setPhotos(null);
         setLocation(null);
+        setPhotos(null);
+        createPhotospotForm.reset()
+    }
+    const searchLocation = (query: string) => {
+        console.log('search location', query);
     }
     //need some states to control this comp
     // want to be able to search a location, select it to create
@@ -90,12 +95,12 @@ export default function LeftWindow({ location, setLocation }: { location: { lat:
                     <CardContent className="flex-1 overflow-auto mb-4">
                         <FormField
                             control={createPhotospotForm.control}
-                            name="location"
-                            render={({ field }) => (
+                            name="location_name"
+                            render={({ field: { onChange }, ...field }) => (
                                 <FormItem>
-                                    <FormLabel>Location</FormLabel>
+                                    <FormLabel>Location {location ? `(${round(location.lat, 5)},${round(location.lng, 5)})` : ''}</FormLabel>
                                     <FormControl>
-                                        <Input onChangeCapture={(e) => setLocation({ lat: Number(e.currentTarget.value.split(' ')[0]), lng: Number(e.currentTarget.value.split(' ')[1]) })} type="text" placeholder="" {...field} />
+                                        <Input onChange={(e) => searchLocation(e.target.value)} type="text" placeholder="" {...field} />
                                     </FormControl>
                                     <FormDescription>
                                         Either type a location, or click on the map

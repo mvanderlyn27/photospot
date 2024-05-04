@@ -43,7 +43,11 @@
     - Need to fix the create function to be clean, and take in the info properly
     - Geolocation for searching a location when creating a photospot
 - For later
-    - would be cool to have photospot view rotate slowly around a point
+    - map improvements
+        - maybe see about entering a specific lat/lng when creating
+        - would be cool to have photospot view rotate slowly around a point
+        - should be able to animate light changing throughout the day using mapref.setProperty
+        - figure out what map settings to reduce lag and look the prettiest
     - better photospot searching
     - photospot rating
     - Add trigger to photospot table on deletes to also delete its picture from storage 
