@@ -40,7 +40,8 @@
     - setup email service so I don't get rate limited on user signup
         - need to look into smtp providers mayeb smtp2go
         - reenable email on account creation after this
-    Geolocation for searching a location when creating a photospot
+    - Need to fix the create function to be clean, and take in the info properly
+    - Geolocation for searching a location when creating a photospot
 - For later
     - would be cool to have photospot view rotate slowly around a point
     - better photospot searching

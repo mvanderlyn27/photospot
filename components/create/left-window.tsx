@@ -13,6 +13,7 @@ import Link from "next/link";
 import PhotoUploadGrid from "../common/PhotoUploadGrid";
 import { useEffect, useState } from "react";
 import { round } from "@/utils/common/math";
+import createPhotospot from "@/app/serverActions/photospots/create";
 // main behaviors are clicking on a photospot, or not, if one's clicked, this will display info on them, and let you click a button to go to photospot page
 // otherwise display the default create form
 // if you click back from the photospot view, bring you back to a reset form 
@@ -21,7 +22,7 @@ import { round } from "@/utils/common/math";
 
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-const createPhotospotSchema = z.object({
+export const createPhotospotSchema = z.object({
     //should add some better requirements for the location
     location: z.string(),
     name: z.string().min(3, {
@@ -29,9 +30,9 @@ const createPhotospotSchema = z.object({
     }),
     description: z.string().optional(),
     //tags for later
-    photos: z.custom<FileList | null>((val) => val instanceof FileList, "Required")
+    photos: z.custom<FileList | null>((val) => val instanceof FileList, "Please upload a picture")
         .refine((files) => files ? files.length > 0 : false, `Required`)
-        .refine((files) => files ? files.length <= 5 : true, `Maximum of 5 images are allowed.`)
+        .refine((files) => files ? files.length <= 4 : true, `Maximum of 4 images are allowed.`)
         .refine(
             (files) =>
                 files ? Array.from(files).every((file) => file.size <= MAX_FILE_SIZE) : true,
@@ -43,7 +44,7 @@ const createPhotospotSchema = z.object({
                     ACCEPTED_IMAGE_TYPES.includes(file.type)
                 ) : true,
             "Only these types are allowed .jpg, .jpeg, .png and .webp"
-        ).optional(),
+        )
 })
 
 export default function LeftWindow({ location, setLocation }: { location: { lat: number, lng: number }, setLocation: any }) {
@@ -53,7 +54,6 @@ export default function LeftWindow({ location, setLocation }: { location: { lat:
         resolver: zodResolver(createPhotospotSchema),
         defaultValues: {
             location: '',
-            // location: '',
             name: "",
             description: "",
             photos: null
@@ -66,31 +66,28 @@ export default function LeftWindow({ location, setLocation }: { location: { lat:
     })
 
     const onCreate = (data: z.infer<typeof createPhotospotSchema>) => {
-        console.log('create', data);
+        createPhotospot(data, location);
     }
     const clearForm = () => {
-        //need to figure out how to properly clear the location and photos section
+        //need to figure out how to properly clear the photos section
         createPhotospotForm.reset()
         setPhotos(null);
         setLocation(null);
-
-
     }
-    console.log('leftbar location', location);
     //need some states to control this comp
     // want to be able to search a location, select it to create
     // 2nd view
 
     //need to get the overflow for the image section working properly here too
     return (
-        <Card className="w-full flex flex-col max-h-[calc(100vh-64px-2rem)]">
-            <CardHeader className="flex-none">
-                <CardTitle>Create Photospot</CardTitle>
-                <CardDescription>Search for a location below, or click on map to place a marker</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-1 overflow-auto mb-4">
-                <Form {...createPhotospotForm}>
-                    <form onSubmit={createPhotospotForm.handleSubmit(onCreate)} className="space-y-4">
+        <Card className=" ">
+            <Form {...createPhotospotForm}>
+                <form onSubmit={createPhotospotForm.handleSubmit(onCreate)} className=" w-full flex flex-col max-h-[calc(100vh-64px-2rem)]">
+                    <CardHeader className="flex-none">
+                        <CardTitle>Create Photospot</CardTitle>
+                        <CardDescription>Search for a location below, or click on map to place a marker</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex-1 overflow-auto mb-4">
                         <FormField
                             control={createPhotospotForm.control}
                             name="location"
@@ -152,17 +149,16 @@ export default function LeftWindow({ location, setLocation }: { location: { lat:
                                 </FormItem>
                             )}
                         />
-                    </form>
-                </Form>
-                {/* <PhotoUploadGrid photos={photos} /> */}
-            </CardContent>
-            {/* make this part on top of the form, and have the rest of the form scroll */}
-            <CardFooter className="flex-none">
-                <div className="w-full flex flex-row gap-8 justify-center">
-                    <Button variant="outline" onClick={clearForm}>Reset</Button>
-                    <Button type="submit">Create</Button>
-                </div>
-            </CardFooter>
-        </Card>
+                    </CardContent>
+                    {/* <PhotoUploadGrid photos={photos} /> */}
+                    <CardFooter className="flex-none">
+                        <div className="w-full flex flex-row gap-8 justify-center">
+                            <Button variant="outline" onClick={(e) => { e.preventDefault(); clearForm() }}>Reset</Button>
+                            <Button type="submit">Create</Button>
+                        </div>
+                    </CardFooter>
+                </form>
+            </Form>
+        </Card >
     )
 }
