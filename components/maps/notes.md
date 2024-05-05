@@ -1,0 +1,1 @@
+- may want to add a map-provider at a higher level so we can re-use maps, and pass the context easier

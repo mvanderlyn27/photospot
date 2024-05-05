@@ -48,6 +48,7 @@
         - would be cool to have photospot view rotate slowly around a point
         - should be able to animate light changing throughout the day using mapref.setProperty
         - figure out what map settings to reduce lag and look the prettiest
+        - look into re-use map, and adding the markers back in on page load
     - better photospot searching
     - photospot rating
     - Add trigger to photospot table on deletes to also delete its picture from storage 
@@ -83,6 +84,7 @@
 - create photospot page, reseting the form doesn't clear the file input
 - having the watched photos lags the thing out, rn commenting it out 
 - updating location on the left bar is kind of broken, text breaks it, and can't enter text over 2 digits
+- marker disappears on creation of photospot
 
 # Future Ideas
 - realtime for reviews? 

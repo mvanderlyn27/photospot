@@ -14,6 +14,8 @@ import PhotoUploadGrid from "../common/PhotoUploadGrid";
 import { useEffect, useState } from "react";
 import { round } from "@/utils/common/math";
 import createPhotospot from "@/app/serverActions/photospots/create";
+import Loading from "../common/Loading";
+import { Photospot } from "@/types/photospotTypes";
 // main behaviors are clicking on a photospot, or not, if one's clicked, this will display info on them, and let you click a button to go to photospot page
 // otherwise display the default create form
 // if you click back from the photospot view, bring you back to a reset form 
@@ -47,9 +49,9 @@ export const createPhotospotSchema = z.object({
         )
 })
 
-export default function LeftWindow({ location, setLocation }: { location: { lat: number, lng: number } | null, setLocation: any }) {
+export default function LeftWindow({ location, setLocation, viewingPhotospot, setViewingPhotospot, refreshPhotospots }: { location: { lat: number, lng: number } | null, setLocation: any, viewingPhotospot: boolean, setViewingPhotospot: any, refreshPhotospots: any }) {
+    const [loading, setLoading] = useState(false)
 
-    const [photos, setPhotos] = useState<FileList | null>(null)
     const createPhotospotForm = useForm<z.infer<typeof createPhotospotSchema>>({
         resolver: zodResolver(createPhotospotSchema),
         defaultValues: {
@@ -60,10 +62,20 @@ export default function LeftWindow({ location, setLocation }: { location: { lat:
         },
     })
 
-    const onCreate = (data: z.infer<typeof createPhotospotSchema>) => {
+    const onCreate = async (data: z.infer<typeof createPhotospotSchema>) => {
         //need to ensure a location when submitting form 
-        if (location) {
-            createPhotospot(data, location);
+        if (location && data.photos) {
+            let photos_form = new FormData();
+            let i = 0
+            Array.from(data.photos).forEach((photo) => {
+                photos_form.append(`photospot_pictures`, photo);
+                i += 1;
+            })
+            setLoading(true);
+            await Promise.all([createPhotospot(data, location, photos_form), refreshPhotospots()]);
+            setViewingPhotospot(true);
+            clearForm();
+            setLoading(false);
         }
         else {
             console.log('setting error');
@@ -73,7 +85,6 @@ export default function LeftWindow({ location, setLocation }: { location: { lat:
     const clearForm = () => {
         //need to figure out how to properly clear the photos section
         setLocation(null);
-        setPhotos(null);
         createPhotospotForm.reset()
     }
     const searchLocation = (query: string) => {
@@ -87,18 +98,19 @@ export default function LeftWindow({ location, setLocation }: { location: { lat:
     return (
         <Card className=" ">
             <Form {...createPhotospotForm}>
-                <form onSubmit={createPhotospotForm.handleSubmit(onCreate)} className=" w-full flex flex-col max-h-[calc(100vh-64px-2rem)]">
+                <form onSubmit={createPhotospotForm.handleSubmit(onCreate)} className=" w-full flex flex-col -h-[calc(100vh-64px-2rem)]">
                     <CardHeader className="flex-none">
                         <CardTitle>Create Photospot</CardTitle>
                         <CardDescription>Search for a location below, or click on map to place a marker</CardDescription>
                     </CardHeader>
-                    <CardContent className="flex-1 overflow-auto mb-4">
+
+                    <CardContent className={`flex-1 overflow-auto mb-4 ${loading ? 'hidden' : ''}`}>
                         <FormField
                             control={createPhotospotForm.control}
                             name="location_name"
                             render={({ field: { onChange }, ...field }) => (
                                 <FormItem>
-                                    <FormLabel>Location {location ? `(${round(location.lat, 5)},${round(location.lng, 5)})` : ''}</FormLabel>
+                                    <FormLabel>Location {location ? `(${round(location.lat, 2)},${round(location.lng, 2)})` : ''}</FormLabel>
                                     <FormControl>
                                         <Input onChange={(e) => searchLocation(e.target.value)} type="text" placeholder="" {...field} />
                                     </FormControl>
@@ -145,7 +157,7 @@ export default function LeftWindow({ location, setLocation }: { location: { lat:
                                 <FormItem>
                                     <FormLabel>Photos</FormLabel>
                                     <FormControl>
-                                        <Input {...field} type="file" multiple={true} onChange={(e) => { setPhotos(e.target.files); onChange(e.target.files); }} />
+                                        <Input {...field} type="file" multiple={true} onChange={(e) => { onChange(e.target.files); }} />
                                     </FormControl>
                                     <FormDescription>
                                         Upload 1 or more cool photos from the spot
@@ -156,6 +168,12 @@ export default function LeftWindow({ location, setLocation }: { location: { lat:
                         />
                     </CardContent>
                     {/* <PhotoUploadGrid photos={photos} /> */}
+
+
+                    <div className={`pb-4 ${loading ? '' : 'hidden'}`}>
+                        <Loading />
+                    </div>
+
                     <CardFooter className="flex-none">
                         <div className="w-full flex flex-row gap-8 justify-center">
                             <Button variant="outline" onClick={(e) => { e.preventDefault(); clearForm() }}>Reset</Button>

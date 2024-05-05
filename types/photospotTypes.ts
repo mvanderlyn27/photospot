@@ -10,7 +10,7 @@ export type Photolist = {
     rating_count?: number;
 }
 export type PhotolistInput = {
-    created_at?: string; 
+    created_at?: string;
     created_by?: string;
     description?: string;
     name: string;
@@ -23,7 +23,7 @@ export type PhotospotInput = {
     photo_paths?: string[];
 }
 
-export type Photospot  = {
+export type Photospot = {
     created_at?: string;
     created_by?: string;
     description?: string;
@@ -31,11 +31,13 @@ export type Photospot  = {
     name: string;
     photo_paths: string[];
     location: string;
+    lat: number;
+    lng: number;
     draft?: boolean;
     photo_placeholder?: "blur" | "empty" | `data:image/${string}` | undefined;
 }
 
-export type PhotospotInsert  = {
+export type PhotospotInsert = {
     description?: string;
     name: string;
     photo_paths: string[];
