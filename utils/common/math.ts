@@ -1,5 +1,5 @@
 export const round = (num: number, digits: number | null) => {
-    if (!digits) {
+    if (digits === null || num === undefined) {
         return num;
     }
     return Number(num.toFixed(digits));

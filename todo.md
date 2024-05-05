@@ -49,6 +49,7 @@
         - should be able to animate light changing throughout the day using mapref.setProperty
         - figure out what map settings to reduce lag and look the prettiest
         - look into re-use map, and adding the markers back in on page load
+        - lookup neighborhood when using lat-lng input
     - better photospot searching
     - photospot rating
     - Add trigger to photospot table on deletes to also delete its picture from storage 

@@ -16,6 +16,7 @@ import { round } from "@/utils/common/math";
 import createPhotospot from "@/app/serverActions/photospots/create";
 import Loading from "../common/Loading";
 import { Photospot } from "@/types/photospotTypes";
+import PhotospotPreview from "./photospot-preview";
 // main behaviors are clicking on a photospot, or not, if one's clicked, this will display info on them, and let you click a button to go to photospot page
 // otherwise display the default create form
 // if you click back from the photospot view, bring you back to a reset form 
@@ -49,7 +50,7 @@ export const createPhotospotSchema = z.object({
         )
 })
 
-export default function LeftWindow({ location, setLocation, viewingPhotospot, setViewingPhotospot, refreshPhotospots }: { location: { lat: number, lng: number } | null, setLocation: any, viewingPhotospot: boolean, setViewingPhotospot: any, refreshPhotospots: any }) {
+export default function LeftWindow({ location, setLocation, viewingPhotospot, setViewingPhotospot, refreshPhotospots }: { location: { lat: number, lng: number } | null, setLocation: any, viewingPhotospot: Photospot | undefined, setViewingPhotospot: any, refreshPhotospots: any }) {
     const [loading, setLoading] = useState(false)
 
     const createPhotospotForm = useForm<z.infer<typeof createPhotospotSchema>>({
@@ -96,92 +97,95 @@ export default function LeftWindow({ location, setLocation, viewingPhotospot, se
 
     //need to get the overflow for the image section working properly here too
     return (
-        <Card className=" ">
-            <Form {...createPhotospotForm}>
-                <form onSubmit={createPhotospotForm.handleSubmit(onCreate)} className=" w-full flex flex-col -h-[calc(100vh-64px-2rem)]">
-                    <CardHeader className="flex-none">
-                        <CardTitle>Create Photospot</CardTitle>
-                        <CardDescription>Search for a location below, or click on map to place a marker</CardDescription>
-                    </CardHeader>
+        <Card className="flex flex-col justify-center ">
+            {!viewingPhotospot ?
+                <Form {...createPhotospotForm}>
+                    <form onSubmit={createPhotospotForm.handleSubmit(onCreate)} className=" w-full flex flex-col max-h-[calc(100vh-64px-2rem)]">
+                        <CardHeader className="flex-none">
+                            <CardTitle className="text-3xl">Create Photospot</CardTitle>
+                            <CardDescription>Search for a location below, or click on map to place a marker</CardDescription>
+                        </CardHeader>
 
-                    <CardContent className={`flex-1 overflow-auto mb-4 ${loading ? 'hidden' : ''}`}>
-                        <FormField
-                            control={createPhotospotForm.control}
-                            name="location_name"
-                            render={({ field: { onChange }, ...field }) => (
-                                <FormItem>
-                                    <FormLabel>Location {location ? `(${round(location.lat, 2)},${round(location.lng, 2)})` : ''}</FormLabel>
-                                    <FormControl>
-                                        <Input onChange={(e) => searchLocation(e.target.value)} type="text" placeholder="" {...field} />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Either type a location, or click on the map
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
-                        <FormField
-                            control={createPhotospotForm.control}
-                            name="name"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Name</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Please enter name for photospot
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
-                        <FormField
-                            control={createPhotospotForm.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Description</FormLabel>
-                                    <FormControl>
-                                        <Textarea {...field} />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Short description about why this location is cool
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
-                        <FormField
-                            control={createPhotospotForm.control}
-                            name="photos"
-                            render={({ field: { onChange }, ...field }) => (
-                                <FormItem>
-                                    <FormLabel>Photos</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} type="file" multiple={true} onChange={(e) => { onChange(e.target.files); }} />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Upload 1 or more cool photos from the spot
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </CardContent>
-                    {/* <PhotoUploadGrid photos={photos} /> */}
+                        <CardContent className={`flex-1 overflow-auto mb-4 ${loading ? 'hidden' : ''}`}>
+                            <FormField
+                                control={createPhotospotForm.control}
+                                name="location_name"
+                                render={({ field: { onChange }, ...field }) => (
+                                    <FormItem>
+                                        <FormLabel>Location {location ? `(${round(location.lat, 2)},${round(location.lng, 2)})` : ''}</FormLabel>
+                                        <FormControl>
+                                            <Input onChange={(e) => searchLocation(e.target.value)} type="text" placeholder="" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Either type a location, or click on the map
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                            <FormField
+                                control={createPhotospotForm.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Name</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Please enter name for photospot
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                            <FormField
+                                control={createPhotospotForm.control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Description</FormLabel>
+                                        <FormControl>
+                                            <Textarea {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Short description about why this location is cool
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                            <FormField
+                                control={createPhotospotForm.control}
+                                name="photos"
+                                render={({ field: { onChange }, ...field }) => (
+                                    <FormItem>
+                                        <FormLabel>Photos</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} type="file" multiple={true} onChange={(e) => { onChange(e.target.files); }} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Upload 1 or more cool photos from the spot
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </CardContent>
+                        {/* <PhotoUploadGrid photos={photos} /> */}
 
 
-                    <div className={`pb-4 ${loading ? '' : 'hidden'}`}>
-                        <Loading />
-                    </div>
-
-                    <CardFooter className="flex-none">
-                        <div className="w-full flex flex-row gap-8 justify-center">
-                            <Button variant="outline" onClick={(e) => { e.preventDefault(); clearForm() }}>Reset</Button>
-                            <Button type="submit">Create</Button>
+                        <div className={`pb-4 ${loading ? '' : 'hidden'}`}>
+                            <Loading />
                         </div>
-                    </CardFooter>
-                </form>
-            </Form>
+
+                        <CardFooter className="flex-none">
+                            <div className="w-full flex flex-row gap-8 justify-center">
+                                <Button variant="outline" onClick={(e) => { e.preventDefault(); clearForm() }}>Reset</Button>
+                                <Button type="submit">Create</Button>
+                            </div>
+                        </CardFooter>
+                    </form>
+                </Form>
+                :
+                <PhotospotPreview photospot={viewingPhotospot} setViewingPhotospot={setViewingPhotospot} />}
         </Card >
     )
 }

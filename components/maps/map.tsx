@@ -18,12 +18,14 @@ export default function PhotospotMap({ location, setLocation, photospots, setVie
     const mapRef = useRef<any>(null);
     useEffect(() => {
         console.log('photospots', photospots);
+
     })
     const handleClick = (e: any) => {
         console.log('setLocation', e);
         const lat = round(e.lngLat.lat, LAT_LNG_DIGITS);
         const lng = round(e.lngLat.lng, LAT_LNG_DIGITS);
         mapRef.current.flyTo({ center: [lng, lat], })
+        setViewingPhotospot(null);
         setLocation({ lat: lat, lng: lng });
     }
 
@@ -31,10 +33,11 @@ export default function PhotospotMap({ location, setLocation, photospots, setVie
         const map = e.target;
         console.log('map_styles', map.style);
         console.log('photospot', photospots[0].location);
-        //maybe 
+        //maybe render markers here with reuse potentially for speed gains 
     }
     const handleMarkerClick = (e: any, photospot: Photospot) => {
         e.originalEvent.stopPropagation();
+        mapRef.current.flyTo({ center: [photospot.lng, photospot.lat], })
         setViewingPhotospot(photospot);
     }
     return (
@@ -44,7 +47,7 @@ export default function PhotospotMap({ location, setLocation, photospots, setVie
                 latitude: location ? location.lat : INITIAL_LAT,
                 zoom: 13
             }}
-            reuseMaps={true}
+            // reuseMaps={true}
             mapStyle="mapbox://styles/mvanderlyn27/clc8gyohu000114pl9hy6zzdt"
             mapboxAccessToken={mapBoxToken}
             onClick={(e) => handleClick(e)}
