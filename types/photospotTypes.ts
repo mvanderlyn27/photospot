@@ -26,11 +26,11 @@ export type PhotospotInput = {
 export type Photospot = {
     created_at?: string;
     created_by?: string;
-    description?: string;
+    description: string | null;
     id: number;
     name: string;
     photo_paths: string[];
-    location: string;
+    location: unknown;
     lat: number;
     lng: number;
     draft?: boolean;

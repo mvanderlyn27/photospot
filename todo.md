@@ -34,15 +34,19 @@
 # Code Improvement
 - Most important
     - Update/fix server actions for all profile/photospot things
+        - got some of photospot actions done
     - add ability to create photospots, and view a map of photospots
     - fix page loading so theres no flash between routing, maybe don't use links, or theres something else needed to not have the nav bar flash between page routes (https://stackoverflow.com/questions/55624695/loading-screen-on-next-js-page-transition)
     - make all screens beautiful
     - setup email service so I don't get rate limited on user signup
         - need to look into smtp providers mayeb smtp2go
         - reenable email on account creation after this
-    - Need to fix the create function to be clean, and take in the info properly
+    - need to setup photospot view page
     - Geolocation for searching a location when creating a photospot
+    - Split up leftbar into sub components and organize logic better
+    - Need to finish the left-bar search functionality, got search working, need to get selecting working to update the map, and field vals
 - For later
+    - add back in the photo view for uploading pics
     - map improvements
         - maybe see about entering a specific lat/lng when creating
         - would be cool to have photospot view rotate slowly around a point
@@ -75,7 +79,6 @@
         - username
         - photospot
         - photolist
-    - need to update auth signup/login/signin/password reset/magic link to work better, janky rn
     - add admin edge functions for managing users/testing
         - create random user
         - create random review
@@ -86,6 +89,9 @@
 - having the watched photos lags the thing out, rn commenting it out 
 - updating location on the left bar is kind of broken, text breaks it, and can't enter text over 2 digits
 - marker disappears on creation of photospot
+- bug with spamming space on the auto search, issue with promises where the clearing of the form happens before the searches previous finish
+    - look into using sessions to properly avoid this
+- bug on creating photospots, "photos is undefined" for the carosel in photo preview
 
 # Future Ideas
 - realtime for reviews? 

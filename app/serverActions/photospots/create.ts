@@ -1,5 +1,6 @@
 "use server"
 import { createPhotospotSchema } from "@/components/create/left-window";
+import { Photospot } from "@/types/photospotTypes";
 import { Database } from "@/types/supabase";
 import { randomNumber } from "@/utils/common/math";
 // import { createClient } from "@/utils/supabase/client";
@@ -9,7 +10,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const PHOTO_BUCKET = "photospot_pictures";
-export default async function createPhotospot(photospotInfo: z.infer<typeof createPhotospotSchema>, location: { lat: number, lng: number }, photospotPictures: FormData) {
+export default async function createPhotospot(photospotInfo: z.infer<typeof createPhotospotSchema>, location: { lat: number, lng: number }, photospotPictures: FormData): Promise<Photospot> {
     if (!photospotInfo || !photospotInfo.photos) {
         redirect('/error');
     }

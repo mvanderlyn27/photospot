@@ -1,17 +1,15 @@
 "use client"
-import { Map as MapboxMap, GeolocateControl, NavigationControl, Marker, useMap, MarkerEvent } from "react-map-gl";
+import { Map as MapboxMap, GeolocateControl, NavigationControl, Marker, useMap, MarkerEvent, ViewStateChangeEvent, LngLat, MapEvent } from "react-map-gl";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useEffect, useRef } from "react";
 import { round } from "@/utils/common/math";
 import { Photospot } from "@/types/photospotTypes";
 // import { Pin } from '@/media/pin.tsx';
-const INITIAL_LAT: number = 40.72377;
-const INITIAL_LNG: number = -73.99837;
 //decides how accurate points should be, I want to not round at all to not lose data in where user places photospot
 // just need to see how much info db can take
 const LAT_LNG_DIGITS = null;
 
-export default function PhotospotMap({ location, setLocation, photospots, setViewingPhotospot }: { location: { lat: number, lng: number } | null, setLocation: any, photospots: Photospot[], setViewingPhotospot: any }) {
+export default function PhotospotMap({ setMapBounds, mapCenter, setMapCenter, location, setLocation, photospots, setViewingPhotospot }: { setMapBounds: any, mapCenter: LngLat, setMapCenter: any, location: { lat: number, lng: number } | null, setLocation: any, photospots: Photospot[], setViewingPhotospot: any }) {
     const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ? process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN : "";
     //setup to take options for widht/height
     //allow set location to work for clicking on a location
@@ -29,22 +27,23 @@ export default function PhotospotMap({ location, setLocation, photospots, setVie
         setLocation({ lat: lat, lng: lng });
     }
 
-    const handleMapLoad = (e: any) => {
-        const map = e.target;
-        console.log('map_styles', map.style);
-        console.log('photospot', photospots[0].location);
-        //maybe render markers here with reuse potentially for speed gains 
-    }
     const handleMarkerClick = (e: any, photospot: Photospot) => {
         e.originalEvent.stopPropagation();
         mapRef.current.flyTo({ center: [photospot.lng, photospot.lat], })
         setViewingPhotospot(photospot);
     }
+    const handleMapMove = (e: ViewStateChangeEvent) => {
+        setMapCenter(e.target.getCenter());
+        setMapBounds(e.target.getBounds());
+    }
+    const handleMapLoad = (e: MapEvent) => {
+        setMapBounds(e.target.getBounds());
+    }
     return (
         <MapboxMap
             initialViewState={{
-                longitude: location ? location.lng : INITIAL_LNG,
-                latitude: location ? location.lat : INITIAL_LAT,
+                longitude: mapCenter.lng,
+                latitude: mapCenter.lat,
                 zoom: 13
             }}
             // reuseMaps={true}
@@ -52,6 +51,7 @@ export default function PhotospotMap({ location, setLocation, photospots, setVie
             mapboxAccessToken={mapBoxToken}
             onClick={(e) => handleClick(e)}
             onLoad={(e) => { handleMapLoad(e) }}
+            onMoveEnd={(e) => { handleMapMove(e) }}
             ref={mapRef}
             cursor="auto"
         >
