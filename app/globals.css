@@ -14,6 +14,8 @@ good colors:
   :root {
     /* --background: 0 0% 100%; */
     --background: 47, 47%, 94%;
+    --backgroundHover: 13, 16% 85%;
+
     /* --foreground: 222.2 84% 4.9%; */
     --foreground: 0, 0%, 12%;
 

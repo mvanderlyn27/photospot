@@ -15,9 +15,11 @@ export default function PhotospotMap({ setMapBounds, mapCenter, setMapCenter, lo
     //allow set location to work for clicking on a location
     const mapRef = useRef<any>(null);
     useEffect(() => {
-        console.log('photospots', photospots);
+        if (location) {
+            mapRef.current.flyTo({ center: [location.lng, location.lat], })
+        }
 
-    })
+    }, [location])
     const handleClick = (e: any) => {
         console.log('setLocation', e);
         const lat = round(e.lngLat.lat, LAT_LNG_DIGITS);
@@ -60,7 +62,7 @@ export default function PhotospotMap({ setMapBounds, mapCenter, setMapCenter, lo
                 latitude={location.lat}
                 anchor="bottom"
             >
-                <img className="w-10 h-10" src='/pin.svg' />
+                <img className="w-10 h-10" src='/selectedPin.svg' />
             </Marker>
             }
             {photospots && photospots.map((photospot) => <Marker

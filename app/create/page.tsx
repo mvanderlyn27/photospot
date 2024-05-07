@@ -1,5 +1,5 @@
 "use client";
-import LeftWindow from '@/components/create/left-window';
+import LeftWindow from "@/components/create/left-window";
 import PhotospotMap from '@/components/maps/map';
 import { useEffect, useRef, useState } from 'react';
 import { listAllPhotospots } from '../serverActions/photospots/listAll';

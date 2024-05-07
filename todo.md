@@ -45,7 +45,9 @@
     - Geolocation for searching a location when creating a photospot
     - Split up leftbar into sub components and organize logic better
     - Need to finish the left-bar search functionality, got search working, need to get selecting working to update the map, and field vals
+    - design and implement all mobile views for website
 - For later
+    - add minimize button for leftbar
     - add back in the photo view for uploading pics
     - map improvements
         - maybe see about entering a specific lat/lng when creating

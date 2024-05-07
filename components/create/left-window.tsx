@@ -17,13 +17,14 @@ import createPhotospot from "@/app/serverActions/photospots/create";
 import Loading from "../common/Loading";
 import { Photospot } from "@/types/photospotTypes";
 import PhotospotPreview from "./photospot-preview";
-import { SearchBoxSuggestion } from "@mapbox/search-js-core";
+import { SearchBoxFeatureSuggestion, SearchBoxSuggestion } from "@mapbox/search-js-core";
 import { retrieveLocation, suggestLocations } from "@/app/serverActions/maps/searchLocationByName";
 import { createClient } from "@/utils/supabase/client";
 import { LngLat, LngLatBounds, LngLatLike } from "mapbox-gl";
 import { User } from "@supabase/supabase-js";
 import { useDebouncedCallback } from "use-debounce";
-
+import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
+import { LocationAutoComplete } from "../maps/autocomplete";
 // main behaviors are clicking on a photospot, or not, if one's clicked, this will display info on them, and let you click a button to go to photospot page
 // otherwise display the default create form
 // if you click back from the photospot view, bring you back to a reset form 
@@ -60,11 +61,12 @@ export const createPhotospotSchema = z.object({
 export default function LeftWindow({ mapBounds, mapCenter, user, location, setLocation, viewingPhotospot, setViewingPhotospot, refreshPhotospots }: { mapCenter: LngLat, user: User | null, location: { lat: number, lng: number } | null, setLocation: any, viewingPhotospot: Photospot | undefined, setViewingPhotospot: any, refreshPhotospots: any, mapBounds: LngLatBounds | null }) {
     const supabase = createClient();
     const [loading, setLoading] = useState(false)
-    const [suggestedLocations, setSuggestedLocations] = useState([] as SearchBoxSuggestion[]);
+    const [selectedLocation, setSelectedLocation] = useState<SearchBoxFeatureSuggestion | null>(null);
+
     const createPhotospotForm = useForm<z.infer<typeof createPhotospotSchema>>({
         resolver: zodResolver(createPhotospotSchema),
         defaultValues: {
-            location_name: '',
+            location_name: "",
             name: "",
             description: "",
             photos: null
@@ -98,27 +100,12 @@ export default function LeftWindow({ mapBounds, mapCenter, user, location, setLo
         setLocation(null);
         createPhotospotForm.reset()
     }
-    const suggestLocation = (query: string) => {
-        console.log('search location', query);
-        if (query) {
-            suggestLocations(query, user?.id, mapCenter, mapBounds ? mapBounds : undefined).then(suggestions => {
-                if (suggestions) {
-                    console.log('suggestions', suggestions);
-                    setSuggestedLocations(suggestions);
-                }
-            });
-        }
-        else if (suggestedLocations) {
-            setSuggestedLocations([]);
-        }
-    }
-    const debouncedSuggestLocation = useDebouncedCallback((query: string) => {
-        suggestLocation(query);
-    }, 250);
-    const retrieveLocationInfo = (suggestion: SearchBoxSuggestion) => {
-        retrieveLocation(suggestion, user?.id).then(feature => {
-            console.log('retrieving feature', feature);
-        })
+
+    const handleAutoCompleteChange = (suggestion: SearchBoxFeatureSuggestion) => {
+        console.log('latlng', suggestion.geometry.coordinates);
+        setLocation({ lat: suggestion.geometry.coordinates[1], lng: suggestion.geometry.coordinates[0] })
+        setSelectedLocation(suggestion);
+        createPhotospotForm.setValue('location_name', suggestion.properties.name);
     }
     //need some states to control this comp
     // want to be able to search a location, select it to create
@@ -139,18 +126,18 @@ export default function LeftWindow({ mapBounds, mapCenter, user, location, setLo
                             <FormField
                                 control={createPhotospotForm.control}
                                 name="location_name"
-                                render={({ field: { onChange }, ...field }) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Location {location ? `(${round(location.lat, 2)},${round(location.lng, 2)})` : ''}</FormLabel>
                                         <FormControl>
-                                            <Input onChange={(e) => debouncedSuggestLocation(e.target.value)} type="text" placeholder="" {...field} />
-                                            {/* maybe popover for showing options */}
+                                            {/* <Input {...field} onFocus={() => setSuggestionsOpen(true)} onBlur={() => { field.onBlur();}} onChange={(e) => { field.onChange(e); debouncedSuggestLocation(e.target.value) }} /> */}
+                                            <LocationAutoComplete user={user} mapCenter={mapCenter} onChange={handleAutoCompleteChange} />
                                         </FormControl>
-                                        {suggestedLocations.length > 0 && <FormDescription>
-                                            {suggestedLocations.map((suggestion) => (
-                                                <div key={suggestion.mapbox_id} onClick={() => retrieveLocationInfo(suggestion)}>{suggestion.name}</div>
-                                            ))}
-                                        </FormDescription>}
+
+                                        {/* {suggestionsOpen && suggestedLocations.length > 0 && suggestedLocations.map((suggestion) =>
+                                            <LocationResults suggestion={suggestion} handleClick={() => retrieveLocationInfo(suggestion)} />
+                                        )} */}
+
                                         <FormDescription>
                                             Either type a location, or click on the map
                                         </FormDescription>
