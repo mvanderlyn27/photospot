@@ -15,12 +15,12 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
         })
     }, [params.id])
     return (
-        <div className="flex flex-col justify-center gap-8">
-            <div className="flex flex-row gap-8">
+        <div className="flex flex-col w-full justify-center gap-8">
+            <div className="flex flex-row w-full gap-8">
                 <div className="flex-1">
                     <PhotospotInfo photospot={photospotData} />
                 </div>
-                <div>
+                <div className="flex-1">
                     <PreviewMap />
                 </div>
 
