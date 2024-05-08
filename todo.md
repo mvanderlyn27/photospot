@@ -35,21 +35,22 @@
 - Most important
     - Update/fix server actions for all profile/photospot things
         - got some of photospot actions done
-    - add ability to create photospots, and view a map of photospots
     - fix page loading so theres no flash between routing, maybe don't use links, or theres something else needed to not have the nav bar flash between page routes (https://stackoverflow.com/questions/55624695/loading-screen-on-next-js-page-transition)
     - make all screens beautiful
     - setup email service so I don't get rate limited on user signup
         - need to look into smtp providers mayeb smtp2go
         - reenable email on account creation after this
     - need to setup photospot view page
-    - Geolocation for searching a location when creating a photospot
+    - need to setup explore page
     - Split up leftbar into sub components and organize logic better
-    - Need to finish the left-bar search functionality, got search working, need to get selecting working to update the map, and field vals
+    - fix auto complete searches, kinda weird rn
     - design and implement all mobile views for website
 - For later
     - add minimize button for leftbar
     - add back in the photo view for uploading pics
     - map improvements
+        - improve the auto search names, kinda vague rn, something funky going on with suggestion vs. feature pipeline
+            - https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-limit-region/
         - maybe see about entering a specific lat/lng when creating
         - would be cool to have photospot view rotate slowly around a point
         - should be able to animate light changing throughout the day using mapref.setProperty
@@ -94,6 +95,8 @@
 - bug with spamming space on the auto search, issue with promises where the clearing of the form happens before the searches previous finish
     - look into using sessions to properly avoid this
 - bug on creating photospots, "photos is undefined" for the carosel in photo preview
+- some funkiness with moving map around, markers change position on mouse release
+- visiting a photospot right after making takes forever
 
 # Future Ideas
 - realtime for reviews? 
