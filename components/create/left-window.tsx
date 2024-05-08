@@ -16,7 +16,7 @@ import { round } from "@/utils/common/math";
 import createPhotospot from "@/app/serverActions/photospots/create";
 import Loading from "../common/Loading";
 import { Photospot } from "@/types/photospotTypes";
-import PhotospotPreview from "./photospot-preview";
+import PhotospotPreview from "./photospotPreview";
 import { SearchBoxFeatureSuggestion, SearchBoxSuggestion } from "@mapbox/search-js-core";
 import { retrieveLocation, suggestLocations } from "@/app/serverActions/maps/searchLocationByName";
 import { createClient } from "@/utils/supabase/client";
