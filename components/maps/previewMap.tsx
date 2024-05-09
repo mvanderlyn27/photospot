@@ -7,7 +7,7 @@ import { Map as MapboxMap, Marker } from "react-map-gl";
 
 export default function PreviewMap({ lat, lng, }: { lat: number; lng: number; }) {
     const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ? process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN : "";
-    const [runAnimation, setRunAnimation] = useState(false);
+    const [runAnimation, setRunAnimation] = useState(true);
     const [bearing, setBearing] = useState(0);
     const mapRef = useRef<any>(null);
     function rotateCamera(timestamp: number) {
@@ -21,6 +21,14 @@ export default function PreviewMap({ lat, lng, }: { lat: number; lng: number; })
         const map = e.target;
         rotateCamera(0);
     }
+    useEffect(() => {
+        return () => {
+            if (runAnimation == true) {
+                rotateCamera(0)
+            }
+
+        };
+    }, [runAnimation]);
 
     return (
         <MapboxMap

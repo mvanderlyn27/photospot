@@ -97,6 +97,7 @@
 - bug on creating photospots, "photos is undefined" for the carosel in photo preview
 - some funkiness with moving map around, markers change position on mouse release
 - visiting a photospot right after making takes forever
+- visiting a photospot for the first time doesn't have the rotate animation
 
 # Future Ideas
 - realtime for reviews? 

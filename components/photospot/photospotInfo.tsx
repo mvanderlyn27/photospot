@@ -15,9 +15,9 @@ export default function PhotospotInfo({
     photospot: Photospot | null;
 }) {
     return (
-        <Card className="h-full">
+        <Card className="h-full flex flex-col">
             <CardHeader className="flex-none">
-                <CardTitle className="text-2xl">{photospot?.name}</CardTitle>
+                <CardTitle className="text-3xl">{photospot?.name}</CardTitle>
                 <CardDescription>Rating: 3.5/5</CardDescription>
                 <div className=" flex flex-auto gap-2">
                     <Badge variant="outline">Golden Hour</Badge>
@@ -25,13 +25,13 @@ export default function PhotospotInfo({
                     <Badge variant="outline">Headshot</Badge>
                 </div>
             </CardHeader>
-            <CardContent className="flex flex-col gap-4 ">
-                <div className="flex-1">
+            <CardContent className="flex-1 flex flex-col gap-4 justify-between">
+                <div className="">
                     <h2>
                         <b>A bit more about this spot:</b> {photospot?.description}
                     </h2>
                 </div>
-                <div className="flex-none">
+                <div className="">
                     <GoldenHourDisplay
 
                         lat={photospot?.lat}
