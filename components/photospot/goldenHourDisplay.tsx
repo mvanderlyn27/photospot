@@ -20,15 +20,14 @@ import {
     PhotoTimeWidgetInfo,
     Weather,
 } from "@/types/photospotTypes";
+let SunCalc = require('suncalc3');
 
 export default function GoldenHourDisplay({
     lat,
     lng,
-    photoTypes,
 }: {
     lat: number | undefined;
     lng: number | undefined;
-    photoTypes: PhotoTime[] | undefined;
 }) {
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [photoTimeWidgetInfos, setPhotoTimeWidgetInfos] = useState<
@@ -36,19 +35,17 @@ export default function GoldenHourDisplay({
     >([]);
     useEffect(() => {
         //update photoTimeWidgetInfos here based on which types of photos
-        console.log("date", date);
-        if (date) {
-            const hoursToAdd = 8 * 60 * 60 * 1000;
-            const date2 = new Date();
-            date2.setTime(date.getTime() + hoursToAdd);
+        if (date && lat && lng) {
+            let times = SunCalc.getSunTimes(new Date(), lat, lng);
+            console.log('times', times);
             setPhotoTimeWidgetInfos([
                 {
-                    time: date,
+                    time: times.goldenHourDawnStart.value,
                     time_label: PhotoTime.golden_hour_morning,
                     weather: Weather.sun,
                 },
                 {
-                    time: date2,
+                    time: times.goldenHourDuskStart.value,
                     time_label: PhotoTime.golden_hour_evening,
                     weather: Weather.clouds,
                 },

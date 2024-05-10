@@ -41,7 +41,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import PhotospotGrid from "../PhotoSpotGrid";
+import PhotospotGrid from "../photospot/photospotGrid";
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"

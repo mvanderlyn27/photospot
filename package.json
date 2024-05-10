@@ -40,6 +40,7 @@
     "react-hook-form": "^7.48.2",
     "react-icons": "^5.2.0",
     "react-map-gl": "^7.1.7",
+    "suncalc3": "^2.0.5",
     "swr": "^2.2.4",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",

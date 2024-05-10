@@ -35,20 +35,40 @@
 - Most important
     - Update/fix server actions for all profile/photospot things
         - got some of photospot actions done
-    - fix page loading so theres no flash between routing, maybe don't use links, or theres something else needed to not have the nav bar flash between page routes (https://stackoverflow.com/questions/55624695/loading-screen-on-next-js-page-transition)
     - make all screens beautiful
-    - setup email service so I don't get rate limited on user signup
-        - need to look into smtp providers mayeb smtp2go
-        - reenable email on account creation after this
     - need to setup photospot view page
     - need to setup explore page
     - Split up leftbar into sub components and organize logic better
     - fix auto complete searches, kinda weird rn
+    - photospot page
+        - add ability to review/upload photos for a specific photospot
+        - add back in photos for the photo spot
+        - maybe have some tab on the right  
+        - add share link button
+        - fix golden hour calculator to work
+        - setup tagging system
     - design and implement all mobile views for website
+    - home (timeline)
+        - make mobile like instagram, and web view more like pinterest, or a scroll grid 
+- Before launch of MVP
+    - fix page loading so theres no flash between routing, maybe don't use links, or theres something else needed to not have the nav bar flash between page routes (https://stackoverflow.com/questions/55624695/loading-screen-on-next-js-page-transition)
+    - setup email service so I don't get rate limited on user signup
+        - need to look into smtp providers mayeb smtp2go
+        - reenable email on account creation after this
+ 
 - For later
+    - feed
+        - display when golden hour is near you right now, maybe save location to profile?
+        - have top location pics near you right now in feed
+        - followers/interests feed
+        - top posts of the day feed
+    - when uploading image, add to a queue to generate blur hash for future loading 
+    - fix maps to not render streetname through buildings (maybe use diff map, or remove street tile)
     - add minimize button for leftbar
     - add back in the photo view for uploading pics
-    - map improvements
+    - photospot page
+        - add more info for location, how to get there 
+    - map improvements create page
         - improve the auto search names, kinda vague rn, something funky going on with suggestion vs. feature pipeline
             - https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-limit-region/
         - maybe see about entering a specific lat/lng when creating

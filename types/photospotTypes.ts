@@ -1,100 +1,108 @@
 export type Photolist = {
-  created_at?: string;
-  created_by?: string | null;
-  description?: string | null;
-  id: number;
-  name: string;
-  photospots?: number[];
-  photo_paths: string[];
-  rating_average?: number;
-  rating_count?: number;
+    created_at?: string;
+    created_by?: string | null;
+    description?: string | null;
+    id: number;
+    name: string;
+    photospots?: number[];
+    photo_paths: string[];
+    rating_average?: number;
+    rating_count?: number;
 };
 export type PhotolistInput = {
-  created_at?: string;
-  created_by?: string;
-  description?: string;
-  name: string;
+    created_at?: string;
+    created_by?: string;
+    description?: string;
+    name: string;
 };
 export type PhotospotInput = {
-  description?: string;
-  name?: string;
-  location?: string;
-  draft?: boolean;
-  photo_paths?: string[];
+    description?: string;
+    name?: string;
+    location?: string;
+    draft?: boolean;
+    photo_paths?: string[];
 };
 
 export type Photospot = {
-  created_at?: string;
-  created_by?: string;
-  description: string | null;
-  id: number;
-  name: string;
-  photo_paths: string[];
-  location: unknown;
-  lat: number;
-  lng: number;
-  draft?: boolean;
-  photo_placeholder?: "blur" | "empty" | `data:image/${string}` | undefined;
+    created_at?: string;
+    created_by?: string;
+    description: string | null;
+    id: number;
+    name: string;
+    photo_paths: string[];
+    location: unknown;
+    lat: number;
+    lng: number;
+    draft?: boolean;
+    photo_placeholder?: "blur" | "empty" | `data:image/${string}` | undefined;
 };
 
 export type PhotospotInsert = {
-  description?: string;
-  name: string;
-  photo_paths: string[];
-  location: string;
-  draft?: boolean;
+    description?: string;
+    name: string;
+    photo_paths: string[];
+    location: string;
+    draft?: boolean;
 };
 
-export type PhotoGridInput = {
-  photospots: Photospot[] | undefined;
+export type ReviewGridInput = {
+    path: string;
+    name: string;
+    review?: string;
 };
 
 export type PublicProfile = {
-  id: number;
-  username: string;
-  private?: boolean;
-  role?: string;
-  theme?: string;
-  profile_pic_url?: string;
-  email?: string;
-  password?: string;
+    id: number;
+    username: string;
+    private?: boolean;
+    role?: string;
+    theme?: string;
+    profile_pic_url?: string;
+    email?: string;
+    password?: string;
 };
 export type PhotospotReview = {
-  created_by: string;
-  photospot_id: number;
-  photo_paths?: string[];
-  rating?: number;
-  text?: string;
-  edited?: boolean;
+    created_by: string;
+    photospot_id: number;
+    photo_paths?: string[];
+    rating?: number;
+    text?: string;
+    edited?: boolean;
 };
 export type PhotolistReview = {
-  created_by: string;
-  photolist_id: number;
-  photo_paths?: string[];
-  rating?: number;
-  text?: string;
-  edited?: boolean;
+    created_by: string;
+    photolist_id: number;
+    photo_paths?: string[];
+    rating?: number;
+    text?: string;
+    edited?: boolean;
 };
 export type RatingStat = {
-  id: number;
-  rating_count?: number;
-  rating_average?: number;
+    id: number;
+    rating_count?: number;
+    rating_average?: number;
 };
+export type GoldenHourDisplayInfo = {
+    type: PhotoTime;
+    time: Date;
+}
 export type PhotoTimeWidgetInfo = {
-  time: Date;
-  time_label: PhotoTime;
-  weather: Weather;
+    time: Date;
+    time_label: PhotoTime;
+    weather: Weather;
 };
 
+
+
 export enum Weather {
-  sun,
-  clouds,
-  rain,
-  hail,
-  snow,
-  storm,
+    sun,
+    clouds,
+    rain,
+    hail,
+    snow,
+    storm,
 }
 export enum PhotoTime {
-  golden_hour_morning,
-  golden_hour_evening,
+    golden_hour_morning,
+    golden_hour_evening,
 }

@@ -8,12 +8,14 @@ import {
 } from "../ui/card";
 import GoldenHourDisplay from "./goldenHourDisplay";
 import { Badge } from "../ui/badge";
+import { useEffect, useState } from "react";
 
 export default function PhotospotInfo({
     photospot,
 }: {
     photospot: Photospot | null;
 }) {
+
     return (
         <Card className="h-full flex flex-col">
             <CardHeader className="flex-none">
