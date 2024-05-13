@@ -781,7 +781,6 @@ export default function PhotoSpotTests() {
           </Card>
         </TabsContent>
       </Tabs>
-      <PhotospotGrid photospots={photospots} />
     </div>
   );
 }
