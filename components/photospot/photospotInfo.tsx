@@ -38,10 +38,6 @@ export default function PhotospotInfo({
 
                         lat={photospot?.lat}
                         lng={photospot?.lng}
-                        photoTypes={[
-                            PhotoTime.golden_hour_morning,
-                            PhotoTime.golden_hour_evening,
-                        ]}
                     />
                 </div>
             </CardContent>

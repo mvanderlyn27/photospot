@@ -36,8 +36,8 @@ export default function GoldenHourDisplay({
     useEffect(() => {
         //update photoTimeWidgetInfos here based on which types of photos
         if (date && lat && lng) {
-            let times = SunCalc.getSunTimes(new Date(), lat, lng);
-            console.log('times', times);
+            let times = SunCalc.getSunTimes(date, lat, lng);
+            console.log('times for golden hour', times);
             setPhotoTimeWidgetInfos([
                 {
                     time: times.goldenHourDawnStart.value,
