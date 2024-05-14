@@ -1,10 +1,10 @@
 import { Card, CardContent } from "../ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel";
 
-export default function ImageCarousel({ photos }: { photos: string[] }) {
+export default function ImageCarousel({ photos, width, height }: { photos: string[], width: string, height: string }) {
     console.log('photos', photos);
     return (
-        <Carousel className=" content-center justify-center w-[300px] max-w-xs"
+        <Carousel className={`content-center justify-center w-[${width}] h-[${height}]`}
             opts={{
                 align: "start",
                 loop: true,
@@ -12,12 +12,8 @@ export default function ImageCarousel({ photos }: { photos: string[] }) {
         >
             <CarouselContent>
                 {photos.map((photo_src, index) => (
-                    <CarouselItem key={index}>
-                        <div className="p-1 w-full">
-                            <Card className="w-full">
-                                <img className="w-full h-[300px] object-cover rounded-md" src={photo_src} />
-                            </Card>
-                        </div>
+                    <CarouselItem key={index} className="">
+                        <img className={`w-full h-[${height}] object-cover rounded-md`} src={photo_src} />
                     </CarouselItem>
                 ))}
             </CarouselContent>

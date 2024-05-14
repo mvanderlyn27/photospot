@@ -22,7 +22,7 @@ export default function PhotospotPreview({ photospot, setViewingPhotospot }: { p
 
             <CardContent className={`flex flex-col flex-1 justify-center`}>
                 <div className=" flex w-full content-center justify-center">
-                    <ImageCarousel photos={photospot.photo_paths} />
+                    <ImageCarousel width={"300px"} height={"300px"} photos={photospot.photo_paths} />
                 </div>
             </CardContent>
             <CardContent className={`flex flex-col flex-1 justify-left`}>

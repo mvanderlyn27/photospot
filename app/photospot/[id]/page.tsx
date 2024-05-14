@@ -6,7 +6,8 @@ import PreviewMap from "@/components/maps/previewMap";
 import PhotospotInfo from "@/components/photospot/photospotInfo";
 import { Photospot, ReviewGridInput } from "@/types/photospotTypes";
 import { useEffect, useState } from "react";
-import ReviewGrid from "@/components/photospot/reviewGrid";
+import ReviewGrid from "@/components/review/reviewGrid";
+import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 
 export default function PhotospotPage({ params }: { params: { id: string } }) {
     const [photospotData, setPhotoSpotData] = useState<Photospot | null>(null);
