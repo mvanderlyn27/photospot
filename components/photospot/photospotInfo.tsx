@@ -17,6 +17,7 @@ import { FaEdit } from "react-icons/fa";
 import { savePhotospot } from "@/app/serverActions/photospots/savePhotospot";
 import { getSavedPhotospot } from "@/app/serverActions/photospots/getSavedPhotospots";
 import { unsavePhotospot } from "@/app/serverActions/photospots/unsavePhotospot";
+import { getPhotospotTags } from "@/app/serverActions/photospots/getPhotospotTags";
 
 export default function PhotospotInfo({
     photospot,
@@ -24,11 +25,17 @@ export default function PhotospotInfo({
     photospot: Photospot | null;
 }) {
     const [saved, setSaved] = useState(false);
+    const [tags, setTags] = useState<string[]>([]);
 
     useEffect(() => {
         //pull info from photospot based on id
         if (!photospot) return;
-        console.log("test");
+
+        getPhotospotTags(photospot.id).then((tags) => {
+            if (tags) {
+                setTags(tags);
+            }
+        })
         getSavedPhotospot().then((photospots) => {
             let photospot_ids = photospots.map((photospot_obj) => photospot_obj.photospot);
             console.log('photospots saved: ', photospot_ids)
@@ -47,6 +54,10 @@ export default function PhotospotInfo({
         }
 
     }
+    const handleShare = () => {
+        //maybe add URL shortener lol
+
+    }
     return (
         <Card className="h-full flex flex-col">
             <CardHeader className="flex-none">
@@ -60,9 +71,11 @@ export default function PhotospotInfo({
                 </div>
                 <CardDescription>Rating: 3.5/5</CardDescription>
                 <div className=" flex flex-auto gap-2">
-                    <Badge variant="outline">Golden Hour</Badge>
-                    <Badge variant="outline">Dating App</Badge>
-                    <Badge variant="outline">Headshot</Badge>
+                    {tags.map((tag) => (
+                        <Badge key={tag} variant="outline">
+                            {tag}
+                        </Badge>
+                    ))}
                 </div>
             </CardHeader>
             <CardContent className="flex-1 flex flex-col gap-4 justify-between">

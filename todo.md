@@ -41,7 +41,11 @@
     - Split up leftbar into sub components and organize logic better
     - fix carousel to be properly sizeable, including the extra button space
         - rn messed up on create page, and photospot page
-    - fix auto complete searches, kinda weird rn
+    - create page
+        - fix auto complete searches, kinda weird rn
+        - add in tag creation/selection
+        - update rls policy for tags to allow only user who created photospot to update tags for a photospot
+
     - photospot page
         - add ability to review/upload photos for a specific photospot
         - add back in photos for the photo spot
