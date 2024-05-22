@@ -57,6 +57,7 @@
         - Add dialog to each image in reviewGrid, click to open dialog which shows more info on review
         - turn each image into an image carousel
         - improve review functionality. Make it so you can save inspo pics 
+        - add weather functionality: https://www.npmjs.com/package/openweather-api-node
     - design and implement all mobile views for website
     - home (timeline)
         - make mobile like instagram, and web view more like pinterest, or a scroll grid 

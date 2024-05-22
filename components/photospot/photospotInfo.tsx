@@ -1,3 +1,4 @@
+"use client"
 import { PhotoTime, Photospot } from "@/types/photospotTypes";
 import {
     Card,
@@ -9,7 +10,7 @@ import {
 import GoldenHourDisplay from "./goldenHourDisplay";
 import { Badge } from "../ui/badge";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { FaShareAlt } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
 import { FaBookmark } from "react-icons/fa";
@@ -18,6 +19,9 @@ import { savePhotospot } from "@/app/serverActions/photospots/savePhotospot";
 import { getSavedPhotospot } from "@/app/serverActions/photospots/getSavedPhotospots";
 import { unsavePhotospot } from "@/app/serverActions/photospots/unsavePhotospot";
 import { getPhotospotTags } from "@/app/serverActions/photospots/getPhotospotTags";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { cn } from "@/lib/utils";
+import SharePhotospotWidget from "./sharePhotospotWidget";
 
 export default function PhotospotInfo({
     photospot,
@@ -65,7 +69,17 @@ export default function PhotospotInfo({
                     <CardTitle className="text-3xl">{photospot?.name}</CardTitle>
                     <div className="flex flex-row gap-2">
                         {/* <Button className="p-2"><FaEdit className="w-6 h-6" /></Button> */}
-                        <Button><FaShareAlt className="w-6 h-6" /></Button>
+                        <Dialog>
+                            <DialogTrigger>
+                                <div className={cn(buttonVariants({ variant: 'default' }))}>
+                                    <FaShareAlt className="w-6 h-6" />
+                                </div>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <SharePhotospotWidget />
+                            </DialogContent>
+
+                        </Dialog>
                         <Button onClick={() => handleSave()}>{saved ? <FaBookmark className="w-6 h-6" /> : <FaRegBookmark className="w-6 h-6" />}</Button>
                     </div>
                 </div>
