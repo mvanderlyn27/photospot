@@ -1,6 +1,6 @@
 import PhotospotCard from "@/components/timeline/photospotCard";
 import { createClient } from "@/utils/supabase/server";
-import { listAllPhotospots } from "../serverActions/photospots/listAll";
+import { listAllPhotospots } from "../serverActions/photospots/listAllPhotospots";
 import { redirect } from "next/navigation";
 
 export default async function Home() {

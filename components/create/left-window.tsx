@@ -13,7 +13,7 @@ import Link from "next/link";
 import PhotoUploadGrid from "../common/PhotoUploadGrid";
 import { useEffect, useState } from "react";
 import { round } from "@/utils/common/math";
-import createPhotospot from "@/app/serverActions/photospots/create";
+import createPhotospot from "@/app/serverActions/photospots/createPhotospot";
 import Loading from "../common/Loading";
 import { Photospot } from "@/types/photospotTypes";
 import PhotospotPreview from "./photospotPreview";

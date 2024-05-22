@@ -39,6 +39,8 @@
     - need to setup photospot view page
     - need to setup explore page
     - Split up leftbar into sub components and organize logic better
+    - fix carousel to be properly sizeable, including the extra button space
+        - rn messed up on create page, and photospot page
     - fix auto complete searches, kinda weird rn
     - photospot page
         - add ability to review/upload photos for a specific photospot
@@ -47,6 +49,10 @@
         - add share link button
         - fix golden hour calculator to work
         - setup tagging system
+        - fix review pictures, to be real
+        - Add dialog to each image in reviewGrid, click to open dialog which shows more info on review
+        - turn each image into an image carousel
+        - improve review functionality. Make it so you can save inspo pics 
     - design and implement all mobile views for website
     - home (timeline)
         - make mobile like instagram, and web view more like pinterest, or a scroll grid 

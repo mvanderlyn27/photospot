@@ -2,7 +2,7 @@
 import LeftWindow from "@/components/create/left-window";
 import PhotospotMap from '@/components/maps/map';
 import { useEffect, useRef, useState } from 'react';
-import { listAllPhotospots } from '../serverActions/photospots/listAll';
+import { listAllPhotospots } from '../serverActions/photospots/listAllPhotospots';
 import { Photospot } from '@/types/photospotTypes';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';

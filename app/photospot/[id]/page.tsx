@@ -1,5 +1,5 @@
 "use client";
-import { getById } from "@/app/serverActions/photospots/getById";
+import { getPhotospotById } from "@/app/serverActions/photospots/getPhotospotById";
 import { getTestImages } from "@/app/serverActions/storage/getTestImages";
 import PhotospotGrid from "@/components/photospot/photospotGrid";
 import PreviewMap from "@/components/maps/previewMap";
@@ -14,7 +14,7 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
     const [testPhotospots, setTestPhotospots] = useState<ReviewGridInput[]>([]);
     useEffect(() => {
         //pull info from photospot based on id
-        getById(parseInt(params.id)).then((photospot: Photospot) => {
+        getPhotospotById(parseInt(params.id)).then((photospot: Photospot) => {
             setPhotoSpotData(photospot);
         });
         getTestImages().then((photospots) => {
