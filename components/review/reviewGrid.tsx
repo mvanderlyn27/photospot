@@ -7,8 +7,8 @@ export default function ReviewGrid({ input }: { input: ReviewGridInput[] }) {
 
 
     return (
-        <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4 grid-flow-row-dense" >
+        <div className=" w-full flex flex-col gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4  grid-flow-row-dense" >
                 {
                     input?.map(review => {
                         return (

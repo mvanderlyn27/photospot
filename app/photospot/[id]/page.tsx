@@ -7,7 +7,11 @@ import PhotospotInfo from "@/components/photospot/photospotInfo";
 import { Photospot, ReviewGridInput } from "@/types/photospotTypes";
 import { useEffect, useState } from "react";
 import ReviewGrid from "@/components/review/reviewGrid";
-import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Separator } from "@radix-ui/react-select";
+import CreateReviewDialog from "@/components/review/createReviewDialog";
+import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 export default function PhotospotPage({ params }: { params: { id: string } }) {
     const [photospotData, setPhotoSpotData] = useState<Photospot | null>(null);
@@ -38,15 +42,27 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
 
     }, [params.id]);
     return (
-        <div className="flex flex-col justify-center gap-8 w-full">
-            <div className="flex flex-row gap-8 w-[1800px] h-[500px] m-auto">
-                <div className="flex-1 p-8 h-50vh">
+        <div className="flex flex-col justify-center gap-8 w-full pl-20 pr-20">
+            <div className="flex flex-row gap-24 w-full justify-center h-[500px] ">
+                <div className="flex-1  h-50vh">
                     <PhotospotInfo photospot={photospotData} />
                 </div>
-                <div className="flex-1 p-8 h-50vh">
+                <div className="flex-1  h-50vh">
                     {photospotData?.lat && photospotData?.lng && <PreviewMap lat={photospotData.lat} lng={photospotData.lng} />}
                 </div>
             </div>
+            <div className="flex flex-row gap-24  w-full justify-center">
+                <h1 className="text-2xl font-semibold ">User Impressions</h1>
+                <Dialog>
+                    <DialogTrigger>
+                        <div className={"text-2xl  " + cn(buttonVariants({ variant: 'default' }))}>Add Yours</div>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <CreateReviewDialog photospot={photospotData} />
+                    </DialogContent>
+                </Dialog>
+            </div>
+
             <ReviewGrid input={testPhotospots} />
         </div>
     );

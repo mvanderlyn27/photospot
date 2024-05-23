@@ -9,7 +9,7 @@ import { IoMdText } from "react-icons/io";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { TwitterShareButton, RedditShareButton, FacebookIcon, TwitterIcon, RedditIcon } from "react-share";
 import { useToast } from "../ui/use-toast";
-export default function SharePhotospotWidget() {
+export default function SharePhotospotDialog() {
     const currentPath = getURL() + usePathname().slice(1);
     const { toast } = useToast();
     const handleCopy = () => {

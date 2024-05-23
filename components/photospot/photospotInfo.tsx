@@ -21,7 +21,7 @@ import { unsavePhotospot } from "@/app/serverActions/photospots/unsavePhotospot"
 import { getPhotospotTags } from "@/app/serverActions/photospots/getPhotospotTags";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { cn } from "@/lib/utils";
-import SharePhotospotWidget from "./sharePhotospotWidget";
+import SharePhotospotDialog from "./sharePhotospotDialog";
 
 export default function PhotospotInfo({
     photospot,
@@ -76,7 +76,7 @@ export default function PhotospotInfo({
                                 </div>
                             </DialogTrigger>
                             <DialogContent>
-                                <SharePhotospotWidget />
+                                <SharePhotospotDialog />
                             </DialogContent>
 
                         </Dialog>
