@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/common/theme-provider"
 import NavBar from '@/components/common/NavBar'
 import { createClient } from '@/utils/supabase/server'
+import { Toaster } from "@/components/ui/toaster"
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -39,6 +40,7 @@ export default async function RootLayout({
           >
             <NavBar user={user} />
             {children}
+            <Toaster />
           </ThemeProvider>
         </main>
       </body>
