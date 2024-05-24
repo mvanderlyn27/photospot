@@ -4,7 +4,7 @@ import { getTestImages } from "@/app/serverActions/storage/getTestImages";
 import PhotospotGrid from "@/components/photospot/photospotGrid";
 import PreviewMap from "@/components/maps/previewMap";
 import PhotospotInfo from "@/components/photospot/photospotInfo";
-import { Photospot, ReviewGridInput } from "@/types/photospotTypes";
+import { Photospot, Review, ReviewGridInput } from "@/types/photospotTypes";
 import { useEffect, useState } from "react";
 import ReviewGrid from "@/components/review/reviewGrid";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -12,34 +12,35 @@ import { Separator } from "@radix-ui/react-select";
 import CreateReviewDialog from "@/components/review/createReviewDialog";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { createClient } from "@/utils/supabase/client";
+import { getPhotospotReviews } from "@/app/serverActions/reviews/getPhotospotReviews";
 
 export default function PhotospotPage({ params }: { params: { id: string } }) {
     const [photospotData, setPhotoSpotData] = useState<Photospot | null>(null);
     const [testPhotospots, setTestPhotospots] = useState<ReviewGridInput[]>([]);
     const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+    const [user, setUser] = useState<any>(null)
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [userReview, setUserReview] = useState<Review | null>(null);
+    const supabase = createClient()
+
     useEffect(() => {
         //pull info from photospot based on id
         getPhotospotById(parseInt(params.id)).then((photospot: Photospot) => {
             setPhotoSpotData(photospot);
         });
-        getTestImages().then((photospots) => {
-            let test_photospots: ReviewGridInput[] = [];
-            photospotData?.photo_paths.forEach((photo_path) => {
-                test_photospots.push({
-                    name: photospotData?.name,
-                    path: photo_path,
-                    review: 'very cool spot :D:D'
-                })
-            });
-            for (let i = 0; i < photospots.length; i++) {
-                test_photospots.push({
-                    name: 'test image ' + i,
-                    path: photospots[i],
-                    review: 'very cool spot :D:D'
-                })
-            }
-            setTestPhotospots(test_photospots);
-        })
+
+        supabase.auth.getUser().then(userData => {
+            setUser(userData.data.user)
+            getPhotospotReviews(parseInt(params.id)).then((reviews) => {
+                console.log('reviews', reviews, 'user', user);
+                // if (user.id in reviews) {
+                //     //check if user did a review already
+                // }
+                setReviews(reviews);
+            })
+        });
+
 
     }, [params.id]);
     return (
@@ -64,7 +65,7 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
                 </Dialog>
             </div>
 
-            <ReviewGrid input={testPhotospots} />
+            <ReviewGrid input={reviews} />
         </div>
     );
 }
