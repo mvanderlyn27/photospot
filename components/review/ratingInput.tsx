@@ -1,4 +1,4 @@
-export default function RatingInput({ rating, setRating }: { rating: number, setRating: (rating: number) => void }) {
+export default function RatingInput({ rating }: { rating: number }) {
     return (
 
 

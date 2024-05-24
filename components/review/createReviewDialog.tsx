@@ -85,7 +85,7 @@ export default function CreateReviewDialog({ photospot, setReviewDialogOpen }: {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Rating</FormLabel>
-                                    <RatingInput rating={field.value} setRating={() => console.log("lol")} />
+                                    <RatingInput rating={field.value} />
                                     <Select value={"" + field.value} onValueChange={field.onChange} defaultValue={"" + field.value}>
                                         <FormControl>
                                             <SelectTrigger>
