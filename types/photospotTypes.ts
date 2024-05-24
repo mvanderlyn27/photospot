@@ -44,7 +44,16 @@ export type PhotospotInsert = {
     location: string;
     draft?: boolean;
 };
+export type Review = {
+    id: number
+    created_at?: string;
+    created_by: string;
+    photospot_id: number;
+    text?: string | null;
+    photo_paths: string[];
+    rating: number;
 
+}
 export type ReviewGridInput = {
     path: string;
     name: string;

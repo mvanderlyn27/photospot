@@ -146,7 +146,8 @@ export type Database = {
           created_at: string
           created_by: string
           edited: boolean
-          photo_paths: string[] | null
+          id: number
+          photo_paths: string[]
           photospot_id: number
           rating: number
           text: string | null
@@ -155,7 +156,8 @@ export type Database = {
           created_at?: string
           created_by: string
           edited?: boolean
-          photo_paths?: string[] | null
+          id?: number
+          photo_paths: string[]
           photospot_id: number
           rating: number
           text?: string | null
@@ -164,7 +166,8 @@ export type Database = {
           created_at?: string
           created_by?: string
           edited?: boolean
-          photo_paths?: string[] | null
+          id?: number
+          photo_paths?: string[]
           photospot_id?: number
           rating?: number
           text?: string | null
@@ -193,6 +196,46 @@ export type Database = {
           },
         ]
       }
+      photospot_tags: {
+        Row: {
+          created_at: string
+          id: number
+          tag_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          tag_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          tag_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "photospot_tags_id_fkey"
+            columns: ["id"]
+            isOneToOne: false
+            referencedRelation: "photospot_rating_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photospot_tags_id_fkey"
+            columns: ["id"]
+            isOneToOne: false
+            referencedRelation: "photospots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photospot_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       photospots: {
         Row: {
           created_at: string
@@ -206,7 +249,6 @@ export type Database = {
           name: string
           photo_paths: string[]
           private: boolean | null
-          tags: string[] | null
         }
         Insert: {
           created_at?: string
@@ -220,7 +262,6 @@ export type Database = {
           name: string
           photo_paths: string[]
           private?: boolean | null
-          tags?: string[] | null
         }
         Update: {
           created_at?: string
@@ -234,7 +275,6 @@ export type Database = {
           name?: string
           photo_paths?: string[]
           private?: boolean | null
-          tags?: string[] | null
         }
         Relationships: []
       }
@@ -295,6 +335,64 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      saved_photospots: {
+        Row: {
+          created_at: string
+          id: string
+          photospot: number
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          photospot: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          photospot?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_photospots_id_fkey"
+            columns: ["id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saved_photospots_photospot_fkey"
+            columns: ["photospot"]
+            isOneToOne: false
+            referencedRelation: "photospot_rating_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saved_photospots_photospot_fkey"
+            columns: ["photospot"]
+            isOneToOne: false
+            referencedRelation: "photospots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tags: {
+        Row: {
+          created_at: string
+          id: number
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          name?: string
+        }
+        Relationships: []
       }
     }
     Views: {

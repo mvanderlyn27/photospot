@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 export default function PhotospotPage({ params }: { params: { id: string } }) {
     const [photospotData, setPhotoSpotData] = useState<Photospot | null>(null);
     const [testPhotospots, setTestPhotospots] = useState<ReviewGridInput[]>([]);
+    const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
     useEffect(() => {
         //pull info from photospot based on id
         getPhotospotById(parseInt(params.id)).then((photospot: Photospot) => {
@@ -53,12 +54,12 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
             </div>
             <div className="flex flex-row gap-24  w-full justify-center">
                 <h1 className="text-2xl font-semibold ">User Impressions</h1>
-                <Dialog>
+                <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
                     <DialogTrigger>
                         <div className={"text-2xl  " + cn(buttonVariants({ variant: 'default' }))}>Add Yours</div>
                     </DialogTrigger>
                     <DialogContent>
-                        <CreateReviewDialog photospot={photospotData} />
+                        <CreateReviewDialog photospot={photospotData} setReviewDialogOpen={setReviewDialogOpen} />
                     </DialogContent>
                 </Dialog>
             </div>

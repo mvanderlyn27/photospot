@@ -10,13 +10,17 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import RatingInput from "./ratingInput";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useState } from "react";
+import { toast } from "../ui/use-toast";
+import createReview from "@/app/serverActions/reviews/createReview";
 
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 export const createReviewSchema = z.object({
     //should add some better requirements for the location
     rating: z.coerce.number().min(1).max(5),
-    description: z.string().optional(),
+    text: z.string(),
     //tags for later
     photos: z.custom<FileList | null>((val) => val instanceof FileList, "Please upload a picture")
         .refine((files) => files ? files.length > 0 : false, `Required`)
@@ -36,25 +40,37 @@ export const createReviewSchema = z.object({
 })
 
 
-export default function CreateReviewDialog({ photospot }: { photospot: Photospot | null }) {
-
+export default function CreateReviewDialog({ photospot, setReviewDialogOpen }: { photospot: Photospot | null, setReviewDialogOpen: any }) {
+    const [loading, setLoading] = useState(false);
     const createReviewForm = useForm<z.infer<typeof createReviewSchema>>({
         resolver: zodResolver(createReviewSchema),
         defaultValues: {
             rating: 3,
-            description: "",
+            text: "",
             photos: null
         },
     })
 
     const onCreate = async (data: z.infer<typeof createReviewSchema>) => {
-
+        if (photospot && data.photos) {
+            let photos_form = new FormData();
+            Array.from(data.photos).forEach((photo) => {
+                photos_form.append(`review_pictures`, photo);
+            })
+            setLoading(true);
+            await createReview(data, photospot.id, photos_form);
+            setLoading(false);
+            setReviewDialogOpen(false);
+            toast({
+                title: "Review Submitted",
+            })
+        }
     }
 
-    function clearForm() {
-        throw new Error("Function not implemented.");
+    const clearForm = () => {
+        //need to figure out how to properly clear the photos section
+        createReviewForm.reset()
     }
-
     return (
         <div className="flex flex-col gap-2 ">
             <DialogTitle>What do you think of {photospot?.name}?</DialogTitle>
@@ -69,9 +85,21 @@ export default function CreateReviewDialog({ photospot }: { photospot: Photospot
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Rating</FormLabel>
-                                    <FormControl>
-                                        <RatingInput rating={3} setRating={() => console.log('update rating')} />
-                                    </FormControl>
+                                    <RatingInput rating={field.value} setRating={() => console.log("lol")} />
+                                    <Select value={"" + field.value} onValueChange={field.onChange} defaultValue={"" + field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select rating" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value={"1"}>1</SelectItem>
+                                            <SelectItem value={"2"}>2</SelectItem>
+                                            <SelectItem value={"3"}>3</SelectItem>
+                                            <SelectItem value={"4"}>4</SelectItem>
+                                            <SelectItem value={"5"}>5</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                     <FormDescription>
                                         What would you rate this spot out of 10?
                                     </FormDescription>
@@ -80,7 +108,7 @@ export default function CreateReviewDialog({ photospot }: { photospot: Photospot
                             )} />
                         <FormField
                             control={createReviewForm.control}
-                            name="description"
+                            name="text"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Comments</FormLabel>
