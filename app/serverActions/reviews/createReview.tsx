@@ -22,7 +22,7 @@ export default async function createReview(reviewInfo: z.infer<typeof createRevi
     }
     const { data: uploadData, error: uploadError } = await supabase
         .from('photospot_reviews')
-        .insert([{
+        .upsert([{
             created_by: user.data.user.id,
             photospot_id: photospot_id,
             text: reviewInfo.text,
