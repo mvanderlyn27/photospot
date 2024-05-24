@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { Photospot } from '@/types/photospotTypes'
-export async function getSavedPhotospot(): Promise<{ id: number, photospot: number }[]> {
+export async function getSavedPhotospot(): Promise<{ id: string, photospot: number }[]> {
     const supabase = createClient()
 
     // type-casting here for convenience
@@ -13,7 +13,7 @@ export async function getSavedPhotospot(): Promise<{ id: number, photospot: numb
     if (!user.data.user) {
         redirect('/error?error=not logged in');
     }
-    const { data, error } = await supabase.from('saved_photospots').select('*').eq('id', user.data.user.id).eq('id', user.data.user.id);
+    const { data, error } = await supabase.from('saved_photospots').select('*').eq('id', user.data.user.id);
     if (error) {
         redirect('/error?error=' + error.message);
     }

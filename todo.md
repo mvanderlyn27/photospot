@@ -24,9 +24,8 @@
     - add user table, add triggers to fill out fields after authenticating new user
 - profile
     - users profile page for viewing/updating user details
-- photobooks (photolist?)
+- photobooks (photolist?) (post mvp feature)
     - allow users to curate list of photospots 
-- Update search to be one route that adds all filters into one query 
 
 
 # features needed still for MVP
@@ -36,36 +35,31 @@
     - Update/fix server actions for all profile/photospot things
         - got some of photospot actions done
     - make all screens beautiful
-    - need to setup photospot view page
     - need to setup explore page
-    - Split up leftbar into sub components and organize logic better
     - fix carousel to be properly sizeable, including the extra button space
         - rn messed up on create page, and photospot page
     - create page
+        - Split up leftbar into sub components and organize logic better
         - fix auto complete searches, kinda weird rn
         - add in tag creation/selection
         - update rls policy for tags to allow only user who created photospot to update tags for a photospot
-
     - photospot page
-        - add ability to review/upload photos for a specific photospot
-        - add back in photos for the photo spot
+        - add back in photos for the photo spot from OG poster
         - maybe have some tab on the right  
-        - add share link button
-        - fix golden hour calculator to work
         - setup tagging system
-        - fix review pictures, to be real
+            - partially done, can't create tags though
         - Add dialog to each image in reviewGrid, click to open dialog which shows more info on review
-        - turn each image into an image carousel
-        - improve review functionality. Make it so you can save inspo pics 
+            - have this, but need to touch it up, right now looks like shit
         - add weather functionality: https://www.npmjs.com/package/openweather-api-node
-    - design and implement all mobile views for website
+        - should probably link a review to a username/rating?
     - home (timeline)
         - make mobile like instagram, and web view more like pinterest, or a scroll grid 
-- Before launch of MVP
-    - fix page loading so theres no flash between routing, maybe don't use links, or theres something else needed to not have the nav bar flash between page routes (https://stackoverflow.com/questions/55624695/loading-screen-on-next-js-page-transition)
-    - setup email service so I don't get rate limited on user signup
-        - need to look into smtp providers mayeb smtp2go
-        - reenable email on account creation after this
+# Before launch of MVP
+- design and implement all mobile views for website
+- fix page loading so theres no flash between routing, maybe don't use links, or theres something else needed to not have the nav bar flash between page routes (https://stackoverflow.com/questions/55624695/loading-screen-on-next-js-page-transition)
+- setup email service so I don't get rate limited on user signup
+    - need to look into smtp providers mayeb smtp2go
+    - reenable email on account creation after this
  
 - For later
     - feed
@@ -73,12 +67,18 @@
         - have top location pics near you right now in feed
         - followers/interests feed
         - top posts of the day feed
-    - when uploading image, add to a queue to generate blur hash for future loading 
-    - fix maps to not render streetname through buildings (maybe use diff map, or remove street tile)
-    - add minimize button for leftbar
-    - add back in the photo view for uploading pics
+    -left bar
+        - when uploading image, add to a queue to generate blur hash for future loading 
+        - fix maps to not render streetname through buildings (maybe use diff map, or remove street tile)
+        - add minimize button for leftbar
+        - add back in the photo view for uploading pics
     - photospot page
         - add more info for location, how to get there 
+        - redesign to have better utility/feel, rn hard to find all the info you want
+        - add link to google maps/apple maps to nav to location
+        - add scheduler for getting to the location at golden hour
+        - maybe make all reviews carousels 
+        - add ability to save inspo pics
     - map improvements create page
         - improve the auto search names, kinda vague rn, something funky going on with suggestion vs. feature pipeline
             - https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-limit-region/
