@@ -32,12 +32,10 @@
 - 
 # Code Improvement
 - Most important
-     photospot page
-        - creating a review needs to retrigger a pull of info for reviews
-        - add back in photos for the photo spot from OG poster
-            - maybe rename photo area, and have some way to denote the OP's pics vs other ones
-            - have in photo wall below? Or have somewhere up top with main information 
+    - photospot page
+        - maybe rename photo area, and have some way to denote the OP's pics vs other ones
         - fix editing a photospot/review
+            - owner shouldn't be able to post reviews, or edit them
             - review works, except for editing photos
             - need to figure out how to handle editing pictures
         - add weather functionality: https://www.npmjs.com/package/openweather-api-node
@@ -84,6 +82,7 @@
         - add back in the photo view for uploading pics
     - photospot page
         - add more info for location, how to get there 
+        - add sorting options to image section
         - redesign to have better utility/feel, rn hard to find all the info you want
         - add link to google maps/apple maps to nav to location
         - add scheduler for getting to the location at golden hour

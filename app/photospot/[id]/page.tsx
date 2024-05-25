@@ -30,6 +30,22 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
     const [stats, setStats] = useState<PhotospotStats | null>(null)
     const supabase = createClient()
 
+    const updateReviews = async (id: number, userVal: any) => {
+        getPhotospotReviews(id).then((reviews) => {
+            console.log('reviews', reviews, 'user', userVal);
+            if (userVal?.id === photospotData?.created_by) {
+                setOwner(true);
+            }
+            reviews.forEach(review => {
+                if (review.created_by === userVal?.id) {
+                    //     //check if user did a review already
+                    setUserReview(review);
+                }
+            });
+            setReviews(reviews);
+        });
+    }
+
     useEffect(() => {
         //pull info from photospot based on id
         getPhotospotById(parseInt(params.id)).then((photospot: Photospot) => {
@@ -39,19 +55,7 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
 
     }, [params.id]);
     useEffect(() => {
-        getPhotospotReviews(parseInt(params.id)).then((reviews) => {
-            console.log('reviews', reviews, 'user', user);
-            if (user?.id === photospotData?.created_by) {
-                setOwner(true);
-            }
-            reviews.forEach(review => {
-                if (review.created_by === user?.id) {
-                    //     //check if user did a review already
-                    setUserReview(review);
-                }
-            });
-            setReviews(reviews);
-        });
+        updateReviews(parseInt(params.id), user);
     }, [photospotData, user])
     useEffect(() => {
         getUser().then(user => {
@@ -73,18 +77,18 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
                 </div>
             </div>
             <div className="flex flex-row gap-24  w-full justify-center">
-                <h1 className="text-2xl font-semibold ">User Impressions</h1>
+                <h1 className="text-2xl font-semibold ">Photobook</h1>
                 <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
                     <DialogTrigger>
-                        <div className={"text-2xl  " + cn(buttonVariants({ variant: 'default' }))}>{userReview ? "Edit Impression" : "Add Yours"}</div>
+                        <div className={"text-2xl  " + cn(buttonVariants({ variant: 'default' }))}>{userReview ? "Edit Yours" : "Add Yours"}</div>
                     </DialogTrigger>
                     <DialogContent>
-                        <CreateReviewDialog photospot={photospotData} setReviewDialogOpen={setReviewDialogOpen} userReview={userReview} />
+                        <CreateReviewDialog photospot={photospotData} setReviewDialogOpen={setReviewDialogOpen} userReview={userReview} updateReviews={() => updateReviews(parseInt(params.id), user)} />
                     </DialogContent>
                 </Dialog>
             </div>
 
-            <ReviewGrid input={reviews} />
+            <ReviewGrid input={reviews} photospot={photospotData} />
         </div>
     );
 }

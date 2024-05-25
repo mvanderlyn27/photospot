@@ -40,7 +40,7 @@ export const createReviewSchema = z.object({
 })
 
 
-export default function CreateReviewDialog({ photospot, setReviewDialogOpen, userReview }: { photospot: Photospot | null, setReviewDialogOpen: any, userReview: Review | null }) {
+export default function CreateReviewDialog({ photospot, setReviewDialogOpen, userReview, updateReviews }: { photospot: Photospot | null, setReviewDialogOpen: any, userReview: Review | null, updateReviews: any }) {
     const [loading, setLoading] = useState(false);
     const createReviewForm = useForm<z.infer<typeof createReviewSchema>>({
         resolver: zodResolver(createReviewSchema),
@@ -60,6 +60,7 @@ export default function CreateReviewDialog({ photospot, setReviewDialogOpen, use
             setLoading(true);
             await createReview(data, photospot.id, photos_form);
             setLoading(false);
+            await updateReviews();
             setReviewDialogOpen(false);
             toast({
                 title: "Review Submitted",
