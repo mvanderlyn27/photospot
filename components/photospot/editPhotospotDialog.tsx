@@ -9,7 +9,6 @@ import { Textarea } from "../ui/textarea";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import RatingInput from "./ratingInput";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
@@ -40,13 +39,13 @@ export const createReviewSchema = z.object({
 })
 
 
-export default function CreateReviewDialog({ photospot, setReviewDialogOpen, userReview }: { photospot: Photospot | null, setReviewDialogOpen: any, userReview: Review | null }) {
+export default function EditPhotospotDialog({ photospot, setEditPhotospotDialogOpen }: { photospot: Photospot | null, setEditPhotospotDialogOpen: any, }) {
     const [loading, setLoading] = useState(false);
     const createReviewForm = useForm<z.infer<typeof createReviewSchema>>({
         resolver: zodResolver(createReviewSchema),
         defaultValues: {
-            rating: userReview ? userReview.rating : 3,
-            text: userReview?.text ? userReview.text : "",
+            rating: 3,
+            text: "",
             photos: null
         },
     })
@@ -60,7 +59,7 @@ export default function CreateReviewDialog({ photospot, setReviewDialogOpen, use
             setLoading(true);
             await createReview(data, photospot.id, photos_form);
             setLoading(false);
-            setReviewDialogOpen(false);
+            setEditPhotospotDialogOpen(false);
             toast({
                 title: "Review Submitted",
             })
@@ -85,7 +84,6 @@ export default function CreateReviewDialog({ photospot, setReviewDialogOpen, use
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Rating</FormLabel>
-                                    <RatingInput rating={field.value} />
                                     <Select value={"" + field.value} onValueChange={field.onChange} defaultValue={"" + field.value}>
                                         <FormControl>
                                             <SelectTrigger>
@@ -142,7 +140,7 @@ export default function CreateReviewDialog({ photospot, setReviewDialogOpen, use
                     <CardFooter className="flex-none">
                         <div className="w-full flex flex-row gap-8 justify-center">
                             <Button variant="outline" onClick={(e) => { e.preventDefault(); clearForm() }}>Reset</Button>
-                            <Button type="submit">{userReview ? "Update" : "Create"}</Button>
+                            <Button type="submit">Update</Button>
                         </div>
                     </CardFooter>
                 </form>

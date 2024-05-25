@@ -37,6 +37,7 @@
     - photospot page
         - add back in photos for the photo spot from OG poster
         - fix editing a photospot 
+            - need to figure out how to handle editing pictures
         - should probably link a review to a username/rating?
         - Add dialog to each image in reviewGrid, click to open dialog which shows more info on review
             - have this, but need to touch it up, right now looks like shit
@@ -53,6 +54,7 @@
         - add in tag creation/selection for photospots
         - update rls policy for tags to allow only user who created photospot to update tags for a photospot
     - general fixes
+        - maybe create diff views for common joins
         - fix carousel to be properly sizeable, including the extra button space
             - rn messed up on create page, and photospot page
         - fix navbar to show which page you're on

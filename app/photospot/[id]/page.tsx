@@ -1,10 +1,10 @@
 "use client";
-import { getPhotospotById } from "@/app/serverActions/photospots/getPhotospotById";
+import { getPhotospotById, getPhotospotByIdStats } from "@/app/serverActions/photospots/getPhotospotById";
 import { getTestImages } from "@/app/serverActions/storage/getTestImages";
 import PhotospotGrid from "@/components/photospot/photospotGrid";
 import PreviewMap from "@/components/maps/previewMap";
 import PhotospotInfo from "@/components/photospot/photospotInfo";
-import { Photospot, Review, ReviewGridInput } from "@/types/photospotTypes";
+import { Photospot, PhotospotStats, Review, ReviewGridInput } from "@/types/photospotTypes";
 import { useEffect, useState } from "react";
 import ReviewGrid from "@/components/review/reviewGrid";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { createClient } from "@/utils/supabase/client";
 import { getPhotospotReviews } from "@/app/serverActions/reviews/getPhotospotReviews";
+import { getUser } from "@/app/serverActions/auth/getUser";
 
 export default function PhotospotPage({ params }: { params: { id: string } }) {
     /*
@@ -26,6 +27,7 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
     const [user, setUser] = useState<any>(null)
     const [reviews, setReviews] = useState<Review[]>([]);
     const [userReview, setUserReview] = useState<Review | null>(null);
+    const [stats, setStats] = useState<PhotospotStats | null>(null)
     const supabase = createClient()
 
     useEffect(() => {
@@ -35,24 +37,36 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
             setOwner(photospot?.created_by === user?.id);
         });
 
-        supabase.auth.getUser().then(userData => {
-            setUser(userData.data.user)
-            getPhotospotReviews(parseInt(params.id)).then((reviews) => {
-                console.log('reviews', reviews, 'user', user);
-                // if (user.id in reviews) {
-                //     //check if user did a review already
-                // }
-                setReviews(reviews);
-            })
-        });
-
-
     }, [params.id]);
+    useEffect(() => {
+        getPhotospotReviews(parseInt(params.id)).then((reviews) => {
+            console.log('reviews', reviews, 'user', user);
+            if (user?.id === photospotData?.created_by) {
+                setOwner(true);
+            }
+            reviews.forEach(review => {
+                if (review.created_by === user?.id) {
+                    //     //check if user did a review already
+                    setUserReview(review);
+                }
+            });
+            setReviews(reviews);
+        });
+    }, [photospotData, user])
+    useEffect(() => {
+        getUser().then(user => {
+            setUser(user)
+        });
+        getPhotospotByIdStats(parseInt(params.id)).then((stats) => {
+            setStats(stats)
+        })
+    }, [])
+
     return (
         <div className="flex flex-col justify-center gap-8 w-full pl-20 pr-20">
             <div className="flex flex-row gap-24 w-full justify-center h-[500px] ">
                 <div className="flex-1  h-50vh">
-                    <PhotospotInfo photospot={photospotData} />
+                    <PhotospotInfo owner={owner} photospot={photospotData} stats={stats} />
                 </div>
                 <div className="flex-1  h-50vh">
                     {photospotData?.lat && photospotData?.lng && <PreviewMap lat={photospotData.lat} lng={photospotData.lng} />}
@@ -62,10 +76,10 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
                 <h1 className="text-2xl font-semibold ">User Impressions</h1>
                 <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
                     <DialogTrigger>
-                        <div className={"text-2xl  " + cn(buttonVariants({ variant: 'default' }))}>Add Yours</div>
+                        <div className={"text-2xl  " + cn(buttonVariants({ variant: 'default' }))}>{userReview ? "Edit Impression" : "Add Yours"}</div>
                     </DialogTrigger>
                     <DialogContent>
-                        <CreateReviewDialog photospot={photospotData} setReviewDialogOpen={setReviewDialogOpen} />
+                        <CreateReviewDialog photospot={photospotData} setReviewDialogOpen={setReviewDialogOpen} userReview={userReview} />
                     </DialogContent>
                 </Dialog>
             </div>

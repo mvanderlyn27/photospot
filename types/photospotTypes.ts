@@ -37,7 +37,11 @@ export type Photospot = {
     photo_placeholder?: "blur" | "empty" | `data:image/${string}` | undefined;
     username?: string | null;
 };
-
+export type PhotospotStats = {
+    id: number | null;
+    rating_count: number | null;
+    rating_average: number | null;
+}
 export type PhotospotInsert = {
     description?: string;
     name: string;
@@ -54,8 +58,8 @@ export type Review = {
     photo_paths: string[];
     rating: number;
     username?: string | null;
-
 }
+
 export type ReviewGridInput = {
     path: string;
     name: string;

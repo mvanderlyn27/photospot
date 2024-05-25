@@ -1,5 +1,5 @@
 "use client"
-import { PhotoTime, Photospot } from "@/types/photospotTypes";
+import { PhotoTime, Photospot, PhotospotStats } from "@/types/photospotTypes";
 import {
     Card,
     CardContent,
@@ -22,13 +22,19 @@ import { getPhotospotTags } from "@/app/serverActions/photospots/getPhotospotTag
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { cn } from "@/lib/utils";
 import SharePhotospotDialog from "./sharePhotospotDialog";
+import EditPhotospotDialog from "./editPhotospotDialog";
 
 export default function PhotospotInfo({
     photospot,
+    stats,
+    owner
 }: {
     photospot: Photospot | null;
+    stats: PhotospotStats | null;
+    owner: boolean
 }) {
     const [saved, setSaved] = useState(false);
+    const [editPhotospotDialogOpen, setEditPhotospotDialogOpen] = useState(false);
     const [tags, setTags] = useState<string[]>([]);
 
     useEffect(() => {
@@ -68,7 +74,19 @@ export default function PhotospotInfo({
                 <div className="flex flex-row justify-between">
                     <CardTitle className="text-3xl">{photospot?.name}</CardTitle>
                     <div className="flex flex-row gap-2">
-                        {/* <Button className="p-2"><FaEdit className="w-6 h-6" /></Button> */}
+                        {owner &&
+
+                            <Dialog open={editPhotospotDialogOpen} onOpenChange={setEditPhotospotDialogOpen}>
+                                <DialogTrigger>
+                                    <div className={"p-2  " + cn(buttonVariants({ variant: 'default' }))}>Edit</div>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <EditPhotospotDialog photospot={photospot} setEditPhotospotDialogOpen={setEditPhotospotDialogOpen} />
+                                </DialogContent>
+                            </Dialog>
+                        }
+
+
                         <Dialog>
                             <DialogTrigger>
                                 <div className={cn(buttonVariants({ variant: 'default' }))}>
@@ -83,7 +101,7 @@ export default function PhotospotInfo({
                         <Button onClick={() => handleSave()}>{saved ? <FaBookmark className="w-6 h-6" /> : <FaRegBookmark className="w-6 h-6" />}</Button>
                     </div>
                 </div>
-                <CardDescription>Rating: 3.5/5</CardDescription>
+                <CardDescription>Rating: {stats ? stats.rating_average : "-"}/5</CardDescription>
                 <div className=" flex flex-auto gap-2">
                     {tags.map((tag) => (
                         <Badge key={tag} variant="outline">
