@@ -10,11 +10,12 @@ export async function getPhotospotById(id: number): Promise<Photospot> {
     // type-casting here for convenience
     // in practice, you should validate your inputs
 
-    const { data, error } = await supabase.from('photospots').select('*').eq('id', id);
+    const { data, error } = await supabase.from('photospots').select('*, ...profiles!photospots_created_by_fkey(username)').eq('id', id).single();
+    // const { data, error } = await supabase.from('profiles').select('username, ...photospots(*)').eq('id', id);
     if (error) {
         redirect('/error?error=' + error.message);
     }
     //todo add photospot type
-    return data[0];
+    return data;
 
 }

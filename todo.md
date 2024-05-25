@@ -41,19 +41,25 @@
         - Add dialog to each image in reviewGrid, click to open dialog which shows more info on review
             - have this, but need to touch it up, right now looks like shit
         - add weather functionality: https://www.npmjs.com/package/openweather-api-node
+        - add backbutton to get back to previous page ?
     - need to setup explore page
     - home (timeline)
         - make mobile like instagram, and web view more like pinterest, or a scroll grid 
+    - profile page
+        - add avatar pic to users
     - create page
         - Split up leftbar into sub components and organize logic better
         - fix auto complete searches, kinda weird rn
         - add in tag creation/selection for photospots
         - update rls policy for tags to allow only user who created photospot to update tags for a photospot
-    - fix carousel to be properly sizeable, including the extra button space
-        - rn messed up on create page, and photospot page
-    - make all screens beautiful
+    - general fixes
+        - fix carousel to be properly sizeable, including the extra button space
+            - rn messed up on create page, and photospot page
+        - fix navbar to show which page you're on
 # Before launch of MVP
 - design and implement all mobile views for website
+    - maybe combine explore/home to have picture view/ map view, just call it "explore"
+- make all screens beautiful
 - fix page loading so theres no flash between routing, maybe don't use links, or theres something else needed to not have the nav bar flash between page routes (https://stackoverflow.com/questions/55624695/loading-screen-on-next-js-page-transition)
 - setup email service so I don't get rate limited on user signup
     - need to look into smtp providers mayeb smtp2go

@@ -35,6 +35,7 @@ export type Photospot = {
     lng: number;
     draft?: boolean;
     photo_placeholder?: "blur" | "empty" | `data:image/${string}` | undefined;
+    username?: string | null;
 };
 
 export type PhotospotInsert = {
@@ -52,6 +53,7 @@ export type Review = {
     text?: string | null;
     photo_paths: string[];
     rating: number;
+    username?: string | null;
 
 }
 export type ReviewGridInput = {

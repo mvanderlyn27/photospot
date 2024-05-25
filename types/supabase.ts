@@ -181,6 +181,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "photospot_reviews_created_by_fkey1"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "photospot_reviews_photospot_id_fkey"
             columns: ["photospot_id"]
             isOneToOne: false
@@ -252,7 +259,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          created_by?: string
+          created_by: string
           description?: string | null
           edited?: boolean
           id?: number
@@ -276,7 +283,15 @@ export type Database = {
           photo_paths?: string[]
           private?: boolean | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "photospots_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {

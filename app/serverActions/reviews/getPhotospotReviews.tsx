@@ -11,7 +11,7 @@ export async function getPhotospotReviews(photospot_id: number, user?: number) {
     // in practice, you should validate your inputs
 
     const bucket = "photospot_pictures";
-    let query = supabase.from('photospot_reviews').select('*').eq('photospot_id', photospot_id);
+    let query = supabase.from('photospot_reviews').select('*, ...profiles(username)').eq('photospot_id', photospot_id);
     if (user) {
         query = query.eq('created_by', user);
     }
@@ -20,5 +20,6 @@ export async function getPhotospotReviews(photospot_id: number, user?: number) {
         redirect('/error?error=' + error.message);
     }
     //todo add photospot type
+    console.log('review data', data)
     return data;
 }

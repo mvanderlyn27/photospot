@@ -16,9 +16,13 @@ import { createClient } from "@/utils/supabase/client";
 import { getPhotospotReviews } from "@/app/serverActions/reviews/getPhotospotReviews";
 
 export default function PhotospotPage({ params }: { params: { id: string } }) {
+    /*
+        Want to be able to differentiate if user is the owner, and if user has made a review already
+    */
     const [photospotData, setPhotoSpotData] = useState<Photospot | null>(null);
     const [testPhotospots, setTestPhotospots] = useState<ReviewGridInput[]>([]);
     const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+    const [owner, setOwner] = useState(false);
     const [user, setUser] = useState<any>(null)
     const [reviews, setReviews] = useState<Review[]>([]);
     const [userReview, setUserReview] = useState<Review | null>(null);
@@ -28,6 +32,7 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
         //pull info from photospot based on id
         getPhotospotById(parseInt(params.id)).then((photospot: Photospot) => {
             setPhotoSpotData(photospot);
+            setOwner(photospot?.created_by === user?.id);
         });
 
         supabase.auth.getUser().then(userData => {
