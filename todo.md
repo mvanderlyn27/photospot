@@ -33,12 +33,15 @@
 # Code Improvement
 - Most important
      photospot page
+        - creating a review needs to retrigger a pull of info for reviews
         - add back in photos for the photo spot from OG poster
+            - maybe rename photo area, and have some way to denote the OP's pics vs other ones
             - have in photo wall below? Or have somewhere up top with main information 
         - fix editing a photospot/review
             - review works, except for editing photos
             - need to figure out how to handle editing pictures
         - add weather functionality: https://www.npmjs.com/package/openweather-api-node
+        - add navigation page which links to lat/lng of position in googlemaps/apple maps
         - add or add a button for rotating map view, vs directions to location view
         - add backbutton to get back to previous page ?
     - need to setup explore page
