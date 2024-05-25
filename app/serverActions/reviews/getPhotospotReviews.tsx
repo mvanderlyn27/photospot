@@ -20,6 +20,5 @@ export async function getPhotospotReviews(photospot_id: number, user?: number) {
         redirect('/error?error=' + error.message);
     }
     //todo add photospot type
-    console.log('review data', data)
     return data;
 }

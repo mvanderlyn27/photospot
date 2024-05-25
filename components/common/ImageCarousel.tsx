@@ -10,9 +10,9 @@ export default function ImageCarousel({ photos, width, height }: { photos: strin
                 loop: true,
             }}
         >
-            <CarouselContent>
+            <CarouselContent className={`w-[${width}] flex-1`}>
                 {photos.map((photo_src, index) => (
-                    <CarouselItem key={index} className="">
+                    <CarouselItem key={index} className={`w-[${width}] h-[${height}]`}>
                         <img className={`w-full h-[${height}] object-cover rounded-md`} src={photo_src} />
                     </CarouselItem>
                 ))}

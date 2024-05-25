@@ -1,5 +1,5 @@
 "use client"
-import { PhotoTime, Photospot, PhotospotStats } from "@/types/photospotTypes";
+import { Photospot, PhotospotStats } from "@/types/photospotTypes";
 import {
     Card,
     CardContent,
@@ -23,6 +23,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { cn } from "@/lib/utils";
 import SharePhotospotDialog from "./sharePhotospotDialog";
 import EditPhotospotDialog from "./editPhotospotDialog";
+import RatingInput from "../review/ratingInput";
 
 export default function PhotospotInfo({
     photospot,
@@ -72,7 +73,12 @@ export default function PhotospotInfo({
         <Card className="h-full flex flex-col">
             <CardHeader className="flex-none">
                 <div className="flex flex-row justify-between">
-                    <CardTitle className="text-3xl">{photospot?.name}</CardTitle>
+                    <CardTitle className="text-3xl">
+                        <div className="flex flex-row gap-4">
+                            {photospot?.name}
+                            {stats?.rating_average && <RatingInput rating={stats.rating_average} />}
+                        </div>
+                    </CardTitle>
                     <div className="flex flex-row gap-2">
                         {owner &&
 
@@ -101,7 +107,7 @@ export default function PhotospotInfo({
                         <Button onClick={() => handleSave()}>{saved ? <FaBookmark className="w-6 h-6" /> : <FaRegBookmark className="w-6 h-6" />}</Button>
                     </div>
                 </div>
-                <CardDescription>Rating: {stats ? stats.rating_average : "-"}/5</CardDescription>
+                <CardDescription>Posted by: {photospot?.username}</CardDescription>
                 <div className=" flex flex-auto gap-2">
                     {tags.map((tag) => (
                         <Badge key={tag} variant="outline">

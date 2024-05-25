@@ -83,7 +83,7 @@ export default function LeftWindow({ mapBounds, mapCenter, user, location, setLo
                 i += 1;
             })
             setLoading(true);
-            createPhotospot(data, location, photos_form).then((photospot) => {
+            createPhotospot(data, selectedLocation, location, photos_form).then((photospot) => {
                 refreshPhotospots()
                 setViewingPhotospot(photospot);
                 clearForm();

@@ -36,6 +36,7 @@ export type Photospot = {
     draft?: boolean;
     photo_placeholder?: "blur" | "empty" | `data:image/${string}` | undefined;
     username?: string | null;
+    neighborhood?: string | null;
 };
 export type PhotospotStats = {
     id: number | null;

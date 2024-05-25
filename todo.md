@@ -32,16 +32,14 @@
 - 
 # Code Improvement
 - Most important
-    - Update/fix server actions for all profile/photospot things
-        - got some of photospot actions done
-    - photospot page
+     photospot page
         - add back in photos for the photo spot from OG poster
-        - fix editing a photospot 
+            - have in photo wall below? Or have somewhere up top with main information 
+        - fix editing a photospot/review
+            - review works, except for editing photos
             - need to figure out how to handle editing pictures
-        - should probably link a review to a username/rating?
-        - Add dialog to each image in reviewGrid, click to open dialog which shows more info on review
-            - have this, but need to touch it up, right now looks like shit
         - add weather functionality: https://www.npmjs.com/package/openweather-api-node
+        - add or add a button for rotating map view, vs directions to location view
         - add backbutton to get back to previous page ?
     - need to setup explore page
     - home (timeline)
@@ -49,6 +47,7 @@
     - profile page
         - add avatar pic to users
     - create page
+        - add reverse geocoding for clicking on map to get neighborhood
         - Split up leftbar into sub components and organize logic better
         - fix auto complete searches, kinda weird rn
         - add in tag creation/selection for photospots
@@ -58,6 +57,8 @@
         - fix carousel to be properly sizeable, including the extra button space
             - rn messed up on create page, and photospot page
         - fix navbar to show which page you're on
+        - Update/fix server actions for all profile/photospot things
+            - got some of photospot actions done
 # Before launch of MVP
 - design and implement all mobile views for website
     - maybe combine explore/home to have picture view/ map view, just call it "explore"
@@ -85,11 +86,12 @@
         - add scheduler for getting to the location at golden hour
         - maybe make all reviews carousels 
         - add ability to save inspo pics
-    - map improvements create page
+    - map improvements 
+        - fix sessions so we don't use a session every key entered
+        - add navigation
         - improve the auto search names, kinda vague rn, something funky going on with suggestion vs. feature pipeline
             - https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-limit-region/
         - maybe see about entering a specific lat/lng when creating
-        - would be cool to have photospot view rotate slowly around a point
         - should be able to animate light changing throughout the day using mapref.setProperty
         - figure out what map settings to reduce lag and look the prettiest
         - look into re-use map, and adding the markers back in on page load

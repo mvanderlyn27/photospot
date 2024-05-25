@@ -254,6 +254,7 @@ export type Database = {
           lng: number
           location: unknown
           name: string
+          neighborhood: string | null
           photo_paths: string[]
           private: boolean | null
         }
@@ -267,6 +268,7 @@ export type Database = {
           lng: number
           location: unknown
           name: string
+          neighborhood?: string | null
           photo_paths: string[]
           private?: boolean | null
         }
@@ -280,6 +282,7 @@ export type Database = {
           lng?: number
           location?: unknown
           name?: string
+          neighborhood?: string | null
           photo_paths?: string[]
           private?: boolean | null
         }

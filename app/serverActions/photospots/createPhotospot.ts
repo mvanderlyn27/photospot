@@ -5,27 +5,34 @@ import { Database } from "@/types/supabase";
 import { randomNumber } from "@/utils/common/math";
 // import { createClient } from "@/utils/supabase/client";
 import { createClient } from "@/utils/supabase/server";
+import { SearchBoxFeatureSuggestion } from "@mapbox/search-js-core";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const PHOTO_BUCKET = "photospot_pictures";
-export default async function createPhotospot(photospotInfo: z.infer<typeof createPhotospotSchema>, location: { lat: number, lng: number }, photospotPictures: FormData): Promise<Photospot> {
+export default async function createPhotospot(photospotInfo: z.infer<typeof createPhotospotSchema>, selectedLocation: SearchBoxFeatureSuggestion | null, location: { lat: number, lng: number }, photospotPictures: FormData): Promise<Photospot> {
     if (!photospotInfo || !photospotInfo.photos) {
         redirect('/error');
     }
     const supabase = createClient()
-
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) {
+        redirect('/error?error=not logged in');
+    }
+    const neighborhood = selectedLocation?.properties.context.neighborhood?.name;
     const { data: uploadData, error: uploadError } = await supabase
         .from('photospots')
-        .insert([{
+        .insert({
+            created_by: data.user.id,
             name: photospotInfo.name,
             description: photospotInfo.description,
             photo_paths: [],
             location: `POINT(${location.lat} ${location.lng})`,
             lat: location.lat,
-            lng: location.lng
-        }]).select('*');
+            lng: location.lng,
+            neighborhood: neighborhood
+        }).select('*');
     if (uploadError) {
         console.log("insert error: ", uploadError);
         redirect('error?error=' + uploadError.message);
