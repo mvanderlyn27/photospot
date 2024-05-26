@@ -32,7 +32,15 @@
 - 
 # Code Improvement
 - Most important
+    - fix logged in vs/ not flow
+        - want users to be able to view home, explore, and photospot page
+        - need to be logged in for creating/profile
+        - don't load page at all before checking if logged in
+        - https://supabase.com/docs/guides/auth/auth-anonymous 
+        - probably need to setup anonomous user when hitting the home page and not logged in
+        - setup captcha
     - photospot page
+        - make it so you can view page without being logged in
         - maybe rename photo area, and have some way to denote the OP's pics vs other ones
         - fix editing a photospot/review
             - owner shouldn't be able to post reviews, or edit them
@@ -50,6 +58,7 @@
     - create page
         - add reverse geocoding for clicking on map to get neighborhood
         - Split up leftbar into sub components and organize logic better
+        - maybe remove marker when selecting a spot
         - fix auto complete searches, kinda weird rn
         - add in tag creation/selection for photospots
         - update rls policy for tags to allow only user who created photospot to update tags for a photospot
@@ -68,7 +77,7 @@
 - setup email service so I don't get rate limited on user signup
     - need to look into smtp providers mayeb smtp2go
     - reenable email on account creation after this
- 
+ - figure out migration for DB, and seperating environments 
 - For later
     - feed
         - display when golden hour is near you right now, maybe save location to profile?
@@ -81,6 +90,7 @@
         - add minimize button for leftbar
         - add back in the photo view for uploading pics
     - photospot page
+        - get page to work for logged in/ not logged in
         - add more info for location, how to get there 
         - add sorting options to image section
         - redesign to have better utility/feel, rn hard to find all the info you want
