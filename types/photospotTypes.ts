@@ -50,6 +50,15 @@ export type PhotospotInsert = {
     location: string;
     draft?: boolean;
 };
+export type PhotobookPicture = {
+    id: number;
+    photospot_id: number
+    name: string;
+    description: string;
+    photo_paths: string[];
+    created_by?: string | null;
+    username?: string | null;
+}
 export type Review = {
     id: number
     created_at?: string;

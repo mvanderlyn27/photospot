@@ -32,7 +32,7 @@
 - 
 # Code Improvement
 - Most important
-    - fix logged in vs/ not flow
+    - fix logged in vs/ not flow - do around the time of fixing mobile view
         - want users to be able to view home, explore, and photospot page
         - need to be logged in for creating/profile
         - don't load page at all before checking if logged in
@@ -40,8 +40,9 @@
         - probably need to setup anonomous user when hitting the home page and not logged in
         - setup captcha
     - photospot page
-        - make it so you can view page without being logged in
-        - maybe rename photo area, and have some way to denote the OP's pics vs other ones
+        - complete pulling photobook and reviews out
+            - just have your review up top, and have edit button next to it
+            - need to edit backedn to split out reviews/photobook posts
         - fix editing a photospot/review
             - owner shouldn't be able to post reviews, or edit them
             - review works, except for editing photos
@@ -72,6 +73,10 @@
 # Before launch of MVP
 - design and implement all mobile views for website
     - maybe combine explore/home to have picture view/ map view, just call it "explore"
+    - emphasis how to recreate a shot at a beautiful place
+    - also def a social app now
+    - need to figure out review vs uploading photos
+        - do we need reviews? Or just keep track of number of photos
 - make all screens beautiful
 - fix page loading so theres no flash between routing, maybe don't use links, or theres something else needed to not have the nav bar flash between page routes (https://stackoverflow.com/questions/55624695/loading-screen-on-next-js-page-transition)
 - setup email service so I don't get rate limited on user signup
@@ -90,14 +95,20 @@
         - add minimize button for leftbar
         - add back in the photo view for uploading pics
     - photospot page
+        - editing
+            - fix editing to remove old photos
+            - fix editing to need at least one picture
+            - make editing of picture section look pretty 
+        - update OP photospot pics to be a carousel too
         - get page to work for logged in/ not logged in
         - add more info for location, how to get there 
-        - add sorting options to image section
+        - photobook section
+            - add sorting options to image section
+            - add ability to rate photobook pics, and save them
         - redesign to have better utility/feel, rn hard to find all the info you want
         - add link to google maps/apple maps to nav to location
         - add scheduler for getting to the location at golden hour
-        - maybe make all reviews carousels 
-        - add ability to save inspo pics
+        - maybe make all photospot pics carousels 
     - map improvements 
         - fix sessions so we don't use a session every key entered
         - add navigation
