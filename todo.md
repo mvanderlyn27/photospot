@@ -40,13 +40,13 @@
         - probably need to setup anonomous user when hitting the home page and not logged in
         - setup captcha
     - photospot page
-        - complete pulling photobook and reviews out
+        - complete splitting photobook and reviews out
             - just have your review up top, and have edit button next to it
             - need to edit backedn to split out reviews/photobook posts
         - fix editing a photospot/review
-            - owner shouldn't be able to post reviews, or edit them
-            - review works, except for editing photos
             - need to figure out how to handle editing pictures
+            - make chosing photos smoother, rn clunky, you have upload/remove seperated
+            - also make this prettier
         - add weather functionality: https://www.npmjs.com/package/openweather-api-node
         - add navigation page which links to lat/lng of position in googlemaps/apple maps
         - add or add a button for rotating map view, vs directions to location view

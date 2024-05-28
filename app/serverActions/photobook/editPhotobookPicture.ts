@@ -15,18 +15,24 @@ export default async function editPhotobookPicture(photobookPictureId: number, p
     if (!photobookPictureInfo || !photobookPictureId) {
         redirect('/error?error=missing info for edit');
     }
+
+    console.log('photobookPictureInfo', photobookPictureInfo);
     const supabase = createClient()
     const user = await supabase.auth.getUser();
     if (!user.data.user) {
         redirect('/error?error=not logged in');
     }
 
-    /*
-    need to handle removing old photos here fromt he bucket
+    // need to handle removing old photos here fromt he bucket
+    if (photobookPictureInfo?.photosToRemove && photobookPictureInfo.photosToRemove.length > 0) {
+        let photo_path = photobookPictureInfo.photosToRemove.map((name: string) => photospot_id + '/photobook/' + photobookPictureId + '/' + name);
+        console.log('removing', photo_path);
+        const { error } = await supabase.storage.from(PHOTO_BUCKET).remove(photo_path);
+        if (error) {
+            redirect('/error?error=' + error.message);
+        }
+    }
 
-
-    */
-    console.log('photobookPictureInfo', photobookPictureInfo);
 
     let filePaths: string[] = [];
     const photoData: any[] = photobookPictures.getAll('photobook_pictures');

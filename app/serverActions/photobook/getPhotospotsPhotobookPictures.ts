@@ -15,6 +15,5 @@ export async function getPhotospotsPhotobookPictures(photospot_id: number) {
         redirect('/error?error=' + error.message);
     }
     //todo add photospot type
-    console.log('data', data);
     return data;
 }

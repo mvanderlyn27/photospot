@@ -89,7 +89,7 @@ export default function EditPhotobookPictureDialog({ photobookPicture, setEditMo
         editPhotobookPictureForm.trigger("currentPhotos");
         const updatedArray = editPhotobookPictureForm.getValues("photosToRemove")
         if (updatedArray) {
-            updatedArray.push(photo);
+            updatedArray.push(photo.split('/').pop() as string);
             editPhotobookPictureForm.setValue("photosToRemove", updatedArray);
             editPhotobookPictureForm.trigger("photosToRemove");
         }
