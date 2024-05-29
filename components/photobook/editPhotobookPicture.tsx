@@ -15,6 +15,7 @@ import { toast } from "../ui/use-toast";
 import createReview from "@/app/serverActions/reviews/createReview";
 import uploadPhotobookPicture from "@/app/serverActions/photobook/uploadPhotobookPicture";
 import editPhotobookPicture from "@/app/serverActions/photobook/editPhotobookPicture";
+import deletePhotobookPicture from "@/app/serverActions/photobook/deletePhotobookPicture";
 
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -46,8 +47,10 @@ export const editPhotobookPictureSchema = z.object({
 })
 
 
-export default function EditPhotobookPictureDialog({ photobookPicture, setEditMode, updatePhotobook }: { photobookPicture: PhotobookPicture | null, setEditMode: any, updatePhotobook: any }) {
+export default function EditPhotobookPictureDialog({ photobookPicture, setEditMode, setPhotobookPictureDialogOpen, updatePhotobook }: { photobookPicture: PhotobookPicture | null, setEditMode: any, setPhotobookPictureDialogOpen: any, updatePhotobook: any }) {
     const [loading, setLoading] = useState(false);
+
+    const [confirmDelete, setConfirmDelete] = useState(false);
     const editPhotobookPictureForm = useForm<z.infer<typeof editPhotobookPictureSchema>>({
         resolver: zodResolver(editPhotobookPictureSchema),
         defaultValues: {
@@ -83,7 +86,7 @@ export default function EditPhotobookPictureDialog({ photobookPicture, setEditMo
         editPhotobookPictureForm.reset()
         setEditMode(false)
     }
-    const handleDelete = (photo: string) => {
+    const handleRemovePicture = (photo: string) => {
         //maybe async remove photo too ?
         editPhotobookPictureForm.setValue("currentPhotos", editPhotobookPictureForm.getValues("currentPhotos")?.filter((p) => p !== photo));
         editPhotobookPictureForm.trigger("currentPhotos");
@@ -92,6 +95,21 @@ export default function EditPhotobookPictureDialog({ photobookPicture, setEditMo
             updatedArray.push(photo.split('/').pop() as string);
             editPhotobookPictureForm.setValue("photosToRemove", updatedArray);
             editPhotobookPictureForm.trigger("photosToRemove");
+        }
+    }
+    const promptDelete = (setting: boolean) => {
+        setConfirmDelete(setting);
+    }
+    const handleDelete = async () => {
+        if (photobookPicture && confirmDelete) {
+            setLoading(true);
+            await deletePhotobookPicture(photobookPicture.id);
+            setLoading(false);
+            await updatePhotobook();
+            setPhotobookPictureDialogOpen(false);
+            toast({
+                title: "Photobook PictureDeleted",
+            });
         }
     }
     return (
@@ -152,7 +170,7 @@ export default function EditPhotobookPictureDialog({ photobookPicture, setEditMo
                         <h1> Current Photos: (click to remove) </h1>
                         <div className="flex ">
                             {editPhotobookPictureForm.getValues("currentPhotos")?.map((photo) => (
-                                <div className="flex flex-col cursor-pointer" key={photo} onClick={() => { handleDelete(photo) }}>
+                                <div className="flex flex-col cursor-pointer" key={photo} onClick={() => { handleRemovePicture(photo) }}>
                                     <h1>Name: {photo.split('/').pop()}</h1>
                                     <img className="h-40 w-40 object-cover rounded-md" src={photo} />
                                 </div>
@@ -161,10 +179,15 @@ export default function EditPhotobookPictureDialog({ photobookPicture, setEditMo
                         </div>
                     </CardContent>
 
-                    <CardFooter className="flex-none">
+                    <CardFooter className="flex-none flex-col gap-4">
                         <div className="w-full flex flex-row gap-8 justify-center">
                             <Button variant="outline" onClick={(e) => { e.preventDefault(); cancelEdit() }}>Cancel</Button>
                             <Button type="submit">Save Changes</Button>
+                        </div>
+                        <div className="w-full flex flex-row gap-8 justify-center">
+                            {!confirmDelete && <Button variant="destructive" onClick={(e) => { e.preventDefault(); promptDelete(true) }}>Delete</Button>}
+                            {confirmDelete && <Button variant="outline" onClick={(e) => { e.preventDefault(); promptDelete(false) }}>Cancel Delete</Button>}
+                            {confirmDelete && <Button variant="destructive" onClick={(e) => { e.preventDefault(); handleDelete() }}>Confirm Delete</Button>}
                         </div>
                     </CardFooter>
                 </form>

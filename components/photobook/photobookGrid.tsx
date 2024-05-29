@@ -5,8 +5,9 @@ import { Dialog, DialogTrigger } from '@radix-ui/react-dialog';
 import PhotobookPictureDialog from './photobookPictureDialog';
 import PhotospotDialog from '../photospot/photospotDialog';
 import { UserIdentity } from '@supabase/supabase-js';
+import { useState } from 'react';
 export default function PhotobookGrid({ input, photospot, user, updatePhotobook }: { input: PhotobookPicture[], photospot: Photospot | null, user: UserIdentity, updatePhotobook: any }) {
-
+    const [photobookPictureDialogOpen, setPhotobookPictureDialogOpen] = useState(false);
 
     return (
         <div className=" w-full flex flex-col gap-4">
@@ -33,7 +34,7 @@ export default function PhotobookGrid({ input, photospot, user, updatePhotobook 
                 {
                     input?.map(photobookPicture => {
                         return (
-                            <Dialog>
+                            <Dialog open={photobookPictureDialogOpen} onOpenChange={setPhotobookPictureDialogOpen}>
                                 <DialogTrigger>
                                     <div key={photobookPicture.name} className='overflow-hidden  aspect-square rounded relative group'>
                                         {/* <Image key={photobookPicture.name} placeholder='empty' className= "object-cover rounded w-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out "src={review.photo_paths[0]} layout="fill" objectFit='cover' alt={review.name ? review.name : ""}/> */}
@@ -48,7 +49,7 @@ export default function PhotobookGrid({ input, photospot, user, updatePhotobook 
                                         </div>
                                     </div>
                                 </DialogTrigger>
-                                <PhotobookPictureDialog photobookPicture={photobookPicture} owner={user && user.id === photobookPicture.created_by} updatePhotobook={updatePhotobook} />
+                                <PhotobookPictureDialog photobookPicture={photobookPicture} owner={user && user.id === photobookPicture.created_by} updatePhotobook={updatePhotobook} setPhotobookPictureDialogOpen={(val: boolean) => setPhotobookPictureDialogOpen(val)} />
                             </Dialog>
                         )
                     })

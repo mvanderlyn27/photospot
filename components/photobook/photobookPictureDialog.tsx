@@ -10,7 +10,7 @@ import { useState } from "react";
 import UploadPhotobookPictureDialog from "./uploadPhotobookPictureDialog";
 import EditPhotobookPictureDialog from "./editPhotobookPicture";
 
-export default function PhotobookPictureDialog({ photobookPicture, owner, updatePhotobook }: { photobookPicture: PhotobookPicture, owner: boolean, updatePhotobook: any }) {
+export default function PhotobookPictureDialog({ photobookPicture, owner, updatePhotobook, setPhotobookPictureDialogOpen }: { photobookPicture: PhotobookPicture, owner: boolean, updatePhotobook: any, setPhotobookPictureDialogOpen: any }) {
     const [editMode, setEditMode] = useState(false);
     const saveEditChanges = () => {
 
@@ -30,7 +30,7 @@ export default function PhotobookPictureDialog({ photobookPicture, owner, update
                     </DialogDescription>
                 </div>
             </div>}
-            {editMode && <EditPhotobookPictureDialog photobookPicture={photobookPicture} updatePhotobook={updatePhotobook} setEditMode={setEditMode} />}
+            {editMode && <EditPhotobookPictureDialog photobookPicture={photobookPicture} updatePhotobook={updatePhotobook} setPhotobookPictureDialogOpen={setPhotobookPictureDialogOpen} setEditMode={setEditMode} />}
 
         </DialogContent >
     )
