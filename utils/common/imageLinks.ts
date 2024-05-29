@@ -1,0 +1,1 @@
+export const DefaultProfile = "https://vkfbzrfveygdqsqyiggk.supabase.co/storage/v1/object/public/profile_pictures/default.jpg";

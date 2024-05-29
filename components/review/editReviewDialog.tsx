@@ -1,5 +1,5 @@
 "use client"
-import { Photospot, Review } from "@/types/photospotTypes";
+import { PhotobookPicture, Photospot, Review } from "@/types/photospotTypes";
 import { DialogDescription, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { CardContent, CardFooter } from "../ui/card";
@@ -13,60 +13,79 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
 import createReview from "@/app/serverActions/reviews/createReview";
+import uploadPhotobookPicture from "@/app/serverActions/photobook/uploadPhotobookPicture";
+import editPhotobookPicture from "@/app/serverActions/photobook/editPhotobookPicture";
+import editReview from "@/app/serverActions/reviews/editReview";
+import deleteReview from "@/app/serverActions/reviews/deleteReview";
 import RatingDisplay from "./ratingDisplay";
 
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-export const createReviewSchema = z.object({
+export const editReviewSchema = z.object({
     //should add some better requirements for the location
-    rating: z.coerce.number().min(1).max(5),
-    text: z.string(),
-    //tags for later
+
+    rating: z.string().optional(),
+    text: z.string().optional(),
 })
 
 
-export default function CreateReviewDialog({ photospot, setReviewDialogOpen, userReview, updateReviews }: { photospot: Photospot | null, setReviewDialogOpen: any, userReview: Review | null, updateReviews: any }) {
+export default function EditReviewDialog({ review, setEditReviewDialogOpen, updateReviews }: { review: Review | null, setEditReviewDialogOpen: any, updateReviews: any }) {
     const [loading, setLoading] = useState(false);
-    const createReviewForm = useForm<z.infer<typeof createReviewSchema>>({
-        resolver: zodResolver(createReviewSchema),
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const editReviewForm = useForm<z.infer<typeof editReviewSchema>>({
+        resolver: zodResolver(editReviewSchema),
         defaultValues: {
-            rating: userReview ? userReview.rating : 3,
-            text: userReview?.text ? userReview.text : "",
+            rating: review?.rating + "" || "3",
+            text: review?.text || "",
         },
     })
 
-    const onCreate = async (data: z.infer<typeof createReviewSchema>) => {
-        if (photospot) {
+    const onEdit = async (data: z.infer<typeof editReviewSchema>) => {
+        if (review) {
             setLoading(true);
-            await createReview(data, photospot.id);
+            await editReview(review.id, data);
             setLoading(false);
             await updateReviews();
-            setReviewDialogOpen(false);
+            setEditReviewDialogOpen(false);
             toast({
-                title: "Review Submitted",
+                title: "Edits Saved! :)",
             })
         }
     }
-
-    const clearForm = () => {
+    const promptDelete = (setting: boolean) => {
+        setConfirmDelete(setting);
+    }
+    const handleDelete = async () => {
+        if (review && confirmDelete) {
+            setLoading(true);
+            await deleteReview(review.id);
+            setLoading(false);
+            await updateReviews();
+            setEditReviewDialogOpen(false);
+            toast({
+                title: "Review Deleted",
+            });
+        }
+    }
+    const resetForm = () => {
         //need to figure out how to properly clear the photos section
-        createReviewForm.reset()
+        editReviewForm.reset()
     }
     return (
         <div className="flex flex-col gap-2 ">
-            <DialogTitle>What do you think of {photospot?.name}?</DialogTitle>
-            <DialogDescription className="">Help other users get a better idea of what it's like below</DialogDescription>
-            <Form {...createReviewForm}>
-                <form onSubmit={createReviewForm.handleSubmit(onCreate)} className=" w-full flex flex-col">
+            <DialogTitle>Update your review</DialogTitle>
+            <DialogDescription className="">Show off your artsy side, and help other users learn how to make better shots</DialogDescription>
+            <Form {...editReviewForm}>
+                <form onSubmit={editReviewForm.handleSubmit(onEdit)} className=" w-full flex flex-col">
 
                     <CardContent className={`flex-1 overflow-auto mb-4 }`}>
                         <FormField
-                            control={createReviewForm.control}
+                            control={editReviewForm.control}
                             name="rating"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Rating</FormLabel>
-                                    <RatingDisplay rating={field.value} />
+                                    {field.value && <RatingDisplay rating={parseInt(field.value)} />}
                                     <Select value={"" + field.value} onValueChange={field.onChange} defaultValue={"" + field.value}>
                                         <FormControl>
                                             <SelectTrigger>
@@ -87,27 +106,34 @@ export default function CreateReviewDialog({ photospot, setReviewDialogOpen, use
                                     <FormMessage />
                                 </FormItem>
                             )} />
+
                         <FormField
-                            control={createReviewForm.control}
+                            control={editReviewForm.control}
                             name="text"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Comments</FormLabel>
+                                    <FormLabel>About this shot:</FormLabel>
                                     <FormControl>
                                         <Textarea {...field} />
                                     </FormControl>
                                     <FormDescription>
-                                        Short description about why this location is cool
+                                        Short description about how you got this awesome pic
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )} />
+
                     </CardContent>
 
-                    <CardFooter className="flex-none">
+                    <CardFooter className="flex-none flex-col gap-4">
                         <div className="w-full flex flex-row gap-8 justify-center">
-                            <Button variant="outline" onClick={(e) => { e.preventDefault(); clearForm() }}>Reset</Button>
-                            <Button type="submit">{userReview ? "Update" : "Create"}</Button>
+                            <Button variant="outline" onClick={(e) => { e.preventDefault(); resetForm() }}>Reset</Button>
+                            <Button type="submit">Save Changes</Button>
+                        </div>
+                        <div className="w-full flex flex-row gap-8 justify-center">
+                            {!confirmDelete && <Button variant="destructive" onClick={(e) => { e.preventDefault(); promptDelete(true) }}>Delete</Button>}
+                            {confirmDelete && <Button variant="outline" onClick={(e) => { e.preventDefault(); promptDelete(false) }}>Cancel Delete</Button>}
+                            {confirmDelete && <Button variant="destructive" onClick={(e) => { e.preventDefault(); handleDelete() }}>Confirm Delete</Button>}
                         </div>
                     </CardFooter>
                 </form>

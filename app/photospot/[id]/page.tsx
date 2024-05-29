@@ -42,13 +42,25 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
             if (userVal?.id === photospotData?.created_by) {
                 setOwner(true);
             }
-            reviews.forEach(review => {
+            let reviewFound = false
+            let userReviewIndex = -1;
+            reviews.forEach((review, index) => {
                 if (review.created_by === userVal?.id) {
                     //     //check if user did a review already
                     setUserReview(review);
+                    userReviewIndex = index
+
                 }
             });
-            setReviews(reviews);
+            if (userReviewIndex === -1) {
+                setUserReview(null);
+                setReviews(reviews);
+            }
+            else if (userReview) {
+                //if user review move to top
+                reviews.splice(userReviewIndex, 1);
+                setReviews([userReview, ...reviews]);
+            }
         });
     }
     const updatePhotobook = async (id: number, userVal: any) => {
@@ -117,8 +129,19 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
                     <PhotobookGrid photospot={photospotData} input={photobookPictures} user={user} updatePhotobook={() => updatePhotobook(parseInt(params.id), user)} />
                 </TabsContent>
                 <TabsContent value="reviews">
-                    <h1 className="text-2xl font-semibold ">Reviews</h1>
-                    <ReviewGrid input={reviews} photospot={photospotData} />
+                    <div className="flex flex-row justify-between ">
+                        <h1 className="text-3xl font-semibold ">Reviews</h1>
+                        <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
+                            <DialogTrigger>
+                                {!userReview && <div className={"text-2xl  " + cn(buttonVariants({ variant: 'default' }))}>Review Photospot</div>}
+                            </DialogTrigger>
+                            <DialogContent>
+                                <CreateReviewDialog photospot={photospotData} setReviewDialogOpen={setReviewDialogOpen} userReview={userReview} updateReviews={() => updateReviews(parseInt(params.id), user)} />
+                            </DialogContent>
+                        </Dialog>
+
+                    </div>
+                    <ReviewGrid input={reviews} user={user} updateReviews={() => updateReviews(parseInt(params.id), user)} />
                 </TabsContent>
             </Tabs>
 

@@ -147,7 +147,6 @@ export type Database = {
           created_by: string
           edited: boolean
           id: number
-          photo_paths: string[]
           photospot_id: number
           rating: number
           text: string | null
@@ -157,7 +156,6 @@ export type Database = {
           created_by: string
           edited?: boolean
           id?: number
-          photo_paths: string[]
           photospot_id: number
           rating: number
           text?: string | null
@@ -167,7 +165,6 @@ export type Database = {
           created_by?: string
           edited?: boolean
           id?: number
-          photo_paths?: string[]
           photospot_id?: number
           rating?: number
           text?: string | null
@@ -292,6 +289,58 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      photospots_photobook_pictures: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string
+          id: number
+          name: string
+          photo_paths: string[]
+          photospot_id: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description: string
+          id?: number
+          name: string
+          photo_paths?: string[]
+          photospot_id: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: number
+          name?: string
+          photo_paths?: string[]
+          photospot_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "photospots_photobook_pictures_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photospots_photobook_pictures_photospot_id_fkey"
+            columns: ["photospot_id"]
+            isOneToOne: false
+            referencedRelation: "photospot_rating_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photospots_photobook_pictures_photospot_id_fkey"
+            columns: ["photospot_id"]
+            isOneToOne: false
+            referencedRelation: "photospots"
             referencedColumns: ["id"]
           },
         ]

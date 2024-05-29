@@ -40,17 +40,12 @@
         - probably need to setup anonomous user when hitting the home page and not logged in
         - setup captcha
     - photospot page
-        - complete splitting photobook and reviews out
-            - just have your review up top, and have edit button next to it
-            - need to edit backedn to split out reviews/photobook posts
-        - fix editing a photospot/review
-            - need to figure out how to handle editing pictures
-            - make chosing photos smoother, rn clunky, you have upload/remove seperated
-            - also make this prettier
-        - add weather functionality: https://www.npmjs.com/package/openweather-api-node
-        - add navigation page which links to lat/lng of position in googlemaps/apple maps
-        - add or add a button for rotating map view, vs directions to location view
-        - add backbutton to get back to previous page ?
+        - photospot info
+            - add link to apple maps/google maps for location
+            - fix editing/deleting
+            - polish info, figure out what other info we need
+            - add weather functionality: https://www.npmjs.com/package/openweather-api-node
+        - add ability to view rotating map view, or actual top down map view
     - need to setup explore page
     - home (timeline)
         - make mobile like instagram, and web view more like pinterest, or a scroll grid 
@@ -96,12 +91,11 @@
         - add back in the photo view for uploading pics
     - photospot page
         - editing
-            - fix editing to remove old photos
             - fix editing to need at least one picture
             - make editing of picture section look pretty 
+            - make flow smoother, can add/remove photos in same section, not 2 seperate
         - update OP photospot pics to be a carousel too
         - get page to work for logged in/ not logged in
-        - add more info for location, how to get there 
         - photobook section
             - add sorting options to image section
             - add ability to rate photobook pics, and save them

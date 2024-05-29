@@ -65,7 +65,6 @@ export type Review = {
     created_by: string;
     photospot_id: number;
     text?: string | null;
-    photo_paths: string[];
     rating: number;
     username?: string | null;
 }

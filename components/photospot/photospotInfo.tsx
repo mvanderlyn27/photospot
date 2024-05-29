@@ -23,7 +23,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { cn } from "@/lib/utils";
 import SharePhotospotDialog from "./sharePhotospotDialog";
 import EditPhotospotDialog from "./editPhotospotDialog";
-import RatingInput from "../review/ratingInput";
+import RatingDisplay from "../review/ratingDisplay";
 
 export default function PhotospotInfo({
     photospot,
@@ -76,7 +76,7 @@ export default function PhotospotInfo({
                     <CardTitle className="text-3xl">
                         <div className="flex flex-row gap-4">
                             {photospot?.name}
-                            {stats?.rating_average && <RatingInput rating={stats.rating_average} />}
+                            {stats?.rating_average && <RatingDisplay rating={stats.rating_average} />}
                         </div>
                     </CardTitle>
                     <div className="flex flex-row gap-2">
