@@ -43,9 +43,7 @@
         - photospot info
             - add link to apple maps/google maps for location
             - fix editing/deleting
-                - need to get photobook/photospot deleting finished
-                - fix frontend validation for editing photospot
-                - mainly just need backend function
+                - deleting function needed for photobook and photospot
             - polish info, figure out what other info we need
             - add weather functionality: https://www.npmjs.com/package/openweather-api-node
         - add ability to view rotating map view, or actual top down map view

@@ -28,11 +28,13 @@ import RatingDisplay from "../review/ratingDisplay";
 export default function PhotospotInfo({
     photospot,
     stats,
-    owner
+    owner,
+    updatePhotospot,
 }: {
     photospot: Photospot | null;
     stats: PhotospotStats | null;
-    owner: boolean
+    owner: boolean,
+    updatePhotospot: any
 }) {
     const [saved, setSaved] = useState(false);
     const [editPhotospotDialogOpen, setEditPhotospotDialogOpen] = useState(false);
@@ -87,7 +89,7 @@ export default function PhotospotInfo({
                                     <div className={"p-2  " + cn(buttonVariants({ variant: 'default' }))}>Edit</div>
                                 </DialogTrigger>
                                 <DialogContent>
-                                    <EditPhotospotDialog photospot={photospot} setEditPhotospotDialogOpen={setEditPhotospotDialogOpen} />
+                                    <EditPhotospotDialog photospot={photospot} setEditPhotospotDialogOpen={setEditPhotospotDialogOpen} updatePhotospot={updatePhotospot} />
                                 </DialogContent>
                             </Dialog>
                         }

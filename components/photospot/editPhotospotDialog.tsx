@@ -15,10 +15,11 @@ import { toast } from "../ui/use-toast";
 import createReview from "@/app/serverActions/reviews/createReview";
 import deletePhotospot from "@/app/serverActions/photospots/deletePhotospot";
 import { useRouter } from "next/navigation";
+import editPhotospot from "@/app/serverActions/photospots/editPhotospot";
 
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-export const createReviewSchema = z.object({
+export const editPhotospotSchema = z.object({
     //should add some better requirements for the location
     name: z.string().optional(),
     description: z.string(),
@@ -44,12 +45,13 @@ export const createReviewSchema = z.object({
 })
 
 
-export default function EditPhotospotDialog({ photospot, setEditPhotospotDialogOpen }: { photospot: Photospot | null, setEditPhotospotDialogOpen: any, }) {
+export default function EditPhotospotDialog({ photospot, setEditPhotospotDialogOpen, updatePhotospot }: { photospot: Photospot | null, setEditPhotospotDialogOpen: any, updatePhotospot: any }) {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const [confirmDelete, setConfirmDelete] = useState(false);
-    const createReviewForm = useForm<z.infer<typeof createReviewSchema>>({
-        resolver: zodResolver(createReviewSchema),
+
+    const editPhotospotForm = useForm<z.infer<typeof editPhotospotSchema>>({
+        resolver: zodResolver(editPhotospotSchema),
         defaultValues: {
             name: photospot?.name || "",
             description: photospot?.description || "",
@@ -59,36 +61,39 @@ export default function EditPhotospotDialog({ photospot, setEditPhotospotDialogO
         },
     })
 
-    const onCreate = async (data: z.infer<typeof createReviewSchema>) => {
-        console.log('form info', createReviewForm.getValues());
-        // if (photospot && data.photos) {
-        //     let photos_form = new FormData();
-        //     Array.from(data.photos).forEach((photo) => {
-        //         photos_form.append(`review_pictures`, photo);
-        //     })
-        //     setLoading(true);
-        //     await createReview(data, photospot.id, photos_form);
-        //     setLoading(false);
-        //     setEditPhotospotDialogOpen(false);
-        //     toast({
-        //         title: "Review Submitted",
-        //     })
-        // }
+    const onEdit = async (data: z.infer<typeof editPhotospotSchema>) => {
+        console.log('form info', editPhotospotForm.getValues());
+        if (photospot) {
+            let photos_form = new FormData();
+            if (data.photos) {
+                Array.from(data.photos).forEach((photo) => {
+                    photos_form.append(`photospot_pictures`, photo);
+                })
+            }
+            setLoading(true);
+            await editPhotospot(photospot.id, data, photos_form);
+            setLoading(false);
+            await updatePhotospot(photospot.id);
+            setEditPhotospotDialogOpen(false);
+            toast({
+                title: "Photospot updated",
+            })
+        }
     }
 
     const clearForm = () => {
         //need to figure out how to properly clear the photos section
-        createReviewForm.reset()
+        editPhotospotForm.reset()
     }
     const handleRemovePicture = (photo: string) => {
         //maybe async remove photo too ?
-        createReviewForm.setValue("currentPhotos", createReviewForm.getValues("currentPhotos")?.filter((p) => p !== photo));
-        createReviewForm.trigger("currentPhotos");
-        const updatedArray = createReviewForm.getValues("photosToRemove")
+        editPhotospotForm.setValue("currentPhotos", editPhotospotForm.getValues("currentPhotos")?.filter((p) => p !== photo));
+        editPhotospotForm.trigger("currentPhotos");
+        const updatedArray = editPhotospotForm.getValues("photosToRemove")
         if (updatedArray) {
             updatedArray.push(photo.split('/').pop() as string);
-            createReviewForm.setValue("photosToRemove", updatedArray);
-            createReviewForm.trigger("photosToRemove");
+            editPhotospotForm.setValue("photosToRemove", updatedArray);
+            editPhotospotForm.trigger("photosToRemove");
         }
     }
     const promptDelete = (setting: boolean) => {
@@ -111,12 +116,12 @@ export default function EditPhotospotDialog({ photospot, setEditPhotospotDialogO
         <div className="flex flex-col gap-2 ">
             <DialogTitle>Edit {photospot?.name}?</DialogTitle>
             <DialogDescription className="">Update fields for photospot (except location)</DialogDescription>
-            <Form {...createReviewForm}>
-                <form onSubmit={createReviewForm.handleSubmit(onCreate)} className=" w-full flex flex-col">
+            <Form {...editPhotospotForm}>
+                <form onSubmit={editPhotospotForm.handleSubmit(onEdit)} className=" w-full flex flex-col">
 
                     <CardContent className={`flex-1 overflow-auto mb-4 }`}>
                         <FormField
-                            control={createReviewForm.control}
+                            control={editPhotospotForm.control}
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
@@ -131,7 +136,7 @@ export default function EditPhotospotDialog({ photospot, setEditPhotospotDialogO
                                 </FormItem>
                             )} />
                         <FormField
-                            control={createReviewForm.control}
+                            control={editPhotospotForm.control}
                             name="description"
                             render={({ field }) => (
                                 <FormItem>
@@ -146,7 +151,7 @@ export default function EditPhotospotDialog({ photospot, setEditPhotospotDialogO
                                 </FormItem>
                             )} />
                         <FormField
-                            control={createReviewForm.control}
+                            control={editPhotospotForm.control}
                             name="photos"
                             render={({ field: { onChange }, ...field }) => (
                                 <FormItem>
@@ -163,7 +168,7 @@ export default function EditPhotospotDialog({ photospot, setEditPhotospotDialogO
                         />
                         <h1> Current Photos: (click to remove) </h1>
                         <div className="flex ">
-                            {createReviewForm.getValues("currentPhotos")?.map((photo) => (
+                            {editPhotospotForm.getValues("currentPhotos")?.map((photo) => (
                                 <div className="flex flex-col cursor-pointer" key={photo} onClick={() => { handleRemovePicture(photo) }}>
                                     <h1>Name: {photo.split('/').pop()}</h1>
                                     <img className="h-40 w-40 object-cover rounded-md" src={photo} />

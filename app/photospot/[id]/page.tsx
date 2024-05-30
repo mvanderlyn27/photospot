@@ -36,16 +36,16 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
     const [photobookPictureDialogOpen, setPhotobookPictureDialogOpen] = useState(false);
     const supabase = createClient()
 
-    const updateReviews = async (id: number, userVal: any) => {
+    const updateReviews = async (id: number) => {
         getPhotospotReviews(id).then((reviews) => {
-            console.log('reviews', reviews, 'user', userVal);
-            if (userVal?.id === photospotData?.created_by) {
+            console.log('reviews', reviews, 'user', user);
+            if (user?.id === photospotData?.created_by) {
                 setOwner(true);
             }
             let reviewFound = false
             let userReviewIndex = -1;
             reviews.forEach((review, index) => {
-                if (review.created_by === userVal?.id) {
+                if (review.created_by === user?.id) {
                     //     //check if user did a review already
                     setUserReview(review);
                     userReviewIndex = index
@@ -63,14 +63,14 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
             }
         });
     }
-    const updatePhotobook = async (id: number, userVal: any) => {
+    const updatePhotobook = async (id: number) => {
         getPhotospotsPhotobookPictures(id).then((photoBookPictures) => {
-            console.log('reviews', photoBookPictures, 'user', userVal);
-            if (userVal?.id === photospotData?.created_by) {
+            console.log('reviews', photoBookPictures, 'user', user);
+            if (user?.id === photospotData?.created_by) {
                 setOwner(true);
             }
             photoBookPictures.forEach(photoBookPicture => {
-                if (photoBookPicture.created_by === userVal?.id) {
+                if (photoBookPicture.created_by === user?.id) {
                     //     //check if user did a photoBookPicture already
                     // setUserphotoBookPicture(review);
                 }
@@ -78,17 +78,20 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
             setPhotoBookPictures(photoBookPictures);
         });
     }
-    useEffect(() => {
-        //pull info from photospot based on id
+    const updatePhotospot = async (id: number) => {
         getPhotospotById(parseInt(params.id)).then((photospot: Photospot) => {
             setPhotoSpotData(photospot);
             setOwner(photospot?.created_by === user?.id);
         });
 
+    }
+    useEffect(() => {
+        //pull info from photospot based on id
+        updatePhotospot(parseInt(params.id));
     }, [params.id]);
     useEffect(() => {
-        updateReviews(parseInt(params.id), user);
-        updatePhotobook(parseInt(params.id), user);
+        updateReviews(parseInt(params.id));
+        updatePhotobook(parseInt(params.id));
     }, [photospotData, user])
     useEffect(() => {
         getUser().then(user => {
@@ -103,7 +106,7 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
         <div className="flex flex-col justify-center gap-8 w-full pl-20 pr-20">
             <div className="flex flex-row gap-24 w-full justify-center h-[500px] ">
                 <div className="flex-1  h-50vh">
-                    <PhotospotInfo owner={owner} photospot={photospotData} stats={stats} />
+                    <PhotospotInfo owner={owner} photospot={photospotData} stats={stats} updatePhotospot={() => updatePhotospot(parseInt(params.id))} />
                 </div>
                 <div className="flex-1  h-50vh">
                     {photospotData?.lat && photospotData?.lng && <PreviewMap lat={photospotData.lat} lng={photospotData.lng} />}
@@ -119,14 +122,14 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
                         <h1 className="text-3xl font-semibold ">Inspo Photobook</h1>
                         <Dialog open={photobookPictureDialogOpen} onOpenChange={setPhotobookPictureDialogOpen}>
                             <DialogTrigger>
-                                <div className={"text-2xl  " + cn(buttonVariants({ variant: 'default' }))}>{userReview ? "Edit your entry" : "Add your own"}</div>
+                                <div className={"text-2xl  " + cn(buttonVariants({ variant: 'default' }))}>Upload a shot</div>
                             </DialogTrigger>
                             <DialogContent>
-                                <UploadPhotobookPictureDialog photospot={photospotData} setPhotobookPictureDialogOpen={setPhotobookPictureDialogOpen} updatePhotobook={() => updatePhotobook(parseInt(params.id), user)} />
+                                <UploadPhotobookPictureDialog photospot={photospotData} setPhotobookPictureDialogOpen={setPhotobookPictureDialogOpen} updatePhotobook={() => updatePhotobook(parseInt(params.id))} />
                             </DialogContent>
                         </Dialog>
                     </div>
-                    <PhotobookGrid photospot={photospotData} input={photobookPictures} user={user} updatePhotobook={() => updatePhotobook(parseInt(params.id), user)} />
+                    <PhotobookGrid photospot={photospotData} input={photobookPictures} user={user} updatePhotobook={() => updatePhotobook(parseInt(params.id))} />
                 </TabsContent>
                 <TabsContent value="reviews">
                     <div className="flex flex-row justify-between ">
@@ -136,12 +139,12 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
                                 {!userReview && <div className={"text-2xl  " + cn(buttonVariants({ variant: 'default' }))}>Review Photospot</div>}
                             </DialogTrigger>
                             <DialogContent>
-                                <CreateReviewDialog photospot={photospotData} setReviewDialogOpen={setReviewDialogOpen} userReview={userReview} updateReviews={() => updateReviews(parseInt(params.id), user)} />
+                                <CreateReviewDialog photospot={photospotData} setReviewDialogOpen={setReviewDialogOpen} userReview={userReview} updateReviews={() => updateReviews(parseInt(params.id))} />
                             </DialogContent>
                         </Dialog>
 
                     </div>
-                    <ReviewGrid input={reviews} user={user} updateReviews={() => updateReviews(parseInt(params.id), user)} />
+                    <ReviewGrid input={reviews} user={user} updateReviews={() => updateReviews(parseInt(params.id))} />
                 </TabsContent>
             </Tabs>
 
