@@ -100,7 +100,7 @@ export default function PhotospotInfo({
                             </Dialog>
                         }
 
-                        <div className={cn(buttonVariants({ variant: 'default' }))} onClick={() => handleDirections()}>
+                        <div className={"cursor-pointer " + cn(buttonVariants({ variant: 'default' }))} onClick={() => handleDirections()}>
                             <FaDirections className="w-6 h-6" />
                         </div>
 
