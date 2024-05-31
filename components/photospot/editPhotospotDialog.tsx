@@ -72,9 +72,9 @@ export default function EditPhotospotDialog({ photospot, setEditPhotospotDialogO
             }
             setLoading(true);
             await editPhotospot(photospot.id, data, photos_form);
-            setLoading(false);
             await updatePhotospot(photospot.id);
             setEditPhotospotDialogOpen(false);
+            setLoading(false);
             toast({
                 title: "Photospot updated",
             })
@@ -181,7 +181,7 @@ export default function EditPhotospotDialog({ photospot, setEditPhotospotDialogO
                     <CardFooter className="flex-none flex-col gap-4">
                         <div className="w-full flex flex-row gap-8 justify-center">
                             <Button variant="outline" onClick={(e) => { e.preventDefault(); clearForm() }}>Reset</Button>
-                            <Button type="submit">Update</Button>
+                            <Button type="submit" disabled={loading}>Update</Button>
                         </div>
                         <div className="w-full flex flex-row gap-8 justify-center">
                             {!confirmDelete && <Button variant="destructive" onClick={(e) => { e.preventDefault(); promptDelete(true) }}>Delete</Button>}

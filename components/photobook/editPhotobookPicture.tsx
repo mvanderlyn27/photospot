@@ -104,9 +104,9 @@ export default function EditPhotobookPictureDialog({ photobookPicture, setEditMo
         if (photobookPicture && confirmDelete) {
             setLoading(true);
             await deletePhotobookPicture(photobookPicture);
-            setLoading(false);
             await updatePhotobook();
             setPhotobookPictureDialogOpen(false);
+            setLoading(false);
             toast({
                 title: "Photobook Picture Deleted",
             });
@@ -182,7 +182,7 @@ export default function EditPhotobookPictureDialog({ photobookPicture, setEditMo
                     <CardFooter className="flex-none flex-col gap-4">
                         <div className="w-full flex flex-row gap-8 justify-center">
                             <Button variant="outline" onClick={(e) => { e.preventDefault(); cancelEdit() }}>Cancel</Button>
-                            <Button type="submit">Save Changes</Button>
+                            <Button type="submit" disabled={loading}>Save Changes</Button>
                         </div>
                         <div className="w-full flex flex-row gap-8 justify-center">
                             {!confirmDelete && <Button variant="destructive" onClick={(e) => { e.preventDefault(); promptDelete(true) }}>Delete</Button>}

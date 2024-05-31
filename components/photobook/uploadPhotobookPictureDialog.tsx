@@ -60,9 +60,9 @@ export default function uploadPhotobookPictureDialog({ photospot, setPhotobookPi
             })
             setLoading(true);
             await uploadPhotobookPicture(data, photospot.id, photos_form);
-            setLoading(false);
             await updatePhotobook();
             setPhotobookPictureDialogOpen(false);
+            setLoading(false);
             toast({
                 title: "Photo Uploaded",
             })
@@ -133,7 +133,7 @@ export default function uploadPhotobookPictureDialog({ photospot, setPhotobookPi
                     <CardFooter className="flex-none">
                         <div className="w-full flex flex-row gap-8 justify-center">
                             <Button variant="outline" onClick={(e) => { e.preventDefault(); clearForm() }}>Reset</Button>
-                            <Button type="submit">Create</Button>
+                            <Button type="submit" disabled={loading}>Create</Button>
                         </div>
                     </CardFooter>
                 </form>

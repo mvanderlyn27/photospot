@@ -39,9 +39,9 @@ export default function CreateReviewDialog({ photospot, setReviewDialogOpen, use
         if (photospot) {
             setLoading(true);
             await createReview(data, photospot.id);
-            setLoading(false);
             await updateReviews();
             setReviewDialogOpen(false);
+            setLoading(false);
             toast({
                 title: "Review Submitted",
             })
@@ -107,7 +107,7 @@ export default function CreateReviewDialog({ photospot, setReviewDialogOpen, use
                     <CardFooter className="flex-none">
                         <div className="w-full flex flex-row gap-8 justify-center">
                             <Button variant="outline" onClick={(e) => { e.preventDefault(); clearForm() }}>Reset</Button>
-                            <Button type="submit">{userReview ? "Update" : "Create"}</Button>
+                            <Button type="submit" disabled={loading}> Create</Button>
                         </div>
                     </CardFooter>
                 </form>

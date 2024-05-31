@@ -44,9 +44,9 @@ export default function EditReviewDialog({ review, setEditReviewDialogOpen, upda
         if (review) {
             setLoading(true);
             await editReview(review.id, data);
-            setLoading(false);
             await updateReviews();
             setEditReviewDialogOpen(false);
+            setLoading(false);
             toast({
                 title: "Edits Saved! :)",
             })
@@ -128,7 +128,7 @@ export default function EditReviewDialog({ review, setEditReviewDialogOpen, upda
                     <CardFooter className="flex-none flex-col gap-4">
                         <div className="w-full flex flex-row gap-8 justify-center">
                             <Button variant="outline" onClick={(e) => { e.preventDefault(); resetForm() }}>Reset</Button>
-                            <Button type="submit">Save Changes</Button>
+                            <Button type="submit" disabled={loading}>Save Changes</Button>
                         </div>
                         <div className="w-full flex flex-row gap-8 justify-center">
                             {!confirmDelete && <Button variant="destructive" onClick={(e) => { e.preventDefault(); promptDelete(true) }}>Delete</Button>}
