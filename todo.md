@@ -34,10 +34,10 @@
 - Most important
     - photospot page
         - photospot info
-            - add link to apple maps/google maps for location
             - polish info, figure out what other info we need
             - add weather functionality: https://www.npmjs.com/package/openweather-api-node
         - add ability to view rotating map view, or actual top down map view
+        - can double click create, and it makes 2 calls to create
     - need to setup explore page
     - home (timeline)
         - make mobile like instagram, and web view more like pinterest, or a scroll grid 

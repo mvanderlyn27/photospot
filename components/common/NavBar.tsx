@@ -11,7 +11,7 @@ export default function NavBar({ user }: { user: any }) {
                 <Link href="/">
                     <h3 className="text-3xl font-semibold ">PhotoSpot</h3>
                 </Link>
-
+                {/* 
                 {user ? (
                     <div className="flex items-center gap-4">
                         Hey, <b>{username ? username : user.email}!</b>
@@ -41,7 +41,7 @@ export default function NavBar({ user }: { user: any }) {
                             <Button>Login</Button>
                         </Link>
                     </div>
-                )}
+                )} */}
             </div>
         </nav>
     )
