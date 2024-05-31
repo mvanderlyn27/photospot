@@ -88,6 +88,9 @@
         - add minimize button for leftbar
         - add back in the photo view for uploading pics
     - photospot page
+        - photoInfo section
+            - update direction button to be smarter
+                - take into account device, and open app on mobile
         - editing
             - fix editing to need at least one picture
             - make editing of picture section look pretty 

@@ -15,6 +15,7 @@ import { FaShareAlt } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
 import { FaBookmark } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
+import { FaDirections } from "react-icons/fa";
 import { savePhotospot } from "@/app/serverActions/photospots/savePhotospot";
 import { getSavedPhotospot } from "@/app/serverActions/photospots/getSavedPhotospots";
 import { unsavePhotospot } from "@/app/serverActions/photospots/unsavePhotospot";
@@ -71,6 +72,11 @@ export default function PhotospotInfo({
         //maybe add URL shortener lol
 
     }
+    const handleDirections = () => {
+        if (photospot) {
+            window.open(`https://www.google.com/maps?q=${photospot.lat},${photospot.lng}`);
+        }
+    }
     return (
         <Card className="h-full flex flex-col">
             <CardHeader className="flex-none">
@@ -93,6 +99,10 @@ export default function PhotospotInfo({
                                 </DialogContent>
                             </Dialog>
                         }
+
+                        <div className={cn(buttonVariants({ variant: 'default' }))} onClick={() => handleDirections()}>
+                            <FaDirections className="w-6 h-6" />
+                        </div>
 
 
                         <Dialog>
