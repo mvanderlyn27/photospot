@@ -32,18 +32,9 @@
 - 
 # Code Improvement
 - Most important
-    - fix logged in vs/ not flow - do around the time of fixing mobile view
-        - want users to be able to view home, explore, and photospot page
-        - need to be logged in for creating/profile
-        - don't load page at all before checking if logged in
-        - https://supabase.com/docs/guides/auth/auth-anonymous 
-        - probably need to setup anonomous user when hitting the home page and not logged in
-        - setup captcha
     - photospot page
         - photospot info
             - add link to apple maps/google maps for location
-            - fix editing/deleting
-                - deleting function needed for photobook and photospot
             - polish info, figure out what other info we need
             - add weather functionality: https://www.npmjs.com/package/openweather-api-node
         - add ability to view rotating map view, or actual top down map view
@@ -73,6 +64,12 @@
     - also def a social app now
     - need to figure out review vs uploading photos
         - do we need reviews? Or just keep track of number of photos
+        - https://supabase.com/docs/guides/auth/auth-anonymous 
+        - probably need to setup anonomous user when hitting the home page and not logged in
+        - setup captcha
+- get anonymouse user accounts setup for a lot of the site
+    - should be able to view, and explore photospots without account
+    - explore the flow of being able to create anonymous photospots, or upload angles
 - make all screens beautiful
 - fix page loading so theres no flash between routing, maybe don't use links, or theres something else needed to not have the nav bar flash between page routes (https://stackoverflow.com/questions/55624695/loading-screen-on-next-js-page-transition)
 - setup email service so I don't get rate limited on user signup

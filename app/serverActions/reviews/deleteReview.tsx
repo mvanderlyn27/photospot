@@ -28,7 +28,7 @@ export default async function deleteReview(reviewId: number,): Promise<void> {
         .delete()
         .eq('id', reviewId);
     if (deleteError) {
-        console.log("insert error: ", deleteError);
+        console.log("delete error: ", deleteError);
         redirect('error?error=' + deleteError.message);
         // return { message: `Failed saving data ${formInfo.name},` + resp.error }
     }

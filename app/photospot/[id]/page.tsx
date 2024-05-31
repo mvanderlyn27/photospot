@@ -19,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PhotobookGrid from "@/components/photobook/photobookGrid";
 import { getPhotospotsPhotobookPictures } from "@/app/serverActions/photobook/getPhotospotsPhotobookPictures";
 import UploadPhotobookPictureDialog from "@/components/photobook/uploadPhotobookPictureDialog";
+import { UserIdentity } from "@supabase/supabase-js";
 
 export default function PhotospotPage({ params }: { params: { id: string } }) {
     /*
@@ -42,27 +43,30 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
             if (user?.id === photospotData?.created_by) {
                 setOwner(true);
             }
-            let reviewFound = false
             let userReviewIndex = -1;
             reviews.forEach((review, index) => {
                 if (review.created_by === user?.id) {
                     //     //check if user did a review already
                     setUserReview(review);
                     userReviewIndex = index
+                    console.log('found users review', review, userReviewIndex);
 
                 }
             });
             if (userReviewIndex === -1) {
+                console.log("no reviews found");
                 setUserReview(null);
                 setReviews(reviews);
             }
-            else if (userReview) {
+            else if (userReviewIndex !== -1) {
                 //if user review move to top
-                reviews.splice(userReviewIndex, 1);
-                setReviews([userReview, ...reviews]);
+                reviews.sort(function (x, y) { return x === reviews[userReviewIndex] ? -1 : y === reviews[userReviewIndex] ? 1 : 0 });
+                console.log("updated reviews", reviews);
+                setReviews(reviews);
             }
         });
     }
+
     const updatePhotobook = async (id: number) => {
         getPhotospotsPhotobookPictures(id).then((photoBookPictures) => {
             console.log('reviews', photoBookPictures, 'user', user);

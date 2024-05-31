@@ -103,12 +103,12 @@ export default function EditPhotobookPictureDialog({ photobookPicture, setEditMo
     const handleDelete = async () => {
         if (photobookPicture && confirmDelete) {
             setLoading(true);
-            await deletePhotobookPicture(photobookPicture.id);
+            await deletePhotobookPicture(photobookPicture);
             setLoading(false);
             await updatePhotobook();
             setPhotobookPictureDialogOpen(false);
             toast({
-                title: "Photobook PictureDeleted",
+                title: "Photobook Picture Deleted",
             });
         }
     }
