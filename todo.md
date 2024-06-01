@@ -34,7 +34,6 @@
 - Most important
     - photospot page
         - photospot info
-            - add link to apple maps/google maps for location
             - polish info, figure out what other info we need
             - add weather functionality: https://www.npmjs.com/package/openweather-api-node
         - add ability to view rotating map view, or actual top down map view
@@ -44,6 +43,7 @@
     - profile page
         - add avatar pic to users
     - create page
+        - delete removes all photospots
         - add reverse geocoding for clicking on map to get neighborhood
         - Split up leftbar into sub components and organize logic better
         - maybe remove marker when selecting a spot
