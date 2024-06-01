@@ -38,7 +38,7 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <NavBar user={user} />
+            {/* <NavBar user={user} /> */}
             {children}
             <Toaster />
           </ThemeProvider>
