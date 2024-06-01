@@ -9,7 +9,7 @@ import { Photospot } from "@/types/photospotTypes";
 // just need to see how much info db can take
 const LAT_LNG_DIGITS = null;
 
-export default function PhotospotMap({ setMapBounds, mapCenter, setMapCenter, location, setLocation, photospots, setViewingPhotospot }: { setMapBounds: any, mapCenter: LngLat, setMapCenter: any, location: { lat: number, lng: number } | null, setLocation: any, photospots: Photospot[], setViewingPhotospot: any }) {
+export default function PhotospotMap({ setMapBounds, setMapLoaded, mapCenter, setMapCenter, location, setLocation, photospots, setViewingPhotospot }: { setMapBounds: any, setMapLoaded: any, mapCenter: LngLat, setMapCenter: any, location: { lat: number, lng: number } | null, setLocation: any, photospots: Photospot[], setViewingPhotospot: any }) {
     const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ? process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN : "";
     //setup to take options for widht/height
     //allow set location to work for clicking on a location
@@ -39,6 +39,7 @@ export default function PhotospotMap({ setMapBounds, mapCenter, setMapCenter, lo
         setMapBounds(e.target.getBounds());
     }
     const handleMapLoad = (e: MapEvent) => {
+        setMapLoaded(true);
         setMapBounds(e.target.getBounds());
     }
     return (

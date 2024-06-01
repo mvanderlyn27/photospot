@@ -113,7 +113,7 @@ export type GoldenHourDisplayInfo = {
 export type PhotoTimeWidgetInfo = {
     time: Date;
     time_label: PhotoTime;
-    weather: Weather;
+    weather: Weather | undefined;
 };
 
 
@@ -125,6 +125,7 @@ export enum Weather {
     hail,
     snow,
     storm,
+    drizzle,
 }
 export enum PhotoTime {
     golden_hour_morning,

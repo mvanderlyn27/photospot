@@ -20,6 +20,8 @@ import {
     PhotoTimeWidgetInfo,
     Weather,
 } from "@/types/photospotTypes";
+import { getWeather } from "@/app/serverActions/weather/getWeather";
+import { CurrentConditions, CurrentWeather } from "openweather-api-node";
 let SunCalc = require('suncalc3');
 
 export default function GoldenHourDisplay({
@@ -29,10 +31,33 @@ export default function GoldenHourDisplay({
     lat: number | undefined;
     lng: number | undefined;
 }) {
-    const [date, setDate] = useState<Date | undefined>(new Date());
-    const [photoTimeWidgetInfos, setPhotoTimeWidgetInfos] = useState<
-        PhotoTimeWidgetInfo[] | undefined
-    >([]);
+    const [date, setDate] = useState<Date | undefined>(undefined);
+    const [photoTimeWidgetInfos, setPhotoTimeWidgetInfos] = useState<PhotoTimeWidgetInfo[] | undefined>([]);
+    const [weather, setWeather] = useState<CurrentConditions | undefined>();
+
+    const convertWeather = (curWeather: CurrentConditions): Weather | undefined => {
+        curWeather.conditionId = 801;
+        if (String(curWeather.conditionId).startsWith("8")) {
+            if (curWeather.conditionId === 800) {
+                return Weather.sun;
+            }
+            return Weather.clouds;
+        }
+        if (String(curWeather.conditionId).startsWith("2")) {
+            return Weather.storm
+        }
+        if (String(curWeather.conditionId).startsWith("3")) {
+            return Weather.drizzle
+        }
+        if (String(curWeather.conditionId).startsWith("5")) {
+            return Weather.rain
+        }
+        if (String(curWeather.conditionId).startsWith("6")) {
+            return Weather.snow
+        }
+    }
+
+
     useEffect(() => {
         //update photoTimeWidgetInfos here based on which types of photos
         if (date && lat && lng) {
@@ -42,16 +67,23 @@ export default function GoldenHourDisplay({
                 {
                     time: times.goldenHourDawnStart.value,
                     time_label: PhotoTime.golden_hour_morning,
-                    weather: Weather.sun,
+                    weather: weather ? convertWeather(weather) : undefined,
                 },
                 {
                     time: times.goldenHourDuskStart.value,
                     time_label: PhotoTime.golden_hour_evening,
-                    weather: Weather.clouds,
+                    weather: weather ? convertWeather(weather) : undefined,
                 },
             ]);
         }
     }, [date, lat, lng]);
+    useEffect(() => {
+        setDate(new Date());
+        getWeather().then(weather => {
+            console.log('weather', weather);
+            setWeather(weather?.weather);
+        })
+    }, []);
     //take in lat/lng have option to chose date, default to today, lookup golden hour times using an npm package
     return (
         <div className="flex flex-col gap-4">

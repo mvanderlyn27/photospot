@@ -22,6 +22,7 @@ export default function CreatePage() {
     const [user, setUser] = useState<User | null>(null);
     const [mapCenter, setMapCenter] = useState<LngLat>(new LngLat(INITIAL_LNG, INITIAL_LAT));
     const [mapBounds, setMapBounds] = useState<LngLatBounds | null>(null);
+    const [mapLoaded, setMapLoaded] = useState(false);
     const refreshPhotospots = () => {
         listAllPhotospots().then((photospots) => {
             setPhotospots(photospots);
@@ -37,14 +38,14 @@ export default function CreatePage() {
     }
     useEffect(() => {
         refreshPhotospots();
-    }, [])
+    }, [mapLoaded])
     return (
         <div className="h-[calc(100vh-64px)] w-screen">
             <div className="absolute top-[64px] left-0 lg:w-[450px] max-h-[calc(100vh-64px)] pl-4 pt-4 z-50">
                 <LeftWindow mapBounds={mapBounds} mapCenter={mapCenter} user={user} location={location ? location : null} setLocation={setLocation} viewingPhotospot={viewingPhotospot} setViewingPhotospot={setViewingPhotospot} refreshPhotospots={refreshPhotospots} />
             </div>
             <div className="h-full w-full">
-                <PhotospotMap setMapBounds={setMapBounds} mapCenter={mapCenter} setMapCenter={setMapCenter} location={location ? location : null} setLocation={setLocation} photospots={photospots} setViewingPhotospot={setViewingPhotospot} />
+                <PhotospotMap setMapBounds={setMapBounds} setMapLoaded={(val: boolean) => setMapLoaded(val)} mapCenter={mapCenter} setMapCenter={setMapCenter} location={location ? location : null} setLocation={setLocation} photospots={photospots} setViewingPhotospot={setViewingPhotospot} />
             </div>
         </div>
 

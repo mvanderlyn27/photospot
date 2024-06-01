@@ -9,8 +9,6 @@ export async function listAllPhotospots() {
 
     // type-casting here for convenience
     // in practice, you should validate your inputs
-
-    const bucket = "photospot_pictures";
     const { data, error } = await supabase.from('photospots').select('*');
     if (error) {
         redirect('/error?error=' + error.message);

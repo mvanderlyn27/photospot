@@ -10,7 +10,6 @@ export default function PhotoTimeWidget({
   info: PhotoTimeWidgetInfo;
 }) {
   //need to figure out about adding weather/time of day
-  console.log("info", info);
   const timeLabelToString = (timeLabel: PhotoTime) => {
     switch (timeLabel) {
       case PhotoTime.golden_hour_morning:

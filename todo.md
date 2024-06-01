@@ -36,6 +36,7 @@
         - photospot info
             - polish info, figure out what other info we need
             - add weather functionality: https://www.npmjs.com/package/openweather-api-node
+            - update weather to pull from correct times, and display temps too xD
         - add ability to view rotating map view, or actual top down map view
     - need to setup explore page
     - home (timeline)
@@ -108,6 +109,8 @@
         - fix sessions so we don't use a session every key entered
         - add navigation
         - improve the auto search names, kinda vague rn, something funky going on with suggestion vs. feature pipeline
+            - maybe add limit to region, and poi types for better filters
+            - also if we have user location then can bias towards nearby things
             - https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-limit-region/
         - maybe see about entering a specific lat/lng when creating
         - should be able to animate light changing throughout the day using mapref.setProperty
