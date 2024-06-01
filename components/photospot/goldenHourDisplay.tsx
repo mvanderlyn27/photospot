@@ -36,7 +36,6 @@ export default function GoldenHourDisplay({
     const [weather, setWeather] = useState<CurrentConditions | undefined>();
 
     const convertWeather = (curWeather: CurrentConditions): Weather | undefined => {
-        curWeather.conditionId = 801;
         if (String(curWeather.conditionId).startsWith("8")) {
             if (curWeather.conditionId === 800) {
                 return Weather.sun;
