@@ -36,7 +36,7 @@
         - photospot info
             - polish info, figure out what other info we need
             - add weather functionality: https://www.npmjs.com/package/openweather-api-node
-            - update weather to pull from correct times, and display temps too xD
+            - update weather to pull from correct times, and lat/lng, and display temps too xD, also allow for prediction of weather out to a week away
         - add ability to view rotating map view, or actual top down map view
     - need to setup explore page
     - home (timeline)
