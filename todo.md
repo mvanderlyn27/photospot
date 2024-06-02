@@ -32,11 +32,17 @@
 - 
 # Code Improvement
 - Most important
+    - fix create page with new data
+        - need to update to creating a photoshot
+        - update photospot view page, can't edit anymore, only display info relevant to location, then all the photos 
     - photospot page
         - photospot info
+            - rn anyone can edit a photospot
             - polish info, figure out what other info we need
             - add weather functionality: https://www.npmjs.com/package/openweather-api-node
             - update weather to pull from correct times, and lat/lng, and display temps too xD, also allow for prediction of weather out to a week away
+        - need to make sure all updates pull most recent info
+        - name of photospot too long  with rating messes up the icons
         - add ability to view rotating map view, or actual top down map view
     - need to setup explore page
     - home (timeline)
@@ -78,6 +84,7 @@
     - reenable email on account creation after this
  - figure out migration for DB, and seperating environments 
 - For later
+    - add calculator page?
     - feed
         - display when golden hour is near you right now, maybe save location to profile?
         - have top location pics near you right now in feed
@@ -160,6 +167,8 @@
 - visiting a photospot for the first time doesn't have the rotate animation
 
 # Future Ideas
+- extract info from imags with ai/metadata to create tags/ suggestions for users/ guide on how to recreate
+- remove background people from photos
 - realtime for reviews? 
 add shadows for photospots, see if you're photospot will be in shadow when you want a shot
 - have weather included as well to findout when is the perfect time to take a photo

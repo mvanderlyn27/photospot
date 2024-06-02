@@ -1,0 +1,26 @@
+- main point
+    - don't have a photospot, just have users search locations, and upload inspo photos
+    - backend will automatically create a "photospot" based on that location if it doesn't already exist, if it does exist then tie it to the photospot
+- Would be good to have photos seperate from photospot 
+- maybe make it so you cant name a photospot, just have a location
+- creative spot needs to be through the photos you upload there
+- new flows
+    - user finds cool location
+    - takes a picture
+    - go to create page
+        - find existing photospot, via map/search
+        - after location is selected, add photo/details on photo
+            - if location right next to another on map (selected via clicking, then warn user that spot already exists)
+            - uploads "photoshot" to photospot, tagging location, and explaining how to recreate the shot
+            - if location in photospot DB, if so link it to existing photospot else create new entry in db for photospot
+    - go to photospot page in saved, or from search
+        - click on add photoshot in photobook section
+        - add shot in dialog
+        - save new photoshot info 
+- where photospot info comes from 
+    - location saved in photospot
+    - golden hour/weather comes from location + api
+    - photoshot has photos/tags
+        - photoshots can be saved 
+    - rating from reviews of photospot
+

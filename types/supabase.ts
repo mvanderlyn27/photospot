@@ -9,137 +9,111 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      photolist_photospots: {
+      betaEmailList: {
         Row: {
           created_at: string
-          photolist: number
-          photospot: number
+          email: string
+          id: number
         }
         Insert: {
           created_at?: string
-          photolist: number
-          photospot: number
+          email: string
+          id?: number
         }
         Update: {
           created_at?: string
-          photolist?: number
-          photospot?: number
+          email?: string
+          id?: number
+        }
+        Relationships: []
+      }
+      photoshot_tags: {
+        Row: {
+          created_at: string
+          id: number
+          tag_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          tag_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          tag_id?: number
         }
         Relationships: [
           {
-            foreignKeyName: "photolist_photospots_photolist_fkey"
-            columns: ["photolist"]
+            foreignKeyName: "photoshot_tags_id_fkey"
+            columns: ["id"]
             isOneToOne: false
-            referencedRelation: "photolist_rating_stats"
+            referencedRelation: "photoshots"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "photolist_photospots_photolist_fkey"
-            columns: ["photolist"]
+            foreignKeyName: "photospot_tags_tag_id_fkey"
+            columns: ["tag_id"]
             isOneToOne: false
-            referencedRelation: "photolists"
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      photoshots: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: number
+          likes: number
+          name: string
+          photo_paths: string[]
+          photospot_id: number
+          recreate_text: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: number
+          likes?: number
+          name: string
+          photo_paths?: string[]
+          photospot_id: number
+          recreate_text: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: number
+          likes?: number
+          name?: string
+          photo_paths?: string[]
+          photospot_id?: number
+          recreate_text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "photospots_photobook_pictures_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "photolist_photospots_photospot_fkey"
-            columns: ["photospot"]
+            foreignKeyName: "photospots_photobook_pictures_photospot_id_fkey"
+            columns: ["photospot_id"]
             isOneToOne: false
             referencedRelation: "photospot_rating_stats"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "photolist_photospots_photospot_fkey"
-            columns: ["photospot"]
+            foreignKeyName: "photospots_photobook_pictures_photospot_id_fkey"
+            columns: ["photospot_id"]
             isOneToOne: false
             referencedRelation: "photospots"
             referencedColumns: ["id"]
           },
         ]
-      }
-      photolist_reviews: {
-        Row: {
-          created_at: string
-          created_by: string
-          edited: boolean
-          photo_paths: string[] | null
-          photolist_id: number
-          rating: number
-          text: string | null
-        }
-        Insert: {
-          created_at?: string
-          created_by: string
-          edited?: boolean
-          photo_paths?: string[] | null
-          photolist_id: number
-          rating: number
-          text?: string | null
-        }
-        Update: {
-          created_at?: string
-          created_by?: string
-          edited?: boolean
-          photo_paths?: string[] | null
-          photolist_id?: number
-          rating?: number
-          text?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "photolist_reviews_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "photolist_reviews_photolist_id_fkey"
-            columns: ["photolist_id"]
-            isOneToOne: false
-            referencedRelation: "photolist_rating_stats"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "photolist_reviews_photolist_id_fkey"
-            columns: ["photolist_id"]
-            isOneToOne: false
-            referencedRelation: "photolists"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      photolists: {
-        Row: {
-          created_at: string
-          created_by: string | null
-          description: string | null
-          edited: boolean
-          id: number
-          name: string
-          photo_paths: string[] | null
-          private: boolean
-        }
-        Insert: {
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          edited?: boolean
-          id?: number
-          name: string
-          photo_paths?: string[] | null
-          private?: boolean
-        }
-        Update: {
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          edited?: boolean
-          id?: number
-          name?: string
-          photo_paths?: string[] | null
-          private?: boolean
-        }
-        Relationships: []
       }
       photospot_reviews: {
         Row: {
@@ -200,150 +174,38 @@ export type Database = {
           },
         ]
       }
-      photospot_tags: {
-        Row: {
-          created_at: string
-          id: number
-          tag_id: number
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          tag_id: number
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          tag_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "photospot_tags_id_fkey"
-            columns: ["id"]
-            isOneToOne: false
-            referencedRelation: "photospot_rating_stats"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "photospot_tags_id_fkey"
-            columns: ["id"]
-            isOneToOne: false
-            referencedRelation: "photospots"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "photospot_tags_tag_id_fkey"
-            columns: ["tag_id"]
-            isOneToOne: false
-            referencedRelation: "tags"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       photospots: {
         Row: {
           created_at: string
           created_by: string
-          description: string | null
-          edited: boolean
           id: number
           lat: number
           lng: number
           location: unknown
-          name: string
-          neighborhood: string | null
-          photo_paths: string[]
-          private: boolean | null
+          location_name: string
+          neighborhood: string
         }
         Insert: {
           created_at?: string
           created_by: string
-          description?: string | null
-          edited?: boolean
           id?: number
           lat: number
           lng: number
           location: unknown
-          name: string
-          neighborhood?: string | null
-          photo_paths: string[]
-          private?: boolean | null
+          location_name: string
+          neighborhood: string
         }
         Update: {
           created_at?: string
           created_by?: string
-          description?: string | null
-          edited?: boolean
           id?: number
           lat?: number
           lng?: number
           location?: unknown
-          name?: string
-          neighborhood?: string | null
-          photo_paths?: string[]
-          private?: boolean | null
+          location_name?: string
+          neighborhood?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "photospots_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      photospots_photobook_pictures: {
-        Row: {
-          created_at: string
-          created_by: string | null
-          description: string
-          id: number
-          name: string
-          photo_paths: string[]
-          photospot_id: number
-        }
-        Insert: {
-          created_at?: string
-          created_by?: string | null
-          description: string
-          id?: number
-          name: string
-          photo_paths?: string[]
-          photospot_id: number
-        }
-        Update: {
-          created_at?: string
-          created_by?: string | null
-          description?: string
-          id?: number
-          name?: string
-          photo_paths?: string[]
-          photospot_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "photospots_photobook_pictures_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "photospots_photobook_pictures_photospot_id_fkey"
-            columns: ["photospot_id"]
-            isOneToOne: false
-            referencedRelation: "photospot_rating_stats"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "photospots_photobook_pictures_photospot_id_fkey"
-            columns: ["photospot_id"]
-            isOneToOne: false
-            referencedRelation: "photospots"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -399,6 +261,39 @@ export type Database = {
             columns: ["id"]
             isOneToOne: true
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saved_photoshots: {
+        Row: {
+          created_at: string
+          id: string
+          photoshot_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          photoshot_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          photoshot_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_photoshots_id_fkey"
+            columns: ["id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saved_photoshots_photoshot_id_fkey"
+            columns: ["photoshot_id"]
+            isOneToOne: false
+            referencedRelation: "photoshots"
             referencedColumns: ["id"]
           },
         ]
@@ -463,14 +358,6 @@ export type Database = {
       }
     }
     Views: {
-      photolist_rating_stats: {
-        Row: {
-          id: number | null
-          rating_average: number | null
-          rating_count: number | null
-        }
-        Relationships: []
-      }
       photospot_rating_stats: {
         Row: {
           id: number | null
