@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import { PhotobookPicture, Review, ReviewGridInput } from "@/types/photospotTypes";
 import ImageCarousel from "../common/ImageCarousel";
 import { useState } from "react";
-import UploadPhotobookPictureDialog from "./uploadPhotobookPictureDialog";
+import UploadPhotobookPictureDialog from "./photoshotUploadDialog";
 import EditPhotobookPictureDialog from "./editPhotobookPicture";
 
 export default function PhotobookPictureDialog({ photobookPicture, owner, updatePhotobook, setPhotobookPictureDialogOpen }: { photobookPicture: PhotobookPicture, owner: boolean, updatePhotobook: any, setPhotobookPictureDialogOpen: any }) {

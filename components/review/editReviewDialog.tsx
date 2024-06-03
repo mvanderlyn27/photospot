@@ -13,8 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
 import createReview from "@/app/serverActions/reviews/createReview";
-import uploadPhotobookPicture from "@/app/serverActions/photobook/uploadPhotobookPicture";
-import editPhotobookPicture from "@/app/serverActions/photobook/editPhotobookPicture";
+import uploadPhotobookPicture from "@/app/serverActions/photoshots/uploadPhotoshot";
+import editPhotobookPicture from "@/app/serverActions/photoshots/editPhotobookPicture";
 import editReview from "@/app/serverActions/reviews/editReview";
 import deleteReview from "@/app/serverActions/reviews/deleteReview";
 import RatingDisplay from "./ratingDisplay";

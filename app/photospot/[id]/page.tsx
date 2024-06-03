@@ -8,7 +8,7 @@ import PhotospotGrid from "@/components/photospot/photospotGrid";
 import PreviewMap from "@/components/maps/previewMap";
 import PhotospotInfo from "@/components/photospot/photospotInfo";
 import {
-  PhotobookPicture,
+  Photoshot,
   Photospot,
   PhotospotStats,
   Review,
@@ -26,9 +26,9 @@ import { getPhotospotReviews } from "@/app/serverActions/reviews/getPhotospotRev
 import { getUser } from "@/app/serverActions/auth/getUser";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PhotobookGrid from "@/components/photoshot/photobookGrid";
-import { getPhotospotsPhotobookPictures } from "@/app/serverActions/photobook/getPhotospotsPhotobookPictures";
-import UploadPhotobookPictureDialog from "@/components/photoshot/uploadPhotobookPictureDialog";
+import { getPhotospotsPhotobookPictures } from "@/app/serverActions/photoshots/getPhotospotsPhotobookPictures";
 import { UserIdentity } from "@supabase/supabase-js";
+import PhotoshotUploadDialog from "@/components/photoshot/photoshotUploadDialog";
 
 export default function PhotospotPage({ params }: { params: { id: string } }) {
   /*
@@ -42,10 +42,10 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
   const [userReview, setUserReview] = useState<Review | null>(null);
   const [stats, setStats] = useState<PhotospotStats | null>(null);
   const [photobookPictures, setPhotoBookPictures] = useState<
-    PhotobookPicture[]
+    Photoshot[]
   >([]);
   const [userPhotobookPicture, setUserPhotobookPicture] =
-    useState<PhotobookPicture | null>(null);
+    useState<Photoshot | null>(null);
   const [photobookPictureDialogOpen, setPhotobookPictureDialogOpen] =
     useState(false);
   const supabase = createClient();
@@ -75,8 +75,8 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
           return x === reviews[userReviewIndex]
             ? -1
             : y === reviews[userReviewIndex]
-            ? 1
-            : 0;
+              ? 1
+              : 0;
         });
         console.log("updated reviews", reviews);
         setReviews(reviews);
@@ -165,9 +165,10 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
                 </div>
               </DialogTrigger>
               <DialogContent>
-                <UploadPhotobookPictureDialog
+                <PhotoshotUploadDialog
+                  locationName={photospotData?.location_name ? photospotData?.location_name : ""}
                   photospot={photospotData}
-                  setPhotobookPictureDialogOpen={setPhotobookPictureDialogOpen}
+                  setPhotoshotDialogOpen={setPhotobookPictureDialogOpen}
                   updatePhotobook={() => updatePhotobook(parseInt(params.id))}
                 />
               </DialogContent>

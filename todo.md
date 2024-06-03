@@ -32,9 +32,15 @@
 - 
 # Code Improvement
 - Most important
+
     - fix create page with new data
-        - need to update to creating a photoshot
-        - update photospot view page, can't edit anymore, only display info relevant to location, then all the photos 
+        - need to fix searching for a photospot based on lat/lng
+        - need to update create photospot to be in its own code area, and have create photoshot call that function
+        - update map to interact properly with left bar
+        - update photospot view page, 
+            - get old functionality working
+            - update to display relevant info, and make pics more prevalent, probably remove rotating map, make adding new photos the important part, and recreating photos section better
+
     - photospot page
         - photospot info
             - rn anyone can edit a photospot
@@ -84,6 +90,9 @@
     - reenable email on account creation after this
  - figure out migration for DB, and seperating environments 
 - For later
+    - setup geocoding via backend functions, and postgres tiger geocoding
+        -https://postgis.net/docs/Extras.html
+    - add confetti into creating new photospot locations
     - add calculator page?
     - feed
         - display when golden hour is near you right now, maybe save location to profile?
@@ -167,6 +176,7 @@
 - visiting a photospot for the first time doesn't have the rotate animation
 
 # Future Ideas
+- have user enter pos, and direction of shot, and have an AR guide appear for taking new photos, maybe have ar stuff with the sun as well
 - extract info from imags with ai/metadata to create tags/ suggestions for users/ guide on how to recreate
 - remove background people from photos
 - realtime for reviews? 

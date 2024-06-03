@@ -13,9 +13,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
 import createReview from "@/app/serverActions/reviews/createReview";
-import uploadPhotobookPicture from "@/app/serverActions/photobook/uploadPhotobookPicture";
-import editPhotobookPicture from "@/app/serverActions/photobook/editPhotobookPicture";
-import deletePhotobookPicture from "@/app/serverActions/photobook/deletePhotobookPicture";
+import uploadPhotobookPicture from "@/app/serverActions/photoshots/uploadPhotoshot";
+import editPhotobookPicture from "@/app/serverActions/photoshots/editPhotobookPicture";
+import deletePhotobookPicture from "@/app/serverActions/photoshots/deletePhotobookPicture";
 
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];

@@ -177,30 +177,24 @@ export type Database = {
       photospots: {
         Row: {
           created_at: string
-          created_by: string
+          created_by: string | null
           id: number
-          lat: number
-          lng: number
           location: unknown
           location_name: string
           neighborhood: string
         }
         Insert: {
           created_at?: string
-          created_by: string
+          created_by?: string | null
           id?: number
-          lat: number
-          lng: number
           location: unknown
           location_name: string
           neighborhood: string
         }
         Update: {
           created_at?: string
-          created_by?: string
+          created_by?: string | null
           id?: number
-          lat?: number
-          lng?: number
           location?: unknown
           location_name?: string
           neighborhood?: string
@@ -399,11 +393,34 @@ export type Database = {
         }
         Returns: Record<string, unknown>
       }
+      find_photospot_by_lat_lng: {
+        Args: {
+          latitude: number
+          longitude: number
+        }
+        Returns: {
+          id: number
+          neighborhood: string
+          location_name: string
+          lat: number
+          lng: number
+        }[]
+      }
       generate_random_password: {
         Args: {
           length: number
         }
         Returns: string
+      }
+      get_all_photospots_with_lat_lng: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: number
+          location_name: string
+          neighborhood: string
+          lat: number
+          lng: number
+        }[]
       }
       get_random_user: {
         Args: Record<PropertyKey, never>

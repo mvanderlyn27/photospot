@@ -9,10 +9,11 @@ export async function listAllPhotospots(): Promise<Photospot[]> {
 
   // type-casting here for convenience
   // in practice, you should validate your inputs
-  const { data, error } = await supabase.from("photospots").select("*");
+  const { data, error } = await supabase.rpc("get_all_photospots_with_lat_lng").select("*");
   if (error) {
     redirect("/error?error=" + error.message);
   }
   //todo add photospot type
+  console.log('photospots', data);
   return data;
 }

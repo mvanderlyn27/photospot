@@ -1,102 +1,110 @@
 export type Photospot = {
-  created_at?: string;
-  created_by?: string;
-  id: number;
-  location: unknown;
-  lat: number;
-  lng: number;
-  location_name: string;
-  neighborhood?: string | null;
+    created_at?: string;
+    created_by?: string;
+    id: number;
+    location?: unknown | null;
+    top_photo_path?: string | null;
+    lat: number;
+    lng: number;
+    location_name: string;
+    neighborhood?: string | null;
+    rating?: number | null;
 };
+export type NewPhotospotInfo = {
+    location_name: string;
+    neighborhood: string;
+    lat: number;
+    lng: number;
+}
 export type PhotospotStats = {
-  id: number | null;
-  rating_count: number | null;
-  rating_average: number | null;
+    id: number | null;
+    rating_count: number | null;
+    rating_average: number | null;
 };
 export type PhotospotInsert = {
-  description?: string;
-  name: string;
-  photo_paths: string[];
-  location: string;
-  draft?: boolean;
+    description?: string;
+    name: string;
+    photo_paths: string[];
+    location: string;
+    draft?: boolean;
 };
 export type Photoshot = {
-  id: number;
-  photospot_id: number;
-  name: string;
-  recreate_text: string;
-  photo_paths: string[];
-  created_by?: string | null;
-  username?: string | null;
-  likes: number | null;
+    id: number;
+    photospot_id: number;
+    name: string;
+    recreate_text: string;
+    photo_paths: string[];
+    created_by?: string | null;
+    username?: string | null;
+    likes: number | null;
 };
 export type Review = {
-  id: number;
-  created_at?: string;
-  created_by: string;
-  photospot_id: number;
-  text?: string | null;
-  rating: number;
-  username?: string | null;
+    id: number;
+    created_at?: string;
+    created_by: string;
+    photospot_id: number;
+    text?: string | null;
+    rating: number;
+    username?: string | null;
 };
 
 export type ReviewGridInput = {
-  path: string;
-  name: string;
-  review?: string;
+    path: string;
+    name: string;
+    review?: string;
 };
 
 export type PublicProfile = {
-  id: number;
-  username: string;
-  private?: boolean;
-  role?: string;
-  theme?: string;
-  profile_pic_url?: string;
-  email?: string;
-  password?: string;
+    id: number;
+    username: string;
+    private?: boolean;
+    role?: string;
+    theme?: string;
+    profile_pic_url?: string;
+    email?: string;
+    password?: string;
 };
 export type PhotospotReview = {
-  created_by: string;
-  photospot_id: number;
-  photo_paths?: string[];
-  rating?: number;
-  text?: string;
-  edited?: boolean;
+    created_by: string;
+    photospot_id: number;
+    photo_paths?: string[];
+    rating?: number;
+    text?: string;
+    edited?: boolean;
 };
 export type PhotolistReview = {
-  created_by: string;
-  photolist_id: number;
-  photo_paths?: string[];
-  rating?: number;
-  text?: string;
-  edited?: boolean;
+    created_by: string;
+    photolist_id: number;
+    photo_paths?: string[];
+    rating?: number;
+    text?: string;
+    edited?: boolean;
 };
 export type RatingStat = {
-  id: number;
-  rating_count?: number;
-  rating_average?: number;
+    id: number;
+    rating_count?: number;
+    rating_average?: number;
 };
 export type GoldenHourDisplayInfo = {
-  type: PhotoTime;
-  time: Date;
+    type: PhotoTime;
+    time: Date;
 };
 export type PhotoTimeWidgetInfo = {
-  time: Date;
-  time_label: PhotoTime;
-  weather: Weather | undefined;
+    time: Date;
+    time_label: PhotoTime;
+    weather: Weather | undefined;
 };
 
 export enum Weather {
-  sun,
-  clouds,
-  rain,
-  hail,
-  snow,
-  storm,
-  drizzle,
+    sun,
+    clouds,
+    rain,
+    hail,
+    snow,
+    storm,
+    drizzle,
 }
 export enum PhotoTime {
-  golden_hour_morning,
-  golden_hour_evening,
+    golden_hour_morning,
+    golden_hour_evening,
 }

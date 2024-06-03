@@ -9,51 +9,20 @@ import { useDebouncedCallback } from "use-debounce";
 import { SearchBoxFeatureSuggestion, SearchBoxSuggestion } from "@mapbox/search-js-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
-
+import { Button } from "../ui/button";
+import { MdOutlineCancel } from "react-icons/md";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 type Framework = Record<"value" | "label", string>;
 
-const FRAMEWORKS = [
-    {
-        value: "next.js",
-        label: "Next.js",
-    },
-    {
-        value: "sveltekit",
-        label: "SvelteKit",
-    },
-    {
-        value: "nuxt.js",
-        label: "Nuxt.js",
-    },
-    {
-        value: "remix",
-        label: "Remix",
-    },
-    {
-        value: "astro",
-        label: "Astro",
-    },
-    {
-        value: "wordpress",
-        label: "WordPress",
-    },
-    {
-        value: "express.js",
-        label: "Express.js",
-    },
-    {
-        value: "nest.js",
-        label: "Nest.js",
-    },
-] satisfies Framework[];
-
 interface Props {
+    currentSearch: boolean;
     onChange?: (values: SearchBoxFeatureSuggestion) => void;
     user: User | null;
     mapCenter: LngLat;
+    setViewingPhotospot: any
 }
 
-export const LocationAutoComplete = ({ onChange, user, mapCenter }: Props) => {
+export const LocationAutoComplete = ({ currentSearch, onChange, user, mapCenter, setViewingPhotospot }: Props) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [open, setOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<SearchBoxFeatureSuggestion | null>(null);
@@ -113,19 +82,38 @@ export const LocationAutoComplete = ({ onChange, user, mapCenter }: Props) => {
 
     return (
         <>
-            <div className="flex flex-wrap gap-1"
-                onKeyDown={handleKeyDown}
-            >
+
+            <TooltipProvider>
                 {/* Avoid having the "Search" Icon */}
-                <Input
-                    ref={inputRef}
-                    value={inputValue}
-                    onChange={(e) => { setInputValue(e.target.value); debouncedSuggestLocation(e.target.value) }}
-                    onBlur={() => setOpen(false)}
-                    onFocus={() => setOpen(true)}
-                    placeholder=""
-                />
-            </div>
+
+
+                <div className="flex flex-row gap-1 relative "
+                    onKeyDown={handleKeyDown}
+                >
+                    <Input
+                        className="h-12 text-xl"
+                        ref={inputRef}
+                        value={inputValue}
+                        onChange={(e) => { setInputValue(e.target.value); debouncedSuggestLocation(e.target.value) }}
+                        onBlur={() => setOpen(false)}
+                        onFocus={() => setOpen(true)}
+                        placeholder="Search for a location"
+                    />
+                    <div className="absolute h-full right-0">
+                        {currentSearch && <Tooltip >
+                            <TooltipTrigger asChild  >
+                                <Button variant="ghost" className="h-full hover:bg-clear group" onClick={() => { setViewingPhotospot(null); setSelected(null); setInputValue("") }} ><MdOutlineCancel className="h-6 w-6 group-hover:fill-primary" /></Button>
+                            </TooltipTrigger>
+                            <TooltipContent >
+                                <p>Clear</p>
+                            </TooltipContent>
+                        </Tooltip>
+                        }
+                    </div>
+
+                </div >
+            </TooltipProvider >
+
             <div className="relative mt-2">
                 {open && selectables.length > 0 &&
                     <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">

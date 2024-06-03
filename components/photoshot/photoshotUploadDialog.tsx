@@ -1,5 +1,5 @@
 "use client"
-import { PhotobookPicture, Photospot, Review } from "@/types/photospotTypes";
+import { NewPhotospotInfo, Photoshot, Photospot, Review } from "@/types/photospotTypes";
 import { DialogDescription, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { CardContent, CardFooter } from "../ui/card";
@@ -13,15 +13,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
 import createReview from "@/app/serverActions/reviews/createReview";
-import uploadPhotobookPicture from "@/app/serverActions/photobook/uploadPhotobookPicture";
+import uploadPhotobookPicture from "@/app/serverActions/photoshots/uploadPhotoshot";
+import { useRouter } from "next/navigation";
+import uploadPhotoshot from "@/app/serverActions/photoshots/uploadPhotoshot";
 
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-export const uploadPhotobookPictureSchema = z.object({
+export const uploadPhotoshotSchema = z.object({
     //should add some better requirements for the location
 
     name: z.string(),
-    description: z.string(),
+    recreate_text: z.string(),
     //tags for later
     photos: z.custom<FileList | null>((val) => val instanceof FileList, "Please upload a picture")
         .refine((files) => files ? files.length > 0 : false, `Required`)
@@ -41,28 +43,44 @@ export const uploadPhotobookPictureSchema = z.object({
 })
 
 
-export default function uploadPhotobookPictureDialog({ photospot, setPhotobookPictureDialogOpen, updatePhotobook }: { photospot: Photospot | null, setPhotobookPictureDialogOpen: any, updatePhotobook: any }) {
+export default function PhotoshotUploadDialog({ newPhotospotInfo, photospot, setPhotoshotDialogOpen, updatePhotobook }: { newPhotospotInfo: NewPhotospotInfo | null, photospot: Photospot | null, setPhotoshotDialogOpen: any, updatePhotobook: any }) {
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
-    const uploadPhotobookPictureForm = useForm<z.infer<typeof uploadPhotobookPictureSchema>>({
-        resolver: zodResolver(uploadPhotobookPictureSchema),
+    const uploadPhotoshotForm = useForm<z.infer<typeof uploadPhotoshotSchema>>({
+        resolver: zodResolver(uploadPhotoshotSchema),
         defaultValues: {
             name: "",
-            description: "",
+            recreate_text: "",
             photos: null
         },
     })
 
-    const onCreate = async (data: z.infer<typeof uploadPhotobookPictureSchema>) => {
-        if (photospot && data.photos) {
+    const onCreate = async (data: z.infer<typeof uploadPhotoshotSchema>): Promise<void> => {
+        if (data.photos) {
+            console.log("creating photoshot");
             let photos_form = new FormData();
             Array.from(data.photos).forEach((photo) => {
                 photos_form.append(`photobook_pictures`, photo);
             })
             setLoading(true);
-            await uploadPhotobookPicture(data, photospot.id, photos_form);
-            await updatePhotobook();
-            setPhotobookPictureDialogOpen(false);
+            let photoshot = undefined;
+            if (photospot) {
+                console.log('uploading photoshot with photospot');
+                photoshot = await uploadPhotoshot(data, photos_form, photospot.id, undefined);
+            }
+            else {
+                console.log('uploading photoshot and creating new photospot');
+                photoshot = await uploadPhotoshot(data, photos_form, undefined, newPhotospotInfo);
+            }
+            if (updatePhotobook) {
+                await updatePhotobook();
+            }
+            setPhotoshotDialogOpen(false);
             setLoading(false);
+            if (photoshot) {
+                router.push('/photospot/' + photoshot.id);
+            }
+
             toast({
                 title: "Photo Uploaded",
             })
@@ -71,22 +89,23 @@ export default function uploadPhotobookPictureDialog({ photospot, setPhotobookPi
 
     const clearForm = () => {
         //need to figure out how to properly clear the photos section
-        uploadPhotobookPictureForm.reset()
+        uploadPhotoshotForm.reset()
     }
+    console.log('loaded dialog');
     return (
         <div className="flex flex-col gap-2 ">
-            <DialogTitle>Upload a pic for {photospot?.name.toLowerCase()}</DialogTitle>
+            <DialogTitle>Upload a pic for {newPhotospotInfo ? newPhotospotInfo.location_name : photospot?.location_name}</DialogTitle>
             <DialogDescription className="">Show off your artsy side, and help other users learn how to make better shots</DialogDescription>
-            <Form {...uploadPhotobookPictureForm}>
-                <form onSubmit={uploadPhotobookPictureForm.handleSubmit(onCreate)} className=" w-full flex flex-col">
+            <Form {...uploadPhotoshotForm}>
+                <form onSubmit={uploadPhotoshotForm.handleSubmit(onCreate)} className=" w-full flex flex-col">
 
                     <CardContent className={`flex-1 overflow-auto mb-4 }`}>
                         <FormField
-                            control={uploadPhotobookPictureForm.control}
+                            control={uploadPhotoshotForm.control}
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name this angle:</FormLabel>
+                                    <FormLabel>Name this shot:</FormLabel>
                                     <FormControl>
                                         <Input type="text" {...field} />
                                     </FormControl>
@@ -98,11 +117,11 @@ export default function uploadPhotobookPictureDialog({ photospot, setPhotobookPi
                             )} />
 
                         <FormField
-                            control={uploadPhotobookPictureForm.control}
-                            name="description"
+                            control={uploadPhotoshotForm.control}
+                            name="recreate_text"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>About this shot:</FormLabel>
+                                    <FormLabel>How to:</FormLabel>
                                     <FormControl>
                                         <Textarea {...field} />
                                     </FormControl>
@@ -113,7 +132,7 @@ export default function uploadPhotobookPictureDialog({ photospot, setPhotobookPi
                                 </FormItem>
                             )} />
                         <FormField
-                            control={uploadPhotobookPictureForm.control}
+                            control={uploadPhotoshotForm.control}
                             name="photos"
                             render={({ field: { onChange }, ...field }) => (
                                 <FormItem>
