@@ -1,7 +1,7 @@
 "use server";
 import { uploadPhotoshotSchema } from "@/components/photoshot/photoshotUploadDialog";
 import { createReviewSchema } from "@/components/review/createReviewDialog";
-import { Photoshot, Review } from "@/types/photospotTypes";
+import { NewPhotospotInfo, Photoshot, Photospot, Review } from "@/types/photospotTypes";
 import { Database } from "@/types/supabase";
 import { randomNumber } from "@/utils/common/math";
 // import { createClient } from "@/utils/supabase/client";
@@ -9,17 +9,18 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import createPhotospot from "../photospots/createPhotospot";
+import { isPhotospot } from "@/utils/common/typeGuard";
 
 const PHOTO_BUCKET = "photoshot_pictures";
 export default async function uploadPhotoshot(
   photoshotInfo: z.infer<typeof uploadPhotoshotSchema>,
   photoshots: FormData,
-  photospotId: number | null = null,
-  newPhotospotInfo: { location_name: string, neighborhood: string, lat: number, lng: number } | null = null
+  selectedLocation: Photospot | NewPhotospotInfo
 ): Promise<Photoshot> {
 
   // console.log('uploading photoshot', photoshots, photospotId, newPhotospotInfo, photoshotInfo);
-  if (!photoshotInfo || !photoshots || (!photospotId && !newPhotospotInfo)) {
+  if (!photoshotInfo || !photoshots || !selectedLocation) {
     redirect("/error mising info for uploading photoshot");
   }
   const supabase = createClient();
@@ -27,25 +28,18 @@ export default async function uploadPhotoshot(
   if (!user.data.user) {
     redirect("/error?error=not logged in");
   }
-  if (!photospotId && newPhotospotInfo) {
-    //move into createPhotospot server function, get result and use that
-    const { data: photospotData, error: photospotError } = await supabase.from("photospots").insert({
-      location_name: newPhotospotInfo.location_name,
-      neighborhood: newPhotospotInfo.neighborhood,
-      location: `POINT(${newPhotospotInfo.lat} ${newPhotospotInfo.lng})`,
-    }).select("*").single()
-    if (photospotError) {
-      console.log("insert error: ", photospotError);
-      redirect("error?error=" + photospotError.message);
-    }
-    photospotId = photospotData.id;
+  let photospotId = null;
+  if (isPhotospot(selectedLocation)) {
+    photospotId = selectedLocation.id;
+  } else {
+    //if no photospot id, create new photospot
+    const photospot = await createPhotospot(selectedLocation);
+    photospotId = photospot.id;
   }
-  //if no photospod_id, create new photospot 
-  // then upload photoshot
   if (!photospotId) {
-    redirect('/error no photospot tied to this photoshot');
+    redirect("/error?error=missing photospot id");
   }
-
+  // insert photoshot info
   const { data: uploadData, error: uploadError } = await supabase
     .from("photoshots")
     .upsert([
@@ -61,18 +55,18 @@ export default async function uploadPhotoshot(
   if (uploadError) {
     console.log("insert error: ", uploadError);
     redirect("error?error=" + uploadError.message);
-    // return { message: `Failed saving data ${formInfo.name},` + resp.error }
   }
+  //find all photos
   let filePaths: string[] = [];
   const photoData: any[] = photoshots.getAll("photobook_pictures");
   const fileUploadPromiseArray = photoData.map((photo) => {
     //maybe have lookup when uploading image to see if it exists already
-    let photo_path =
-      "/" + photospotId + "/" + uploadData.id + "/" + photo.name;
+    let photo_path = "/" + photospotId + "/" + uploadData.id + "/" + photo.name;
     return supabase.storage
       .from(PHOTO_BUCKET)
       .upload(photo_path, photo, { upsert: true });
   });
+  //upload all photos
   await Promise.all(fileUploadPromiseArray).then((results) => {
     results.forEach((result) => {
       if (result.error) {
@@ -87,7 +81,6 @@ export default async function uploadPhotoshot(
     (path) =>
       supabase.storage.from(PHOTO_BUCKET).getPublicUrl(path).data.publicUrl
   );
-  console.log("filepaths", filePaths);
   const photo_path_update = { photo_paths: filePaths };
   const { data: photoshotWithPhotoPath, error: updatePhotopathError } =
     await supabase

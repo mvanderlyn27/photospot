@@ -362,6 +362,20 @@ export type Database = {
       }
     }
     Functions: {
+      create_photospot_with_lat_lng: {
+        Args: {
+          neighborhoodin: string
+          location_namein: string
+          locationin: unknown
+        }
+        Returns: {
+          id: number
+          neighborhood: string
+          location_name: string
+          lat: number
+          lng: number
+        }[]
+      }
       create_random_user: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -422,20 +436,33 @@ export type Database = {
           lng: number
         }[]
       }
+      get_photospot_by_id_lat_lng: {
+        Args: {
+          input_id: number
+        }
+        Returns: {
+          id: number
+          location_name: string
+          neighborhood: string
+          lat: number
+          lng: number
+        }[]
+      }
       get_random_user: {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
       nearby_photospots: {
         Args: {
-          lat: number
+          latt: number
           long: number
         }
         Returns: {
           id: number
-          name: string
+          location_name: string
+          neighborhood: string
           lat: number
-          long: number
+          lng: number
           dist_meters: number
         }[]
       }

@@ -6,34 +6,35 @@ import { User } from "@supabase/supabase-js";
 import { LngLat } from "mapbox-gl";
 import { retrieveLocation, suggestLocations } from "@/app/serverActions/maps/searchLocationByName";
 import { useDebouncedCallback } from "use-debounce";
-import { SearchBoxFeatureSuggestion, SearchBoxSuggestion } from "@mapbox/search-js-core";
+import { SearchBoxFeatureSuggestion, SearchBoxSuggestion, SessionToken } from "@mapbox/search-js-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { MdOutlineCancel } from "react-icons/md";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { NewPhotospotInfo, Photospot } from "@/types/photospotTypes";
 type Framework = Record<"value" | "label", string>;
 
 interface Props {
-    currentSearch: boolean;
-    onChange?: (values: SearchBoxFeatureSuggestion) => void;
+    onChange: (values: SearchBoxFeatureSuggestion) => void;
+    handleClear: () => void;
     user: User | null;
     mapCenter: LngLat;
-    setViewingPhotospot: any
+    selectedLocation: Photospot | NewPhotospotInfo | null;
 }
 
-export const LocationAutoComplete = ({ currentSearch, onChange, user, mapCenter, setViewingPhotospot }: Props) => {
+export const LocationAutoComplete = ({ onChange, handleClear, user, mapCenter, selectedLocation }: Props) => {
+    const session = new SessionToken();
     const inputRef = useRef<HTMLInputElement>(null);
     const [open, setOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<SearchBoxFeatureSuggestion | null>(null);
-    const [inputValue, setInputValue] = useState<string>("");
+    const [inputValue, setInputValue] = useState<string>(selectedLocation ? selectedLocation.location_name : '');
     const [selectables, setSelectables] = useState<SearchBoxSuggestion[]>([]);
 
     const handleKeyDown = useCallback(
         (e: React.KeyboardEvent<HTMLDivElement>) => {
             const input = inputRef.current;
             if (input) {
-
                 // This is not a default behaviour of the <input /> field
                 if (e.key === "Escape") {
                     input.blur();
@@ -43,18 +44,22 @@ export const LocationAutoComplete = ({ currentSearch, onChange, user, mapCenter,
         []
     );
 
-
     useEffect(() => {
+        //handles when you click on a suggestion
         if (selected) {
-            onChange?.(selected);
+            onChange(selected);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selected]);
+    useEffect(() => {
+        setInputValue(selectedLocation ? selectedLocation.location_name : '');
+
+    }, [selectedLocation]);
+
 
     const suggestLocation = (query: string) => {
         console.log('search location', query);
         if (query) {
-            suggestLocations(query, user?.id, mapCenter, undefined).then(suggestions => {
+            suggestLocations(query, user?.id, mapCenter, undefined, session).then(suggestions => {
                 if (suggestions) {
                     console.log('suggestions', suggestions);
                     setSelectables(suggestions);
@@ -62,10 +67,6 @@ export const LocationAutoComplete = ({ currentSearch, onChange, user, mapCenter,
                 }
             });
         }
-        // else if (selectables) {
-        //     setSelectables([]);
-        //     setOpen(false);
-        // }
     }
     const debouncedSuggestLocation = useDebouncedCallback((query: string) => {
         suggestLocation(query);
@@ -73,7 +74,7 @@ export const LocationAutoComplete = ({ currentSearch, onChange, user, mapCenter,
     const retrieveLocationInfo = (suggestion: SearchBoxSuggestion) => {
         //maybe add loading state, and put back into the promise
         setInputValue(suggestion.name);
-        retrieveLocation(suggestion, user?.id).then(feature => {
+        retrieveLocation(suggestion, user?.id, session).then(feature => {
             console.log('got data for feature', feature);
             setSelected(feature);
             setOpen(false);
@@ -100,9 +101,9 @@ export const LocationAutoComplete = ({ currentSearch, onChange, user, mapCenter,
                         placeholder="Search for a location"
                     />
                     <div className="absolute h-full right-0">
-                        {currentSearch && <Tooltip >
+                        {selectedLocation && <Tooltip >
                             <TooltipTrigger asChild  >
-                                <Button variant="ghost" className="h-full hover:bg-clear group" onClick={() => { setViewingPhotospot(null); setSelected(null); setInputValue("") }} ><MdOutlineCancel className="h-6 w-6 group-hover:fill-primary" /></Button>
+                                <Button variant="ghost" className="h-full hover:bg-clear group" onClick={() => { setSelectables([]); handleClear() }} ><MdOutlineCancel className="h-6 w-6 group-hover:fill-primary" /></Button>
                             </TooltipTrigger>
                             <TooltipContent >
                                 <p>Clear</p>

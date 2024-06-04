@@ -43,7 +43,7 @@ export const uploadPhotoshotSchema = z.object({
 })
 
 
-export default function PhotoshotUploadDialog({ newPhotospotInfo, photospot, setPhotoshotDialogOpen, updatePhotobook }: { newPhotospotInfo: NewPhotospotInfo | null, photospot: Photospot | null, setPhotoshotDialogOpen: any, updatePhotobook: any }) {
+export default function PhotoshotUploadDialog({ selectedLocation, setPhotoshotDialogOpen, updatePhotobook }: { selectedLocation: Photospot | NewPhotospotInfo | null, setPhotoshotDialogOpen: any, updatePhotobook: any }) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const uploadPhotoshotForm = useForm<z.infer<typeof uploadPhotoshotSchema>>({
@@ -56,22 +56,14 @@ export default function PhotoshotUploadDialog({ newPhotospotInfo, photospot, set
     })
 
     const onCreate = async (data: z.infer<typeof uploadPhotoshotSchema>): Promise<void> => {
-        if (data.photos) {
+        if (data.photos && selectedLocation) {
             console.log("creating photoshot");
             let photos_form = new FormData();
             Array.from(data.photos).forEach((photo) => {
                 photos_form.append(`photobook_pictures`, photo);
             })
             setLoading(true);
-            let photoshot = undefined;
-            if (photospot) {
-                console.log('uploading photoshot with photospot');
-                photoshot = await uploadPhotoshot(data, photos_form, photospot.id, undefined);
-            }
-            else {
-                console.log('uploading photoshot and creating new photospot');
-                photoshot = await uploadPhotoshot(data, photos_form, undefined, newPhotospotInfo);
-            }
+            const photoshot = await uploadPhotoshot(data, photos_form, selectedLocation);
             if (updatePhotobook) {
                 await updatePhotobook();
             }
@@ -94,7 +86,7 @@ export default function PhotoshotUploadDialog({ newPhotospotInfo, photospot, set
     console.log('loaded dialog');
     return (
         <div className="flex flex-col gap-2 ">
-            <DialogTitle>Upload a pic for {newPhotospotInfo ? newPhotospotInfo.location_name : photospot?.location_name}</DialogTitle>
+            <DialogTitle>Upload a pic {selectedLocation ? "for " + selectedLocation.location_name : ""}</DialogTitle>
             <DialogDescription className="">Show off your artsy side, and help other users learn how to make better shots</DialogDescription>
             <Form {...uploadPhotoshotForm}>
                 <form onSubmit={uploadPhotoshotForm.handleSubmit(onCreate)} className=" w-full flex flex-col">

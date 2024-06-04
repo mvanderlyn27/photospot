@@ -29,7 +29,7 @@ import PhotoUploadGrid from "../common/PhotoUploadGrid";
 import { useEffect, useState } from "react";
 import { round } from "@/utils/common/math";
 import Loading from "../common/Loading";
-import { Photospot } from "@/types/photospotTypes";
+import { NewPhotospotInfo, Photospot } from "@/types/photospotTypes";
 import PhotospotPreview from "./photospotPreview";
 import {
     SearchBoxFeatureSuggestion,
@@ -68,27 +68,21 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 
 export default function LeftWindow({
-    mapBounds,
     mapCenter,
+    mapBounds,
     user,
-    location,
-    setLocation,
-    viewingPhotospot,
-    setViewingPhotospot,
+    setSelectedLocation,
+    selectedLocation,
     refreshPhotospots,
-    setSelectedPhotospot,
-    selectedPhotospot,
+    loadingSelectedLocation,
 }: {
     mapCenter: LngLat;
     user: User | null;
-    location: { lat: number; lng: number } | null;
-    setLocation: any;
-    viewingPhotospot: boolean | undefined;
-    setViewingPhotospot: any;
+    selectedLocation: Photospot | NewPhotospotInfo | null;
+    setSelectedLocation: any;
     refreshPhotospots: any;
     mapBounds: LngLatBounds | null;
-    setSelectedPhotospot: any;
-    selectedPhotospot: Photospot | null;
+    loadingSelectedLocation: boolean;
 }) {
     /*
       Vision: 
@@ -106,26 +100,34 @@ export default function LeftWindow({
 
     const supabase = createClient();
     const [loading, setLoading] = useState(false);
-    const [selectedLocation, setSelectedLocation] =
-        useState<SearchBoxFeatureSuggestion | null>(null);
+    useState<SearchBoxFeatureSuggestion | null>(null);
 
 
     const handleAutoCompleteChange = (suggestion: SearchBoxFeatureSuggestion) => {
         console.log("latlng", suggestion.geometry.coordinates);
-        setLocation({
-            lat: suggestion.geometry.coordinates[1],
-            lng: suggestion.geometry.coordinates[0],
-        });
         setSelectedLocation(suggestion);
-        getPhotospotByLocation(suggestion.geometry.coordinates[1], suggestion.geometry.coordinates[0]).then((photospot) => {
+        getPhotospotByLocation(suggestion.geometry.coordinates[0], suggestion.geometry.coordinates[1]).then((photospot) => {
             if (photospot) {
-                setSelectedPhotospot(photospot);
+                console.log("photospot found by location", photospot);
+                setSelectedLocation(photospot);
             }
-            setViewingPhotospot(true);
+            else {
+                console.log("no photospot found");
+                //REVERSE GEOCODE LOCATION HERE
+                setSelectedLocation({
+                    neighborhood: suggestion.properties.context.neighborhood ? suggestion.properties.context.neighborhood.name : "",
+                    location_name: suggestion.properties.name,
+                    lat: suggestion.geometry.coordinates[1],
+                    lng: suggestion.geometry.coordinates[0],
+                });
+            }
         })
         //lookup photospot via location
         // setLocation(suggestion.properties.name);
     };
+    const handleClear = () => {
+        setSelectedLocation(null);
+    }
     //need some states to control this comp
     // want to be able to search a location, select it to create
     // 2nd view
@@ -136,20 +138,19 @@ export default function LeftWindow({
             <>
                 <CardContent className="p-4">
                     <LocationAutoComplete
-                        currentSearch={selectedLocation != null}
                         onChange={handleAutoCompleteChange}
+                        handleClear={handleClear}
                         user={user}
                         mapCenter={mapCenter}
-                        setViewingPhotospot={setViewingPhotospot}
+                        selectedLocation={selectedLocation}
                     />
                 </CardContent>
             </>
 
-            {viewingPhotospot &&
+            {selectedLocation &&
                 <PhotospotPreview
-                    newPhotospotInfo={(selectedLocation && selectedLocation.properties.context.neighborhood) ? { location_name: selectedLocation.properties.name, lat: selectedLocation.geometry.coordinates[1], lng: selectedLocation.geometry.coordinates[0], neighborhood: selectedLocation.properties.context.neighborhood.name } : null}
-                    photospot={selectedPhotospot}
-                    setViewingPhotospot={setViewingPhotospot}
+                    selectedLocation={selectedLocation}
+                    loadingSelectedLocation={loadingSelectedLocation}
                 />
             }
         </Card>

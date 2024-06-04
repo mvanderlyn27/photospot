@@ -3,7 +3,7 @@ import LeftWindow from "@/components/create/left-window";
 import PhotospotMap from "@/components/maps/map";
 import { useEffect, useRef, useState } from "react";
 import { listAllPhotospots } from "../serverActions/photospots/listAllPhotospots";
-import { Photospot } from "@/types/photospotTypes";
+import { NewPhotospotInfo, Photospot } from "@/types/photospotTypes";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
@@ -16,21 +16,24 @@ export default function CreatePage() {
     // can click in map to update selected position being passed down, or search via geocoder in the lefwindow
     // both will update the parent, and propogate to other child
     const router = useRouter();
-    const [location, setLocation] = useState();
-    const [viewingPhotospot, setViewingPhotospot] = useState<boolean>();
-    const [selectedPhotospot, setSelectedPhotospot] = useState<Photospot | null>(null);
+    //photospot related states
+    const [selectedLocation, setSelectedLocation] = useState<Photospot | NewPhotospotInfo | null>(null);
+    const [loadingSelectedLocation, setLoadingSelectedLocation] = useState(false);
     const [photospots, setPhotospots] = useState<Photospot[]>([]);
+    //user state
     const [user, setUser] = useState<User | null>(null);
-    const [mapCenter, setMapCenter] = useState<LngLat>(
-        new LngLat(INITIAL_LNG, INITIAL_LAT)
-    );
+    //map related states
+    const [mapCenter, setMapCenter] = useState<LngLat>(new LngLat(INITIAL_LNG, INITIAL_LAT));
     const [mapBounds, setMapBounds] = useState<LngLatBounds | null>(null);
     const [mapLoaded, setMapLoaded] = useState(false);
+
+    const supabase = createClient();
     const refreshPhotospots = () => {
+        //eventually want to get this in reference to the user's frame, only load locations within their view
+        // if we try a new location in an area that isn't loaded yet, could cause issues
         listAllPhotospots().then((photospots) => {
             setPhotospots(photospots);
         });
-        const supabase = createClient();
         supabase.auth.getUser().then((user) => {
             if (!user.data.user) {
                 router.push("/login");
@@ -48,13 +51,10 @@ export default function CreatePage() {
                     mapBounds={mapBounds}
                     mapCenter={mapCenter}
                     user={user}
-                    location={location ? location : null}
-                    setLocation={setLocation}
-                    setSelectedPhotospot={setSelectedPhotospot}
-                    selectedPhotospot={selectedPhotospot}
-                    viewingPhotospot={viewingPhotospot}
-                    setViewingPhotospot={setViewingPhotospot}
+                    setSelectedLocation={setSelectedLocation}
+                    selectedLocation={selectedLocation}
                     refreshPhotospots={refreshPhotospots}
+                    loadingSelectedLocation={loadingSelectedLocation}
                 />
             </div>
             <div className="h-full w-full">
@@ -63,10 +63,11 @@ export default function CreatePage() {
                     setMapLoaded={(val: boolean) => setMapLoaded(val)}
                     mapCenter={mapCenter}
                     setMapCenter={setMapCenter}
-                    location={location ? location : null}
-                    setLocation={setLocation}
+                    selectedLocation={selectedLocation}
+                    setSelectedLocation={setSelectedLocation}
                     photospots={photospots}
-                    setViewingPhotospot={setViewingPhotospot}
+                    setLoadingSelectedLocation={setLoadingSelectedLocation}
+                    loadingSelectedLocation={loadingSelectedLocation}
                 />
             </div>
         </div>

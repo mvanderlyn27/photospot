@@ -14,8 +14,10 @@ import { DialogContent, DialogTrigger } from "../ui/dialog";
 import { Dialog } from "../ui/dialog";
 import PhotoshotUploadDialog from "../photoshot/photoshotUploadDialog";
 import { cn } from "@/lib/utils";
+import { isPhotospot } from "@/utils/common/typeGuard";
+import { Skeleton } from "../ui/skeleton";
 
-export default function PhotospotPreview({ newPhotospotInfo, photospot, setViewingPhotospot }: { newPhotospotInfo: NewPhotospotInfo | null, photospot: Photospot | null, setViewingPhotospot: any }) {
+export default function PhotospotPreview({ selectedLocation, loadingSelectedLocation }: { selectedLocation: Photospot | NewPhotospotInfo | null, loadingSelectedLocation: boolean }) {
     const [tags, setTags] = useState<string[]>([]);
     const [photoshotDialogOpen, setPhotoshotDialogOpen] = useState(false);
     const router = useRouter();
@@ -33,18 +35,36 @@ export default function PhotospotPreview({ newPhotospotInfo, photospot, setViewi
     return (
         <>
             <CardContent className="flex flex-col gap-4">
-                <img src={photospot?.top_photo_path ? photospot.top_photo_path : DefaultPhotospot} alt="" className="w-full lg:h-[300px] rounded-md" />
-                <h1 className="text-3xl font-semibold">
-                    {photospot?.location_name ? photospot.location_name : newPhotospotInfo?.location_name}
-                </h1>
-                {photospot?.rating && <RatingDisplay rating={photospot.rating} />}
-                <div className=" flex flex-auto gap-2">
-                    {tags.map((tag) => (
-                        <Badge key={tag} variant="outline">
-                            {tag}
-                        </Badge>
-                    ))}
-                </div>
+                {selectedLocation && isPhotospot(selectedLocation) ?
+                    <>
+                        {
+                            !loadingSelectedLocation ?
+                                <img src={selectedLocation?.top_photo_path ? selectedLocation.top_photo_path : DefaultPhotospot} alt="" className="w-full lg:h-[300px] rounded-md" />
+                                : <Skeleton className="w-full h-[300px] rounded-md" />
+                        }
+                        <h1 className="text-3xl font-semibold">
+                            {selectedLocation?.location_name ? selectedLocation.location_name : selectedLocation?.location_name}
+                        </h1>
+                        {selectedLocation?.rating && <RatingDisplay rating={selectedLocation.rating} />}
+                        <div className=" flex flex-auto gap-2">
+                            {tags.map((tag) => (
+                                <Badge key={tag} variant="outline">
+                                    {tag}
+                                </Badge>
+                            ))}
+                        </div>
+                    </> :
+                    <>
+                        {
+                            !loadingSelectedLocation ?
+                                <img src={DefaultPhotospot} alt="" className="w-full lg:h-[300px] rounded-md" />
+                                : <Skeleton className="bg-slate-800/10 w-full h-[300px] rounded-md" />
+                        }
+                        <h1 className="text-3xl font-semibold">
+                            {selectedLocation?.location_name ? selectedLocation.location_name : selectedLocation?.location_name}
+                        </h1>
+                    </>
+                }
                 <div className="flex justify-center">
                     <Dialog open={photoshotDialogOpen} onOpenChange={setPhotoshotDialogOpen}>
                         <DialogTrigger>
@@ -53,7 +73,7 @@ export default function PhotospotPreview({ newPhotospotInfo, photospot, setViewi
                             </div>
                         </DialogTrigger>
                         <DialogContent>
-                            <PhotoshotUploadDialog newPhotospotInfo={newPhotospotInfo} photospot={photospot} setPhotoshotDialogOpen={setPhotoshotDialogOpen} updatePhotobook={() => console.log("haha")} />
+                            <PhotoshotUploadDialog selectedLocation={selectedLocation} setPhotoshotDialogOpen={setPhotoshotDialogOpen} updatePhotobook={() => console.log("haha")} />
                         </DialogContent>
                     </Dialog>
                 </div>

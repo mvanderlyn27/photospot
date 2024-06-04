@@ -1,8 +1,7 @@
 export type Photospot = {
     created_at?: string;
-    created_by?: string;
+    created_by?: string | null;
     id: number;
-    location?: unknown | null;
     top_photo_path?: string | null;
     lat: number;
     lng: number;
@@ -10,6 +9,9 @@ export type Photospot = {
     neighborhood?: string | null;
     rating?: number | null;
 };
+export interface NearbyPhotospot extends Photospot {
+    dist_meters: number
+}
 export type NewPhotospotInfo = {
     location_name: string;
     neighborhood: string;

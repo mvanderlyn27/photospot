@@ -14,6 +14,5 @@ export async function listAllPhotospots(): Promise<Photospot[]> {
     redirect("/error?error=" + error.message);
   }
   //todo add photospot type
-  console.log('photospots', data);
   return data;
 }
