@@ -7,7 +7,8 @@ const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ? process.env.NE
 export async function reverseGeocodeLocation(lat: number, lng: number): Promise<NewPhotospotInfo | null> {
 
     const geocode = new GeocodingCore({ accessToken: mapBoxToken });
-    const results = await geocode.reverse({ lat: lat, lng: lng });
+    //maybe look more into making better , want to get POI eventually, can only do street names
+    const results = await geocode.reverse({ lat: lat, lng: lng }, { country: "us", limit: 1, language: "en" });
     if (results.features.length === 0) return null;
     const feature = results.features[0];
 

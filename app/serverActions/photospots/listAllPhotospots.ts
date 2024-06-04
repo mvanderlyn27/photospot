@@ -7,8 +7,7 @@ import { Photospot } from "@/types/photospotTypes";
 export async function listAllPhotospots(): Promise<Photospot[]> {
   const supabase = createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
+  // UPDATE TO GET A PHOTOSPOTS MOST POPULAR PHOTO
   const { data, error } = await supabase.rpc("get_all_photospots_with_lat_lng").select("*");
   if (error) {
     redirect("/error?error=" + error.message);

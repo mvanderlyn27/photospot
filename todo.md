@@ -32,37 +32,38 @@
 - 
 # Code Improvement
 - Most important
-
-    - fix create page with new data
-        - need to fix searching for a photospot based on lat/lng
-        - need to update create photospot to be in its own code area, and have create photoshot call that function
-        - update map to interact properly with left bar
-        - update photospot view page, 
-            - get old functionality working
-            - update to display relevant info, and make pics more prevalent, probably remove rotating map, make adding new photos the important part, and recreating photos section better
+    - lock map/ searches within an area area around NYC
+    - add address info to a photospot
+    - have location_name be editable, if its not good, users should be able to update it
+    - update photospot view page, 
+        - get old functionality working
+        - update to display relevant info, and make pics more prevalent, probably remove rotating map, make adding new photos the important part, and recreating photos section better
 
     - photospot page
         - photospot info
+            - need to reogranize page so its actually useful
+                - users want to see cool photos, when to view the location, how to get there
             - rn anyone can edit a photospot
             - polish info, figure out what other info we need
-            - add weather functionality: https://www.npmjs.com/package/openweather-api-node
-            - update weather to pull from correct times, and lat/lng, and display temps too xD, also allow for prediction of weather out to a week away
-        - need to make sure all updates pull most recent info
+            - fix weather functionality
+                - add weather functionality: https://www.npmjs.com/package/openweather-api-node
+                - update weather to pull from correct times, and lat/lng, and display temps too xD, also allow for prediction of weather out to a week away
+                - weather almost working just need to fix bounds for when we can view, and show it on the map better
+        - need to make sure all updates pull most recent info to avoid jank
+            - add loading states, and skeletons so users can see when things are loading
         - name of photospot too long  with rating messes up the icons
-        - add ability to view rotating map view, or actual top down map view
     - need to setup explore page
     - home (timeline)
         - make mobile like instagram, and web view more like pinterest, or a scroll grid 
     - profile page
         - add avatar pic to users
     - create page
+        - add dialog for when a user clicks too close to another spot, ask them if they want to select the nearby spot
+            - shouldn't let user update selected location yet
         - delete removes all photospots
-        - add reverse geocoding for clicking on map to get neighborhood
         - Split up leftbar into sub components and organize logic better
-        - maybe remove marker when selecting a spot
-        - fix auto complete searches, kinda weird rn
+        - see if its possible to improve autocomplete searches
         - add in tag creation/selection for photospots
-        - update rls policy for tags to allow only user who created photospot to update tags for a photospot
     - general fixes
         - maybe create diff views for common joins
         - fix carousel to be properly sizeable, including the extra button space

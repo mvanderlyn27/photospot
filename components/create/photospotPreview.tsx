@@ -31,7 +31,11 @@ export default function PhotospotPreview({ selectedLocation, loadingSelectedLoca
         setTags(["golden hour", "headshot"])
 
     }, [])
-
+    const handleViewPhotospot = () => {
+        if (isPhotospot(selectedLocation)) {
+            router.push("/photospot/" + selectedLocation.id);
+        }
+    }
     return (
         <>
             <CardContent className="flex flex-col gap-4">
@@ -65,7 +69,7 @@ export default function PhotospotPreview({ selectedLocation, loadingSelectedLoca
                         </h1>
                     </>
                 }
-                <div className="flex justify-center">
+                <div className="flex justify-center flex-row gap-4">
                     <Dialog open={photoshotDialogOpen} onOpenChange={setPhotoshotDialogOpen}>
                         <DialogTrigger>
                             <div className={"text-2xl  " + cn(buttonVariants({ variant: "default" }))} >
@@ -76,6 +80,10 @@ export default function PhotospotPreview({ selectedLocation, loadingSelectedLoca
                             <PhotoshotUploadDialog selectedLocation={selectedLocation} setPhotoshotDialogOpen={setPhotoshotDialogOpen} updatePhotobook={() => console.log("haha")} />
                         </DialogContent>
                     </Dialog>
+                    {selectedLocation && isPhotospot(selectedLocation) &&
+                        <Button variant="outline" onClick={() => { handleViewPhotospot(); }}>
+                            View Photospot
+                        </Button>}
                 </div>
 
             </CardContent>
