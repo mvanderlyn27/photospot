@@ -33,7 +33,8 @@ export default function PhotoTimes({
     lat: number | undefined;
     lng: number | undefined;
 }) {
-    const [date, setDate] = useState<Date | undefined>(undefined);
+    const today = new Date();
+    const [date, setDate] = useState<Date | undefined>(today);
     const [loadingPhotoTime, setLoadingPhotoTime] = useState<boolean>(true);
     const [photoTimeWidgetInfos, setPhotoTimeWidgetInfos] = useState<PhotoTimeWidgetInfo[] | undefined>([]);
     const [weather, setWeather] = useState<{ conditionId: number, time: Date, temp: number }[] | undefined>();
@@ -78,10 +79,13 @@ export default function PhotoTimes({
         let morningWeather = undefined;
         let eveningWeather = undefined;
         if (weather && date) {
+            //checks if its within a day lol, should find a better way to see if the date is ok
             let dateLower = new Date(date);
-            dateLower.setHours(dateLower.getHours() + 3);
+            dateLower.setHours(0);
+            dateLower.setDate(dateLower.getDate() + 1);
             let dateUpper = new Date(date);
-            dateUpper.setHours(dateUpper.getHours() - 3);
+            dateUpper.setHours(0);
+            dateUpper.setDate(dateUpper.getDate() - 1);
             if (weather[0].time <= dateLower && weather[(weather.length - 1)].time >= dateUpper) {
                 //date in range for forecast
                 //find closest dates
@@ -114,9 +118,9 @@ export default function PhotoTimes({
         }
     }
     useEffect(() => {
-        const date = new Date();
-        setDate(date);
-        if (lat && lng) {
+        // const date = new Date();
+        // setDate(date);
+        if (date && lat && lng) {
 
             getForecast(lat, lng).then(weatherArray => {
                 if (weatherArray) {
@@ -128,15 +132,15 @@ export default function PhotoTimes({
                 }
             });
         }
-    }, [lat, lng])
+    }, [date, lat, lng])
     //take in lat/lng have option to chose date, default to today, lookup golden hour times using an npm package
     return (
         <div className="flex flex-col gap-4">
             <div className="flex flex-none flex-row items-center gap-2 justify-left">
                 <h1 className="text-2xl font-semibold">When are you going?</h1>
-                <DatePicker date={date} setDate={setDate} />
+                <DatePicker date={date} setDate={setDate} today={today} />
             </div>
-            {loadingPhotoTime ? <Skeleton className="w-full h-[300px]  bg-slate-800/10 " /> :
+            {loadingPhotoTime ? <div><Skeleton className="w-full h-[300px]  bg-slate-800/10 " /></div> :
                 <div className="flex flex-col justify-left gap-8">
                     {photoTimeWidgetInfos?.map((photoTimeWidgetInfo) => (
                         <PhotoTimeWidget info={photoTimeWidgetInfo} />
@@ -150,10 +154,19 @@ export default function PhotoTimes({
 function DatePicker({
     date,
     setDate,
+    today
 }: {
     date: Date | undefined;
     setDate: any;
+    today: Date
 }) {
+    const handleDisabledCheck = (date: Date) => {
+        let dateLower = new Date(today);
+        let dateUpper = new Date(today);
+        dateLower.setDate(dateLower.getDate() - 1)
+        dateUpper.setDate(dateUpper.getDate() + 5)
+        return date < dateLower || date > dateUpper
+    }
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -170,7 +183,7 @@ function DatePicker({
             </PopoverTrigger>
             <PopoverContent className="flex w-auto flex-col space-y-2 p-2">
                 <div className="rounded-md border">
-                    <Calendar mode="single" selected={date} onSelect={setDate} />
+                    <Calendar mode="single" selected={date} onSelect={setDate} disabled={(date) => handleDisabledCheck(date)} />
                 </div>
             </PopoverContent>
         </Popover>

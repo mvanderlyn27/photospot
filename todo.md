@@ -40,17 +40,9 @@
         - have location_name be editable, if its not good, users should be able to update it
 
     - photospot page
-        - investigate why neighborhood and location_name are swapped
-        - update to display relevant info, and make pics more prevalent, probably remove rotating map, make adding new photos the important part, and recreating photos section better
         - photospot info
-            - need to reogranize page so its actually useful
-                - users want to see cool photos, when to view the location, how to get there
-            - rn anyone can edit a photospot
-            - polish info, figure out what other info we need
             - fix weather functionality
-                - add weather functionality: https://www.npmjs.com/package/openweather-api-node
-                - update weather to pull from correct times, and lat/lng, and display temps too xD, also allow for prediction of weather out to a week away
-                - weather almost working just need to fix bounds for when we can view, and show it on the map better
+                - selecting later date, then going back to today messes it up rn
         - need to make sure all updates pull most recent info to avoid jank
             - add loading states, and skeletons so users can see when things are loading
         - name of photospot too long  with rating messes up the icons
