@@ -32,15 +32,13 @@
 - 
 # Code Improvement
 - Most important
-- add address to photospot and its functions
     - create page
         - lock map/ searches within an area area around NYC
-        - add address info to a photospot
         - have location_name be editable, if its not good, users should be able to update it
         - add tag creation/selection to create photoshot tab
-
-
     - photospot page
+        - edit photoshot doesn't work anymore
+            - it opens both all dialogues for every photospot clicked
         - make photobook/review tabs bigger
         - make it so we only render the streetname for map section
         - get tags properly pulling from photos
