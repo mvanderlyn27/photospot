@@ -15,7 +15,8 @@ export async function reverseGeocodeLocation(lat: number, lng: number): Promise<
     const newPhotospotInfo = {
         lat: lat,
         lng: lng,
-        location_name: feature.properties.name,
+        address: feature.properties.full_address,
+        location_name: feature.properties.name_preferred ? feature.properties.name_preferred : feature.properties.name,
         neighborhood: feature.properties.context.neighborhood ? feature.properties.context.neighborhood.name : ""
     }
     return newPhotospotInfo;

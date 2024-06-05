@@ -84,28 +84,9 @@ export default function LeftWindow({
     mapBounds: LngLatBounds | null;
     loadingSelectedLocation: boolean;
 }) {
-    /*
-      Vision: 
-       - select location via search, or reverse geocoding map marker
-       - go to preview, if no photospot pictures display generic image, 
-         or something that says no images yet
-       - prompt user to upload photo, or go back
-       - if they click upload photo, upon create photospot dialog
-      Todo:
-      - add reverse geocoding
-      - fix photospot preview
-      - fix server actions
-      - add location finding button
-  */
-
-    const supabase = createClient();
-    const [loading, setLoading] = useState(false);
-    useState<SearchBoxFeatureSuggestion | null>(null);
-
 
     const handleAutoCompleteChange = (suggestion: SearchBoxFeatureSuggestion) => {
-        console.log("latlng", suggestion.geometry.coordinates);
-        setSelectedLocation(suggestion);
+        // setSelectedLocation(suggestion);
         getPhotospotByLocation(suggestion.geometry.coordinates[0], suggestion.geometry.coordinates[1]).then((photospot) => {
             if (photospot) {
                 console.log("photospot found by location", photospot);
@@ -115,24 +96,19 @@ export default function LeftWindow({
                 console.log("no photospot found");
                 //REVERSE GEOCODE LOCATION HERE
                 setSelectedLocation({
+                    address: suggestion.properties.full_address,
                     neighborhood: suggestion.properties.context.neighborhood ? suggestion.properties.context.neighborhood.name : "",
-                    location_name: suggestion.properties.name,
+                    location_name: suggestion.properties.name_preferred ? suggestion.properties.name_preferred : suggestion.properties.name,
                     lat: suggestion.geometry.coordinates[1],
                     lng: suggestion.geometry.coordinates[0],
                 });
             }
         })
-        //lookup photospot via location
-        // setLocation(suggestion.properties.name);
     };
     const handleClear = () => {
         setSelectedLocation(null);
     }
-    //need some states to control this comp
-    // want to be able to search a location, select it to create
-    // 2nd view
 
-    //need to get the overflow for the image section working properly here too
     return (
         <Card className="flex flex-col justify-center ">
             <>

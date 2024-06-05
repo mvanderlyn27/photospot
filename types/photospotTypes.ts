@@ -6,6 +6,7 @@ export type Photospot = {
     lat: number;
     lng: number;
     location_name: string;
+    address: string;
     neighborhood?: string | null;
     rating?: number | null;
 };
@@ -14,6 +15,7 @@ export interface NearbyPhotospot extends Photospot {
 }
 export type NewPhotospotInfo = {
     location_name: string;
+    address: string;
     neighborhood: string;
     lat: number;
     lng: number;
@@ -92,9 +94,11 @@ export type GoldenHourDisplayInfo = {
     time: Date;
 };
 export type PhotoTimeWidgetInfo = {
-    time: Date;
+    start: Date;
+    end: Date;
     time_label: PhotoTime;
     weather: Weather | undefined;
+    temp: number | undefined;
 };
 
 export enum Weather {

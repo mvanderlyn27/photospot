@@ -23,9 +23,10 @@ import {
 import { CurrentConditions, CurrentWeather } from "openweather-api-node";
 import { getCurrentWeather } from "@/app/serverActions/weather/getCurrentWeather";
 import { getForecast } from "@/app/serverActions/weather/getForecast";
+import { Skeleton } from "../ui/skeleton";
 let SunCalc = require('suncalc3');
 
-export default function GoldenHourDisplay({
+export default function PhotoTimes({
     lat,
     lng,
 }: {
@@ -33,8 +34,9 @@ export default function GoldenHourDisplay({
     lng: number | undefined;
 }) {
     const [date, setDate] = useState<Date | undefined>(undefined);
+    const [loadingPhotoTime, setLoadingPhotoTime] = useState<boolean>(true);
     const [photoTimeWidgetInfos, setPhotoTimeWidgetInfos] = useState<PhotoTimeWidgetInfo[] | undefined>([]);
-    const [weather, setWeather] = useState<{ conditionId: number, time: Date }[] | undefined>();
+    const [weather, setWeather] = useState<{ conditionId: number, time: Date, temp: number }[] | undefined>();
 
     const convertWeather = (curWeather: number): Weather | undefined => {
         if (String(curWeather).startsWith("8")) {
@@ -56,7 +58,7 @@ export default function GoldenHourDisplay({
             return Weather.snow
         }
     }
-    const binarySearchWeather = (weather: { conditionId: number, time: Date }[], date: Date) => {
+    const binarySearchWeather = (weather: { conditionId: number, time: Date, temp: number }[], date: Date) => {
         let start = 0
         let end = weather.length - 1;
         while (start < end) {
@@ -72,70 +74,75 @@ export default function GoldenHourDisplay({
         }
         return weather[start];
     }
-    const checkDateInWeatherRange = (weather: { conditionId: number, time: Date }[] | undefined, dateMorning: Date, dateEvening: Date) => {
+    const checkDateInWeatherRange = (weather: { conditionId: number, time: Date, temp: number }[] | undefined, dateMorning: Date, dateEvening: Date) => {
         let morningWeather = undefined;
         let eveningWeather = undefined;
         if (weather && date) {
-            let dateLower = date;
-            dateLower.setHours(dateLower.getHours() - 3);
-            let dateUpper = date;
-            dateUpper.setHours(dateUpper.getHours() + 3);
-            console.log('date L', dateLower, 'smallest forecast', weather[0].time, 'date U', dateUpper, 'largest forecast', weather[(weather.length - 1)].time);
-            //something going on with check, not properly updating date ranges, needs to get current time and check +- 3 hours to see if we're in the range
+            let dateLower = new Date(date);
+            dateLower.setHours(dateLower.getHours() + 3);
+            let dateUpper = new Date(date);
+            dateUpper.setHours(dateUpper.getHours() - 3);
             if (weather[0].time <= dateLower && weather[(weather.length - 1)].time >= dateUpper) {
                 //date in range for forecast
-                //find closest date
-                morningWeather = binarySearchWeather(weather, dateMorning).conditionId;
-                eveningWeather = binarySearchWeather(weather, dateEvening).conditionId;
-                console.log('closest weather', morningWeather, eveningWeather);
+                //find closest dates
+                morningWeather = binarySearchWeather(weather, dateMorning);
+                eveningWeather = binarySearchWeather(weather, dateEvening);
             }
         }
         return { morningWeather, eveningWeather };
     }
-    useEffect(() => {
-        //update photoTimeWidgetInfos here based on which types of photos
-        if (date && lat && lng) {
+    const updatePhotoTimeWidgetInfos = (weather: { conditionId: number, time: Date, temp: number }[], date: Date, lat: number, lng: number) => {
+        if (weather && date && lat && lng) {
             let times = SunCalc.getSunTimes(date, lat, lng);
-            const { morningWeather, eveningWeather } = checkDateInWeatherRange(weather, times.goldenHourDawnStart.value, times.goldenHourDuskStart.value);
-
-            console.log('weather', weather, morningWeather, eveningWeather);
+            const { morningWeather, eveningWeather } = checkDateInWeatherRange(weather, times.goldenHourDawnStart.value, times.goldenHourDuskEnd.value);
             setPhotoTimeWidgetInfos([
                 {
-                    time: times.goldenHourDawnStart.value,
+                    start: times.goldenHourDawnStart.value,
+                    end: times.goldenHourDawnEnd.value,
                     time_label: PhotoTime.golden_hour_morning,
-                    weather: morningWeather ? convertWeather(morningWeather) : undefined,
+                    weather: morningWeather ? convertWeather(morningWeather.conditionId) : undefined,
+                    temp: morningWeather ? morningWeather.temp : undefined,
                 },
                 {
-                    time: times.goldenHourDuskStart.value,
+                    start: times.goldenHourDuskStart.value,
+                    end: times.goldenHourDuskEnd.value,
                     time_label: PhotoTime.golden_hour_evening,
-                    weather: eveningWeather ? convertWeather(eveningWeather) : undefined,
+                    weather: eveningWeather ? convertWeather(eveningWeather.conditionId) : undefined,
+                    temp: eveningWeather ? eveningWeather.temp : undefined,
                 },
             ]);
         }
-    }, [weather, date, lat, lng]);
+    }
     useEffect(() => {
-        setDate(new Date());
+        const date = new Date();
+        setDate(date);
         if (lat && lng) {
 
             getForecast(lat, lng).then(weatherArray => {
                 if (weatherArray) {
-                    setWeather(weatherArray.map(w => ({ conditionId: w.weather.conditionId, time: w.dt })));
+                    const weather = weatherArray.map(w => ({ conditionId: w.weather.conditionId, time: w.dt, temp: w.weather.temp.cur }));
+                    setWeather(weather);
+                    updatePhotoTimeWidgetInfos(weather, date, lat, lng);
+
+                    setLoadingPhotoTime(false);
                 }
-            })
+            });
         }
-    }, [lat, lng]);
+    }, [lat, lng])
     //take in lat/lng have option to chose date, default to today, lookup golden hour times using an npm package
     return (
         <div className="flex flex-col gap-4">
-            <div className="flex flex-row items-center gap-2 justify-center ">
-                <h1 className="text-xl font-semibold">Best Photo Times for: </h1>
+            <div className="flex flex-none flex-row items-center gap-2 justify-left">
+                <h1 className="text-2xl font-semibold">When are you going?</h1>
                 <DatePicker date={date} setDate={setDate} />
             </div>
-            <div className="flex flex-row justify-center gap-8">
-                {photoTimeWidgetInfos?.map((photoTimeWidgetInfo) => (
-                    <PhotoTimeWidget info={photoTimeWidgetInfo} />
-                ))}
-            </div>
+            {loadingPhotoTime ? <Skeleton className="w-full h-[300px]  bg-slate-800/10 " /> :
+                <div className="flex flex-col justify-left gap-8">
+                    {photoTimeWidgetInfos?.map((photoTimeWidgetInfo) => (
+                        <PhotoTimeWidget info={photoTimeWidgetInfo} />
+                    ))}
+                </div>
+            }
         </div>
     );
 }

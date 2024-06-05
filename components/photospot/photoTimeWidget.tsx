@@ -4,6 +4,7 @@ import {
   TiWeatherCloudy,
   TiWeatherSunny,
 } from "react-icons/ti";
+import { Skeleton } from "../ui/skeleton";
 export default function PhotoTimeWidget({
   info,
 }: {
@@ -20,22 +21,30 @@ export default function PhotoTimeWidget({
   }
 
   const dateToString = (date: Date) => {
-    console.log('formating date', date);
-    return date.getHours() + ':' + date.getMinutes();
+    return date.toLocaleTimeString()
   }
   return (
-    <div className="flex flex-row align-center gap-2 p-4 rounded-md outline outline-2">
-      {info.weather == Weather.sun && <TiWeatherSunny className="h-10 w-10" />}
-      {info.weather == Weather.clouds && (
-        <TiWeatherCloudy className="h-10 w-10" />
-      )}
-      {info.weather == Weather.rain && (
-        <TiWeatherDownpour className="h-10 w-10" />
-      )}
-      <div className="flex flex-col">
-        <h1 className="font-semibold"> {timeLabelToString(info.time_label)}</h1>
-        <h1 className="text-left"> {dateToString(info.time)}</h1>
+    <div className="flex flex-col gap-4 pt-4">
+
+      < h1 className="font-semibold text-xl" > {timeLabelToString(info.time_label)}</h1 >
+      <div className="flex flex-row gap-8">
+        {info.weather != undefined && <div className="align-center  p-4 rounded-md outline outline-2">
+
+          {info.weather == Weather.sun && <TiWeatherSunny className="h-10 w-10" />}
+          {info.weather == Weather.clouds && (
+            <TiWeatherCloudy className="h-10 w-10" />
+          )}
+          {info.weather == Weather.rain && (
+            <TiWeatherDownpour className="h-10 w-10" />
+          )}
+        </div>}
+        <div className="align-center  p-4 rounded-md outline outline-2">
+          <h1 className="text-left text-xl"> {dateToString(info.start)}</h1>
+        </div>
+        <div className="align-center gap-2 p-4 rounded-md outline outline-2">
+          <h1 className="text-left text-xl"> {dateToString(info.end)}</h1>
+        </div>
       </div>
     </div>
-  );
+  )
 }

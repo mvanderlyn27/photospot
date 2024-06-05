@@ -70,7 +70,7 @@ export default function PhotoshotUploadDialog({ selectedLocation, setPhotoshotDi
             setPhotoshotDialogOpen(false);
             setLoading(false);
             if (photoshot) {
-                router.push('/photospot/' + photoshot.id);
+                router.push('/photospot/' + photoshot.photospot_id);
             }
 
             toast({

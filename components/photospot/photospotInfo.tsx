@@ -25,16 +25,16 @@ import { cn } from "@/lib/utils";
 import SharePhotospotDialog from "./sharePhotospotDialog";
 import EditPhotospotDialog from "./editPhotospotDialog";
 import RatingDisplay from "../review/ratingDisplay";
+import PhotoTimes from "./goldenHourDisplay";
+import { Skeleton } from "../ui/skeleton";
 
 export default function PhotospotInfo({
     photospot,
     stats,
-    owner,
     updatePhotospot,
 }: {
     photospot: Photospot | null;
     stats: PhotospotStats | null;
-    owner: boolean,
     updatePhotospot: any
 }) {
     const [saved, setSaved] = useState(false);
@@ -72,76 +72,48 @@ export default function PhotospotInfo({
         //maybe add URL shortener lol
 
     }
-    const handleDirections = () => {
-        if (photospot) {
-            window.open(`https://www.google.com/maps?q=${photospot.lat},${photospot.lng}`);
-        }
-    }
     return (
-        <Card className="h-full flex flex-col">
-            <CardHeader className="flex-none">
-                <div className="flex flex-row justify-between">
-                    <CardTitle className="text-3xl">
-                        <div className="flex flex-row gap-4">
-                            {photospot?.name}
-                            {stats?.rating_average && <RatingDisplay rating={stats.rating_average} />}
-                        </div>
-                    </CardTitle>
-                    <div className="flex flex-row gap-2">
-                        {owner &&
-
-                            <Dialog open={editPhotospotDialogOpen} onOpenChange={setEditPhotospotDialogOpen}>
+        //setup skeelton for loading
+        <>
+            {photospot && stats ? <Skeleton className={`h-full w-full bg-slate-800/10 ${photospot ? "hidden" : ""}`} /> : null}
+            < Card className={`h-full flex flex-col ${photospot ? "" : "hidden"}`}>
+                <CardHeader className="flex-none">
+                    <div className="flex flex-row justify-between">
+                        <CardTitle className="text-3xl">
+                            <div className="flex flex-row gap-4">
+                                {photospot?.location_name}
+                            </div>
+                        </CardTitle>
+                        <div className="flex flex-row gap-2">
+                            <Dialog>
                                 <DialogTrigger>
-                                    <div className={"p-2  " + cn(buttonVariants({ variant: 'default' }))}>Edit</div>
+                                    <div className={cn(buttonVariants({ variant: 'default' }))}>
+                                        <FaShareAlt className="w-6 h-6" />
+                                    </div>
                                 </DialogTrigger>
                                 <DialogContent>
-                                    <EditPhotospotDialog photospot={photospot} setEditPhotospotDialogOpen={setEditPhotospotDialogOpen} updatePhotospot={updatePhotospot} />
+                                    <SharePhotospotDialog />
                                 </DialogContent>
                             </Dialog>
-                        }
-
-                        <div className={"cursor-pointer " + cn(buttonVariants({ variant: 'default' }))} onClick={() => handleDirections()}>
-                            <FaDirections className="w-6 h-6" />
+                            <Button onClick={() => handleSave()}>{saved ? <FaBookmark className="w-6 h-6" /> : <FaRegBookmark className="w-6 h-6" />}</Button>
                         </div>
-
-
-                        <Dialog>
-                            <DialogTrigger>
-                                <div className={cn(buttonVariants({ variant: 'default' }))}>
-                                    <FaShareAlt className="w-6 h-6" />
-                                </div>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <SharePhotospotDialog />
-                            </DialogContent>
-
-                        </Dialog>
-                        <Button onClick={() => handleSave()}>{saved ? <FaBookmark className="w-6 h-6" /> : <FaRegBookmark className="w-6 h-6" />}</Button>
                     </div>
-                </div>
-                <CardDescription>Posted by: {photospot?.username}</CardDescription>
-                <div className=" flex flex-auto gap-2">
-                    {tags.map((tag) => (
-                        <Badge key={tag} variant="outline">
-                            {tag}
-                        </Badge>
-                    ))}
-                </div>
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col gap-4 justify-between">
-                <div className="">
-                    <h2>
-                        <b>A bit more about this spot:</b> {photospot?.description}
-                    </h2>
-                </div>
-                <div className="">
-                    <GoldenHourDisplay
-
+                </CardHeader>
+                <CardContent className=" flex flex-col gap-4 ">
+                    <RatingDisplay rating={stats?.rating_average ? stats.rating_average : 0} count={stats?.rating_count ? stats.rating_count : 0} />
+                    <div className=" flex flex-auto gap-2">
+                        {tags.map((tag) => (
+                            <Badge key={tag} variant="outline">
+                                {tag}
+                            </Badge>
+                        ))}
+                    </div>
+                    <PhotoTimes
                         lat={photospot?.lat}
                         lng={photospot?.lng}
                     />
-                </div>
-            </CardContent>
-        </Card>
+                </CardContent>
+            </Card>
+        </>
     );
 }

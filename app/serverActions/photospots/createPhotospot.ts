@@ -14,6 +14,7 @@ export default async function createPhotospot(newPhotospotInfo: NewPhotospotInfo
     const supabase = createClient();
     const { data: photospotData, error: photospotError } = await supabase.rpc("create_photospot_with_lat_lng", {
         location_namein: newPhotospotInfo.location_name,
+        addressin: newPhotospotInfo.address,
         neighborhoodin: newPhotospotInfo.neighborhood,
         locationin: `POINT(${newPhotospotInfo.lng} ${newPhotospotInfo.lat})`,
     }).select("*").single()

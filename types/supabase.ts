@@ -176,6 +176,7 @@ export type Database = {
       }
       photospots: {
         Row: {
+          address: string | null
           created_at: string
           created_by: string | null
           id: number
@@ -184,6 +185,7 @@ export type Database = {
           neighborhood: string
         }
         Insert: {
+          address?: string | null
           created_at?: string
           created_by?: string | null
           id?: number
@@ -192,6 +194,7 @@ export type Database = {
           neighborhood: string
         }
         Update: {
+          address?: string | null
           created_at?: string
           created_by?: string | null
           id?: number
@@ -364,14 +367,16 @@ export type Database = {
     Functions: {
       create_photospot_with_lat_lng: {
         Args: {
-          neighborhoodin: string
           location_namein: string
+          addressin: string
+          neighborhoodin: string
           locationin: unknown
         }
         Returns: {
           id: number
-          neighborhood: string
           location_name: string
+          address: string
+          neighborhood: string
           lat: number
           lng: number
         }[]
@@ -414,8 +419,9 @@ export type Database = {
         }
         Returns: {
           id: number
-          neighborhood: string
           location_name: string
+          address: string
+          neighborhood: string
           lat: number
           lng: number
         }[]
@@ -431,6 +437,7 @@ export type Database = {
         Returns: {
           id: number
           location_name: string
+          address: string
           neighborhood: string
           lat: number
           lng: number
@@ -443,6 +450,7 @@ export type Database = {
         Returns: {
           id: number
           location_name: string
+          address: string
           neighborhood: string
           lat: number
           lng: number

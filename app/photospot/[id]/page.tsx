@@ -36,7 +36,6 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
     */
   const [photospotData, setPhotoSpotData] = useState<Photospot | null>(null);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
-  const [owner, setOwner] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [userReview, setUserReview] = useState<Review | null>(null);
@@ -53,9 +52,6 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
   const updateReviews = async (id: number) => {
     getPhotospotReviews(id).then((reviews) => {
       console.log("reviews", reviews, "user", user);
-      if (user?.id === photospotData?.created_by) {
-        setOwner(true);
-      }
       let userReviewIndex = -1;
       reviews.forEach((review, index) => {
         if (review.created_by === user?.id) {
@@ -87,9 +83,6 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
   const updatePhotobook = async (id: number) => {
     getPhotospotsPhotobookPictures(id).then((photoBookPictures) => {
       console.log("reviews", photoBookPictures, "user", user);
-      if (user?.id === photospotData?.created_by) {
-        setOwner(true);
-      }
       photoBookPictures.forEach((photoBookPicture) => {
         if (photoBookPicture.created_by === user?.id) {
           //     //check if user did a photoBookPicture already
@@ -101,18 +94,18 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
   };
   const updatePhotospot = async (id: number) => {
     getPhotospotById(parseInt(params.id)).then((photospot: Photospot) => {
+      console.log('photospot info', photospot)
       setPhotoSpotData(photospot);
-      setOwner(photospot?.created_by === user?.id);
     });
   };
   useEffect(() => {
     //pull info from photospot based on id
     updatePhotospot(parseInt(params.id));
   }, [params.id]);
-  useEffect(() => {
-    updateReviews(parseInt(params.id));
-    updatePhotobook(parseInt(params.id));
-  }, [photospotData, user]);
+  // useEffect(() => {
+  //   updateReviews(parseInt(params.id));
+  //   updatePhotobook(parseInt(params.id));
+  // }, [photospotData, user]);
   useEffect(() => {
     getUser().then((user) => {
       setUser(user);
@@ -124,18 +117,17 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="flex flex-col justify-center gap-8 w-full pl-20 pr-20">
-      <div className="flex flex-row gap-24 w-full justify-center h-[500px] ">
-        <div className="flex-1  h-50vh">
+      <div className="flex flex-row gap-24 w-full justify-center h-[600px] ">
+        <div className="flex-1 ">
           <PhotospotInfo
-            owner={owner}
             photospot={photospotData}
             stats={stats}
             updatePhotospot={() => updatePhotospot(parseInt(params.id))}
           />
         </div>
-        <div className="flex-1  h-50vh">
+        <div className="flex-1 ">
           {photospotData?.lat && photospotData?.lng && (
-            <PreviewMap lat={photospotData.lat} lng={photospotData.lng} />
+            <PreviewMap lat={photospotData.lat} lng={photospotData.lng} photospot={photospotData} />
           )}
         </div>
       </div>
@@ -166,8 +158,7 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
               </DialogTrigger>
               <DialogContent>
                 <PhotoshotUploadDialog
-                  locationName={photospotData?.location_name ? photospotData?.location_name : ""}
-                  photospot={photospotData}
+                  selectedLocation={photospotData}
                   setPhotoshotDialogOpen={setPhotobookPictureDialogOpen}
                   updatePhotobook={() => updatePhotobook(parseInt(params.id))}
                 />

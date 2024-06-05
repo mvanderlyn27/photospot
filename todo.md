@@ -32,14 +32,16 @@
 - 
 # Code Improvement
 - Most important
-    - lock map/ searches within an area area around NYC
-    - add address info to a photospot
-    - have location_name be editable, if its not good, users should be able to update it
-    - update photospot view page, 
-        - get old functionality working
-        - update to display relevant info, and make pics more prevalent, probably remove rotating map, make adding new photos the important part, and recreating photos section better
+- add address to photospot and its functions
+    - make it so we only render the streetname
+    - create page
+        - lock map/ searches within an area area around NYC
+        - add address info to a photospot
+        - have location_name be editable, if its not good, users should be able to update it
 
     - photospot page
+        - investigate why neighborhood and location_name are swapped
+        - update to display relevant info, and make pics more prevalent, probably remove rotating map, make adding new photos the important part, and recreating photos section better
         - photospot info
             - need to reogranize page so its actually useful
                 - users want to see cool photos, when to view the location, how to get there
@@ -63,8 +65,9 @@
         - delete removes all photospots
         - Split up leftbar into sub components and organize logic better
         - see if its possible to improve autocomplete searches
-        - add in tag creation/selection for photospots
+        - update retrieve photospots in view (map bounds)rpc function when time, and make create and expore functiosn use it
     - general fixes
+        - don't show photospots with no photoshots
         - maybe create diff views for common joins
         - fix carousel to be properly sizeable, including the extra button space
             - rn messed up on create page, and photospot page
@@ -72,6 +75,7 @@
         - Update/fix server actions for all profile/photospot things
             - got some of photospot actions done
 # Before launch of MVP
+- if not using 3d, maybe turn it off on the map
 - design and implement all mobile views for website
     - maybe combine explore/home to have picture view/ map view, just call it "explore"
     - emphasis how to recreate a shot at a beautiful place
