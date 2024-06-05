@@ -124,11 +124,11 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
         </div>
       </div>
       <Tabs defaultValue="photos" className="w-full ">
-        <TabsList className="w-full justify-center gap-8">
-          <TabsTrigger value="photos" className="text-xl">
+        <TabsList className="w-full justify-center gap-24">
+          <TabsTrigger value="photos" className="text-3xl">
             Photobook
           </TabsTrigger>
-          <TabsTrigger value="reviews" className="text-xl">
+          <TabsTrigger value="reviews" className="text-3xl">
             Reviews
           </TabsTrigger>
         </TabsList>

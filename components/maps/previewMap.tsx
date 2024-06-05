@@ -57,12 +57,24 @@ export default function PreviewMap({ lat, lng, photospot }: { lat: number; lng: 
         console.log('handleMapLoad', e);
         setMapLoaded(true);
     }
-
+    const toStreetAddress = (address: string): string => {
+        //shortents to street, city address
+        const address_ar = address.split(',');
+        if (address_ar.length > 1) {
+            return address_ar[0] + ", " + address_ar[1];
+        }
+        else if (address_ar.length == 1) {
+            return address_ar[0];
+        }
+        else {
+            return "";
+        }
+    }
     return (
 
         <Card className="w-full h-full flex flex-col relative">
             <div className={`flex-0 p-4 flex flex-row justify-between items-center ${mapLoaded ? "" : "invisible"}`}>
-                <h1 className="text-xl ">{photospot.address}</h1>
+                <h1 className="text-xl ">{toStreetAddress(photospot.address)}</h1>
                 <div className="flex flex-row gap-4">
                     <Button onClick={handleReset}>Reset</Button>
                     <div className={"cursor-pointer " + cn(buttonVariants({ variant: 'default' }))} onClick={() => handleDirections()}>

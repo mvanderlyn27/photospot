@@ -37,15 +37,13 @@
         - have location_name be editable, if its not good, users should be able to update it
         - add tag creation/selection to create photoshot tab
     - photospot page
-        - edit photoshot doesn't work anymore
-            - it opens both all dialogues for every photospot clicked
-        - make photobook/review tabs bigger
-        - make it so we only render the streetname for map section
         - get tags properly pulling from photos
         - need to make sure all updates pull most recent info to avoid jank
             - add loading states, and skeletons so users can see when things are loading
+            - add skeleton to photo section
+            - fix skeleton for info section
+            - ensure edit updates info properly
             - make sure skeletons all look good
-        - Editing a photoshot, then clicking out, needs to clear the edit mode
     - need to setup explore page
     - home (timeline)
         - make mobile like instagram, and web view more like pinterest, or a scroll grid 
@@ -102,6 +100,7 @@
         - add minimize button for leftbar
         - add back in the photo view for uploading pics
     - photospot page
+        - fix tabs to align with top boxes
         - add more info to review section, for ratings counts in different groups
         - revisit weather check to ensure always correct
         - photoInfo section
