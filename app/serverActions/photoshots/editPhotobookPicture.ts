@@ -1,6 +1,6 @@
 "use server";
-import { editPhotobookPictureSchema } from "@/components/photoshot/editPhotobookPicture";
-import { PhotobookPicture, Review } from "@/types/photospotTypes";
+import { editPhotoshotSchema } from "@/components/photoshot/editPhotoshotDialog";
+import { Photoshot, Review } from "@/types/photospotTypes";
 import { Database } from "@/types/supabase";
 import { randomNumber } from "@/utils/common/math";
 // import { createClient } from "@/utils/supabase/client";
@@ -9,18 +9,18 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
-const PHOTO_BUCKET = "photospot_pictures";
-export default async function editPhotobookPicture(
-  photobookPictureId: number,
-  photobookPictureInfo: z.infer<typeof editPhotobookPictureSchema>,
+const PHOTO_BUCKET = "photoshot_pictures";
+export default async function editPhotoshot(
+  photoshotId: number,
+  photoshotInfo: z.infer<typeof editPhotoshotSchema>,
   photospot_id: number,
-  photobookPictures: FormData
-): Promise<PhotobookPicture> {
-  if (!photobookPictureInfo || !photobookPictureId) {
+  photoshots: FormData
+): Promise<Photoshot> {
+  if (!photoshotInfo || !photoshotId) {
     redirect("/error?error=missing info for edit");
   }
 
-  console.log("photobookPictureInfo", photobookPictureInfo);
+  console.log("photoshotInfo", photoshotInfo);
   const supabase = createClient();
   const user = await supabase.auth.getUser();
   if (!user.data.user) {
@@ -29,12 +29,12 @@ export default async function editPhotobookPicture(
 
   // need to handle removing old photos here fromt he bucket
   if (
-    photobookPictureInfo?.photosToRemove &&
-    photobookPictureInfo.photosToRemove.length > 0
+    photoshotInfo?.photosToRemove &&
+    photoshotInfo.photosToRemove.length > 0
   ) {
-    let photo_path = photobookPictureInfo.photosToRemove.map(
+    let photo_path = photoshotInfo.photosToRemove.map(
       (name: string) =>
-        photospot_id + "/photobook/" + photobookPictureId + "/" + name
+        '/' + photospot_id + "/" + photoshotId + "/" + name
     );
     console.log("removing", photo_path);
     const { error } = await supabase.storage
@@ -46,12 +46,12 @@ export default async function editPhotobookPicture(
   }
 
   let filePaths: string[] = [];
-  const photoData: any[] = photobookPictures.getAll("photobook_pictures");
+  const photoData: any[] = photoshots.getAll("photoshot_pictures");
   if (photoData) {
     const fileUploadPromiseArray = photoData.map((photo) => {
       //maybe have lookup when uploading image to see if it exists already
       let photo_path =
-        photospot_id + "/photobook/" + photobookPictureId + "/" + photo.name;
+        '/' + photospot_id + "/" + photoshotId + "/" + photo.name;
       return supabase.storage
         .from(PHOTO_BUCKET)
         .upload(photo_path, photo, { upsert: true });
@@ -70,18 +70,18 @@ export default async function editPhotobookPicture(
         supabase.storage.from(PHOTO_BUCKET).getPublicUrl(path).data.publicUrl
     );
   }
-  if (photobookPictureInfo.currentPhotos) {
+  if (photoshotInfo.currentPhotos) {
     console.log("fixing photo path");
-    filePaths = filePaths.concat(photobookPictureInfo.currentPhotos);
+    filePaths = filePaths.concat(photoshotInfo.currentPhotos);
   }
   const { data: uploadData, error: uploadError } = await supabase
     .from("photospots_photobook_pictures")
     .update({
-      name: photobookPictureInfo.name,
-      description: photobookPictureInfo.description,
+      name: photoshotInfo.name,
+      recreate_text: photoshotInfo.recreate_text,
       photo_paths: filePaths,
     })
-    .eq("id", photobookPictureId)
+    .eq("id", photoshotId)
     .select("*")
     .single();
   if (uploadError) {

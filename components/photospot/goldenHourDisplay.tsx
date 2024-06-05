@@ -80,18 +80,19 @@ export default function PhotoTimes({
         let eveningWeather = undefined;
         if (weather && date) {
             //checks if its within a day lol, should find a better way to see if the date is ok
-            let dateLower = new Date(date);
-            dateLower.setHours(0);
-            dateLower.setDate(dateLower.getDate() + 1);
-            let dateUpper = new Date(date);
-            dateUpper.setHours(0);
-            dateUpper.setDate(dateUpper.getDate() - 1);
-            if (weather[0].time <= dateLower && weather[(weather.length - 1)].time >= dateUpper) {
-                //date in range for forecast
-                //find closest dates
-                morningWeather = binarySearchWeather(weather, dateMorning);
-                eveningWeather = binarySearchWeather(weather, dateEvening);
-            }
+            // let dateLower = new Date(date);
+            // dateLower.setHours(0);
+            // dateLower.setDate(dateLower.getDate() + 1);
+            // let dateUpper = new Date(date);
+            // dateUpper.setHours(0);
+            // dateUpper.setDate(dateUpper.getDate() - 1);
+            //need better way to check
+            // if (weather[0].time <= dateLower && weather[(weather.length - 1)].time >= dateUpper) {
+            //date in range for forecast
+            //find closest dates
+            morningWeather = binarySearchWeather(weather, dateMorning);
+            eveningWeather = binarySearchWeather(weather, dateEvening);
+            // }
         }
         return { morningWeather, eveningWeather };
     }

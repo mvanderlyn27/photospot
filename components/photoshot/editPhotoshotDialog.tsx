@@ -1,5 +1,5 @@
 "use client"
-import { PhotobookPicture, Photospot, Review } from "@/types/photospotTypes";
+import { Photoshot, Photospot, Review } from "@/types/photospotTypes";
 import { DialogDescription, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { CardContent, CardFooter } from "../ui/card";
@@ -19,11 +19,11 @@ import deletePhotobookPicture from "@/app/serverActions/photoshots/deletePhotobo
 
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-export const editPhotobookPictureSchema = z.object({
+export const editPhotoshotSchema = z.object({
     //should add some better requirements for the location
 
     name: z.string().optional(),
-    description: z.string().optional(),
+    recreate_text: z.string().optional(),
     //tags for later
     photos: z.custom<FileList | null>(() => true, "")
         // photos: z.custom<FileList | null>((val) => val instanceof FileList || null, "Please upload a picture")
@@ -47,33 +47,33 @@ export const editPhotobookPictureSchema = z.object({
 })
 
 
-export default function EditPhotobookPictureDialog({ photobookPicture, setEditMode, setPhotobookPictureDialogOpen, updatePhotobook }: { photobookPicture: PhotobookPicture | null, setEditMode: any, setPhotobookPictureDialogOpen: any, updatePhotobook: any }) {
+export default function EditPhotoshotDialog({ photoshot, setEditMode, setPhotoshotDialogOpen, updatePhotoshots }: { photoshot: Photoshot | null, setEditMode: any, setPhotoshotDialogOpen: any, updatePhotoshots: any }) {
     const [loading, setLoading] = useState(false);
 
     const [confirmDelete, setConfirmDelete] = useState(false);
-    const editPhotobookPictureForm = useForm<z.infer<typeof editPhotobookPictureSchema>>({
-        resolver: zodResolver(editPhotobookPictureSchema),
+    const editPhotoshotForm = useForm<z.infer<typeof editPhotoshotSchema>>({
+        resolver: zodResolver(editPhotoshotSchema),
         defaultValues: {
-            name: photobookPicture?.name || "",
-            description: photobookPicture?.description || "",
+            name: photoshot?.name || "",
+            recreate_text: photoshot?.recreate_text || "",
             photos: null,
-            currentPhotos: photobookPicture?.photo_paths || [],
+            currentPhotos: photoshot?.photo_paths || [],
             photosToRemove: []
         },
     })
 
-    const onEdit = async (data: z.infer<typeof editPhotobookPictureSchema>) => {
-        if (photobookPicture) {
+    const onEdit = async (data: z.infer<typeof editPhotoshotSchema>) => {
+        if (photoshot) {
             let photos_form = new FormData();
             if (data.photos) {
                 Array.from(data.photos).forEach((photo) => {
-                    photos_form.append(`photobook_pictures`, photo);
+                    photos_form.append(`photoshot_pictures`, photo);
                 })
             }
             setLoading(true);
-            await editPhotobookPicture(photobookPicture.id, data, photobookPicture.photospot_id, photos_form);
+            await editPhotobookPicture(photoshot.id, data, photoshot.photospot_id, photos_form);
             setLoading(false);
-            await updatePhotobook();
+            await updatePhotoshots();
             setEditMode(false);
             toast({
                 title: "Edits Saved! :)",
@@ -83,29 +83,29 @@ export default function EditPhotobookPictureDialog({ photobookPicture, setEditMo
 
     const cancelEdit = () => {
         //need to figure out how to properly clear the photos section
-        editPhotobookPictureForm.reset()
+        editPhotoshotForm.reset()
         setEditMode(false)
     }
     const handleRemovePicture = (photo: string) => {
         //maybe async remove photo too ?
-        editPhotobookPictureForm.setValue("currentPhotos", editPhotobookPictureForm.getValues("currentPhotos")?.filter((p) => p !== photo));
-        editPhotobookPictureForm.trigger("currentPhotos");
-        const updatedArray = editPhotobookPictureForm.getValues("photosToRemove")
+        editPhotoshotForm.setValue("currentPhotos", editPhotoshotForm.getValues("currentPhotos")?.filter((p) => p !== photo));
+        editPhotoshotForm.trigger("currentPhotos");
+        const updatedArray = editPhotoshotForm.getValues("photosToRemove")
         if (updatedArray) {
             updatedArray.push(photo.split('/').pop() as string);
-            editPhotobookPictureForm.setValue("photosToRemove", updatedArray);
-            editPhotobookPictureForm.trigger("photosToRemove");
+            editPhotoshotForm.setValue("photosToRemove", updatedArray);
+            editPhotoshotForm.trigger("photosToRemove");
         }
     }
     const promptDelete = (setting: boolean) => {
         setConfirmDelete(setting);
     }
     const handleDelete = async () => {
-        if (photobookPicture && confirmDelete) {
+        if (photoshot && confirmDelete) {
             setLoading(true);
-            await deletePhotobookPicture(photobookPicture);
-            await updatePhotobook();
-            setPhotobookPictureDialogOpen(false);
+            await deletePhotobookPicture(photoshot);
+            await updatePhotoshots();
+            setPhotoshotDialogOpen(false);
             setLoading(false);
             toast({
                 title: "Photobook Picture Deleted",
@@ -114,14 +114,14 @@ export default function EditPhotobookPictureDialog({ photobookPicture, setEditMo
     }
     return (
         <div className="flex flex-col gap-2 ">
-            <DialogTitle>Update info for {photobookPicture?.name}</DialogTitle>
+            <DialogTitle>Update info for {photoshot?.name}</DialogTitle>
             <DialogDescription className="">Show off your artsy side, and help other users learn how to make better shots</DialogDescription>
-            <Form {...editPhotobookPictureForm}>
-                <form onSubmit={editPhotobookPictureForm.handleSubmit(onEdit)} className=" w-full flex flex-col">
+            <Form {...editPhotoshotForm}>
+                <form onSubmit={editPhotoshotForm.handleSubmit(onEdit)} className=" w-full flex flex-col">
 
                     <CardContent className={`flex-1 overflow-auto mb-4 }`}>
                         <FormField
-                            control={editPhotobookPictureForm.control}
+                            control={editPhotoshotForm.control}
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
@@ -137,8 +137,8 @@ export default function EditPhotobookPictureDialog({ photobookPicture, setEditMo
                             )} />
 
                         <FormField
-                            control={editPhotobookPictureForm.control}
-                            name="description"
+                            control={editPhotoshotForm.control}
+                            name="recreate_text"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>About this shot:</FormLabel>
@@ -152,7 +152,7 @@ export default function EditPhotobookPictureDialog({ photobookPicture, setEditMo
                                 </FormItem>
                             )} />
                         <FormField
-                            control={editPhotobookPictureForm.control}
+                            control={editPhotoshotForm.control}
                             name="photos"
                             render={({ field: { onChange }, ...field }) => (
                                 <FormItem>
@@ -169,7 +169,7 @@ export default function EditPhotobookPictureDialog({ photobookPicture, setEditMo
                         />
                         <h1> Current Photos: (click to remove) </h1>
                         <div className="flex ">
-                            {editPhotobookPictureForm.getValues("currentPhotos")?.map((photo) => (
+                            {editPhotoshotForm.getValues("currentPhotos")?.map((photo) => (
                                 <div className="flex flex-col cursor-pointer" key={photo} onClick={() => { handleRemovePicture(photo) }}>
                                     <h1>Name: {photo.split('/').pop()}</h1>
                                     <img className="h-40 w-40 object-cover rounded-md" src={photo} />

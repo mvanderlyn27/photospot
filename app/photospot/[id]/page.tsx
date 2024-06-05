@@ -25,10 +25,10 @@ import { createClient } from "@/utils/supabase/client";
 import { getPhotospotReviews } from "@/app/serverActions/reviews/getPhotospotReviews";
 import { getUser } from "@/app/serverActions/auth/getUser";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PhotobookGrid from "@/components/photoshot/photobookGrid";
-import { getPhotospotsPhotobookPictures } from "@/app/serverActions/photoshots/getPhotospotsPhotobookPictures";
+import PhotoshotGrid from "@/components/photoshot/photoshotGrid";
 import { UserIdentity } from "@supabase/supabase-js";
 import PhotoshotUploadDialog from "@/components/photoshot/photoshotUploadDialog";
+import { getPhotospotsByPhotospot } from "@/app/serverActions/photoshots/getPhotoshotsByPhotospot";
 
 export default function PhotospotPage({ params }: { params: { id: string } }) {
   /*
@@ -40,10 +40,8 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [userReview, setUserReview] = useState<Review | null>(null);
   const [stats, setStats] = useState<PhotospotStats | null>(null);
-  const [photobookPictures, setPhotoBookPictures] = useState<
-    Photoshot[]
-  >([]);
-  const [userPhotobookPicture, setUserPhotobookPicture] =
+  const [photoshots, setPhotoshots] = useState<Photoshot[]>([]);
+  const [userPhotoshot, setUserPhotoshot] =
     useState<Photoshot | null>(null);
   const [photobookPictureDialogOpen, setPhotobookPictureDialogOpen] =
     useState(false);
@@ -80,16 +78,10 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
     });
   };
 
-  const updatePhotobook = async (id: number) => {
-    getPhotospotsPhotobookPictures(id).then((photoBookPictures) => {
-      console.log("reviews", photoBookPictures, "user", user);
-      photoBookPictures.forEach((photoBookPicture) => {
-        if (photoBookPicture.created_by === user?.id) {
-          //     //check if user did a photoBookPicture already
-          // setUserphotoBookPicture(review);
-        }
-      });
-      setPhotoBookPictures(photoBookPictures);
+  const updatePhotoshots = async (id: number) => {
+    getPhotospotsByPhotospot(id).then((photoshots) => {
+      console.log("reviews", photoshots, "user", user);
+      setPhotoshots(photoshots);
     });
   };
   const updatePhotospot = async (id: number) => {
@@ -102,10 +94,10 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
     //pull info from photospot based on id
     updatePhotospot(parseInt(params.id));
   }, [params.id]);
-  // useEffect(() => {
-  //   updateReviews(parseInt(params.id));
-  //   updatePhotobook(parseInt(params.id));
-  // }, [photospotData, user]);
+  useEffect(() => {
+    updateReviews(parseInt(params.id));
+    updatePhotoshots(parseInt(params.id));
+  }, [photospotData, user]);
   useEffect(() => {
     getUser().then((user) => {
       setUser(user);
@@ -160,16 +152,15 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
                 <PhotoshotUploadDialog
                   selectedLocation={photospotData}
                   setPhotoshotDialogOpen={setPhotobookPictureDialogOpen}
-                  updatePhotobook={() => updatePhotobook(parseInt(params.id))}
+                  updatePhotobook={() => updatePhotoshots(parseInt(params.id))}
                 />
               </DialogContent>
             </Dialog>
           </div>
-          <PhotobookGrid
-            photospot={photospotData}
-            input={photobookPictures}
+          <PhotoshotGrid
+            input={photoshots}
             user={user}
-            updatePhotobook={() => updatePhotobook(parseInt(params.id))}
+            updatePhotoshots={() => updatePhotoshots(parseInt(params.id))}
           />
         </TabsContent>
         <TabsContent value="reviews">

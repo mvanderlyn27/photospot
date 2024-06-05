@@ -58,7 +58,7 @@ export default async function uploadPhotoshot(
   }
   //find all photos
   let filePaths: string[] = [];
-  const photoData: any[] = photoshots.getAll("photobook_pictures");
+  const photoData: any[] = photoshots.getAll("photoshot_pictures");
   const fileUploadPromiseArray = photoData.map((photo) => {
     //maybe have lookup when uploading image to see if it exists already
     let photo_path = "/" + photospotId + "/" + uploadData.id + "/" + photo.name;

@@ -93,21 +93,21 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "photospots_photobook_pictures_created_by_fkey"
+            foreignKeyName: "photoshots_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "photospots_photobook_pictures_photospot_id_fkey"
+            foreignKeyName: "photoshots_photospot_id_fkey"
             columns: ["photospot_id"]
             isOneToOne: false
             referencedRelation: "photospot_rating_stats"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "photospots_photobook_pictures_photospot_id_fkey"
+            foreignKeyName: "photoshots_photospot_id_fkey"
             columns: ["photospot_id"]
             isOneToOne: false
             referencedRelation: "photospots"

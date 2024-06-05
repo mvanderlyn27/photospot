@@ -60,7 +60,7 @@ export default function PhotoshotUploadDialog({ selectedLocation, setPhotoshotDi
             console.log("creating photoshot");
             let photos_form = new FormData();
             Array.from(data.photos).forEach((photo) => {
-                photos_form.append(`photobook_pictures`, photo);
+                photos_form.append(`photoshot_pictures`, photo);
             })
             setLoading(true);
             const photoshot = await uploadPhotoshot(data, photos_form, selectedLocation);

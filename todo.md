@@ -33,19 +33,21 @@
 # Code Improvement
 - Most important
 - add address to photospot and its functions
-    - make it so we only render the streetname
     - create page
         - lock map/ searches within an area area around NYC
         - add address info to a photospot
         - have location_name be editable, if its not good, users should be able to update it
+        - add tag creation/selection to create photoshot tab
+
 
     - photospot page
-        - photospot info
-            - fix weather functionality
-                - selecting later date, then going back to today messes it up rn
+        - make photobook/review tabs bigger
+        - make it so we only render the streetname for map section
+        - get tags properly pulling from photos
         - need to make sure all updates pull most recent info to avoid jank
             - add loading states, and skeletons so users can see when things are loading
-        - name of photospot too long  with rating messes up the icons
+            - make sure skeletons all look good
+        - Editing a photoshot, then clicking out, needs to clear the edit mode
     - need to setup explore page
     - home (timeline)
         - make mobile like instagram, and web view more like pinterest, or a scroll grid 
@@ -102,6 +104,8 @@
         - add minimize button for leftbar
         - add back in the photo view for uploading pics
     - photospot page
+        - add more info to review section, for ratings counts in different groups
+        - revisit weather check to ensure always correct
         - photoInfo section
             - update direction button to be smarter
                 - take into account device, and open app on mobile
