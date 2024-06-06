@@ -38,7 +38,6 @@
         - have location_name be editable, if its not good, users should be able to update it
         - add tag creation/selection to create photoshot tab
     - photospot page
-        - get tags properly pulling from photos
         - need to make sure all updates pull most recent info to avoid jank
             - Maybe revisit suspense, didn't seem to work with server actions tho
             - add loading states, and skeletons so users can see when things are loading

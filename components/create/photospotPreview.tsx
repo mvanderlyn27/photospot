@@ -8,7 +8,7 @@ import ImageCarousel from "../common/ImageCarousel";
 import { DefaultPhotospot } from "@/utils/common/imageLinks";
 import RatingDisplay from "../review/ratingDisplay";
 import { useEffect, useState } from "react";
-import { getPhotospotTags } from "@/app/serverActions/photospots/getPhotospotTags";
+import { getPhotospotsPhotoshotTags } from "@/app/serverActions/photospots/getPhotospotsPhotoshotTags";
 import { Badge } from "../ui/badge";
 import { DialogContent, DialogTrigger } from "../ui/dialog";
 import { Dialog } from "../ui/dialog";
@@ -23,12 +23,13 @@ export default function PhotospotPreview({ selectedLocation, loadingSelectedLoca
     const router = useRouter();
     useEffect(() => {
         //need to fix still
-        // getPhotospotTags(photospot.id).then((tags) => {
-        //     if (tags) {
-        //         setTags(tags);
-        //     }
-        // })
-        setTags(["golden hour", "headshot"])
+        if (selectedLocation && isPhotospot(selectedLocation)) {
+            getPhotospotsPhotoshotTags(selectedLocation.id).then((tags) => {
+                if (tags) {
+                    setTags(tags);
+                }
+            })
+        }
 
     }, [])
     const handleViewPhotospot = () => {

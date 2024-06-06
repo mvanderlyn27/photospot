@@ -112,13 +112,13 @@ export default function PhotospotPage({ params }: { params: { id: string } }) {
       <div className="flex flex-row gap-24 w-full justify-center h-[600px] ">
         <div className="flex-1 ">
 
-          {/* <Suspense fallback={<div className="flex-1">Loading...</div>}> */}
-          <PhotospotInfo
-            photospot={photospotData}
-            stats={stats}
-            updatePhotospot={() => updatePhotospot(parseInt(params.id))}
-          />
-          {/* </Suspense> */}
+          <Suspense fallback={<div className="flex-1">Loading...</div>}>
+            <PhotospotInfo
+              photospot={photospotData}
+              stats={stats}
+              updatePhotospot={() => updatePhotospot(parseInt(params.id))}
+            />
+          </Suspense>
         </div>
         <div className="flex-1 ">
           {photospotData && (
