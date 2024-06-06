@@ -33,15 +33,20 @@
 # Code Improvement
 - Most important
     - create page
+        - add map skeleton
         - lock map/ searches within an area area around NYC
         - have location_name be editable, if its not good, users should be able to update it
         - add tag creation/selection to create photoshot tab
     - photospot page
         - get tags properly pulling from photos
         - need to make sure all updates pull most recent info to avoid jank
+            - Maybe revisit suspense, didn't seem to work with server actions tho
             - add loading states, and skeletons so users can see when things are loading
+            - have skeleton just for weather icons
             - add skeleton to photo section
             - fix skeleton for info section
+            - add skeleton to review section
+            - ensure edits to review is working properly
             - ensure edit updates info properly
             - make sure skeletons all look good
     - need to setup explore page
@@ -65,6 +70,7 @@
         - Update/fix server actions for all profile/photospot things
             - got some of photospot actions done
 # Before launch of MVP
+- fix components to pass info down via context, instead of every component passing down props
 - if not using 3d, maybe turn it off on the map
 - design and implement all mobile views for website
     - maybe combine explore/home to have picture view/ map view, just call it "explore"
@@ -89,6 +95,7 @@
         -https://postgis.net/docs/Extras.html
     - add confetti into creating new photospot locations
     - add calculator page?
+        - lookup any location find golden hour/weather there
     - feed
         - display when golden hour is near you right now, maybe save location to profile?
         - have top location pics near you right now in feed

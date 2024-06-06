@@ -75,7 +75,7 @@ export default async function editPhotoshot(
     filePaths = filePaths.concat(photoshotInfo.currentPhotos);
   }
   const { data: uploadData, error: uploadError } = await supabase
-    .from("photospots_photobook_pictures")
+    .from("photoshots")
     .update({
       name: photoshotInfo.name,
       recreate_text: photoshotInfo.recreate_text,

@@ -14,7 +14,7 @@ import { useState } from "react";
 import { toast } from "../ui/use-toast";
 import createReview from "@/app/serverActions/reviews/createReview";
 import uploadPhotobookPicture from "@/app/serverActions/photoshots/uploadPhotoshot";
-import editPhotobookPicture from "@/app/serverActions/photoshots/editPhotobookPicture";
+import editPhotoshot from "@/app/serverActions/photoshots/editPhotoshot";
 import deletePhotobookPicture from "@/app/serverActions/photoshots/deletePhotobookPicture";
 
 const MAX_FILE_SIZE = 5242880; //5MB
@@ -71,7 +71,7 @@ export default function EditPhotoshotDialog({ photoshot, setEditMode, setPhotosh
                 })
             }
             setLoading(true);
-            await editPhotobookPicture(photoshot.id, data, photoshot.photospot_id, photos_form);
+            await editPhotoshot(photoshot.id, data, photoshot.photospot_id, photos_form);
             setLoading(false);
             await updatePhotoshots();
             setEditMode(false);
