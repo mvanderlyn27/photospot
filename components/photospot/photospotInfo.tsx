@@ -19,7 +19,6 @@ import { FaDirections } from "react-icons/fa";
 import { savePhotospot } from "@/app/serverActions/photospots/savePhotospot";
 import { getSavedPhotospot } from "@/app/serverActions/photospots/getSavedPhotospots";
 import { unsavePhotospot } from "@/app/serverActions/photospots/unsavePhotospot";
-import { getPhotospotTags } from "@/app/serverActions/photospots/getPhotospotTags";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { cn } from "@/lib/utils";
 import SharePhotospotDialog from "./sharePhotospotDialog";
@@ -27,6 +26,7 @@ import EditPhotospotDialog from "./editPhotospotDialog";
 import RatingDisplay from "../review/ratingDisplay";
 import PhotoTimes from "./goldenHourDisplay";
 import { Skeleton } from "../ui/skeleton";
+import { getPhotospotsPhotoshotTags } from "@/app/serverActions/photospots/getPhotospotsPhotoshotTags";
 
 export default function PhotospotInfo({
     photospot,
@@ -45,7 +45,7 @@ export default function PhotospotInfo({
         //pull info from photospot based on id
         if (!photospot) return;
 
-        getPhotospotTags(photospot.id).then((tags) => {
+        getPhotospotsPhotoshotTags(photospot.id).then((tags) => {
             if (tags) {
                 setTags(tags);
             }
