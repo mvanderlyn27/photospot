@@ -6,14 +6,22 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Photoshot, Review, ReviewGridInput } from "@/types/photospotTypes";
 import ImageCarousel from "../common/ImageCarousel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UploadPhotobookPictureDialog from "./photoshotUploadDialog";
 import EditPhotobookPictureDialog from "./editPhotoshotDialog";
 import EditPhotoshotDialog from "./editPhotoshotDialog";
+import { getPhotoshotTags } from "@/app/serverActions/photoshots/getPhotoshotTags";
+import { Badge } from "../ui/badge";
 
 export default function PhotoshotDialog({ photoshot, owner, updatePhotoshots, }: { photoshot: Photoshot, owner: boolean, updatePhotoshots: any }) {
     const [editMode, setEditMode] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [tags, setTags] = useState<string[]>([]);
+    useEffect(() => {
+        getPhotoshotTags(photoshot.id).then((tags) => {
+            setTags(tags);
+        })
+    }, [])
     const saveEditChanges = () => {
 
     }
@@ -44,6 +52,13 @@ export default function PhotoshotDialog({ photoshot, owner, updatePhotoshots, }:
                         </div>
                         <h1 className="text-xl  text-left">Created by: {photoshot.username}</h1>
                         <DialogDescription className="pt-4">
+                            <div className=" flex flex-auto gap-2">
+                                {tags.map((tag) => (
+                                    <Badge key={tag} variant="outline">
+                                        {tag}
+                                    </Badge>
+                                ))}
+                            </div>
                             <h1><b>How to take the shot: </b>{photoshot.recreate_text}</h1>
                         </DialogDescription>
                     </div>

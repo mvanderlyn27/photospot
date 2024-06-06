@@ -39,6 +39,7 @@
         - add tag creation/selection to create photoshot tab
     - photospot page
         - need to make sure all updates pull most recent info to avoid jank
+            - try out suspense most basic version on a new test route 
             - Maybe revisit suspense, didn't seem to work with server actions tho
             - add loading states, and skeletons so users can see when things are loading
             - have skeleton just for weather icons
