@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { Photospot } from '@/types/photospotTypes'
-export async function getPhotospotsByPhotospot(photospot_id: number) {
+export async function getPhotoshotsByPhotospot(photospot_id: number) {
     const supabase = createClient()
 
     // type-casting here for convenience

@@ -10,8 +10,10 @@ import { FaDirections } from "react-icons/fa";
 import { Card } from "../ui/card";
 import { Photospot } from "@/types/photospotTypes";
 import { Skeleton } from "../ui/skeleton";
+import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
+import { getPhotospotById } from "@/app/supabaseQueries/photospot";
 
-export default function PreviewMap({ lat, lng, photospot }: { lat: number; lng: number; photospot: Photospot }) {
+export default function PreviewMap({ id }: { id: number }) {
     const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ? process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN : "";
     // const [runAnimation, setRunAnimation] = useState(true);
     const [bearing, setBearing] = useState(0);
@@ -36,10 +38,9 @@ export default function PreviewMap({ lat, lng, photospot }: { lat: number; lng: 
 
     //     };
     // }, [runAnimation]);
+    const { data: photospot, isLoading: photospotLoading, error: photospotError } = useQuery(getPhotospotById(id));
     const initialMapState = {
         zoom: 16,
-        latitude: lat,
-        longitude: lng,
         bearing: 29,
         pitch: 0
     }
@@ -49,7 +50,7 @@ export default function PreviewMap({ lat, lng, photospot }: { lat: number; lng: 
         }
     }
     const handleReset = () => {
-        if (mapRef.current) {
+        if (mapRef.current && photospot) {
             mapRef.current.flyTo({ pitch: initialMapState.pitch, bearing: initialMapState.bearing, zoom: initialMapState.zoom, center: [photospot.lng, photospot.lat], })
         }
     }
@@ -71,40 +72,51 @@ export default function PreviewMap({ lat, lng, photospot }: { lat: number; lng: 
         }
     }
     return (
-
-        <Card className="w-full h-full flex flex-col relative">
-            <div className={`flex-0 p-4 flex flex-row justify-between items-center ${mapLoaded ? "" : "invisible"}`}>
-                <h1 className="text-xl ">{toStreetAddress(photospot.address)}</h1>
-                <div className="flex flex-row gap-4">
-                    <Button onClick={handleReset}>Reset</Button>
-                    <div className={"cursor-pointer " + cn(buttonVariants({ variant: 'default' }))} onClick={() => handleDirections()}>
-                        Directions <FaDirections className="ml-2 w-6 h-6" />
+        <div className="w-full h-full">
+            {photospot && <Card className="w-full h-full flex flex-col relative">
+                <div className={`flex-0 p-4 flex flex-row justify-between items-center ${mapLoaded ? "" : "invisible"}`}>
+                    <h1 className="text-xl ">{toStreetAddress(photospot.address)}</h1>
+                    <div className="flex flex-row gap-4">
+                        <Button onClick={handleReset}>Reset</Button>
+                        <div className={"cursor-pointer " + cn(buttonVariants({ variant: 'default' }))} onClick={() => handleDirections()}>
+                            Directions <FaDirections className="ml-2 w-6 h-6" />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className={`w-full flex-1 ${mapLoaded ? "" : "invisible"}`} >
-                <MapboxMap
-                    reuseMaps={true}
-                    // longitude={lng}
-                    // latitude={lat}
-                    initialViewState={initialMapState}
-                    dragRotate={true}
-                    // zoom={18}
-                    // pitch={60}
-                    // onLoad={handleLoad}
-                    mapStyle="mapbox://styles/mvanderlyn27/clc8gyohu000114pl9hy6zzdt"
-                    mapboxAccessToken={mapBoxToken}
-                    onLoad={(e) => { handleMapLoad(e) }}
-                    ref={mapRef}
-                >
-                    <Marker longitude={lng} latitude={lat} anchor="bottom">
-                        <img className="w-10 h-10" src="/selectedPin.svg" />
-                    </Marker>
-                </MapboxMap>
-            </div>
+                <div className={`w-full flex-1 ${mapLoaded ? "" : "invisible"}`} >
+                    <MapboxMap
+                        reuseMaps={true}
+                        // longitude={lng}
+                        // latitude={lat}
+                        initialViewState={
+                            {
+                                zoom: 16,
+                                bearing: 29,
+                                pitch: 0,
+                                latitude: photospot.lat,
+                                longitude: photospot.lng
+                            }
 
-            <Skeleton className={`bg-slate-800/10 absolute top-0 bottom-0 right-0 left-0 ${!mapLoaded ? "" : "invisible"}`} />
+                        }
+                        dragRotate={true}
+                        // zoom={18}
+                        // pitch={60}
+                        // onLoad={handleLoad}
+                        mapStyle="mapbox://styles/mvanderlyn27/clc8gyohu000114pl9hy6zzdt"
+                        mapboxAccessToken={mapBoxToken}
+                        onLoad={(e) => { handleMapLoad(e) }}
+                        ref={mapRef}
+                    >
+                        <Marker longitude={photospot.lng} latitude={photospot.lat} anchor="bottom">
+                            <img className="w-10 h-10" src="/selectedPin.svg" />
+                        </Marker>
+                    </MapboxMap>
+                </div>
 
-        </Card>
+                <Skeleton className={`bg-slate-800/10 absolute top-0 bottom-0 right-0 left-0 ${!mapLoaded ? "" : "invisible"}`} />
+
+            </Card>}
+            {photospotLoading && <Skeleton className="bg-black/10 w-full h-full" />}
+        </div >
     );
 }

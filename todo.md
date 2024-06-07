@@ -32,6 +32,13 @@
 - 
 # Code Improvement
 - Most important
+    - data fetching overhaul
+        - midway through fixing photospot page
+            - need to fix photoInfo section phototimewidget, isn't updating with date change
+            - add mutation for saving/unsaving
+            - fix pulling tags from photospot's photoshots, need to make an rpc function, or pull it into a route handeler, and call via swr
+            - need to add changes to the bottom section (haven't started)
+            - maybe could add signals between date selector and display for phototime to make parent a server comp, but maybe not
     - create page
         - add map skeleton
         - lock map/ searches within an area area around NYC

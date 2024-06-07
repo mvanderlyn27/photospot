@@ -93,7 +93,7 @@ export type GoldenHourDisplayInfo = {
     type: PhotoTime;
     time: Date;
 };
-export type PhotoTimeWidgetInfo = {
+export type PhotoTimeDisplayInfo = {
     start: Date;
     end: Date;
     time_label: PhotoTime;
@@ -114,3 +114,4 @@ export enum PhotoTime {
     golden_hour_morning,
     golden_hour_evening,
 }
+
