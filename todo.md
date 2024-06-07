@@ -114,6 +114,13 @@
         - add minimize button for leftbar
         - add back in the photo view for uploading pics
     - photospot page
+        - phototime section section
+            - weather
+                - maybe look into other api's
+                - need to make it so when you select today it shows right time for the past?
+            - maybe only show next available good time to take pics
+            - add other types of photo times
+            - maybe figure out how to account for shadows
         - fix tabs to align with top boxes
         - add more info to review section, for ratings counts in different groups
         - revisit weather check to ensure always correct

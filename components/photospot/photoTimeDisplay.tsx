@@ -25,9 +25,11 @@ export default function PhotoTimeDisplay({
   //need to figure out about adding weather/time of day
   const [info, setInfo] = useState<PhotoTimeDisplayInfo[]>([])
   useEffect(() => {
+    console.log('updating photo time widget info', date);
     setInfo(buildPhotoTimeWidgetInfo(date))
   }, [date, weather])
   const convertWeather = (curWeather: number): Weather | undefined => {
+    console.log('converting weather', curWeather)
     if (String(curWeather).startsWith("8")) {
       if (curWeather === 800) {
         return Weather.sun;
@@ -52,15 +54,18 @@ export default function PhotoTimeDisplay({
     let end = weather.length - 1;
     while (start < end) {
       let mid = Math.round((start + end) / 2);
-      if (weather[mid].time < date) {
+      let midDate = new Date(weather[mid].time);
+      console.log('binary search weather', start, mid, end, weather[mid], date)
+      if (midDate < date) {
         start = mid + 1
-      } else if (weather[mid].time > date) {
+      } else if (midDate > date) {
         end = mid - 1
       }
       else {
         return weather[mid]
       }
     }
+    console.log('out when binary finishes early', start, weather[start])
     return weather[start];
   }
   const checkDateInWeatherRange = (weather: { conditionId: number, time: Date, temp: number }[] | undefined, dateMorning: Date, dateEvening: Date) => {
@@ -70,6 +75,8 @@ export default function PhotoTimeDisplay({
       //checks if its within a day lol, should find a better way to see if the date is ok
       morningWeather = binarySearchWeather(weather, dateMorning);
       eveningWeather = binarySearchWeather(weather, dateEvening);
+      console.log('binary search weather results', morningWeather, eveningWeather, weather)
+
     }
     return { morningWeather, eveningWeather };
   }
@@ -80,9 +87,11 @@ export default function PhotoTimeDisplay({
       let eveningWeather = undefined;
       if (weather) {
         const weatherMassaged = weather.map(w => ({ conditionId: w.weather.conditionId, time: w.dt, temp: w.weather.temp.cur }));
+        console.log('updating weather info', weatherMassaged)
         const closestWeathers = checkDateInWeatherRange(weatherMassaged, times.goldenHourDawnStart.value, times.goldenHourDuskEnd.value);
         morningWeather = closestWeathers.morningWeather;
         eveningWeather = closestWeathers.eveningWeather;
+        console.log('morning weather', morningWeather, 'evening weather', eveningWeather)
       }
       return [
         {
@@ -116,7 +125,7 @@ export default function PhotoTimeDisplay({
 }
 
 function PhotoDisplayRow({ info }: { info: PhotoTimeDisplayInfo }) {
-
+  console.log('rebuilding photo display', info);
   const dateToString = (date: Date) => {
     return date.toLocaleTimeString()
   }
@@ -135,13 +144,16 @@ function PhotoDisplayRow({ info }: { info: PhotoTimeDisplayInfo }) {
       <div className="flex flex-row gap-8">
         {info.weather ? <div className="align-center  p-4 rounded-md outline outline-2">
 
-          {(info.weather == Weather.sun) && <TiWeatherSunny className="h-10 w-10" />}
+          {info.weather == Weather.sun && <TiWeatherSunny className="h-10 w-10" />}
           {info.weather == Weather.clouds && (
             <TiWeatherCloudy className="h-10 w-10" />
           )}
           {info.weather == Weather.rain && (
             <TiWeatherDownpour className="h-10 w-10" />
           )}
+        </div> : <Skeleton className="align-center bg-black/10 p-4 h-16 w-16 rounded-md outline outline-2" />}
+        {info.weather ? <div className="align-center  p-4 rounded-md outline outline-2">
+          {info.temp && <h1 className="text-left text-xl"> {Math.round(info.temp)} F°</h1>}
         </div> : <Skeleton className="align-center bg-black/10 p-4 h-16 w-16 rounded-md outline outline-2" />}
         <div className="align-center  p-4 rounded-md outline outline-2">
           <h1 className="text-left text-xl"> {dateToString(info.start)}</h1>

@@ -102,13 +102,13 @@ export type PhotoTimeDisplayInfo = {
 };
 
 export enum Weather {
-    sun,
-    clouds,
-    rain,
-    hail,
-    snow,
-    storm,
-    drizzle,
+    sun = 1,
+    clouds = 2,
+    rain = 3,
+    hail = 4,
+    snow = 5,
+    storm = 6,
+    drizzle = 7,
 }
 export enum PhotoTime {
     golden_hour_morning,
