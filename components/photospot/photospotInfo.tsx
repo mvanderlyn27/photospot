@@ -25,74 +25,47 @@ import SharePhotospotDialog from "./sharePhotospotDialog";
 import RatingDisplay from "../review/ratingDisplay";
 import PhotoTimes from "./photoTimeSelector";
 import { Skeleton } from "../ui/skeleton";
-import { getPhotospotsPhotoshotTags } from "@/app/serverActions/photospots/getPhotospotsPhotoshotTags";
 import { getPhotospotById, getPhotospotStatsById, getUserSavedPhotospots } from "@/app/supabaseQueries/photospot";
 import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
 import { UserIdentity, UserResponse } from "@supabase/supabase-js";
 import { User } from "@supabase/supabase-js";
 import PhotoTimeWidget from "./photoTimeWidget";
+import useSWR from "swr";
+import { fetcher } from "@/utils/common/fetcher";
+import useSWRMutation from "swr/dist/mutation";
 
+const TAG_LIMIT = 5;
 
 export default function PhotospotInfo({
-    // photospot,
-    // stats,
-    // updatePhotospot,
     id,
     user
 }: {
     id: number;
     user: User;
-    // photospot: Photospot | null;
-    // stats: PhotospotStats | null;
-    // updatePhotospot: any
 }) {
 
     const { data: photospot, isLoading: photospotLoading, error: photospotError } = useQuery(getPhotospotById(id));
     const { data: stats, isLoading: statsLoading, error: statsError } = useQuery(getPhotospotStatsById(id));
-    const { data: saved, isLoading: savedLoading, error: savedError } = useQuery(getUserSavedPhotospots(user, id));
-    const tags = ["test"];
-    // const { data: tags, isLoading: tagsLoading, error: tagsError } = useQuery(getUserSavedPhotospots(user,id));
-    // const [editPhotospotDialogOpen, setEditPhotospotDialogOpen] = useState(false);
-    // const [tags, setTags] = useState<string[]>([]);
-
-    // useEffect(() => {
-    //     //pull info from photospot based on id
-    //     if (!photospot) return;
-
-    //     getPhotospotsPhotoshotTags(photospot.id).then((tags) => {
-    //         if (tags) {
-    //             setTags(tags);
-    //         }
-    //     })
-    //     getSavedPhotospot().then((photospots) => {
-    //         let photospot_ids = photospots.map((photospot_obj) => photospot_obj.photospot);
-    //         console.log('photospots saved: ', photospot_ids)
-    //         setSaved(photospot_ids.includes(photospot?.id))
-    //     })
-    // }, [photospot?.id])
-    const handleSave = () => {
+    const { data: isSaved, mutate: updateSaved, isLoading: savedLoading, error: savedError } = useSWR('/api/photospot/' + id + '/isSaved', fetcher);
+    const { data: tags, isLoading: tagsLoading, error: tagsError } = useSWR('/api/photospot/' + id + '/tags?limit=' + TAG_LIMIT, fetcher);
+    const handleUpdateSaved = async () => {
         if (!photospot) return
-        if (saved) {
-            unsavePhotospot(photospot.id);
-            //mutate SWR
-            // setSaved(false);
+        if (isSaved) {
+            console.log('un saveing ');
+            fetch('/api/photospot/' + id + '/unSave', { method: 'post' });
+            updateSaved(false, { optimisticData: false });
         }
         else {
-            savePhotospot(photospot.id);
-            //mutate SWR
-            // setSaved(true);
+            console.log('saving');
+            fetch('/api/photospot/' + id + '/save', { method: 'post' })
+            updateSaved(true, { optimisticData: true });
         }
-
-    }
-    const handleShare = () => {
-        //maybe add URL shortener lol
-
     }
     return (
         //setup skeelton for loading
         <>
-            {(photospotLoading || statsLoading || savedLoading) && <Skeleton className="h-full w-full bg-slate-800/10" />}
-            {(photospot && stats && saved) &&
+            {(photospotLoading || statsLoading) && <Skeleton className="h-full w-full bg-slate-800/10" />}
+            {(photospot && stats) &&
                 < Card className={`h-full flex flex-col ${photospot ? "" : "hidden"}`}>
                     <CardHeader className="flex-none">
                         <div className="flex flex-row justify-between">
@@ -112,14 +85,14 @@ export default function PhotospotInfo({
                                         <SharePhotospotDialog />
                                     </DialogContent>
                                 </Dialog>
-                                <Button onClick={() => handleSave()}>{saved ? <FaBookmark className="w-6 h-6" /> : <FaRegBookmark className="w-6 h-6" />}</Button>
+                                <Button onClick={() => handleUpdateSaved()} disabled={savedLoading}>{isSaved ? <FaBookmark className="w-6 h-6" /> : <FaRegBookmark className="w-6 h-6" />}</Button>
                             </div>
                         </div>
                     </CardHeader>
                     <CardContent className=" flex flex-col gap-4 ">
                         <RatingDisplay rating={stats?.rating_average ? stats.rating_average : 0} count={stats?.rating_count ? stats.rating_count : 0} />
                         <div className=" flex flex-auto gap-2">
-                            {tags.map((tag) => (
+                            {tags && tags.map((tag: string) => (
                                 <Badge key={tag} variant="outline">
                                     {tag}
                                 </Badge>

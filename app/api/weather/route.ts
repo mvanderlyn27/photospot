@@ -15,7 +15,6 @@ export async function GET(request: NextRequest) {
         })
         // const data = await weather.getHourlyForecast();
         const data = await weather.getForecast();
-        console.log('got data!')
         return Response.json(data);
     }
     return null;

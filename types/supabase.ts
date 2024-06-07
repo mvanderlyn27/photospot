@@ -460,6 +460,12 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      get_tags_for_photospot: {
+        Args: {
+          photospotid: number
+        }
+        Returns: string[]
+      }
       nearby_photospots: {
         Args: {
           latt: number

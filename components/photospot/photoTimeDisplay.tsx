@@ -25,11 +25,9 @@ export default function PhotoTimeDisplay({
   //need to figure out about adding weather/time of day
   const [info, setInfo] = useState<PhotoTimeDisplayInfo[]>([])
   useEffect(() => {
-    console.log('updating photo time widget info', date);
     setInfo(buildPhotoTimeWidgetInfo(date))
   }, [date, weather])
   const convertWeather = (curWeather: number): Weather | undefined => {
-    console.log('converting weather', curWeather)
     if (String(curWeather).startsWith("8")) {
       if (curWeather === 800) {
         return Weather.sun;
@@ -55,7 +53,6 @@ export default function PhotoTimeDisplay({
     while (start < end) {
       let mid = Math.round((start + end) / 2);
       let midDate = new Date(weather[mid].time);
-      console.log('binary search weather', start, mid, end, weather[mid], date)
       if (midDate < date) {
         start = mid + 1
       } else if (midDate > date) {
@@ -65,7 +62,6 @@ export default function PhotoTimeDisplay({
         return weather[mid]
       }
     }
-    console.log('out when binary finishes early', start, weather[start])
     return weather[start];
   }
   const checkDateInWeatherRange = (weather: { conditionId: number, time: Date, temp: number }[] | undefined, dateMorning: Date, dateEvening: Date) => {
@@ -75,7 +71,6 @@ export default function PhotoTimeDisplay({
       //checks if its within a day lol, should find a better way to see if the date is ok
       morningWeather = binarySearchWeather(weather, dateMorning);
       eveningWeather = binarySearchWeather(weather, dateEvening);
-      console.log('binary search weather results', morningWeather, eveningWeather, weather)
 
     }
     return { morningWeather, eveningWeather };
@@ -87,11 +82,9 @@ export default function PhotoTimeDisplay({
       let eveningWeather = undefined;
       if (weather) {
         const weatherMassaged = weather.map(w => ({ conditionId: w.weather.conditionId, time: w.dt, temp: w.weather.temp.cur }));
-        console.log('updating weather info', weatherMassaged)
         const closestWeathers = checkDateInWeatherRange(weatherMassaged, times.goldenHourDawnStart.value, times.goldenHourDuskEnd.value);
         morningWeather = closestWeathers.morningWeather;
         eveningWeather = closestWeathers.eveningWeather;
-        console.log('morning weather', morningWeather, 'evening weather', eveningWeather)
       }
       return [
         {
@@ -125,9 +118,8 @@ export default function PhotoTimeDisplay({
 }
 
 function PhotoDisplayRow({ info }: { info: PhotoTimeDisplayInfo }) {
-  console.log('rebuilding photo display', info);
   const dateToString = (date: Date) => {
-    return date.toLocaleTimeString()
+    return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })
   }
   const timeLabelToString = (timeLabel: PhotoTime) => {
     switch (timeLabel) {

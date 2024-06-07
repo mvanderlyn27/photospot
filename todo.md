@@ -39,6 +39,7 @@
             - fix pulling tags from photospot's photoshots, need to make an rpc function, or pull it into a route handeler, and call via swr
             - need to add changes to the bottom section (haven't started)
             - maybe could add signals between date selector and display for phototime to make parent a server comp, but maybe not
+        - want to move all server actions to route handlers
     - create page
         - add map skeleton
         - lock map/ searches within an area area around NYC
@@ -195,6 +196,7 @@
 - visiting a photospot for the first time doesn't have the rotate animation
 
 # Future Ideas
+- have better features for planning when to go/getting notifications
 - have user enter pos, and direction of shot, and have an AR guide appear for taking new photos, maybe have ar stuff with the sun as well
 - extract info from imags with ai/metadata to create tags/ suggestions for users/ guide on how to recreate
 - remove background people from photos

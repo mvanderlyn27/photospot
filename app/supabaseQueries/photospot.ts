@@ -25,9 +25,6 @@ export const getSavedPhotospots = (user: User) => {
 export const getUserSavedPhotospots = (user: User, id: number) => {
     return supabase.from('saved_photospots').select('*').eq('id', user.id).eq('photospot', id);
 }
-export const getPhotospotsTags = (id: number) => {
-    return supabase.from('photoshot_tags').select('*').eq('id', id);
-}
 /*
     convert get photospot tags needs to be turned to rpc function, 
     or converted into one longer query
