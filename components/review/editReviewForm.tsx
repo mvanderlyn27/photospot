@@ -1,17 +1,17 @@
 "use client"
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@radix-ui/react-select";
-import { useForm, Form } from "react-hook-form";
-import { z } from "zod";
-import { CardContent, CardFooter } from "../ui/card";
-import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "../ui/form";
-import { Textarea } from "../ui/textarea";
-import RatingDisplay from "./ratingDisplay";
 import { Photospot, Review } from "@/types/photospotTypes";
 import { Button } from "../ui/button";
+import { CardContent, CardFooter } from "../ui/card";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Textarea } from "../ui/textarea";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useState } from "react";
-import { useSWRConfig } from "swr";
 import { toast } from "../ui/use-toast";
+import RatingDisplay from "./ratingDisplay";
+import useSWR, { useSWRConfig } from "swr";
 
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -23,8 +23,9 @@ export const createReviewSchema = z.object({
 })
 
 
-export default function EditReviewForm(reviewData: Review, photospot: Photospot, setReviewDialogOpen: any) {
+export default function EditReviewForm({ reviewData, setReviewDialogOpen }: { reviewData: Review, setReviewDialogOpen: any }) {
     const [submitting, setSubmitting] = useState(false);
+    const [confirmDelete, setConfirmDelete] = useState(false);
     const { mutate } = useSWRConfig();
     const createReviewForm = useForm<z.infer<typeof createReviewSchema>>({
         resolver: zodResolver(createReviewSchema),
@@ -34,7 +35,7 @@ export default function EditReviewForm(reviewData: Review, photospot: Photospot,
         },
     })
     const editReview = async (data: z.infer<typeof createReviewSchema>): Promise<Review> => {
-        return fetch('/api/photospot/' + photospot.id + '/reviews/edit', {
+        return fetch('/api/photospot/' + reviewData.photospot_id + '/reviews/edit', {
             method: 'POST',
             body: JSON.stringify(data)
         }).then((res: Response) => res.json());
@@ -48,9 +49,9 @@ export default function EditReviewForm(reviewData: Review, photospot: Photospot,
     }
     const handleEdit = async (data: z.infer<typeof createReviewSchema>) => {
         //could pull user info here to have more seamless creation of new review
-        const tempReview = { ...data, created_by: '', photospot_id: photospot.id, created_at: '' } as Review;
+        const tempReview = { ...data, created_by: '', photospot_id: reviewData.photospot_id, created_at: '' } as Review;
         setSubmitting(true);
-        await mutate('/api/photospot/' + photospot.id + '/reviews', editReview(data), {
+        await mutate('/api/photospot/' + reviewData.photospot_id + '/reviews/', editReview(data), {
             optimisticData: (current) => (updateReview(current, reviewData, tempReview)),
             rollbackOnError: true
         });
@@ -64,6 +65,37 @@ export default function EditReviewForm(reviewData: Review, photospot: Photospot,
     const clearForm = () => {
         //need to figure out how to properly clear the photos section
         createReviewForm.reset()
+    }
+
+
+    //delete functions
+    const promptDelete = (setting: boolean) => {
+        setConfirmDelete(setting);
+    }
+    const deleteReview = async () => {
+        return fetch('/api/photospot/' + reviewData.photospot_id + '/reviews/delete', {
+            method: 'POST',
+        }).then((res: Response) => res.json());
+    }
+    const removeReview = (arr: Review[], old_val: Review) => {
+        const index = arr.indexOf(old_val);
+        if (index !== -1) {
+            arr.splice(index, 1);
+        }
+        return arr;
+    }
+    const handleDelete = async () => {
+
+        setSubmitting(true);
+        await mutate('/api/photospot/' + reviewData.photospot_id + '/reviews', deleteReview(), {
+            optimisticData: (current) => (removeReview(current, reviewData)),
+            rollbackOnError: true
+        });
+        setSubmitting(false);
+        setReviewDialogOpen(false);
+        toast({
+            title: "Review Deleted",
+        });
     }
     return (
         <Form {...createReviewForm}>
@@ -117,7 +149,12 @@ export default function EditReviewForm(reviewData: Review, photospot: Photospot,
                 <CardFooter className="flex-none">
                     <div className="w-full flex flex-row gap-8 justify-center">
                         <Button variant="outline" onClick={(e) => { e.preventDefault(); clearForm() }}>Reset</Button>
-                        <Button type="submit" disabled={submitting}> Create</Button>
+                        <Button type="submit" disabled={submitting}>Save</Button>
+                    </div>
+                    <div className="w-full flex flex-row gap-8 justify-center">
+                        {!confirmDelete && <Button variant="destructive" onClick={(e) => { e.preventDefault(); promptDelete(true) }}>Delete</Button>}
+                        {confirmDelete && <Button variant="outline" onClick={(e) => { e.preventDefault(); promptDelete(false) }}>Cancel Delete</Button>}
+                        {confirmDelete && <Button variant="destructive" onClick={(e) => { e.preventDefault(); handleDelete() }}>Confirm Delete</Button>}
                     </div>
                 </CardFooter>
             </form>

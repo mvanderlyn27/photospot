@@ -7,22 +7,15 @@ import { Avatar, AvatarImage } from "../ui/avatar";
 import RatingDisplay from "./ratingDisplay";
 import { Button } from "../ui/button";
 import { DialogContent, Dialog, DialogTrigger } from "../ui/dialog";
-import EditReviewDialog from "./editReviewDialog";
 import { useState } from "react";
+import EditReviewForm from "./editReviewForm";
+import EditReviewDialog from "./editReviewDialog";
 
-export default function ReviewCard({ review, updateReviews }: { review: Review, updateReviews: any }) {
-    const [editReviewDialogOpen, setEditReviewDialogOpen] = useState(false);
+export default function ReviewCard({ review }: { review: Review, updateReviews: any }) {
     return (
         <Card className="w-[40%]">
             <div className="relative p-4 flex flex-col gap-4">
-                {review?.owner && <Dialog open={editReviewDialogOpen} onOpenChange={setEditReviewDialogOpen}>
-                    <DialogTrigger>
-                        <Button variant="outline" className="absolute top-4 right-4">Edit</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <EditReviewDialog review={review} setEditReviewDialogOpen={setEditReviewDialogOpen} updateReviews={updateReviews} />
-                    </DialogContent>
-                </Dialog>}
+                {review?.owner && <EditReviewDialog review={review} />}
                 <RatingDisplay rating={review.rating} />
                 <p>{review.text}</p>
                 <div className="flex flex-row gap-4 items-center">

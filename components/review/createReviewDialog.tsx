@@ -26,16 +26,18 @@ export default function CreateReviewDialog({ id }: { id: number }) {
     const { data: photospot, isLoading, error } = useSWR(`/api/photospot/${id}`, fetcher);
     const { data: reviews, error: reviewsError } = useSWR(`/api/photospot/${id}/reviews/`, fetcher);
     const user: User = useSWR('/api/user', fetcher).data;
+    // const user = { id: 'test' };
+    //    const reviews: Review[] = [{ created_by: 'test', rating: 5, text: 'test', created_at: 'test', photospot_id: 1 }];
     const [loading, setLoading] = useState(false);
     const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
     const { mutate } = useSWRConfig();
 
-
+    console.log('user, reviews', user, reviews);
 
 
     return (
         <div className="flex flex-col gap-2 ">
-            {reviews && user && !reviews.some((review: Review) => (review.created_by === user.id)) && <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
+            {reviews != undefined && user && !reviews.some((review: Review) => (review.created_by === user.id)) && <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
                 <DialogTrigger>
                     {/* {!userReview && ( */}
                     <div

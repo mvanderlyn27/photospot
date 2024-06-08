@@ -40,9 +40,9 @@
             - need to add changes to the bottom section (haven't started)
                 -remaining:
                     -review button/dialog
+                        -  (HERE RIGHT NOW) need to fix behavior to show/hide create review button showing up
                     -create photoshot button/dialog fix
                     -photospot grid
-                    -review grid
             - maybe could add signals between date selector and display for phototime to make parent a server comp, but maybe not
         - want to move all server actions to route handlers
     - create page
