@@ -1,8 +1,10 @@
-import { getPhotospotById, getPhotospotStatsById } from "@/app/supabaseQueries/photospot";
+import {
+  getPhotospotById,
+  getPhotospotStatsById,
+} from "@/app/supabaseQueries/photospot";
 import { getTestImages } from "@/app/serverActions/storage/getTestImages";
-import PhotospotGrid from "@/components/photospot/photospotGrid";
-import PreviewMap from "@/components/maps/previewMap";
-import PhotospotInfo from "@/components/photospot/photospotInfo";
+import PreviewMap from "@/components/photospot-page/previewMap";
+import PhotospotInfo from "@/components/photospot-page/photospotInfo";
 import {
   Photoshot,
   Photospot,
@@ -27,19 +29,25 @@ import { getPhotoshotsByPhotospot } from "@/app/serverActions/photoshots/getPhot
 import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
 import { getCurrentUser } from "@/app/supabaseQueries/user";
 import { redirect } from "next/navigation";
-import PhotospotReviewSection from "@/components/photospot/photospotReviewSection";
-import { PhotospotPhotoSection } from "@/components/photospot/photospotPhotoSection";
+import PhotospotReviewSection from "@/components/photospot-page/photospotReviewSection";
+import { PhotospotPhotoSection } from "@/components/photospot-page/photospotPhotoSection";
 
-export default async function PhotospotPage({ params }: { params: { id: string } }) {
+export default async function PhotospotPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   /*
         Want to be able to differentiate if user is the owner, and if user has made a review already
     */
   // const [photospotData, setPhotoSpotData] = useState<Photospot | null>(null);
   // const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
-    redirect('/login')
+    redirect("/login");
   }
 
   // const [reviews, setReviews] = useState<Review[]>([]);
@@ -113,17 +121,11 @@ export default async function PhotospotPage({ params }: { params: { id: string }
   // }, []);
   // const { data: user, isLoading: userLoading, error: userError } = useQuery(getCurrentUser());
 
-
   return (
     <div className="flex flex-col justify-center gap-8 w-full pl-20 pr-20">
       <div className="flex flex-row gap-24 w-full justify-center h-[600px] ">
         <div className="flex-1 ">
-
-          {user &&
-            <PhotospotInfo
-              user={user}
-              id={parseInt(params.id)}
-            />}
+          {user && <PhotospotInfo user={user} id={parseInt(params.id)} />}
         </div>
         <div className="flex-1 ">
           <PreviewMap id={parseInt(params.id)} />
@@ -203,6 +205,6 @@ export default async function PhotospotPage({ params }: { params: { id: string }
           /> */}
         </TabsContent>
       </Tabs>
-    </div >
+    </div>
   );
 }

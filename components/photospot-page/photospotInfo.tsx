@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import GoldenHourDisplay from "./photoTimeSelector";
+import GoldenHourDisplay from "../photospot/photoTimeSelector";
 import { Badge } from "../ui/badge";
 import { useEffect, useState } from "react";
 import { Button, buttonVariants } from "../ui/button";
@@ -28,9 +28,9 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { cn } from "@/lib/utils";
-import SharePhotospotDialog from "./sharePhotospotDialog";
+import SharePhotospotDialog from "../photospot/sharePhotospotDialog";
 import RatingDisplay from "../review/ratingDisplay";
-import PhotoTimes from "./photoTimeSelector";
+import PhotoTimes from "../photospot/photoTimeSelector";
 import { Skeleton } from "../ui/skeleton";
 import {
   getPhotospotById,
@@ -40,7 +40,7 @@ import {
 import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
 import { UserIdentity, UserResponse } from "@supabase/supabase-js";
 import { User } from "@supabase/supabase-js";
-import PhotoTimeWidget from "./photoTimeWidget";
+import PhotoTimeWidget from "../photospot/photoTimeWidget";
 import useSWR from "swr";
 import { fetcher } from "@/utils/common/fetcher";
 import useSWRMutation from "swr/dist/mutation";

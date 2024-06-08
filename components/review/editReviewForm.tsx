@@ -201,7 +201,7 @@ export default function EditReviewForm({
           />
         </CardContent>
 
-        <CardFooter className="flex-none">
+        <CardFooter className="flex-none flex-col gap-4">
           <div className="w-full flex flex-row gap-8 justify-center">
             <Button
               variant="outline"

@@ -1,226 +1,232 @@
 # Planned Features
-- overall 
-    - nav bar across all pages
-- home page
-    - need to figure out what to put here for MVP
-        - maybe photo inspo feed?
-        - maybe heatmap of photo locations 
-        - need to narrow down target audiance/needs for them
-- explore page
-    - view photospots on a map
-    - add photospots via location
-    - filter photospots/search photospots
-- ratings
-    - implement rating of photolocation
-    - have commenting/ up/down vote of rating
-    - add overall score of location
-    - add user uploaded images for a location
-- photospots
-    - allow users to update, and delete photospots
-    - figure out more of what we want to allow for photospots
-        - should they be owned by a user, or by the community? 
-    - maybe make it so owner of photospot can be transfered
-- users
-    - add user table, add triggers to fill out fields after authenticating new user
-- profile
-    - users profile page for viewing/updating user details
-- photobooks (photolist?) (post mvp feature)
-    - allow users to curate list of photospots 
 
+- overall
+  - nav bar across all pages
+- home page
+  - need to figure out what to put here for MVP
+    - maybe photo inspo feed?
+    - maybe heatmap of photo locations
+    - need to narrow down target audiance/needs for them
+- explore page
+  - view photospots on a map
+  - add photospots via location
+  - filter photospots/search photospots
+- ratings
+  - implement rating of photolocation
+  - have commenting/ up/down vote of rating
+  - add overall score of location
+  - add user uploaded images for a location
+- photospots
+  - allow users to update, and delete photospots
+  - figure out more of what we want to allow for photospots
+    - should they be owned by a user, or by the community?
+  - maybe make it so owner of photospot can be transfered
+- users
+  - add user table, add triggers to fill out fields after authenticating new user
+- profile
+  - users profile page for viewing/updating user details
+- photobooks (photolist?) (post mvp feature)
+  - allow users to curate list of photospots
 
 # features needed still for MVP
-- 
+
+-
+
 # Code Improvement
+
 - Most important
-    - add username to returned values for getting current user
-    - data fetching overhaul
-        - new strat, use SWR to get all data, and use routehandelers to interact with APIS
-        - use fetch to route handlers that mutate date, and optimistic updates with SWR for frontend updates
-        - midway through fixing photospot page
-            - need to add changes to the bottom section (haven't started)
+  - data fetching overhaul
+    - new strat, use SWR to get all data, and use routehandelers to interact with APIS
+    - use fetch to route handlers that mutate date, and optimistic updates with SWR for frontend updates
+    - midway through fixing photospot page
+      - need to add changes to the bottom section (haven't started)
                 -remaining:
-                    -review button/dialog
-                        -  (HERE RIGHT NOW) need to fix behavior to show/hide create review button showing up
-                    - get photospot-stats to update with new reviews
                     -create photoshot button/dialog fix
                     -photospot grid
-            - maybe could add signals between date selector and display for phototime to make parent a server comp, but maybe not
-        - want to move all server actions to route handlers
-    - create page
-        - add map skeleton
-        - lock map/ searches within an area area around NYC
-        - have location_name be editable, if its not good, users should be able to update it
-        - add tag creation/selection to create photoshot tab
-    - photospot page
-        - need to make sure all updates pull most recent info to avoid jank
-            - handleing with SWR, and route handlers
-            - eventually go back and remove the supabase useQuery sections in photospot info, replace with routehandlers
-    - need to setup explore page
-    - home (timeline)
-        - make mobile like instagram, and web view more like pinterest, or a scroll grid 
-    - profile page
-        - add avatar pic to users
-    - create page
-        - add dialog for when a user clicks too close to another spot, ask them if they want to select the nearby spot
-            - shouldn't let user update selected location yet
-        - delete removes all photospots
-        - Split up leftbar into sub components and organize logic better
-        - see if its possible to improve autocomplete searches
-        - update retrieve photospots in view (map bounds)rpc function when time, and make create and expore functiosn use it
-    - general fixes
-        - don't show photospots with no photoshots
-        - maybe create diff views for common joins
-        - fix carousel to be properly sizeable, including the extra button space
-            - rn messed up on create page, and photospot page
-        - fix navbar to show which page you're on
-        - Update/fix server actions for all profile/photospot things
-            - got some of photospot actions done
+      - maybe could add signals between date selector and display for phototime to make parent a server comp, but maybe not
+    - want to move all server actions to route handlers
+  - create page
+    - add map skeleton
+    - lock map/ searches within an area area around NYC
+    - have location_name be editable, if its not good, users should be able to update it
+    - add tag creation/selection to create photoshot tab
+  - photospot page
+    - update rating to use rating component: <https://www.npmjs.com/package/react-simple-star-rating>
+    - need to make sure all updates pull most recent info to avoid jank
+      - handleing with SWR, and route handlers
+      - eventually go back and remove the supabase useQuery sections in photospot info, replace with routehandlers
+  - need to setup explore page
+  - home (timeline)
+    - make mobile like instagram, and web view more like pinterest, or a scroll grid
+  - profile page
+    - add avatar pic to users
+  - create page
+    - add dialog for when a user clicks too close to another spot, ask them if they want to select the nearby spot
+      - shouldn't let user update selected location yet
+    - delete removes all photospots
+    - Split up leftbar into sub components and organize logic better
+    - see if its possible to improve autocomplete searches
+    - update retrieve photospots in view (map bounds)rpc function when time, and make create and expore functiosn use it
+  - Navbar
+    - add username to returned values for getting current user
+    - fix navbar to show which page you're on
+  - general fixes
+    - don't show photospots with no photoshots
+    - maybe create diff views for common joins
+    - fix carousel to be properly sizeable, including the extra button space
+      - rn messed up on create page, and photospot page
+
 # Before launch of MVP
+
 - fix components to pass info down via context, instead of every component passing down props
 - if not using 3d, maybe turn it off on the map
 - design and implement all mobile views for website
-    - maybe combine explore/home to have picture view/ map view, just call it "explore"
-    - emphasis how to recreate a shot at a beautiful place
-    - also def a social app now
-    - need to figure out review vs uploading photos
-        - do we need reviews? Or just keep track of number of photos
-        - https://supabase.com/docs/guides/auth/auth-anonymous 
-        - probably need to setup anonomous user when hitting the home page and not logged in
-        - setup captcha
+  - maybe combine explore/home to have picture view/ map view, just call it "explore"
+  - emphasis how to recreate a shot at a beautiful place
+  - also def a social app now
+  - need to figure out review vs uploading photos
+    - do we need reviews? Or just keep track of number of photos
+    - <https://supabase.com/docs/guides/auth/auth-anonymous>
+    - probably need to setup anonomous user when hitting the home page and not logged in
+    - setup captcha
 - get anonymouse user accounts setup for a lot of the site
-    - should be able to view, and explore photospots without account
-    - explore the flow of being able to create anonymous photospots, or upload angles
+  - should be able to view, and explore photospots without account
+  - explore the flow of being able to create anonymous photospots, or upload angles
 - make all screens beautiful
-- fix page loading so theres no flash between routing, maybe don't use links, or theres something else needed to not have the nav bar flash between page routes (https://stackoverflow.com/questions/55624695/loading-screen-on-next-js-page-transition)
+- fix page loading so theres no flash between routing, maybe don't use links, or theres something else needed to not have the nav bar flash between page routes (<https://stackoverflow.com/questions/55624695/loading-screen-on-next-js-page-transition>)
 - setup email service so I don't get rate limited on user signup
-    - need to look into smtp providers mayeb smtp2go
-    - reenable email on account creation after this
- - figure out migration for DB, and seperating environments 
+  - need to look into smtp providers mayeb smtp2go
+  - reenable email on account creation after this
+- figure out migration for DB, and seperating environments
 - For later
-    - setup geocoding via backend functions, and postgres tiger geocoding
-        -https://postgis.net/docs/Extras.html
-    - add confetti into creating new photospot locations
-    - add calculator page?
-        - lookup any location find golden hour/weather there
-    - feed
-        - display when golden hour is near you right now, maybe save location to profile?
-        - have top location pics near you right now in feed
-        - followers/interests feed
-        - top posts of the day feed
+  - setup geocoding via backend functions, and postgres tiger geocoding
+        -<https://postgis.net/docs/Extras.html>
+  - add confetti into creating new photospot locations
+  - add calculator page?
+    - lookup any location find golden hour/weather there
+  - feed
+    - display when golden hour is near you right now, maybe save location to profile?
+    - have top location pics near you right now in feed
+    - followers/interests feed
+    - top posts of the day feed
     -left bar
-        - when uploading image, add to a queue to generate blur hash for future loading 
-        - fix maps to not render streetname through buildings (maybe use diff map, or remove street tile)
-        - add minimize button for leftbar
-        - add back in the photo view for uploading pics
-    - photospot page
-        - phototime section section
-            - weather
-                - maybe look into other api's
-                - need to make it so when you select today it shows right time for the past?
-            - maybe only show next available good time to take pics
-            - add other types of photo times
-            - maybe figure out how to account for shadows
-        - fix tabs to align with top boxes
-        - add more info to review section, for ratings counts in different groups
-        - revisit weather check to ensure always correct
-        - photoInfo section
-            - update direction button to be smarter
-                - take into account device, and open app on mobile
-        - editing
-            - fix editing to need at least one picture
-            - make editing of picture section look pretty 
-            - make flow smoother, can add/remove photos in same section, not 2 seperate
-        - update OP photospot pics to be a carousel too
-        - get page to work for logged in/ not logged in
-        - photobook section
-            - add sorting options to image section
-            - add ability to rate photobook pics, and save them
-        - redesign to have better utility/feel, rn hard to find all the info you want
-        - add link to google maps/apple maps to nav to location
-        - add scheduler for getting to the location at golden hour
-        - maybe make all photospot pics carousels 
-    - map improvements 
-        - fix sessions so we don't use a session every key entered
-        - add navigation
-        - improve the auto search names, kinda vague rn, something funky going on with suggestion vs. feature pipeline
-            - maybe add limit to region, and poi types for better filters
-            - also if we have user location then can bias towards nearby things
-            - https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-limit-region/
-        - maybe see about entering a specific lat/lng when creating
-        - should be able to animate light changing throughout the day using mapref.setProperty
-        - figure out what map settings to reduce lag and look the prettiest
-        - look into re-use map, and adding the markers back in on page load
-        - lookup neighborhood when using lat-lng input
-    - better photospot searching
-    - photospot rating
-    - Add trigger to photospot table on deletes to also delete its picture from storage 
-    - Add new function and trigger to delete user from auth table upon deleting user profile
-    - ADD REVIEW RATING FUNCTIONALITY for photospots and photolists
-    - ADD ability to upload photo for user profile
-    - ADD proper migration for supabase dbs, for local testing
-        - need to have multiple env for db, so we're not working against prod data
-    - Add better unit testing/ e2e 
-        - rn using a test page to do testing, not super comprehensive
-    - improve error handeling/loggin in apis/frontend
-    - fix search by location for photolists
-    - layout better, cleaner types for use throughout the app 
-    - Move a lot of db functions to db triggers
-        - delete photospot, and profile picture on delete of auth.row
-        - delete old photospots pictures on new entry
-    - rewrite all route handler code to have as much parallelism as possible
-    - need to update GET profiles route to only have access to public profiles via RLS/Functions
-    - update trigger so users can't give themselves admin
-    - also give admin more abilities 
-    - properly enforce private user profiles
-    - add better searching for all text searches, using some type of substring search 
-        - username
-        - photospot
-        - photolist
-    - add admin edge functions for managing users/testing
-        - create random user
-        - create random review
-        - modify user/ ownership of diff db entities
-    - add admin panel to app
-# Bugs 
+    - when uploading image, add to a queue to generate blur hash for future loading
+    - fix maps to not render streetname through buildings (maybe use diff map, or remove street tile)
+    - add minimize button for leftbar
+    - add back in the photo view for uploading pics
+  - photospot page
+    - phototime section section
+      - weather
+        - maybe look into other api's
+        - need to make it so when you select today it shows right time for the past?
+      - maybe only show next available good time to take pics
+      - add other types of photo times
+      - maybe figure out how to account for shadows
+    - fix tabs to align with top boxes
+    - add more info to review section, for ratings counts in different groups
+    - revisit weather check to ensure always correct
+    - photoInfo section
+      - update direction button to be smarter
+        - take into account device, and open app on mobile
+    - editing
+      - fix editing to need at least one picture
+      - make editing of picture section look pretty
+      - make flow smoother, can add/remove photos in same section, not 2 seperate
+    - update OP photospot pics to be a carousel too
+    - get page to work for logged in/ not logged in
+    - photobook section
+      - add sorting options to image section
+      - add ability to rate photobook pics, and save them
+    - redesign to have better utility/feel, rn hard to find all the info you want
+    - add link to google maps/apple maps to nav to location
+    - add scheduler for getting to the location at golden hour
+    - maybe make all photospot pics carousels
+  - map improvements
+    - fix sessions so we don't use a session every key entered
+    - add navigation
+    - improve the auto search names, kinda vague rn, something funky going on with suggestion vs. feature pipeline
+      - maybe add limit to region, and poi types for better filters
+      - also if we have user location then can bias towards nearby things
+      - <https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-limit-region/>
+    - maybe see about entering a specific lat/lng when creating
+    - should be able to animate light changing throughout the day using mapref.setProperty
+    - figure out what map settings to reduce lag and look the prettiest
+    - look into re-use map, and adding the markers back in on page load
+    - lookup neighborhood when using lat-lng input
+  - better photospot searching
+  - photospot rating
+  - Add trigger to photospot table on deletes to also delete its picture from storage
+  - Add new function and trigger to delete user from auth table upon deleting user profile
+  - ADD REVIEW RATING FUNCTIONALITY for photospots and photolists
+  - ADD ability to upload photo for user profile
+  - ADD proper migration for supabase dbs, for local testing
+    - need to have multiple env for db, so we're not working against prod data
+  - Add better unit testing/ e2e
+    - rn using a test page to do testing, not super comprehensive
+  - improve error handeling/loggin in apis/frontend
+  - fix search by location for photolists
+  - layout better, cleaner types for use throughout the app
+  - Move a lot of db functions to db triggers
+    - delete photospot, and profile picture on delete of auth.row
+    - delete old photospots pictures on new entry
+  - rewrite all route handler code to have as much parallelism as possible
+  - need to update GET profiles route to only have access to public profiles via RLS/Functions
+  - update trigger so users can't give themselves admin
+  - also give admin more abilities
+  - properly enforce private user profiles
+  - add better searching for all text searches, using some type of substring search
+    - username
+    - photospot
+    - photolist
+  - add admin edge functions for managing users/testing
+    - create random user
+    - create random review
+    - modify user/ ownership of diff db entities
+  - add admin panel to app
+
+# Bugs
+
 - create photospot page, reseting the form doesn't clear the file input
-- having the watched photos lags the thing out, rn commenting it out 
+- having the watched photos lags the thing out, rn commenting it out
 - updating location on the left bar is kind of broken, text breaks it, and can't enter text over 2 digits
 - marker disappears on creation of photospot
 - bug with spamming space on the auto search, issue with promises where the clearing of the form happens before the searches previous finish
-    - look into using sessions to properly avoid this
+  - look into using sessions to properly avoid this
 - bug on creating photospots, "photos is undefined" for the carosel in photo preview
 - some funkiness with moving map around, markers change position on mouse release
 - visiting a photospot right after making takes forever
 - visiting a photospot for the first time doesn't have the rotate animation
 
 # Future Ideas
+
 - have better features for planning when to go/getting notifications
 - have user enter pos, and direction of shot, and have an AR guide appear for taking new photos, maybe have ar stuff with the sun as well
 - extract info from imags with ai/metadata to create tags/ suggestions for users/ guide on how to recreate
 - remove background people from photos
-- realtime for reviews? 
+- realtime for reviews?
 add shadows for photospots, see if you're photospot will be in shadow when you want a shot
 - have weather included as well to findout when is the perfect time to take a photo
-    - maybe could be the main focus of product to sell to photographers
+  - maybe could be the main focus of product to sell to photographers
 - have a "placeholder" person to put into a photo for photospots where a user don't want to upload their face, or have a way to blur out the user
 - have notification for users how many people liked their photospot they uploaded
 - add cool tagging feature for photos
 - add cool tagging feature for videos as well
 - maybe have whole social media platform, adding friends, messaging, etc
-    - need to think through how to make the MVP have most value to users in the beginning
-    - setup user feed of photos 
-        - show new photos posted at your photospots
-        - show new photos posted at tags you like
-        - maybe have mapview of your feed, showing hotspots of locations 
+  - need to think through how to make the MVP have most value to users in the beginning
+  - setup user feed of photos
+    - show new photos posted at your photospots
+    - show new photos posted at tags you like
+    - maybe have mapview of your feed, showing hotspots of locations
 - offline
 - Could focus in a few areas
-    - social media part, finding other photographers near you, seeing their pics, sharing yours
-    - planning photography shoots for professionals
-    - mainly the "photo trip" planning, focusing on either traveling somewhere, or exploring your own city, multiple locations, focusing more on the photo trip, than just the one location
+  - social media part, finding other photographers near you, seeing their pics, sharing yours
+  - planning photography shoots for professionals
+  - mainly the "photo trip" planning, focusing on either traveling somewhere, or exploring your own city, multiple locations, focusing more on the photo trip, than just the one location
 - Add ability to track when doing a photolist tour, keep track of photos you're trying to take, and whats next, where to go
 - focus more on the type of photo you want to take, figure out how to seperate planning taking a specific type of photo, vs going to a photospot
 
 # Intended audiance
+
 - pro photographers?
 - amatuer photographers?
 - travelers?
