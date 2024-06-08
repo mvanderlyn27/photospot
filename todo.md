@@ -41,6 +41,7 @@
                 -remaining:
                     -review button/dialog
                         -  (HERE RIGHT NOW) need to fix behavior to show/hide create review button showing up
+                    - get photospot-stats to update with new reviews
                     -create photoshot button/dialog fix
                     -photospot grid
             - maybe could add signals between date selector and display for phototime to make parent a server comp, but maybe not
