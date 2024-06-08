@@ -1,7 +1,7 @@
 "use client"
 import { Photospot, Review } from "@/types/photospotTypes";
-import { DialogDescription, DialogTitle } from "../ui/dialog";
-import { Button } from "../ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Button, buttonVariants } from "../ui/button";
 import { CardContent, CardFooter } from "../ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
@@ -14,104 +14,46 @@ import { useState } from "react";
 import { toast } from "../ui/use-toast";
 import createReview from "@/app/serverActions/reviews/createReview";
 import RatingDisplay from "./ratingDisplay";
-
-const MAX_FILE_SIZE = 5242880; //5MB
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-export const createReviewSchema = z.object({
-    //should add some better requirements for the location
-    rating: z.coerce.number().min(1).max(5),
-    text: z.string(),
-    //tags for later
-})
+import { cn } from "@/lib/utils";
+import useSWR, { useSWRConfig } from "swr";
+import CreateReviewForm from "./createReviewForm";
+import { fetcher } from "@/utils/common/fetcher";
+import PhotoshotUploadDialog from "../photoshot/photoshotUploadDialog";
+import { User } from "@supabase/supabase-js";
 
 
-export default function CreateReviewDialog({ photospot, setReviewDialogOpen, userReview, updateReviews }: { photospot: Photospot | null, setReviewDialogOpen: any, userReview: Review | null, updateReviews: any }) {
+export default function CreateReviewDialog({ id }: { id: number }) {
+    const { data: photospot, isLoading, error } = useSWR(`/api/photospot/${id}`, fetcher);
+    const { data: reviews, error: reviewsError } = useSWR(`/api/photospot/${id}/reviews/`, fetcher);
+    const user: User = useSWR('/api/user', fetcher).data;
     const [loading, setLoading] = useState(false);
-    const createReviewForm = useForm<z.infer<typeof createReviewSchema>>({
-        resolver: zodResolver(createReviewSchema),
-        defaultValues: {
-            rating: userReview ? userReview.rating : 3,
-            text: userReview?.text ? userReview.text : "",
-        },
-    })
+    const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+    const { mutate } = useSWRConfig();
 
-    const onCreate = async (data: z.infer<typeof createReviewSchema>) => {
-        if (photospot) {
-            setLoading(true);
-            await createReview(data, photospot.id);
-            await updateReviews();
-            setReviewDialogOpen(false);
-            setLoading(false);
-            toast({
-                title: "Review Submitted",
-            })
-        }
-    }
 
-    const clearForm = () => {
-        //need to figure out how to properly clear the photos section
-        createReviewForm.reset()
-    }
+
+
     return (
         <div className="flex flex-col gap-2 ">
-            <DialogTitle>What do you think of {photospot?.name}?</DialogTitle>
-            <DialogDescription className="">Help other users get a better idea of what it's like below</DialogDescription>
-            <Form {...createReviewForm}>
-                <form onSubmit={createReviewForm.handleSubmit(onCreate)} className=" w-full flex flex-col">
-
-                    <CardContent className={`flex-1 overflow-auto mb-4 }`}>
-                        <FormField
-                            control={createReviewForm.control}
-                            name="rating"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Rating</FormLabel>
-                                    <RatingDisplay rating={field.value} />
-                                    <Select value={"" + field.value} onValueChange={field.onChange} defaultValue={"" + field.value}>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select rating" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value={"1"}>1</SelectItem>
-                                            <SelectItem value={"2"}>2</SelectItem>
-                                            <SelectItem value={"3"}>3</SelectItem>
-                                            <SelectItem value={"4"}>4</SelectItem>
-                                            <SelectItem value={"5"}>5</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <FormDescription>
-                                        What would you rate this spot out of 10?
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
-                        <FormField
-                            control={createReviewForm.control}
-                            name="text"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Comments</FormLabel>
-                                    <FormControl>
-                                        <Textarea {...field} />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Short description about why this location is cool
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
-                    </CardContent>
-
-                    <CardFooter className="flex-none">
-                        <div className="w-full flex flex-row gap-8 justify-center">
-                            <Button variant="outline" onClick={(e) => { e.preventDefault(); clearForm() }}>Reset</Button>
-                            <Button type="submit" disabled={loading}> Create</Button>
-                        </div>
-                    </CardFooter>
-                </form>
-            </Form>
+            {reviews && user && !reviews.some((review: Review) => (review.created_by === user.id)) && <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
+                <DialogTrigger>
+                    {/* {!userReview && ( */}
+                    <div
+                        className={
+                            "text-2xl  " + cn(buttonVariants({ variant: "default" }))
+                        }
+                    >
+                        Review Photospot
+                    </div>
+                    {/* )} */}
+                </DialogTrigger>
+                <DialogContent>
+                    {photospot && <DialogTitle>What do you think of {photospot.location_name}?</DialogTitle>}
+                    {isLoading && <DialogTitle>What do you think of ...</DialogTitle>}
+                    <DialogDescription className="">Help other users get a better idea of what it's like below</DialogDescription>
+                    {photospot && <CreateReviewForm setReviewDialogOpen={setReviewDialogOpen} photospot={photospot} />}
+                </DialogContent>
+            </Dialog>}
         </div>
     )
 }

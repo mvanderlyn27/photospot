@@ -32,12 +32,17 @@
 - 
 # Code Improvement
 - Most important
+    - add username to returned values for getting current user
     - data fetching overhaul
+        - new strat, use SWR to get all data, and use routehandelers to interact with APIS
+        - use fetch to route handlers that mutate date, and optimistic updates with SWR for frontend updates
         - midway through fixing photospot page
-            - need to fix photoInfo section phototimewidget, isn't updating with date change
-            - add mutation for saving/unsaving
-            - fix pulling tags from photospot's photoshots, need to make an rpc function, or pull it into a route handeler, and call via swr
             - need to add changes to the bottom section (haven't started)
+                -remaining:
+                    -review button/dialog
+                    -create photoshot button/dialog fix
+                    -photospot grid
+                    -review grid
             - maybe could add signals between date selector and display for phototime to make parent a server comp, but maybe not
         - want to move all server actions to route handlers
     - create page
@@ -47,16 +52,8 @@
         - add tag creation/selection to create photoshot tab
     - photospot page
         - need to make sure all updates pull most recent info to avoid jank
-            - try out suspense most basic version on a new test route 
-            - Maybe revisit suspense, didn't seem to work with server actions tho
-            - add loading states, and skeletons so users can see when things are loading
-            - have skeleton just for weather icons
-            - add skeleton to photo section
-            - fix skeleton for info section
-            - add skeleton to review section
-            - ensure edits to review is working properly
-            - ensure edit updates info properly
-            - make sure skeletons all look good
+            - handleing with SWR, and route handlers
+            - eventually go back and remove the supabase useQuery sections in photospot info, replace with routehandlers
     - need to setup explore page
     - home (timeline)
         - make mobile like instagram, and web view more like pinterest, or a scroll grid 

@@ -44,7 +44,8 @@ export default function PhotospotInfo({
     user: User;
 }) {
 
-    const { data: photospot, isLoading: photospotLoading, error: photospotError } = useQuery(getPhotospotById(id));
+    // const { data: photospot, isLoading: photospotLoading, error: photospotError } = useQuery(getPhotospotById(id));
+    const { data: photospot, isLoading: photospotLoading, error: photospotError } = useSWR('/api/photospot/' + id, fetcher);
     const { data: stats, isLoading: statsLoading, error: statsError } = useQuery(getPhotospotStatsById(id));
     const { data: isSaved, mutate: updateSaved, isLoading: savedLoading, error: savedError } = useSWR('/api/photospot/' + id + '/isSaved', fetcher);
     const { data: tags, isLoading: tagsLoading, error: tagsError } = useSWR('/api/photospot/' + id + '/tags?limit=' + TAG_LIMIT, fetcher);

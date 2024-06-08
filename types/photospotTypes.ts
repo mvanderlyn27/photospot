@@ -43,13 +43,14 @@ export type Photoshot = {
     likes: number | null;
 };
 export type Review = {
-    id: number;
+    id?: number;
     created_at?: string;
     created_by: string;
     photospot_id: number;
     text?: string | null;
     rating: number;
     username?: string | null;
+    owner?: boolean;
 };
 
 export type ReviewGridInput = {

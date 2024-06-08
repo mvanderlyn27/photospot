@@ -27,6 +27,8 @@ import { getPhotoshotsByPhotospot } from "@/app/serverActions/photoshots/getPhot
 import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
 import { getCurrentUser } from "@/app/supabaseQueries/user";
 import { redirect } from "next/navigation";
+import PhotospotReviewSection from "@/components/photospot/photospotReviewSection";
+import { PhotospotPhotoSection } from "@/components/photospot/photospotPhotoSection";
 
 export default async function PhotospotPage({ params }: { params: { id: string } }) {
   /*
@@ -39,6 +41,7 @@ export default async function PhotospotPage({ params }: { params: { id: string }
   if (!user) {
     redirect('/login')
   }
+
   // const [reviews, setReviews] = useState<Review[]>([]);
   // const [userReview, setUserReview] = useState<Review | null>(null);
   // const [stats, setStats] = useState<PhotospotStats | null>(null);
@@ -136,6 +139,7 @@ export default async function PhotospotPage({ params }: { params: { id: string }
           </TabsTrigger>
         </TabsList>
         <TabsContent value="photos" className="flex flex-col gap-4">
+          <PhotospotPhotoSection id={parseInt(params.id)} />
           {/* <div className="flex flex-row items-right justify-between ">
             <div></div>
             <Dialog
@@ -167,6 +171,7 @@ export default async function PhotospotPage({ params }: { params: { id: string }
           /> */}
         </TabsContent>
         <TabsContent value="reviews">
+          <PhotospotReviewSection id={parseInt(params.id)} />
           {/* <div className="flex flex-row justify-between ">
             <h1 className="text-3xl font-semibold ">Reviews</h1>
             <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
