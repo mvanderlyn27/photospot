@@ -37,8 +37,7 @@
 - Most important
   - photospot page
     - update rating to use rating component: <https://www.npmjs.com/package/react-simple-star-rating>
-    - update skeletons to look better
-    - add ability to like photoshots
+    - add ability to like/save photoshots
   - explore page
   - home (timeline)
     - need logic to select correct photoshot picture for photospot
@@ -46,6 +45,7 @@
   - profile page
     - add avatar pic to users
   - create page
+    - location search broken rn
     - add map skeleton
     - lock map/ searches within an area area around NYC
     - have location_name be editable, if its not good, users should be able to update it
@@ -68,7 +68,8 @@
 
 # Before launch of MVP
 
-- design and implement all mobile views for website
+- *design and implement all mobile views for website
+  - fix all skeletons to looke better
 - clean up API to be efficient, remove console logs
 - fix components to pass info down via context, instead of every component passing down props
 - if not using 3d, maybe turn it off on the map

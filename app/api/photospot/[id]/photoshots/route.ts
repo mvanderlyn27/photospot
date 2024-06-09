@@ -23,25 +23,12 @@ export async function GET(
     return new Response(error.message, { status: 500 });
   }
   //move users to front and add owner tag
-  let photoshotPromiseAr = data?.map(async (photoshot: Photoshot) => {
-    const { data: count, error: countError } = await supabase
-      .from("photoshot_like_counts")
-      .select("*")
-      .eq("photoshot_id", photoshot.id)
-      .single();
-    photoshot.like_count = 0;
-    if (count) {
-      photoshot.like_count = count.like_count;
-    }
+  let photoshotAr = data?.map((photoshot: Photoshot) => {
     if (photoshot.created_by === user.data.user?.id) {
       photoshot.owner = true;
     }
     return photoshot;
   });
-  return await Promise.all(photoshotPromiseAr)
-    .then((photoshotAr) => {
-      photoshotAr.sort(sortByOwnershipAndDate);
-      return NextResponse.json(photoshotAr);
-    })
-    .catch((error) => new Response(error.message, { status: 500 }));
+  photoshotAr.sort(sortByOwnershipAndDate);
+  return NextResponse.json(photoshotAr);
 }
