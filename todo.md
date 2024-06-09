@@ -35,11 +35,10 @@
 # Code Improvement
 
 - Most important
-    - photospot page
-        - update rating to use rating component: <https://www.npmjs.com/package/react-simple-star-rating>
-        - update skeletons to look better
-        - add ability to like photoshots
-        - save doesn't work properly right now
+  - photospot page
+    - update rating to use rating component: <https://www.npmjs.com/package/react-simple-star-rating>
+    - update skeletons to look better
+    - add ability to like photoshots
   - explore page
   - home (timeline)
     - need logic to select correct photoshot picture for photospot
@@ -62,114 +61,117 @@
     - fix navbar to show which page you're on
   - general fixes
     - don't show photospots with no photoshots
-        - maybe when you delete last photoshot in a photospot it removes the spot?
+      - maybe when you delete last photoshot in a photospot it removes the spot?
     - maybe create diff views for common joins
     - fix carousel to be properly sizeable, including the extra button space
       - rn messed up on create page, and photospot page
 
 # Before launch of MVP
+
 - design and implement all mobile views for website
-- clean up API to be efficient, remove console logs 
+- clean up API to be efficient, remove console logs
 - fix components to pass info down via context, instead of every component passing down props
 - if not using 3d, maybe turn it off on the map
   - maybe combine explore/home to have picture view/ map view, just call it "explore"
   - emphasis how to recreate a shot at a beautiful place
   - also def a social app now
 - get anonymouse user accounts setup for a lot of the site
-    - probably need to setup anonomous user when hitting the home page and not logged in
-    - <https://supabase.com/docs/guides/auth/auth-anonymous>
-    - setup captcha
-    - should be able to view, and explore photospots without account
-    - explore the flow of being able to create anonymous photospots, or upload angles
+  - probably need to setup anonomous user when hitting the home page and not logged in
+  - <https://supabase.com/docs/guides/auth/auth-anonymous>
+  - setup captcha
+  - should be able to view, and explore photospots without account
+  - explore the flow of being able to create anonymous photospots, or upload angles
 - *setup email service so I don't get rate limited on user signup
   - need to look into smtp providers mayeb smtp2go
   - reenable email on account creation after this
 - *figure out migration for DB, and seperating environments
+
 # After launch of MVP
-  - setup geocoding via backend functions, and postgres tiger geocoding
+
+- setup geocoding via backend functions, and postgres tiger geocoding
         -<https://postgis.net/docs/Extras.html>
-  - add confetti into creating new photospot locations
-  - add calculator page?
-    - lookup any location find golden hour/weather there
-  - feed
-    - display when golden hour is near you right now, maybe save location to profile?
-    - have top location pics near you right now in feed
-    - followers/interests feed
-    - top posts of the day feed
+- add confetti into creating new photospot locations
+- add calculator page?
+  - lookup any location find golden hour/weather there
+- feed
+  - display when golden hour is near you right now, maybe save location to profile?
+  - have top location pics near you right now in feed
+  - followers/interests feed
+  - top posts of the day feed
     -left bar
-    - when uploading image, add to a queue to generate blur hash for future loading
-    - fix maps to not render streetname through buildings (maybe use diff map, or remove street tile)
-    - add minimize button for leftbar
-    - add back in the photo view for uploading pics
-  - photospot page
-    - phototime section section
-      - weather
-        - maybe look into other api's
-        - need to make it so when you select today it shows right time for the past?
-      - maybe only show next available good time to take pics
-      - add other types of photo times
-      - maybe figure out how to account for shadows
-    - fix tabs to align with top boxes
-    - add more info to review section, for ratings counts in different groups
-    - revisit weather check to ensure always correct
-    - photoInfo section
-      - update direction button to be smarter
-        - take into account device, and open app on mobile
-    - editing
-      - fix editing to need at least one picture
-      - make editing of picture section look pretty
-      - make flow smoother, can add/remove photos in same section, not 2 seperate
-    - update OP photospot pics to be a carousel too
-    - get page to work for logged in/ not logged in
-    - photobook section
-      - add sorting options to image section
-      - add ability to rate photobook pics, and save them
-    - redesign to have better utility/feel, rn hard to find all the info you want
-    - add link to google maps/apple maps to nav to location
-    - add scheduler for getting to the location at golden hour
-    - maybe make all photospot pics carousels
-  - map improvements
-    - fix sessions so we don't use a session every key entered
-    - add navigation
-    - improve the auto search names, kinda vague rn, something funky going on with suggestion vs. feature pipeline
-      - maybe add limit to region, and poi types for better filters
-      - also if we have user location then can bias towards nearby things
-      - <https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-limit-region/>
-    - maybe see about entering a specific lat/lng when creating
-    - should be able to animate light changing throughout the day using mapref.setProperty
-    - figure out what map settings to reduce lag and look the prettiest
-    - look into re-use map, and adding the markers back in on page load
-    - lookup neighborhood when using lat-lng input
-  - better photospot searching
-  - photospot rating
-  - Add trigger to photospot table on deletes to also delete its picture from storage
-  - Add new function and trigger to delete user from auth table upon deleting user profile
-  - ADD REVIEW RATING FUNCTIONALITY for photospots and photolists
-  - ADD ability to upload photo for user profile
-  - ADD proper migration for supabase dbs, for local testing
-    - need to have multiple env for db, so we're not working against prod data
-  - Add better unit testing/ e2e
-    - rn using a test page to do testing, not super comprehensive
-  - improve error handeling/loggin in apis/frontend
-  - fix search by location for photolists
-  - layout better, cleaner types for use throughout the app
-  - Move a lot of db functions to db triggers
-    - delete photospot, and profile picture on delete of auth.row
-    - delete old photospots pictures on new entry
-  - rewrite all route handler code to have as much parallelism as possible
-  - need to update GET profiles route to only have access to public profiles via RLS/Functions
-  - update trigger so users can't give themselves admin
-  - also give admin more abilities
-  - properly enforce private user profiles
-  - add better searching for all text searches, using some type of substring search
-    - username
-    - photospot
-    - photolist
-  - add admin edge functions for managing users/testing
-    - create random user
-    - create random review
-    - modify user/ ownership of diff db entities
-  - add admin panel to app
+  - when uploading image, add to a queue to generate blur hash for future loading
+  - fix maps to not render streetname through buildings (maybe use diff map, or remove street tile)
+  - add minimize button for leftbar
+  - add back in the photo view for uploading pics
+- photospot page
+  - phototime section section
+    - weather
+      - maybe look into other api's
+      - need to make it so when you select today it shows right time for the past?
+    - maybe only show next available good time to take pics
+    - add other types of photo times
+    - maybe figure out how to account for shadows
+  - fix tabs to align with top boxes
+  - add more info to review section, for ratings counts in different groups
+  - revisit weather check to ensure always correct
+  - photoInfo section
+    - update direction button to be smarter
+      - take into account device, and open app on mobile
+  - editing
+    - fix editing to need at least one picture
+    - make editing of picture section look pretty
+    - make flow smoother, can add/remove photos in same section, not 2 seperate
+  - update OP photospot pics to be a carousel too
+  - get page to work for logged in/ not logged in
+  - photobook section
+    - add sorting options to image section
+    - add ability to rate photobook pics, and save them
+  - redesign to have better utility/feel, rn hard to find all the info you want
+  - add link to google maps/apple maps to nav to location
+  - add scheduler for getting to the location at golden hour
+  - maybe make all photospot pics carousels
+- map improvements
+  - fix sessions so we don't use a session every key entered
+  - add navigation
+  - improve the auto search names, kinda vague rn, something funky going on with suggestion vs. feature pipeline
+    - maybe add limit to region, and poi types for better filters
+    - also if we have user location then can bias towards nearby things
+    - <https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-limit-region/>
+  - maybe see about entering a specific lat/lng when creating
+  - should be able to animate light changing throughout the day using mapref.setProperty
+  - figure out what map settings to reduce lag and look the prettiest
+  - look into re-use map, and adding the markers back in on page load
+  - lookup neighborhood when using lat-lng input
+- better photospot searching
+- photospot rating
+- Add trigger to photospot table on deletes to also delete its picture from storage
+- Add new function and trigger to delete user from auth table upon deleting user profile
+- ADD REVIEW RATING FUNCTIONALITY for photospots and photolists
+- ADD ability to upload photo for user profile
+- ADD proper migration for supabase dbs, for local testing
+  - need to have multiple env for db, so we're not working against prod data
+- Add better unit testing/ e2e
+  - rn using a test page to do testing, not super comprehensive
+- improve error handeling/loggin in apis/frontend
+- fix search by location for photolists
+- layout better, cleaner types for use throughout the app
+- Move a lot of db functions to db triggers
+  - delete photospot, and profile picture on delete of auth.row
+  - delete old photospots pictures on new entry
+- rewrite all route handler code to have as much parallelism as possible
+- need to update GET profiles route to only have access to public profiles via RLS/Functions
+- update trigger so users can't give themselves admin
+- also give admin more abilities
+- properly enforce private user profiles
+- add better searching for all text searches, using some type of substring search
+  - username
+  - photospot
+  - photolist
+- add admin edge functions for managing users/testing
+  - create random user
+  - create random review
+  - modify user/ ownership of diff db entities
+- add admin panel to app
 
 # Bugs
 

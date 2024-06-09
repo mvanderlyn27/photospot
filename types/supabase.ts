@@ -27,6 +27,49 @@ export type Database = {
         }
         Relationships: []
       }
+      photoshot_likes: {
+        Row: {
+          created_at: string
+          created_by: string
+          like_type: number
+          photoshot_id: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          like_type: number
+          photoshot_id: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          like_type?: number
+          photoshot_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "photoshot_likes_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photoshot_likes_photoshot_id_fkey"
+            columns: ["photoshot_id"]
+            isOneToOne: false
+            referencedRelation: "photoshot_like_counts"
+            referencedColumns: ["photoshot_id"]
+          },
+          {
+            foreignKeyName: "photoshot_likes_photoshot_id_fkey"
+            columns: ["photoshot_id"]
+            isOneToOne: false
+            referencedRelation: "photoshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       photoshot_tags: {
         Row: {
           created_at: string
@@ -48,6 +91,13 @@ export type Database = {
             foreignKeyName: "photoshot_tags_id_fkey"
             columns: ["id"]
             isOneToOne: false
+            referencedRelation: "photoshot_like_counts"
+            referencedColumns: ["photoshot_id"]
+          },
+          {
+            foreignKeyName: "photoshot_tags_id_fkey"
+            columns: ["id"]
+            isOneToOne: false
             referencedRelation: "photoshots"
             referencedColumns: ["id"]
           },
@@ -65,7 +115,6 @@ export type Database = {
           created_at: string
           created_by: string | null
           id: number
-          likes: number
           name: string
           photo_paths: string[]
           photospot_id: number
@@ -75,7 +124,6 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: number
-          likes?: number
           name: string
           photo_paths?: string[]
           photospot_id: number
@@ -85,7 +133,6 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: number
-          likes?: number
           name?: string
           photo_paths?: string[]
           photospot_id?: number
@@ -290,6 +337,13 @@ export type Database = {
             foreignKeyName: "saved_photoshots_photoshot_id_fkey"
             columns: ["photoshot_id"]
             isOneToOne: false
+            referencedRelation: "photoshot_like_counts"
+            referencedColumns: ["photoshot_id"]
+          },
+          {
+            foreignKeyName: "saved_photoshots_photoshot_id_fkey"
+            columns: ["photoshot_id"]
+            isOneToOne: false
             referencedRelation: "photoshots"
             referencedColumns: ["id"]
           },
@@ -355,6 +409,13 @@ export type Database = {
       }
     }
     Views: {
+      photoshot_like_counts: {
+        Row: {
+          like_count: number | null
+          photoshot_id: number | null
+        }
+        Relationships: []
+      }
       photospot_rating_stats: {
         Row: {
           id: number | null

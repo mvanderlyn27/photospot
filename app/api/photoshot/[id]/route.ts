@@ -6,14 +6,19 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const supabase = createClient();
-  const { data, error } = await supabase
+  let data = {};
+  const photoshotProimse = supabase
     .from("photoshots")
     .select("*")
     .eq("id", params.id)
     .single();
-  if (error) {
-    console.log("error", error);
-    return new Response(error.message, { status: 500 });
-  }
+  const countPromise = supabase
+    .from("photoshot_like_counts")
+    .select("*")
+    .eq("photoshot_id", params.id)
+    .single();
+  Promise.all([photoshotProimse, countPromise]).then((values) => {
+    data = { ...values[0], ...values[1] };
+  });
   return new Response(JSON.stringify(data), { status: 200 });
 }
