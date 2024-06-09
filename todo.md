@@ -68,28 +68,24 @@
       - rn messed up on create page, and photospot page
 
 # Before launch of MVP
-
+- design and implement all mobile views for website
+- clean up API to be efficient, remove console logs 
 - fix components to pass info down via context, instead of every component passing down props
 - if not using 3d, maybe turn it off on the map
-- design and implement all mobile views for website
   - maybe combine explore/home to have picture view/ map view, just call it "explore"
   - emphasis how to recreate a shot at a beautiful place
   - also def a social app now
-  - need to figure out review vs uploading photos
-    - do we need reviews? Or just keep track of number of photos
-    - <https://supabase.com/docs/guides/auth/auth-anonymous>
-    - probably need to setup anonomous user when hitting the home page and not logged in
-    - setup captcha
 - get anonymouse user accounts setup for a lot of the site
-  - should be able to view, and explore photospots without account
-  - explore the flow of being able to create anonymous photospots, or upload angles
-- make all screens beautiful
-- fix page loading so theres no flash between routing, maybe don't use links, or theres something else needed to not have the nav bar flash between page routes (<https://stackoverflow.com/questions/55624695/loading-screen-on-next-js-page-transition>)
-- setup email service so I don't get rate limited on user signup
+    - probably need to setup anonomous user when hitting the home page and not logged in
+    - <https://supabase.com/docs/guides/auth/auth-anonymous>
+    - setup captcha
+    - should be able to view, and explore photospots without account
+    - explore the flow of being able to create anonymous photospots, or upload angles
+- *setup email service so I don't get rate limited on user signup
   - need to look into smtp providers mayeb smtp2go
   - reenable email on account creation after this
-- figure out migration for DB, and seperating environments
-- For later
+- *figure out migration for DB, and seperating environments
+# After launch of MVP
   - setup geocoding via backend functions, and postgres tiger geocoding
         -<https://postgis.net/docs/Extras.html>
   - add confetti into creating new photospot locations
