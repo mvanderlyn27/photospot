@@ -12,10 +12,10 @@ export function PhotospotPhotoSection({ id }: { id: number }) {
     error: photospotError,
   } = useSWR(`/api/photospot/${id}`, fetcher);
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-4">
       {/* <Skeleton className="bg-balck/10 h-[600px] w-full" /> */}
       <div className="flex flex-row ">
-        <PhotoshotUploadDialog selectedLocation={photospot} />
+        <PhotoshotUploadDialog selectedLocation={photospot} mapView={false} />
       </div>
       <PhotoshotGrid photospotId={id} />
     </div>

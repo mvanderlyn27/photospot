@@ -13,6 +13,7 @@ import { Dialog, DialogTrigger } from "../ui/dialog";
 import PhotoshotDialog from "./photoshotDialog";
 import { fetcher } from "@/utils/common/fetcher";
 import useSWR from "swr";
+import { arrayRange } from "@/utils/common/math";
 export default function PhotoshotGrid({
     photospotId,
 }: {
@@ -27,9 +28,10 @@ export default function PhotoshotGrid({
     return (
         <div className=" w-full flex flex-col gap-4">
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4  grid-flow-row-dense">
-                {photoshots?.map((photoshot: Photoshot) => (
+                {photoshots && photoshots?.map((photoshot: Photoshot) => (
                     <PhotoshotDialog photoshot={photoshot} />
                 ))}
+                {photoshotLoading && arrayRange(0, 10, 1).map((i) => <Skeleton key={i} className="bg-black/10 object-cover rounded w-full aspect-square" />)}
             </div>
         </div>
     );
