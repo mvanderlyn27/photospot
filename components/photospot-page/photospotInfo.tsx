@@ -81,13 +81,21 @@ export default function PhotospotInfo({
     if (!photospot) return;
     if (isSaved) {
       console.log("un saveing ");
-      fetch("/api/photospot/" + id + "/unSave", { method: "post" });
-      updateSaved(false, { optimisticData: false });
+      updateSaved(handleUnsave(), { optimisticData: false });
     } else {
       console.log("saving");
-      fetch("/api/photospot/" + id + "/save", { method: "post" });
-      updateSaved(true, { optimisticData: true });
+      updateSaved(handleSave(), { optimisticData: true });
     }
+  };
+  const handleSave = async () => {
+    return fetch("/api/photospot/" + id + "/save", { method: "post" }).then(
+      (res) => true
+    );
+  };
+  const handleUnsave = async () => {
+    return fetch("/api/photospot/" + id + "/unSave", { method: "post" }).then(
+      (res) => false
+    );
   };
   return (
     //setup skeelton for loading
