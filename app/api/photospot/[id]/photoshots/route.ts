@@ -1,6 +1,8 @@
 "use server";
 import { Photoshot, Photospot } from "@/types/photospotTypes";
+import { sortByOwnershipAndDate } from "@/utils/common/sort";
 import { createClient } from "@/utils/supabase/server";
+import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
@@ -13,7 +15,7 @@ export async function GET(
   }
   const { data, error } = await supabase
     .from("photoshots")
-    .select("*")
+    .select("*, ...profiles!photoshots_created_by_fkey(username)")
     .eq("photospot_id", params.id);
   if (error) {
     console.log("error", error);
@@ -26,10 +28,6 @@ export async function GET(
     }
     return photoshot;
   });
-  const sortedArray = [
-    ...photoshotAr.filter(({ owner }) => owner),
-    ...photoshotAr.filter(({ owner }) => !owner),
-  ];
-  console.log("photoshots with owner", sortedArray);
-  return new Response(JSON.stringify(data), { status: 200 });
+  photoshotAr.sort(sortByOwnershipAndDate);
+  return NextResponse.json(photoshotAr);
 }

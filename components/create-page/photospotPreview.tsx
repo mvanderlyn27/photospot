@@ -71,16 +71,7 @@ export default function PhotospotPreview({ selectedLocation, loadingSelectedLoca
                     </>
                 }
                 <div className="flex justify-center flex-row gap-4">
-                    <Dialog open={photoshotDialogOpen} onOpenChange={setPhotoshotDialogOpen}>
-                        <DialogTrigger>
-                            <div className={"text-2xl  " + cn(buttonVariants({ variant: "default" }))} >
-                                Upload a shot
-                            </div>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <PhotoshotUploadDialog selectedLocation={selectedLocation} setPhotoshotDialogOpen={setPhotoshotDialogOpen} updatePhotobook={() => console.log("haha")} />
-                        </DialogContent>
-                    </Dialog>
+                    <PhotoshotUploadDialog selectedLocation={selectedLocation} mapView={true} />
                     {selectedLocation && isPhotospot(selectedLocation) &&
                         <Button variant="outline" onClick={() => { handleViewPhotospot(); }}>
                             View Photospot

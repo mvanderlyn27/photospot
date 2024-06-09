@@ -1,5 +1,6 @@
 "use server"
 import { createClient } from "@/utils/supabase/server";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request, { params }: { params: { id: number } }) {
     const supabase = createClient();
@@ -7,5 +8,5 @@ export async function GET(request: Request, { params }: { params: { id: number }
     if (error) {
         return new Response(error.message, { status: 500 });
     }
-    return new Response(JSON.stringify(data), { status: 200 });
+    return NextResponse.json(data);
 }

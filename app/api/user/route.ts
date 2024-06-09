@@ -1,5 +1,6 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   const supabase = createClient();
@@ -8,5 +9,5 @@ export async function GET() {
     throw new Error(error.message);
   }
   //maybe create new user object which stores user/profile info
-  return new Response(JSON.stringify(data.user));
+  return NextResponse.json(data.user);
 }

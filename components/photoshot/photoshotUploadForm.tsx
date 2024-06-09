@@ -15,18 +15,14 @@ import { Textarea } from "../ui/textarea";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { NewPhotospotInfo, Photospot } from "@/types/photospotTypes";
+import { NewPhotospotInfo, Photoshot, Photospot } from "@/types/photospotTypes";
+import useSWR, { useSWRConfig } from "swr";
+import { isPhotospot } from "@/utils/common/typeGuard";
+import { fetcher } from "@/utils/common/fetcher";
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -36,7 +32,6 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 export const uploadPhotoshotSchema = z.object({
   //should add some better requirements for the location
-
   name: z.string(),
   recreate_text: z.string(),
   //tags for later
@@ -61,19 +56,26 @@ export const uploadPhotoshotSchema = z.object({
       (files) =>
         files
           ? Array.from(files).every((file) =>
-              ACCEPTED_IMAGE_TYPES.includes(file.type)
-            )
+            ACCEPTED_IMAGE_TYPES.includes(file.type)
+          )
           : true,
       "Only these types are allowed .jpg, .jpeg, .png and .webp"
     ),
 });
-
 export default function PhotoshotUploadForm({
   selectedLocation,
+  setPhotoshotUploadDialogOpen,
+  handleSubmit,
+  mapView
 }: {
   selectedLocation: Photospot | NewPhotospotInfo;
+  setPhotoshotUploadDialogOpen: any;
+  handleSubmit?: any
+  mapView: boolean
 }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { data: photoshots, mutate: mutatePhotoshots } = useSWR(isPhotospot(selectedLocation) ? "/api/photospot/" + selectedLocation.id + "/photoshots" : null, fetcher);
   const uploadPhotoshotForm = useForm<z.infer<typeof uploadPhotoshotSchema>>({
     resolver: zodResolver(uploadPhotoshotSchema),
     defaultValues: {
@@ -84,50 +86,78 @@ export default function PhotoshotUploadForm({
   });
 
   const createNewPhotoshot = async (
-    data: z.infer<typeof uploadPhotoshotSchema>
+    data: z.infer<typeof uploadPhotoshotSchema>, selectedLocation: Photospot | NewPhotospotInfo
   ) => {
-    const formData = new FormData();
+    let formData = new FormData();
+    if (data.photos) {
+      Array.from(data.photos).forEach((photo) => {
+        formData.append(`photos`, photo);
+      });
+    }
+    formData.append(`data`, JSON.stringify(data));
+    formData.append(`selectedLocation`, JSON.stringify(selectedLocation));
     return fetch("/api/photoshot/create", {
       method: "PUT",
       body: formData,
-    });
+    }).then(res => res.json());
   };
   const onCreate = async (
     data: z.infer<typeof uploadPhotoshotSchema>
   ): Promise<void> => {
-    //TODO: optimistic data
-    /*
-        if existing photospot do somethign else
-        FILL THE REST OF THIS OUT
-    */
+    //TODO: fix optimistic data 
     setLoading(true);
     //need to revalidate cache for photospot/id if existing photospot
-    await mutate("/api/photospot/" + selectedLocation.id + "/photoshots");
+    toast({
+      title: "Uploading... ",
+    })
+    if (isPhotospot(selectedLocation)) {
+      const tempPhotoshot: Photoshot = {
+        name: data.name,
+        recreate_text: data.recreate_text,
+        photospot_id: selectedLocation.id,
+        id: 0,
+        photo_paths: [],
+        likes: 0,
+      }
+      mutatePhotoshots(createNewPhotoshot(data, selectedLocation), {
+        optimisticData: (curPhotoshots: Photoshot[]) => [tempPhotoshot, ...curPhotoshots],
+        populateCache: (updatedPhotoshot: Photoshot, curPhotoshots: Photoshot[]) => [updatedPhotoshot, ...curPhotoshots],
+      }).then(() => {
+        if (mapView) {
+          //happens on map view but selecting existing photospot
+          router.push('/photospot/' + selectedLocation.id);
+          setLoading(false);
+          setPhotoshotUploadDialogOpen(false);
+          toast({
+            title: "Uploaded Photoshot",
+          })
+        }
+      });
+    }
+    else {
+      const photospot = await createNewPhotoshot(data, selectedLocation);
+      if (mapView) {
+        //happens when new photospot selected from map
+        router.push('/photospot/' + photospot.id);
+        setLoading(false);
+        setPhotoshotUploadDialogOpen(false);
+        toast({
+          title: "Uploaded Photoshot",
+        })
+      }
+    }
+    if (!mapView) {
+      //happens on photospot view page
+      setLoading(false);
+      setPhotoshotUploadDialogOpen(false);
+      toast({
+        title: "Uploaded Photoshot",
+      })
+    }
 
-    // if (data.photos && selectedLocation) {
-    //   console.log("creating photoshot");
-    //   let photos_form = new FormData();
-    //   Array.from(data.photos).forEach((photo) => {
-    //     photos_form.append(`photoshot_pictures`, photo);
-    //   });
-    //   setLoading(true);
-    //   const photoshot = await uploadPhotoshot(
-    //     data,
-    //     photos_form,
-    //     selectedLocation
-    //   );
-    //   if (updatePhotobook) {
-    //     await updatePhotobook();
-    //   }
-    //   setPhotoshotDialogOpen(false);
-    //   setLoading(false);
-    //   if (photoshot) {
-    //     router.push("/photospot/" + photoshot.photospot_id);
-    //   }
-    //   toast({
-    //     title: "Photo Uploaded",
-    //   });
-    // }
+    if (handleSubmit) {
+      handleSubmit();
+    }
   };
 
   const clearForm = () => {

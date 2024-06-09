@@ -38,6 +38,8 @@
   - data fetching overhaul
     - new strat, use SWR to get all data, and use routehandelers to interact with APIS
     - use fetch to route handlers that mutate date, and optimistic updates with SWR for frontend updates
+    - can use server actions inside route handelers for re-used code
+    - save this for later to overhaul
     - midway through fixing photospot page
       - need to add changes to the bottom section (haven't started)
                 -remaining:

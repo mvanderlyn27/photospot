@@ -43,18 +43,19 @@ import PhotoshotUploadForm from "./photoshotUploadForm";
 
 export default function PhotoshotUploadDialog({
   selectedLocation,
+  mapView = false
 }: {
-  selectedLocation: NewPhotospotInfo | Photospot;
+  selectedLocation: NewPhotospotInfo | Photospot | null;
+  mapView: boolean
 }) {
-  const [photobookPictureDialogOpen, setPhotobookPictureDialogOpen] =
+  const [photoshotUploadDialogOpen, setPhotoshotUploadDialogOpen] =
     useState(false);
 
-  useState(false);
   return (
-    <div className="ml-auto ">
+    <div className={mapView ? "" : `ml-auto `}>
       <Dialog
-        open={photobookPictureDialogOpen}
-        onOpenChange={setPhotobookPictureDialogOpen}
+        open={photoshotUploadDialogOpen}
+        onOpenChange={setPhotoshotUploadDialogOpen}
       >
         <DialogTrigger>
           <div
@@ -74,7 +75,7 @@ export default function PhotoshotUploadDialog({
             Show off your artsy side, and help other users learn how to make
             better shots
           </DialogDescription>
-          <PhotoshotUploadForm selectedLocation={selectedLocation} />
+          {selectedLocation && <PhotoshotUploadForm selectedLocation={selectedLocation} setPhotoshotUploadDialogOpen={setPhotoshotUploadDialogOpen} mapView={mapView} />}
         </DialogContent>
       </Dialog>
     </div>

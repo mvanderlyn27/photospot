@@ -1,5 +1,6 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
+import { NextResponse } from "next/server";
 
 export async function POST(
   request: Request,
@@ -29,5 +30,5 @@ export async function POST(
     return new Response(reviewError.message, { status: 500 });
   }
   console.log("successful delete", data);
-  return new Response(JSON.stringify(reviewsAfterDelete), { status: 200 });
+  return NextResponse.json(reviewsAfterDelete);
 }
