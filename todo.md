@@ -35,37 +35,25 @@
 # Code Improvement
 
 - Most important
-  - data fetching overhaul
-    - new strat, use SWR to get all data, and use routehandelers to interact with APIS
-    - use fetch to route handlers that mutate date, and optimistic updates with SWR for frontend updates
-    - can use server actions inside route handelers for re-used code
-    - save this for later to overhaul
-    - midway through fixing photospot page
-      - need to add changes to the bottom section (haven't started)
-                -remaining:
-                    -create photoshot button/dialog fix
-                    -photospot grid
-      - maybe could add signals between date selector and display for phototime to make parent a server comp, but maybe not
-    - want to move all server actions to route handlers
+    - photospot page
+        - update rating to use rating component: <https://www.npmjs.com/package/react-simple-star-rating>
+        - update skeletons to look better
+        - add ability to like photoshots
+        - save doesn't work properly right now
+  - explore page
+  - home (timeline)
+    - need logic to select correct photoshot picture for photospot
+    - make mobile like instagram, and web view more like pinterest, or a scroll grid
+  - profile page
+    - add avatar pic to users
   - create page
     - add map skeleton
     - lock map/ searches within an area area around NYC
     - have location_name be editable, if its not good, users should be able to update it
     - add tag creation/selection to create photoshot tab
-  - photospot page
-    - update rating to use rating component: <https://www.npmjs.com/package/react-simple-star-rating>
-    - need to make sure all updates pull most recent info to avoid jank
-      - handleing with SWR, and route handlers
-      - eventually go back and remove the supabase useQuery sections in photospot info, replace with routehandlers
-  - need to setup explore page
-  - home (timeline)
-    - make mobile like instagram, and web view more like pinterest, or a scroll grid
-  - profile page
-    - add avatar pic to users
-  - create page
+
     - add dialog for when a user clicks too close to another spot, ask them if they want to select the nearby spot
       - shouldn't let user update selected location yet
-    - delete removes all photospots
     - Split up leftbar into sub components and organize logic better
     - see if its possible to improve autocomplete searches
     - update retrieve photospots in view (map bounds)rpc function when time, and make create and expore functiosn use it
@@ -74,6 +62,7 @@
     - fix navbar to show which page you're on
   - general fixes
     - don't show photospots with no photoshots
+        - maybe when you delete last photoshot in a photospot it removes the spot?
     - maybe create diff views for common joins
     - fix carousel to be properly sizeable, including the extra button space
       - rn messed up on create page, and photospot page
