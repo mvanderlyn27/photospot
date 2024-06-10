@@ -50,9 +50,9 @@ import {
     CommandItem,
     CommandList,
 } from "../ui/command";
-import { LocationAutoComplete } from "../maps/autocomplete";
-import { getPhotospotTags } from "@/app/serverActions/photospots/getPhotospotTags";
+// import { LocationAutoComplete } from "../maps/autocompleteOld";
 import getPhotospotByLocation from "@/app/serverActions/photospots/getPhotospotByLocation";
+import AutoComplete from "../maps/autocomplete";
 // main behaviors are clicking on a photospot, or not, if one's clicked, this will display info on them, and let you click a button to go to photospot page
 // otherwise display the default create form
 // if you click back from the photospot view, bring you back to a reset form
@@ -113,13 +113,14 @@ export default function LeftWindow({
         <Card className="flex flex-col justify-center ">
             <>
                 <CardContent className="p-4">
-                    <LocationAutoComplete
+                    {/* <LocationAutoComplete
                         onChange={handleAutoCompleteChange}
                         handleClear={handleClear}
                         user={user}
                         mapCenter={mapCenter}
                         selectedLocation={selectedLocation}
-                    />
+                    /> */}
+                    <AutoComplete />
                 </CardContent>
             </>
 

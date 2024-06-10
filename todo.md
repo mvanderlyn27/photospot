@@ -35,30 +35,30 @@
 # Code Improvement
 
 - Most important
-  - photospot page
-    - update rating to use rating component: <https://www.npmjs.com/package/react-simple-star-rating>
-    - display like count
+  - create page
+    - finish implementing react auto search/ reverse geocoding with SWR, maybe have option to change the name with a better one as well 
+    - add map skeleton
+    - add asking for grabbing users location
+    - add button to track users location/show up on map
+    - lock map/ searches within an area area around NYC
+    - have location_name be editable, if its not good, users should be able to update it
+    - add tag creation/selection to create photoshot tab
+    - add dialog for when a user clicks too close to another spot, ask them if they want to select the nearby spot
+      - shouldn't let user update selected location yet
+    - Split up leftbar into sub components and organize logic better
+    - see if its possible to improve autocomplete searches
+    - update retrieve photospots in view (map bounds)rpc function when time, and make create and expore functiosn use it
   - explore page
   - home (timeline)
     - need logic to select correct photoshot picture for photospot
     - make mobile like instagram, and web view more like pinterest, or a scroll grid
   - profile page
     - add avatar pic to users
-  - create page
-    - location search broken rn
-    - add map skeleton
-    - lock map/ searches within an area area around NYC
-    - have location_name be editable, if its not good, users should be able to update it
-    - add tag creation/selection to create photoshot tab
-
-    - add dialog for when a user clicks too close to another spot, ask them if they want to select the nearby spot
-      - shouldn't let user update selected location yet
-    - Split up leftbar into sub components and organize logic better
-    - see if its possible to improve autocomplete searches
-    - update retrieve photospots in view (map bounds)rpc function when time, and make create and expore functiosn use it
   - Navbar
     - add username to returned values for getting current user
     - fix navbar to show which page you're on
+  - photospot page
+    -Done for now
   - general fixes
     - don't show photospots with no photoshots
       - maybe when you delete last photoshot in a photospot it removes the spot?
