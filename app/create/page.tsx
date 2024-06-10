@@ -1,7 +1,7 @@
 "use client";
 import LeftWindow from "@/components/create-page/left-window";
 import PhotospotMap from "@/components/maps/map";
-import { useEffect, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { listAllPhotospots } from "../serverActions/photospots/listAllPhotospots";
 import { NewPhotospotInfo, Photospot } from "@/types/photospotTypes";
 import { createClient } from "@/utils/supabase/client";
@@ -30,7 +30,7 @@ export default function CreatePage() {
   );
   const [mapBounds, setMapBounds] = useState<LngLatBounds | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
-
+  const [mapRef, setMapRef] = useState<MutableRefObject<any> | null>(null);
   const supabase = createClient();
   const refreshPhotospots = () => {
     //eventually want to get this in reference to the user's frame, only load locations within their view
@@ -52,6 +52,7 @@ export default function CreatePage() {
     <div className="h-[calc(100vh-64px)] w-screen">
       <div className="absolute top-[64px] left-0 lg:w-[450px] max-h-[calc(100vh-64px)] pl-4 pt-4 z-50">
         <LeftWindow
+          mapRef={mapRef}
           mapBounds={mapBounds}
           mapCenter={mapCenter}
           user={user}
@@ -63,6 +64,8 @@ export default function CreatePage() {
       </div>
       <div className="h-full w-full">
         <PhotospotMap
+          mapRef={mapRef}
+          setMapRef={setMapRef}
           setMapBounds={setMapBounds}
           setMapLoaded={(val: boolean) => setMapLoaded(val)}
           mapCenter={mapCenter}
