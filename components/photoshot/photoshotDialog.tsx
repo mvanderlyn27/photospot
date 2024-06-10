@@ -149,14 +149,12 @@ export default function PhotoshotDialog({
                   <div className="transform-gpu  p-4 space-y-3 text-xl group-hover:opacity-100 group-hover:translate-y-0 translate-y-4 pb-10 transform transition duration-300 ease-in-out">
                     <div className="font-bold flex gap-4 flex-row items-center">
                       {photoshot.name}
-                      {photoshot.like_count && (
-                        <div className="flex flex-row items-center">
-                          <IoMdHeart />
-                          <h1 className="text-sm font-semibold">
-                            {photoshot.like_count}
-                          </h1>
-                        </div>
-                      )}
+                      <div className="flex flex-row items-center">
+                        {photoshot.like_count ? <IoMdHeart /> : null}
+                        <h1 className="text-sm font-semibold">
+                          {photoshot.like_count > 0 ? photoshot.like_count : ""}
+                        </h1>
+                      </div>
                     </div>
                     {/* <RatingInput rating={photobookPicture.rating} /> */}
                   </div>
