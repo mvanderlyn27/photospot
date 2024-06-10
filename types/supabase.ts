@@ -58,13 +58,6 @@ export type Database = {
             foreignKeyName: "photoshot_likes_photoshot_id_fkey"
             columns: ["photoshot_id"]
             isOneToOne: false
-            referencedRelation: "photoshot_like_counts"
-            referencedColumns: ["photoshot_id"]
-          },
-          {
-            foreignKeyName: "photoshot_likes_photoshot_id_fkey"
-            columns: ["photoshot_id"]
-            isOneToOne: false
             referencedRelation: "photoshots"
             referencedColumns: ["id"]
           },
@@ -87,13 +80,6 @@ export type Database = {
           tag_id?: number
         }
         Relationships: [
-          {
-            foreignKeyName: "photoshot_tags_id_fkey"
-            columns: ["id"]
-            isOneToOne: false
-            referencedRelation: "photoshot_like_counts"
-            referencedColumns: ["photoshot_id"]
-          },
           {
             foreignKeyName: "photoshot_tags_id_fkey"
             columns: ["id"]
@@ -337,13 +323,6 @@ export type Database = {
             foreignKeyName: "saved_photoshots_photoshot_id_fkey"
             columns: ["photoshot_id"]
             isOneToOne: false
-            referencedRelation: "photoshot_like_counts"
-            referencedColumns: ["photoshot_id"]
-          },
-          {
-            foreignKeyName: "saved_photoshots_photoshot_id_fkey"
-            columns: ["photoshot_id"]
-            isOneToOne: false
             referencedRelation: "photoshots"
             referencedColumns: ["id"]
           },
@@ -409,13 +388,6 @@ export type Database = {
       }
     }
     Views: {
-      photoshot_like_counts: {
-        Row: {
-          like_count: number | null
-          photoshot_id: number | null
-        }
-        Relationships: []
-      }
       photospot_rating_stats: {
         Row: {
           id: number | null
@@ -540,6 +512,12 @@ export type Database = {
           lng: number
           dist_meters: number
         }[]
+      }
+      photoshot_like_count: {
+        Args: {
+          input_id: number
+        }
+        Returns: number
       }
       photospots_in_view: {
         Args: {

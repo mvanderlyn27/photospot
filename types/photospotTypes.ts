@@ -42,6 +42,8 @@ export type Photoshot = {
   created_at?: string;
   username?: string | null;
   like_count?: number | null;
+  is_saved?: boolean;
+  is_liked?: boolean;
   owner?: boolean;
 };
 export type Tag = {

@@ -37,7 +37,7 @@
 - Most important
   - photospot page
     - update rating to use rating component: <https://www.npmjs.com/package/react-simple-star-rating>
-    - add ability to like/save photoshots
+    - display like count
   - explore page
   - home (timeline)
     - need logic to select correct photoshot picture for photospot

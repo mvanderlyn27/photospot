@@ -3,7 +3,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
-export async function POST(
+export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
@@ -18,13 +18,12 @@ export async function POST(
     .eq("id", user.data.user.id)
     .eq("photoshot_id", parseInt(params.id))
     .single();
-  if (error) {
-    console.log("error", error);
-    return new Response("Error saving photoshot", { status: 500 });
-  }
-  if (data) {
-    return NextResponse.json(true);
-  } else {
+  if (error || !data) {
+    if (error && error.code !== "PGRST116") {
+      console.log("error", error);
+      return new Response("error checking saved", { status: 401 });
+    }
     return NextResponse.json(false);
   }
+  return NextResponse.json(true);
 }

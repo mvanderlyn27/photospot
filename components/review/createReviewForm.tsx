@@ -27,6 +27,7 @@ import { toast } from "../ui/use-toast";
 import RatingDisplay from "./ratingDisplay";
 import useSWR, { useSWRConfig } from "swr";
 import { fetcher } from "@/utils/common/fetcher";
+import { RatingInput } from "./ratingInput";
 
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = [
@@ -95,6 +96,9 @@ export default function CreateReviewForm({
     });
     setReviewDialogOpen(false);
   };
+  const handleRating = (val: number) => {
+    createReviewForm.setValue("rating", val);
+  };
   return (
     <Form {...createReviewForm}>
       <form
@@ -102,38 +106,7 @@ export default function CreateReviewForm({
         className=" w-full flex flex-col"
       >
         <CardContent className={`flex-1 overflow-auto mb-4 }`}>
-          <FormField
-            control={createReviewForm.control}
-            name="rating"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Rating</FormLabel>
-                <RatingDisplay rating={field.value} />
-                <Select
-                  value={"" + field.value}
-                  onValueChange={field.onChange}
-                  defaultValue={"" + field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select rating" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value={"1"}>1</SelectItem>
-                    <SelectItem value={"2"}>2</SelectItem>
-                    <SelectItem value={"3"}>3</SelectItem>
-                    <SelectItem value={"4"}>4</SelectItem>
-                    <SelectItem value={"5"}>5</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormDescription>
-                  What would you rate this spot out of 10?
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <RatingInput initialVal={3} onChange={handleRating} />
           <FormField
             control={createReviewForm.control}
             name="text"
