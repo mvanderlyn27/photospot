@@ -117,7 +117,6 @@ export default function PhotoshotUploadForm({
         photospot_id: selectedLocation.id,
         id: 0,
         photo_paths: [],
-        likes: 0,
       }
       mutatePhotoshots(createNewPhotoshot(data, selectedLocation), {
         optimisticData: (curPhotoshots: Photoshot[]) => [tempPhotoshot, ...curPhotoshots],
@@ -135,10 +134,10 @@ export default function PhotoshotUploadForm({
       });
     }
     else {
-      const photospot = await createNewPhotoshot(data, selectedLocation);
+      const photoshot = await createNewPhotoshot(data, selectedLocation);
       if (mapView) {
         //happens when new photospot selected from map
-        router.push('/photospot/' + photospot.id);
+        router.push('/photospot/' + photoshot.photospot_id);
         setLoading(false);
         setPhotoshotUploadDialogOpen(false);
         toast({

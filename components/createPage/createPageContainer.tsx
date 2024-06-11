@@ -20,6 +20,7 @@ export default function CreatePageContainer() {
             longitude: INITIAL_LNG,
             latitude: INITIAL_LAT,
             zoom: 13,
+            bearing: 29
         })
     const [selectedLocation, setSelectedLocation] = useState<Photospot | NewPhotospotInfo | null>(null);
     const [closestPhotospots, setClosestPhotospots] = useState<Photospot[]>([]);

@@ -36,9 +36,8 @@
 
 - Most important
   - create page
-    - something wrong with autocomplete isn't letting us load page properly
+    - viewing photospot may have some jank
     - photoshot upload fix
-      - fix the whole flow (broken rn)
       - have location_name be editable, if its not good, users should be able to update it
       - add tag creation/selection to create photoshot tab
     - see if we can update searchbox when cleared to clear selectedLocation
@@ -54,7 +53,7 @@
     - add username to returned values for getting current user
     - fix navbar to show which page you're on
   - photospot page
-    -Done for now
+    -images loading in have a skeleton, then switch to alt text, then image
   - general fixes
     - don't show photospots with no photoshots
       - maybe when you delete last photoshot in a photospot it removes the spot?
