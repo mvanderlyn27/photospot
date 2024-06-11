@@ -9,152 +9,129 @@ import {
   ViewStateChangeEvent,
   LngLat,
   MapEvent,
+  MapRef,
 } from "react-map-gl";
+import mapboxgl, { MarkerOptions } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { MutableRefObject, useCallback, useEffect, useRef } from "react";
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import { distanceOnGlobe, round } from "@/utils/common/math";
 import { NewPhotospotInfo, Photospot } from "@/types/photospotTypes";
 import { toast } from "../ui/use-toast";
 import { reverseGeocodeLocation } from "@/app/serverActions/maps/reverseGeocodeLocation";
 import * as turf from "@turf/turf";
-// import { Pin } from '@/media/pin.tsx';
-//decides how accurate points should be, I want to not round at all to not lose data in where user places photospot
-// just need to see how much info db can take
-const LAT_LNG_DIGITS = null;
-//distance in meters
+import useSWR from "swr";
+import { fetcher } from "@/utils/common/fetcher";
+import { GeocodingCore } from "@mapbox/search-js-core";
+// TODO
+// - add a geofence
+// - add check for photospots being too close, and dialog
+//  - have leftbar pass a function which handles this 
+//minimum distance in meters between photospots
 const MINIMUM_PHOTOSPOT_DISTANCE = 2;
-
+// A circle of 5 mile radius of the Empire State Building
 const GEOFENCE = turf.circle([-74.0122106, 40.7467898], 5, { units: "miles" });
 export default function PhotospotMap({
-  mapRef,
-  setMapRef,
-  setMapBounds,
-  setMapLoaded,
-  mapCenter,
-  setMapCenter,
   selectedLocation,
   setSelectedLocation,
-  setLoadingSelectedLocation,
-  loadingSelectedLocation,
-  photospots,
+  viewState,
+  setViewState
 }: {
-  mapRef: any;
-  setMapRef: any;
-  setMapBounds: any;
-  setMapLoaded: any;
-  mapCenter: LngLat;
-  setMapCenter: any;
   selectedLocation: Photospot | NewPhotospotInfo | null;
   setSelectedLocation: any;
   photospots: Photospot[];
-  setLoadingSelectedLocation: any;
-  loadingSelectedLocation: boolean;
+  viewState: any;
+  setViewState: any
 }) {
-  const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-    ? process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-    : "";
-  //setup to take options for widht/height
-  //allow set location to work for clicking on a location
-
-  // A circle of 5 mile radius of the Empire State Building
-
+  //api keys
+  const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ? process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN : "";
+  const geocode = new GeocodingCore({ accessToken: mapBoxToken });
+  mapboxgl.accessToken = mapBoxToken;
+  //state
+  const { data: photospots, isLoading: isLoadingPhotospots } = useSWR('/api/photospot', fetcher);
+  const { photospotMap } = useMap();
+  //hooks
   useEffect(() => {
-    if (selectedLocation) {
-      mapRef.flyTo({
+    if (selectedLocation && photospotMap) {
+      photospotMap.flyTo({
         center: [selectedLocation.lng, selectedLocation.lat],
       });
     }
-  }, [selectedLocation]);
-  const onRefChange = useCallback((node: any) => {
-    console.log("mapref changed", node);
-    setMapRef(node);
-  }, []);
-  const handleClick = (e: any) => {
-    const lat = round(e.lngLat.lat, LAT_LNG_DIGITS);
-    const lng = round(e.lngLat.lng, LAT_LNG_DIGITS);
-    mapRef.flyTo({ center: [lng, lat] });
-    //get nearest photospot, if its too close bring up error
-
-    const photospotDist = photospots.map((photospot) =>
-      distanceOnGlobe({ lng: lng, lat: lat }, photospot)
-    );
-    if (Math.min(...photospotDist) < MINIMUM_PHOTOSPOT_DISTANCE) {
-      setSelectedLocation(null);
-      toast({ title: "Too close to another photospot", duration: 3000 });
-    }
-    // getNearestPhotospots(lat, lng, 1).then((photospots) => { //see if its too close })
-
-    setLoadingSelectedLocation(true);
-    setSelectedLocation({ lat: lat, lng: lng });
-    reverseGeocodeLocation(lat, lng).then((newPhotospotInfo) => {
-      setLoadingSelectedLocation(false);
-      setSelectedLocation(newPhotospotInfo);
-    });
-  };
-
-  const handleMarkerClick = (e: any, photospot: Photospot) => {
+  }, [selectedLocation, photospotMap]);
+  const selectLocation = async (e: any, loc: { lat: number, lng: number }, photospot: Photospot | null) => {
     e.originalEvent.stopPropagation();
-    mapRef.flyTo({ center: [photospot.lng, photospot.lat] });
-    setSelectedLocation(photospot);
-  };
-  const handleMapMove = (e: ViewStateChangeEvent) => {
-    setMapCenter(e.target.getCenter());
-    setMapBounds(e.target.getBounds());
-    const newCenter = [e.viewState.longitude, e.viewState.latitude];
-    // Only update the view state if the center is inside the geofence
-    if (turf.booleanPointInPolygon(newCenter, GEOFENCE)) {
-      mapRef.fly(newCenter);
+    if (photospot) {
+      setSelectedLocation(photospot);
     }
-  };
-  const handleMapLoad = (e: MapEvent) => {
-    setMapLoaded(true);
-    // console.log("map loaded", e);
-    // setMapRef(mapRef);
-    setMapBounds(e.target.getBounds());
-  };
+    else {
+      // see if any locations are too close
+      const photospotsTooClose: Photospot[] = [];
+      photospots.forEach((photospot: Photospot) => {
+        const dist = distanceOnGlobe({ lat: loc.lat, lng: loc.lng }, { lat: photospot.lat, lng: photospot.lng });
+        if (dist < MINIMUM_PHOTOSPOT_DISTANCE) {
+          photospotsTooClose.push(photospot);
+        }
+      });
+      console.log('too close =', photospotsTooClose);
+      if (photospotsTooClose.length > 0) {
+        //open dialog and pass in nearby photospots
+        toast({
+          title: 'Too close to another photospot',
+          description: 'Please select a new location',
+          variant: 'destructive',
+        });
+        return;
+      }
+      //otherwise reverse-geocode, and update selectedLocation
+      const reverseGeocode = await geocode.reverse({ lat: loc.lat, lng: loc.lng });
+      if (reverseGeocode.features) {
+        const newPhotospotInfo = {
+          location_name: reverseGeocode.features[0].properties.name_preferred ? reverseGeocode.features[0].properties.name_preferred : reverseGeocode.features[0].properties.name,
+          address: reverseGeocode.features[0].properties.full_address,
+          neighborhood: reverseGeocode.features[0].properties.context.neighborhood?.name,
+          lat: e.lngLat.lat,
+          lng: e.lngLat.lng
+        } as NewPhotospotInfo
+        setSelectedLocation(newPhotospotInfo);
+      }
+    }
+  }
   return (
     <MapboxMap
+      id="photospotMap"
+      // onLoad={handleLoad}
       initialViewState={{
-        longitude: mapCenter.lng,
-        latitude: mapCenter.lat,
-        zoom: 13,
+        ...viewState
       }}
-      // reuseMaps={true}
-      mapStyle="mapbox://styles/mvanderlyn27/clc8gyohu000114pl9hy6zzdt"
+      reuseMaps={true}
+      // mapStyle="mapbox://styles/mvanderlyn27/clc8gyohu000114pl9hy6zzdt"
+      mapStyle="mapbox://styles/mapbox/standard"
       mapboxAccessToken={mapBoxToken}
-      onClick={(e) => handleClick(e)}
-      onLoad={(e) => {
-        handleMapLoad(e);
-      }}
-      onMoveEnd={(e) => {
-        handleMapMove(e);
-      }}
-      ref={onRefChange}
       cursor="auto"
+      onClick={(e) => selectLocation(e, e.lngLat, null)}
+      onMoveEnd={(e) => { setViewState({ ...viewState, ...e.target.getCenter() }) }}
     >
-      {selectedLocation && (
-        <Marker
-          longitude={selectedLocation.lng}
-          latitude={selectedLocation.lat}
-          anchor="bottom"
-        >
-          <img className="w-10 h-10" src="/selectedPin.svg" />
-        </Marker>
-      )}
+      {selectedLocation && <Marker
+        longitude={selectedLocation.lng}
+        latitude={selectedLocation.lat}
+        anchor="bottom"
+        onClick={(e) => { e.originalEvent.stopPropagation(); setSelectedLocation(null) }}
+      >
+        <img className="w-10 h-10" src="/selectedPin.svg" />
+      </Marker>
+      }
       {photospots &&
-        photospots.map((photospot) => {
+        photospots.map((photospot: Photospot) => {
           return (
             <Marker
               longitude={photospot.lng}
               latitude={photospot.lat}
               anchor="bottom"
-              onClick={(e) => handleMarkerClick(e, photospot)}
+              onClick={(e) => { selectLocation(e, { lng: photospot.lng, lat: photospot.lat }, photospot) }}
             >
               <img className="w-10 h-10" src="/pin.svg" />
             </Marker>
           );
         })}
-
       <GeolocateControl position="top-right" />
       <NavigationControl position="top-right" />
     </MapboxMap>

@@ -17,20 +17,12 @@ import { cn } from "@/lib/utils";
 import { isPhotospot } from "@/utils/common/typeGuard";
 import { Skeleton } from "../ui/skeleton";
 
-export default function PhotospotPreview({ selectedLocation, loadingSelectedLocation }: { selectedLocation: Photospot | NewPhotospotInfo | null, loadingSelectedLocation: boolean }) {
+export default function PhotospotPreview({ selectedLocation }: { selectedLocation: Photospot | NewPhotospotInfo | null }) {
     const [tags, setTags] = useState<string[]>([]);
     const [photoshotDialogOpen, setPhotoshotDialogOpen] = useState(false);
     const router = useRouter();
     useEffect(() => {
         //need to fix still
-        if (selectedLocation && isPhotospot(selectedLocation)) {
-            getPhotospotsPhotoshotTags(selectedLocation.id).then((tags) => {
-                if (tags) {
-                    setTags(tags);
-                }
-            })
-        }
-
     }, [])
     const handleViewPhotospot = () => {
         if (isPhotospot(selectedLocation)) {
@@ -42,11 +34,7 @@ export default function PhotospotPreview({ selectedLocation, loadingSelectedLoca
             <CardContent className="flex flex-col gap-4">
                 {selectedLocation && isPhotospot(selectedLocation) ?
                     <>
-                        {
-                            !loadingSelectedLocation ?
-                                <img src={selectedLocation?.top_photo_path ? selectedLocation.top_photo_path : DefaultPhotospot} alt="" className="w-full lg:h-[300px] rounded-md" />
-                                : <Skeleton className="w-full h-[300px] rounded-md" />
-                        }
+                        <img src={selectedLocation?.top_photo_path ? selectedLocation.top_photo_path : DefaultPhotospot} alt="" className="w-full lg:h-[300px] rounded-md" />
                         <h1 className="text-3xl font-semibold">
                             {selectedLocation?.location_name ? selectedLocation.location_name : selectedLocation?.location_name}
                         </h1>
@@ -60,11 +48,7 @@ export default function PhotospotPreview({ selectedLocation, loadingSelectedLoca
                         </div>
                     </> :
                     <>
-                        {
-                            !loadingSelectedLocation ?
-                                <img src={DefaultPhotospot} alt="" className="w-full lg:h-[300px] rounded-md" />
-                                : <Skeleton className="bg-slate-800/10 w-full h-[300px] rounded-md" />
-                        }
+                        <img src={DefaultPhotospot} alt="" className="w-full lg:h-[300px] rounded-md" />
                         <h1 className="text-3xl font-semibold">
                             {selectedLocation?.location_name ? selectedLocation.location_name : selectedLocation?.location_name}
                         </h1>
@@ -77,7 +61,6 @@ export default function PhotospotPreview({ selectedLocation, loadingSelectedLoca
                             View Photospot
                         </Button>}
                 </div>
-
             </CardContent>
 
 
