@@ -9,6 +9,8 @@ import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { LngLat, LngLatBounds } from "mapbox-gl";
 import { MapProvider } from "react-map-gl";
+import { DialogContent, DialogTrigger } from "@radix-ui/react-dialog";
+import PhotospotsTooCloseDialog from "@/components/create-page/photospotsTooCloseDialog";
 // import mapboxgl from 'mapbox-gl';
 const INITIAL_LAT: number = 40.72377;
 const INITIAL_LNG: number = -73.99837;
@@ -21,6 +23,12 @@ export default function CreatePage() {
       zoom: 13,
     })
   const [selectedLocation, setSelectedLocation] = useState<Photospot | NewPhotospotInfo | null>(null);
+  const [closestPhotospots, setClosestPhotospots] = useState<Photospot[]>([]);
+  const [photospotsTooCloseDialogOpen, setPhotospotsTooCloseDialogOpen] = useState<boolean>(false);
+  const handlePhotospotTooClose = (photospots: Photospot[]) => {
+    setClosestPhotospots(photospots);
+    setPhotospotsTooCloseDialogOpen(true);
+  }
   return (
     <div className="h-[calc(100vh-64px)] w-screen">
 
@@ -37,9 +45,11 @@ export default function CreatePage() {
             viewState={viewState}
             setViewState={setViewState}
             selectedLocation={selectedLocation}
-            setSelectedLocation={setSelectedLocation} photospots={[]} />
-
+            setSelectedLocation={setSelectedLocation}
+            handlePhotospotTooClose={handlePhotospotTooClose}
+          />
         </div>
+        <PhotospotsTooCloseDialog photospots={closestPhotospots} photospotsTooCloseDialogOpen={photospotsTooCloseDialogOpen} setPhotospotsTooCloseDialogOpen={setPhotospotsTooCloseDialogOpen} setSelectedLocation={setSelectedLocation} />
       </MapProvider>
     </div>
   );

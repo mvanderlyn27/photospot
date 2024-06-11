@@ -34,13 +34,14 @@ export default function PhotospotMap({
   selectedLocation,
   setSelectedLocation,
   viewState,
-  setViewState
+  setViewState,
+  handlePhotospotTooClose
 }: {
   selectedLocation: Photospot | NewPhotospotInfo | null;
   setSelectedLocation: any;
-  photospots: Photospot[];
   viewState: any;
-  setViewState: any
+  setViewState: any;
+  handlePhotospotTooClose: any;
 }) {
   //api keys
   const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ? process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN : "";
@@ -71,14 +72,14 @@ export default function PhotospotMap({
           photospotsTooClose.push(photospot);
         }
       });
-      console.log('too close =', photospotsTooClose);
       if (photospotsTooClose.length > 0) {
         //open dialog and pass in nearby photospots
-        toast({
-          title: 'Too close to another photospot',
-          description: 'Please select a new location',
-          variant: 'destructive',
-        });
+        // toast({
+        //   title: 'Too close to another photospot',
+        //   description: 'Please select a new location',
+        //   variant: 'destructive',
+        // });
+        handlePhotospotTooClose(photospotsTooClose);
         return;
       }
       //otherwise reverse-geocode, and update selectedLocation
