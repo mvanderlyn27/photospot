@@ -67,12 +67,6 @@ export default function PhotospotMap({
         }
       });
       if (photospotsTooClose.length > 0) {
-        //open dialog and pass in nearby photospots
-        // toast({
-        //   title: 'Too close to another photospot',
-        //   description: 'Please select a new location',
-        //   variant: 'destructive',
-        // });
         handlePhotospotTooClose(photospotsTooClose);
         return;
       }
@@ -94,7 +88,6 @@ export default function PhotospotMap({
     <MapboxMap
       maxBounds={MAXBOUNDS}
       id="photospotMap"
-      // onLoad={handleLoad}
       initialViewState={{
         ...viewState
       }}
@@ -119,12 +112,13 @@ export default function PhotospotMap({
         photospots.map((photospot: Photospot) => {
           return (
             <Marker
+              key={photospot.id}
               longitude={photospot.lng}
               latitude={photospot.lat}
               anchor="bottom"
               onClick={(e) => { selectLocation(e, { lng: photospot.lng, lat: photospot.lat }, photospot) }}
             >
-              <img className="w-10 h-10" src="/pin.svg" />
+              <img key={photospot.id} className="w-10 h-10" src="/pin.svg" />
             </Marker>
           );
         })}

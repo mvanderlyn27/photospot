@@ -1,29 +1,18 @@
 "use client"
 import { NewPhotospotInfo, Photospot } from "@/types/photospotTypes";
-import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
-import { round } from "@/utils/common/math";
-import { Button, buttonVariants } from "../ui/button";
-import { redirect, useRouter } from "next/navigation";
-import ImageCarousel from "../common/ImageCarousel";
+import { CardContent } from "../ui/card";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 import { DefaultPhotospot } from "@/utils/common/imageLinks";
 import RatingDisplay from "../review/ratingDisplay";
 import { useEffect, useState } from "react";
-import { getPhotospotsPhotoshotTags } from "@/app/serverActions/photospots/getPhotospotsPhotoshotTags";
 import { Badge } from "../ui/badge";
-import { DialogContent, DialogTrigger } from "../ui/dialog";
-import { Dialog } from "../ui/dialog";
 import PhotoshotUploadDialog from "../photoshot/photoshotUploadDialog";
-import { cn } from "@/lib/utils";
 import { isPhotospot } from "@/utils/common/typeGuard";
-import { Skeleton } from "../ui/skeleton";
 
 export default function PhotospotPreview({ selectedLocation }: { selectedLocation: Photospot | NewPhotospotInfo | null }) {
     const [tags, setTags] = useState<string[]>([]);
-    const [photoshotDialogOpen, setPhotoshotDialogOpen] = useState(false);
     const router = useRouter();
-    useEffect(() => {
-        //need to fix still
-    }, [])
     const handleViewPhotospot = () => {
         if (isPhotospot(selectedLocation)) {
             router.push("/photospot/" + selectedLocation.id);
@@ -62,10 +51,6 @@ export default function PhotospotPreview({ selectedLocation }: { selectedLocatio
                         </Button>}
                 </div>
             </CardContent>
-
-
-
         </>
-
     )
 }

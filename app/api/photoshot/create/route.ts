@@ -1,6 +1,6 @@
 "use server"
 import { uploadPhotoshotSchema } from "@/components/photoshot/photoshotUploadForm";
-import { NewPhotospotInfo, Photoshot } from "@/types/photospotTypes";
+import { NewPhotospotInfo, Photoshot, Photospot } from "@/types/photospotTypes";
 import { sortByOwnershipAndDate } from "@/utils/common/sort";
 import { isPhotospot } from "@/utils/common/typeGuard";
 import { createClient } from "@/utils/supabase/server";
@@ -17,7 +17,7 @@ export async function PUT(request: Request) {
         return new Response("Missing data", { status: 400 });
     }
     const photoshotInfo = JSON.parse(dataRaw) as z.infer<typeof uploadPhotoshotSchema>;
-    const selectedLocation = JSON.parse(selectedLocationRaw) as Photoshot | NewPhotospotInfo;
+    const selectedLocation = JSON.parse(selectedLocationRaw) as Photospot | NewPhotospotInfo;
     console.log('info, location', photoshotInfo, selectedLocation);
     const supabase = createClient();
     const user = await supabase.auth.getUser();
@@ -30,8 +30,18 @@ export async function PUT(request: Request) {
     } else {
         //if no photospot id, create new photospot
         // const photospot = await createPhotospot(selectedLocation);
-        const photospot = await fetch('/api/photospot/create', { method: 'POST', body: JSON.stringify(selectedLocation) }).then(res => res.json())
-        photospotId = photospot.id;
+        const { data: photospotData, error: photospotError } = await supabase.rpc("create_photospot_with_lat_lng", {
+            location_namein: selectedLocation.location_name,
+            addressin: selectedLocation.address,
+            neighborhoodin: selectedLocation.neighborhood,
+            locationin: `POINT(${selectedLocation.lng} ${selectedLocation.lat})`,
+        }).select("*").single()
+
+        if (photospotError) {
+            console.log("insert error: ", photospotError);
+            return new Response("error creating photospot", { status: 500 });
+        }
+        photospotId = photospotData.id;
     }
     if (!photospotId) {
         return new Response("error no photospot to link", { status: 500 });

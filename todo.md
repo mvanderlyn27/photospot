@@ -36,11 +36,14 @@
 
 - Most important
   - create page
-    - add map skeleton
-    - lock map/ searches within an area area around NYC
-    - have location_name be editable, if its not good, users should be able to update it
-    - add tag creation/selection to create photoshot tab
+    - something wrong with autocomplete isn't letting us load page properly
+    - photoshot upload fix
+      - fix the whole flow (broken rn)
+      - have location_name be editable, if its not good, users should be able to update it
+      - add tag creation/selection to create photoshot tab
+    - see if we can update searchbox when cleared to clear selectedLocation
     - see if its possible to improve searchbox searches
+    - some error (500 when loading create page)
   - explore page
   - home (timeline)
     - need logic to select correct photoshot picture for photospot

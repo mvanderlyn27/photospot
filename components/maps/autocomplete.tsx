@@ -2,9 +2,19 @@
 import { NewPhotospotInfo, Photospot } from "@/types/photospotTypes";
 import { fetcher } from "@/utils/common/fetcher";
 import { SearchBoxRetrieveResponse } from "@mapbox/search-js-core";
-import { SearchBox } from "@mapbox/search-js-react";
-import mapboxgl, { MarkerOptions } from "mapbox-gl";
-import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+const SearchBox = dynamic(
+    () =>
+        import("@mapbox/search-js-react").then(
+            /* eslint-disable @typescript-eslint/no-explicit-any */
+            /* eslint-disable @typescript-eslint/no-unsafe-return */
+            (module) => module.SearchBox as any,
+        ),
+    { ssr: false },
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+) as any;
 import useSWR from "swr";
 export default function AutoComplete({
     selectedLocation,
@@ -20,11 +30,6 @@ export default function AutoComplete({
 
     //add mapbox map ref, and marker settings
     //
-    useEffect(() => {
-        if (token) {
-            mapboxgl.accessToken = token;
-        }
-    }, []);
     const handleRetrieve = (e: SearchBoxRetrieveResponse) => {
         let existingPhotospot = null;
         photospots.forEach((photospot: Photospot) => {
@@ -47,8 +52,7 @@ export default function AutoComplete({
     }
     return (
         <div>
-            {/* @ts-expect-error Server Component */}
-            {token && (<SearchBox
+            {token && <SearchBox
                 accessToken={token}
                 options={{
                     language: "en",
@@ -68,7 +72,7 @@ export default function AutoComplete({
                 onRetrieve={handleRetrieve}
                 value={selectedLocation ? selectedLocation.location_name : ""}
             />
-            )}
+            }
         </div>
     );
 }
