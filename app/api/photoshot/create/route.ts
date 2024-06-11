@@ -24,7 +24,7 @@ export async function PUT(request: Request) {
     if (!user.data.user) {
         return new Response("not logged in", { status: 401 });
     }
-    let photospotId = null;
+    let photospotId: number | null = null;
     if (isPhotospot(selectedLocation)) {
         photospotId = selectedLocation.id;
     } else {

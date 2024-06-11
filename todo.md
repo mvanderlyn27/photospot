@@ -39,10 +39,12 @@
     - viewing photospot may have some jank
     - photoshot upload fix
       - have location_name be editable, if its not good, users should be able to update it
+      - maybe add new option to suggest name updates for photospots on this page/photospot page
+        - can suggest updated name, updated location, or that the spot doesn't exist anymore, admin will have to go in and update the info
+        - upate top photo on photospot creation, and when likes are updated, grab the most liked picture for photospot photoshot, also most liked picture should be most liked photoshot
       - add tag creation/selection to create photoshot tab
     - see if we can update searchbox when cleared to clear selectedLocation
     - see if its possible to improve searchbox searches
-    - some error (500 when loading create page)
   - explore page
   - home (timeline)
     - need logic to select correct photoshot picture for photospot

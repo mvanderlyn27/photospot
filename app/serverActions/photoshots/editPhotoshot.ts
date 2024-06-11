@@ -1,5 +1,4 @@
 "use server";
-import { editPhotoshotSchema } from "@/components/photoshot/editPhotoshotDialog";
 import { Photoshot, Review } from "@/types/photospotTypes";
 import { Database } from "@/types/supabase";
 import { randomNumber } from "@/utils/common/math";
@@ -12,7 +11,7 @@ import { z } from "zod";
 const PHOTO_BUCKET = "photoshot_pictures";
 export default async function editPhotoshot(
   photoshotId: number,
-  photoshotInfo: z.infer<typeof editPhotoshotSchema>,
+  photoshotInfo: any,
   photospot_id: number,
   photoshots: FormData
 ): Promise<Photoshot> {

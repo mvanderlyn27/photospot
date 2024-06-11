@@ -1,5 +1,5 @@
 "use client";
-import { Photospot, Review } from "@/types/photospotTypes";
+import { Review } from "@/types/photospotTypes";
 import {
   Dialog,
   DialogContent,
@@ -7,39 +7,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { Button, buttonVariants } from "../ui/button";
-import { CardContent, CardFooter } from "../ui/card";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { useState } from "react";
-import { toast } from "../ui/use-toast";
-import createReview from "@/app/serverActions/reviews/createReview";
-import RatingDisplay from "./ratingDisplay";
+import { buttonVariants } from "../ui/button";
 import { cn } from "@/lib/utils";
-import useSWR, { useSWRConfig } from "swr";
+import useSWR from "swr";
 import CreateReviewForm from "./createReviewForm";
 import { fetcher } from "@/utils/common/fetcher";
-import PhotoshotUploadDialog from "../photoshot/photoshotUploadDialog";
 import { User } from "@supabase/supabase-js";
+import { useState } from "react";
 
 export default function CreateReviewDialog({ id }: { id: number }) {
   const {

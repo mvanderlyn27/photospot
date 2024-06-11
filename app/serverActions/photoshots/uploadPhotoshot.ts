@@ -1,6 +1,4 @@
 "use server";
-import { uploadPhotoshotSchema } from "@/components/photoshot/photoshotUploadDialog";
-import { createReviewSchema } from "@/components/review/createReviewDialog";
 import { NewPhotospotInfo, Photoshot, Photospot, Review } from "@/types/photospotTypes";
 import { Database } from "@/types/supabase";
 import { randomNumber } from "@/utils/common/math";
@@ -14,7 +12,7 @@ import { isPhotospot } from "@/utils/common/typeGuard";
 
 const PHOTO_BUCKET = "photoshot_pictures";
 export default async function uploadPhotoshot(
-  photoshotInfo: z.infer<typeof uploadPhotoshotSchema>,
+  photoshotInfo: any,
   photoshots: FormData,
   selectedLocation: Photospot | NewPhotospotInfo
 ): Promise<Photoshot> {
@@ -28,7 +26,7 @@ export default async function uploadPhotoshot(
   if (!user.data.user) {
     redirect("/error?error=not logged in");
   }
-  let photospotId = null;
+  let photospotId: number | null = null;
   if (isPhotospot(selectedLocation)) {
     photospotId = selectedLocation.id;
   } else {
