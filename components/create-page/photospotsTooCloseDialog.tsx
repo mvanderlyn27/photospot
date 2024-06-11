@@ -9,6 +9,10 @@ export default function PhotospotsTooCloseDialog({ photospots, photospotsTooClos
         setSelectedLocation(photospots[0]);
         setPhotospotsTooCloseDialogOpen(false);
     }
+    const handleCancel = () => {
+        setSelectedLocation(null);
+        setPhotospotsTooCloseDialogOpen(false);
+    }
     return (
         <Dialog open={photospotsTooCloseDialogOpen} onOpenChange={setPhotospotsTooCloseDialogOpen}>
             <DialogContent>
@@ -17,10 +21,10 @@ export default function PhotospotsTooCloseDialog({ photospots, photospotsTooClos
                 </DialogTitle>
                 {photospots.length > 0 &&
                     <div className="flex flex-col gap-4">
-                        <h2> Did you mean to select {photospots[0].location_name}?</h2>
+                        <h2> Did you mean to select <b>{photospots[0].location_name}</b> instead?</h2>
                         <img src={photospots[0].top_photo_path ? photospots[0].top_photo_path : DefaultPhotospot}></img>
                         <div className="flex flex-row justify-center gap-4">
-                            <Button variant="destructive">Cancel</Button>
+                            <Button variant="destructive" onClick={handleCancel}>Cancel</Button>
                             <Button onClick={handleSelect}>Select</Button>
                         </div>
                     </div>}
