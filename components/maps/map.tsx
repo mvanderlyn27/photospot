@@ -11,25 +11,19 @@ import {
   MapEvent,
   MapRef,
 } from "react-map-gl";
-import mapboxgl, { MarkerOptions } from "mapbox-gl";
+import mapboxgl, { LngLatBounds, MarkerOptions } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import { distanceOnGlobe, round } from "@/utils/common/math";
 import { NewPhotospotInfo, Photospot } from "@/types/photospotTypes";
 import { toast } from "../ui/use-toast";
 import { reverseGeocodeLocation } from "@/app/serverActions/maps/reverseGeocodeLocation";
-import * as turf from "@turf/turf";
 import useSWR from "swr";
 import { fetcher } from "@/utils/common/fetcher";
 import { GeocodingCore } from "@mapbox/search-js-core";
-// TODO
-// - add a geofence
-// - add check for photospots being too close, and dialog
-//  - have leftbar pass a function which handles this 
-//minimum distance in meters between photospots
 const MINIMUM_PHOTOSPOT_DISTANCE = 2;
 // A circle of 5 mile radius of the Empire State Building
-const GEOFENCE = turf.circle([-74.0122106, 40.7467898], 5, { units: "miles" });
+const MAXBOUNDS = new LngLatBounds([-74.074, 40.68], [-73.82, 40.9]);
 export default function PhotospotMap({
   selectedLocation,
   setSelectedLocation,
@@ -98,6 +92,7 @@ export default function PhotospotMap({
   }
   return (
     <MapboxMap
+      maxBounds={MAXBOUNDS}
       id="photospotMap"
       // onLoad={handleLoad}
       initialViewState={{

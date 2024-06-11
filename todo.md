@@ -37,15 +37,10 @@
 - Most important
   - create page
     - add map skeleton
-    - add asking for grabbing users location
-      - remove the geolocation button for now, blocks makes photospots unselectable lol
-      - probably can have hook for geolocation that re-renders just the photospots in the bound around user
     - lock map/ searches within an area area around NYC
     - have location_name be editable, if its not good, users should be able to update it
     - add tag creation/selection to create photoshot tab
-    - add dialog for when a user clicks too close to another spot, ask them if they want to select the nearby spot
-      - shouldn't let user update selected location yet
-    - see if its possible to improve autocomplete searches
+    - see if its possible to improve searchbox searches
   - explore page
   - home (timeline)
     - need logic to select correct photoshot picture for photospot
@@ -130,7 +125,9 @@
   - add scheduler for getting to the location at golden hour
   - maybe make all photospot pics carousels
 - map improvements
+  - only render photospots/search photospots within view
     - update retrieve photospots in view (map bounds)rpc function when time, and make create and expore functiosn use it
+    - any time bounds are updated, on end of move refresh the photospots visible? Or maybe grab them faster so it feels seamless?  
   - add navigation, (directions to location in app)
   - improve the auto search names, kinda vague rn, something funky going on with suggestion vs. feature pipeline
     - maybe add limit to region, and poi types for better filters
