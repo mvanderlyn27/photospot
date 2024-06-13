@@ -106,9 +106,7 @@ export default function PhotoshotUploadForm({
   const onCreate = async (
     data: z.infer<typeof uploadPhotoshotSchema>
   ): Promise<void> => {
-    //TODO: fix optimistic data 
     setLoading(true);
-    //need to revalidate cache for photospot/id if existing photospot
     toast({
       title: "Uploading... ",
     })
@@ -160,11 +158,10 @@ export default function PhotoshotUploadForm({
       handleSubmit();
     }
   };
-  const setSelectedTags = (selectedTags: Tag[]) => {
+  const setSelectedTags = (selectedTags: number[]) => {
+    console.log('selectedTags', selectedTags);
     if (selectedTags) {
-      let selectedTagIds: number[] = []
-      selectedTags.forEach((tag) => { if (tag.id) { selectedTagIds.push(tag.id); } });
-      uploadPhotoshotForm.setValue("tags", selectedTagIds);
+      uploadPhotoshotForm.setValue("tags", selectedTags);
     }
   }
   const setTagError = (tagError: Error) => {

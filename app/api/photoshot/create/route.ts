@@ -4,6 +4,7 @@ import { NewPhotospotInfo, Photoshot, Photospot } from "@/types/photospotTypes";
 import { sortByOwnershipAndDate } from "@/utils/common/sort";
 import { isPhotospot } from "@/utils/common/typeGuard";
 import { createClient } from "@/utils/supabase/server";
+import id from "date-fns/locale/id/index";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 const PHOTO_BUCKET = "photoshot_pictures";
@@ -62,6 +63,12 @@ export async function PUT(request: Request) {
     if (uploadError) {
         console.log("insert error: ", uploadError);
         return new Response("error creating photoshot", { status: 500 });
+    }
+    //upload all tags
+    const { data: tagInsert, error: tagInsertError } = await supabase.from('photoshot_tags').insert(photoshotInfo.tags.map((tag: number) => ({ id: uploadData.id, tag_id: tag }))).select();
+    if (tagInsertError) {
+        console.log('error inserting tags', tagInsertError);
+        return new Response("error inserting tags", { status: 500 });
     }
     //find all photos
     let filePaths: string[] = [];

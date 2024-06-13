@@ -19,10 +19,11 @@ import { useState } from "react";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { NewPhotospotInfo, Photoshot, Photospot } from "@/types/photospotTypes";
+import { NewPhotospotInfo, Photoshot, Photospot, Tag } from "@/types/photospotTypes";
 import useSWR, { useSWRConfig } from "swr";
 import { isPhotospot } from "@/utils/common/typeGuard";
 import { fetcher } from "@/utils/common/fetcher";
+import TagSelect from "../common/TagSelect";
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = [
     "image/jpeg",
@@ -34,6 +35,7 @@ export const editPhotoshotSchema = z.object({
     //should add some better requirements for the location
 
     name: z.string().optional(),
+    tags: z.array(z.number()).optional(),
     recreate_text: z.string().optional(),
     //tags for later
     photos: z
@@ -83,6 +85,7 @@ export default function EditPhotoshotForm({
         resolver: zodResolver(editPhotoshotSchema),
         defaultValues: {
             name: photoshot?.name || "",
+            tags: [],
             recreate_text: photoshot?.recreate_text || "",
             photos: null,
             currentPhotos: photoshot?.photo_paths || [],
@@ -146,6 +149,12 @@ export default function EditPhotoshotForm({
         if (data.recreate_text != undefined) {
             tempPhotoshot.recreate_text = data.recreate_text;
         }
+        if (data.tags != undefined) {
+            //either get the new tags from db here and await, or seperate tags?
+            // maybe get general info on main page, and more advanced info when opening dialog?
+            tempPhotoshot.tags = photoshot?.tags?.filter((tag: Tag) => data.tags?.includes(tag.id));
+        }
+        //issue here when adding new tags
         mutatePhotoshots(handleEdit(data), {
             optimisticData: (curPhotoshots: Photoshot[]) => replacePhotoshot(curPhotoshots, photoshot, tempPhotoshot),
             populateCache: (updatedPhotoshot: Photoshot, curPhotoshots: Photoshot[]) => replacePhotoshot(curPhotoshots, photoshot, updatedPhotoshot),
@@ -226,7 +235,21 @@ export default function EditPhotoshotForm({
     }
 
 
-
+    const setSelectedTags = (selectedTags: number[]) => {
+        console.log('selectedTags', selectedTags);
+        if (selectedTags) {
+            editPhotoshotForm.setValue("tags", selectedTags);
+        }
+    }
+    const setTagError = (tagError: Error) => {
+        console.log("tagError", tagError);
+        if (tagError) {
+            editPhotoshotForm.setError("tags", { type: 'manual', message: tagError.message });
+        }
+        else {
+            editPhotoshotForm.clearErrors("tags");
+        }
+    }
 
     return (
         <Form {...editPhotoshotForm}>
@@ -246,6 +269,22 @@ export default function EditPhotoshotForm({
                                 </FormControl>
                                 <FormDescription>
                                     Give a unique name for this type of picture at this spot
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={editPhotoshotForm.control}
+                        name="tags"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Tags:</FormLabel>
+                                <FormControl>
+                                    <TagSelect setSelectedTags={setSelectedTags} setTagError={setTagError} initialSelectedTags={photoshot.tags} />
+                                </FormControl>
+                                <FormDescription>
+                                    Upload tags for this shot here
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>

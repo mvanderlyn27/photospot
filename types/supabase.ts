@@ -542,6 +542,13 @@ export type Database = {
           name: string
         }[]
       }
+      update_photoshot_tags: {
+        Args: {
+          photoshot_id: number
+          tag_ids: number[]
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       db_roles: "user" | "admin"

@@ -45,12 +45,12 @@ export type Photoshot = {
   is_saved?: boolean;
   is_liked?: boolean;
   owner?: boolean;
+  tags?: Tag[]
 };
 export type Tag = {
-  id?: number;
+  id: number;
   name?: string;
   created_at?: string;
-  tag_id?: number;
 };
 export type Review = {
   id?: number;

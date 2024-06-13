@@ -22,7 +22,6 @@ export async function GET(
     if (error && error.code !== "PGRST116") {
       return new Response("error checking liked", { status: 401 });
     }
-    console.log("error", error);
     return NextResponse.json(false);
   }
   return NextResponse.json(true);

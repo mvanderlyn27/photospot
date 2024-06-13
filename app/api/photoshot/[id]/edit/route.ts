@@ -1,4 +1,5 @@
 "use server"
+import { Photoshot, Tag } from "@/types/photospotTypes";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -87,7 +88,21 @@ export async function PUT(
         return new Response("Failed saving data", { status: 500 });
         // return { message: `Failed saving data ${formInfo.name},` + resp.error }
     }
-
-    console.log("successfully uploaded", uploadData);
-    return NextResponse.json(uploadData);
+    let uploadDataWithTag: Photoshot = uploadData;
+    //need to remove all old tags, and add new ones properly
+    if (data.tags?.length >= 0) {
+        const { error: tagError } = await supabase.rpc('update_photoshot_tags', { tag_ids: data.tags, photoshot_id: photoshotId });
+        if (tagError) {
+            console.log('error removing tags', tagError);
+            return new Response("error removing tags", { status: 500 });
+        }
+        const { data: tagData, error: tagDataError } = await supabase.from('tags').select('*').in('id', data.tags);
+        if (tagDataError) {
+            console.log('error getting tags', tagDataError);
+            return new Response("error getting tags", { status: 500 });
+        }
+        uploadDataWithTag = { ...uploadDataWithTag, tags: tagData.map((tag: Tag) => { return { id: tag.id, name: tag.name, } }) };
+    }
+    console.log("successfully edited", uploadDataWithTag);
+    return NextResponse.json(uploadDataWithTag);
 }

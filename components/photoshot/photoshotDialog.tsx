@@ -175,15 +175,17 @@ export default function PhotoshotDialog({
                     <h1 className="text-3xl font-semibold text-left">
                       {photoshot.name}
                     </h1>
-                    {photoshot.owner && (
-                      <Button onClick={() => setEditMode(true)}>Edit</Button>
-                    )}
-                    <Button onClick={() => handleLike()}>
-                      {isLiked ? <IoMdHeart /> : <IoMdHeartEmpty />}
-                    </Button>
-                    <Button onClick={() => handleSave()}>
-                      {isSaved ? <FaBookmark /> : <FaRegBookmark />}
-                    </Button>
+                    <div className="flex flex-row gap-4">
+                      {photoshot.owner && (
+                        <Button onClick={() => setEditMode(true)}>Edit</Button>
+                      )}
+                      <Button onClick={() => handleLike()}>
+                        {isLiked ? <IoMdHeart /> : <IoMdHeartEmpty />}
+                      </Button>
+                      <Button onClick={() => handleSave()}>
+                        {isSaved ? <FaBookmark /> : <FaRegBookmark />}
+                      </Button>
+                    </div>
                   </div>
                   <h1 className="text-xl  text-left">
                     Created by: {photoshot.username}

@@ -28,7 +28,7 @@ export async function GET(
 
   const tagPromise = supabase
     .from("photoshot_tags")
-    .select("*, ...tags(name)")
+    .select("*, ...tags(id,name)")
     .eq("id", params.id);
   const savePromise = supabase
     .from("saved_photoshots")
@@ -54,7 +54,7 @@ export async function GET(
       const photoshotBaseData = values[0].data;
       const like_count = values[1].data;
       const tags = values[2].data?.map((tag) => {
-        return tag.name;
+        return { id: tag.id, name: tag.name };
       });
       const isSaved = values[3].data ? true : false;
       const isLiked = values[4].data ? true : false;

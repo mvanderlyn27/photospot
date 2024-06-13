@@ -2,30 +2,30 @@
 import { Tag } from '@/types/photospotTypes';
 import { fetcher } from '@/utils/common/fetcher';
 import { NSFWTextMatcher } from '@/utils/common/obscenity';
-import { create } from 'domain';
 import React, { useState } from 'react';
-import { MultiValue, SingleValue } from 'react-select';
+import { MultiValue } from 'react-select';
 
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import useSWR from 'swr';
 import { useDebouncedCallback } from 'use-debounce';
 interface Option {
     readonly label: string;
-    readonly value: number | undefined;
+    readonly value: number;
 }
 // TODO:
 // - add better styling to match other form info
-export default function TagSelect({ setSelectedTags, setTagError }: { setSelectedTags: any, setTagError: any }) {
+const createOption = (tag: Tag): Option => (
+    {
+        label: tag.name ? tag.name : '',
+        value: tag.id ? tag.id : -1,
+    });
+
+export default function TagSelect({ initialSelectedTags, setSelectedTags, setTagError }: { initialSelectedTags?: Tag[] | undefined, setSelectedTags: any, setTagError: any }) {
     const { data: tags, isLoading: tagLoading, mutate: updateTags, error: tagsError } = useSWR('/api/tags', fetcher)
     const [isLoading, setIsLoading] = useState(false);
-    const [values, setValues] = useState<MultiValue<Option> | null>(null);
+    const [values, setValues] = useState<MultiValue<Option> | null>(initialSelectedTags ? initialSelectedTags.map((tag) => createOption(tag)) : null);
 
     // CREATE SECTION
-    const createOption = (tag: Tag): Option => (
-        {
-            label: tag.name ? tag.name : '',
-            value: tag.id,
-        });
     const handleCreate = async (inputValue: string) => {
         setIsLoading(true);
         if (!inputValue.match(/^[a-zA-Z]+$/)) {
@@ -68,6 +68,12 @@ export default function TagSelect({ setSelectedTags, setTagError }: { setSelecte
             callback(data);
         })
     }
+    // HANDLE CHANGE SECTION
+    const handleChange = (newValue: MultiValue<Option> | null) => {
+        setTagError(null);
+        setSelectedTags(newValue ? newValue.map((option) => option.value) : []);
+        setValues(newValue);
+    }
     const debouncedSearch = useDebouncedCallback(_searchTags, 300);
     return (
         <AsyncCreatableSelect
@@ -75,9 +81,11 @@ export default function TagSelect({ setSelectedTags, setTagError }: { setSelecte
             isMulti
             isDisabled={isLoading || tagLoading}
             isLoading={isLoading || tagLoading}
-            onChange={(newValue) => { setTagError(null); setValues(newValue) }}
+            onChange={handleChange}
             onCreateOption={handleCreate}
             defaultOptions={tags ? tags.map((tag: Tag) => createOption(tag)) : []}
+            // defaultValue={values ? values.filter((option) => initialSelectedTags?.includes(option.value)) : []}
+            blurInputOnSelect
             loadOptions={debouncedSearch}
             value={values}
         />
