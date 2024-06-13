@@ -16,7 +16,7 @@ export async function GET(
   }
   const { data, error } = await supabase
     .from("photoshots")
-    .select("*, ...profiles!photoshots_created_by_fkey(username)")
+    .select("*")
     .eq("photospot_id", params.id);
   if (error) {
     console.log("error", error);
@@ -30,5 +30,5 @@ export async function GET(
     return photoshot;
   });
   photoshotAr.sort(sortByOwnershipAndDate);
-  return NextResponse.json(photoshotAr);
+  return NextResponse.json(photoshotAr.map((photoshot) => photoshot.id));
 }

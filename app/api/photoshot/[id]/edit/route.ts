@@ -81,7 +81,7 @@ export async function PUT(
             photo_paths: filePaths,
         })
         .eq("id", photoshotId)
-        .select("*")
+        .select("*, ...profiles!photoshots_created_by_fkey(username)")
         .single();
     if (uploadError) {
         console.log("insert error: ", uploadError);
@@ -91,17 +91,18 @@ export async function PUT(
     let uploadDataWithTag: Photoshot = uploadData;
     //need to remove all old tags, and add new ones properly
     if (data.tags?.length >= 0) {
-        const { error: tagError } = await supabase.rpc('update_photoshot_tags', { tag_ids: data.tags, photoshot_id: photoshotId });
+        const tagIds = data.tags.map((tag: Tag) => tag.id);
+        const { error: tagError } = await supabase.rpc('update_photoshot_tags', { tag_ids: tagIds, photoshot_id: photoshotId });
         if (tagError) {
             console.log('error removing tags', tagError);
             return new Response("error removing tags", { status: 500 });
         }
-        const { data: tagData, error: tagDataError } = await supabase.from('tags').select('*').in('id', data.tags);
+        const { data: tagData, error: tagDataError } = await supabase.from('tags').select('*').in('id', tagIds);
         if (tagDataError) {
             console.log('error getting tags', tagDataError);
             return new Response("error getting tags", { status: 500 });
         }
-        uploadDataWithTag = { ...uploadDataWithTag, tags: tagData.map((tag: Tag) => { return { id: tag.id, name: tag.name, } }) };
+        uploadDataWithTag = { ...uploadDataWithTag, owner: true, tags: tagData.map((tag: Tag) => { return { id: tag.id, name: tag.name, } }) };
     }
     console.log("successfully edited", uploadDataWithTag);
     return NextResponse.json(uploadDataWithTag);

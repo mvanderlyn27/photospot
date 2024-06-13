@@ -20,16 +20,16 @@ export default function PhotoshotGrid({
   photospotId: number;
 }) {
   const {
-    data: photoshots,
+    data: photoshotIds,
     isLoading: photoshotLoading,
     error: photoshotError,
   } = useSWR("/api/photospot/" + photospotId + "/photoshots", fetcher);
   return (
     <div className=" w-full flex flex-col gap-4">
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4  grid-flow-row-dense">
-        {photoshots &&
-          photoshots?.map((photoshot: Photoshot) => (
-            <PhotoshotDialog photoshotId={photoshot.id} />
+        {photoshotIds &&
+          photoshotIds?.map((photoshotId: number) => (
+            <PhotoshotDialog photoshotId={photoshotId} />
           ))}
         {photoshotLoading &&
           arrayRange(0, 10, 1).map((i) => (

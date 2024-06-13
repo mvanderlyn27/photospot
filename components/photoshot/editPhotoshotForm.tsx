@@ -36,7 +36,7 @@ export const editPhotoshotSchema = z.object({
     //should add some better requirements for the location
 
     name: z.string().optional(),
-    tags: z.array(z.number()).optional(),
+    tags: z.array(z.custom<Tag>(() => true, "")).optional(),
     recreate_text: z.string().optional(),
     //tags for later
     photos: z
@@ -68,21 +68,24 @@ export const editPhotoshotSchema = z.object({
 });
 
 export default function EditPhotoshotForm({
-    photoshot,
+    photoshotId,
     setPhotoshotDialogOpen,
     setEditMode,
     handleSubmit,
 }: {
-    photoshot: Photoshot;
+    photoshotId: number;
     setPhotoshotDialogOpen: any;
     setEditMode: any;
     handleSubmit?: any
 }) {
 
-    const { data: photospots, mutate: mutatePhotoshots } = useSWR('/api/photospot/' + photoshot.photospot_id + '/photoshots', fetcher);
+    // const { mutate } = useSWRConfig();
+    const { data: photoshot, mutate: updatePhotoshot, isLoading: photoshotLoading, error: photoshotError, } = useSWR("/api/photoshot/" + photoshotId, fetcher);
+    const { data: photoshots, mutate: mutatePhotoshots } = useSWR(() => '/api/photospot/' + photoshot.photospot_id + '/photoshots', fetcher);
+
     const [loading, setLoading] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
-    const initialTags = photoshot.tags ? photoshot.tags.map(tag => (createOption(tag))) : null;
+    const initialTags = photoshot?.tags ? photoshot.tags.map((tag: Tag) => (createOption(tag))) : null;
     const [tagValues, setTagValues] = useState<MultiValue<TagOption> | null>(initialTags);
     const editPhotoshotForm = useForm<z.infer<typeof editPhotoshotSchema>>({
         resolver: zodResolver(editPhotoshotSchema),
@@ -155,13 +158,22 @@ export default function EditPhotoshotForm({
         if (data.tags != undefined) {
             //either get the new tags from db here and await, or seperate tags?
             // maybe get general info on main page, and more advanced info when opening dialog?
-            tempPhotoshot.tags = photoshot?.tags?.filter((tag: Tag) => data.tags?.includes(tag.id));
+            tempPhotoshot.tags = data.tags;
+
         }
         //issue here when adding new tags
-        mutatePhotoshots(handleEdit(data), {
-            optimisticData: (curPhotoshots: Photoshot[]) => replacePhotoshot(curPhotoshots, photoshot, tempPhotoshot),
-            populateCache: (updatedPhotoshot: Photoshot, curPhotoshots: Photoshot[]) => replacePhotoshot(curPhotoshots, photoshot, updatedPhotoshot),
+        //update new tag on photoshot route
+        //update photospot route
+        console.log('tempPhotoshot, for optimistic', tempPhotoshot);
+        updatePhotoshot(handleEdit(data), {
+            optimisticData: (currentPhotoshot: Photoshot) => ({ ...currentPhotoshot, ...tempPhotoshot }),
+            populateCache: (currentPhotoshot: Photoshot) => ({ ...currentPhotoshot, ...tempPhotoshot }),
         });
+        // mutatePhotoshots();
+        // mutatePhotoshots(handleEdit(data), {
+        //     optimisticData: (curPhotoshots: Photoshot[]) => replacePhotoshot(curPhotoshots, photoshot, tempPhotoshot),
+        //     populateCache: (updatedPhotoshot: Photoshot, curPhotoshots: Photoshot[]) => replacePhotoshot(curPhotoshots, photoshot, updatedPhotoshot),
+        // });
         toast({
             title: "Edited Photoshot",
         })
@@ -195,17 +207,13 @@ export default function EditPhotoshotForm({
     const promptDelete = (setting: boolean) => {
         setConfirmDelete(setting);
     };
-    const removePhotoshot = (photoshots: Photoshot[], removePhotoshot: Photoshot) => {
+    const removePhotoshot = (photoshots: number[], photoshotId: number): number[] => {
         if (photoshots) {
-            return photoshots.map((photoshot: Photoshot) => {
-                if (photoshot.id !== removePhotoshot.id) {
-                    return photoshot;
-                }
-            });
-        } else {
-            return [];
+            return photoshots.filter((id) => id !== photoshotId);
         }
-
+        else {
+            return []
+        }
     }
     const handleDelete = async () => {
         // if (photoshot && confirmDelete) {
@@ -224,9 +232,13 @@ export default function EditPhotoshotForm({
 
     };
     const onDelete = async () => {
+        // updatePhotoshot(handleDelete(), {
+        //     optimisticData: (curPhotoshots: Photoshot[]) => removePhotoshot(curPhotoshots, photoshot),
+        //     // populateCache: (curPhotoshots: Photoshot[]) => removePhotoshot(curPhotoshots, photoshot),
+        // });
         mutatePhotoshots(handleDelete(), {
-            optimisticData: (curPhotoshots: Photoshot[]) => removePhotoshot(curPhotoshots, photoshot),
-            // populateCache: (curPhotoshots: Photoshot[]) => removePhotoshot(curPhotoshots, photoshot),
+            optimisticData: () => removePhotoshot(photoshots, photoshot.id),
+            populateCache: () => removePhotoshot(photoshots, photoshot.id),
         });
         setPhotoshotDialogOpen(false);
         toast({
@@ -239,7 +251,7 @@ export default function EditPhotoshotForm({
     }
 
 
-    const setSelectedTags = (selectedTags: number[]) => {
+    const setSelectedTags = (selectedTags: Tag[]) => {
         console.log('selectedTags', selectedTags);
         if (selectedTags) {
             editPhotoshotForm.setValue("tags", selectedTags);

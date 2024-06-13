@@ -71,7 +71,7 @@ export default function TagSelect({ tagValues, setTagValues, setSelectedTags, se
     // HANDLE CHANGE SECTION
     const handleChange = (newValue: MultiValue<TagOption> | null) => {
         setTagError(null);
-        setSelectedTags(newValue ? newValue.map((option) => option.value) : []);
+        setSelectedTags(newValue ? newValue.map((option) => ({ id: option.value, name: option.label })) : []);
         setTagValues(newValue);
     }
     const debouncedSearch = useDebouncedCallback(_searchTags, 300);
