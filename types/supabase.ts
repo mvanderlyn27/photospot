@@ -533,6 +533,15 @@ export type Database = {
           long: number
         }[]
       }
+      search_tags: {
+        Args: {
+          input_text: string
+        }
+        Returns: {
+          id: number
+          name: string
+        }[]
+      }
     }
     Enums: {
       db_roles: "user" | "admin"

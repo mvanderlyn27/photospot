@@ -13,16 +13,17 @@ import {
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { ErrorOption, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { NewPhotospotInfo, Photoshot, Photospot } from "@/types/photospotTypes";
+import { NewPhotospotInfo, Photoshot, Photospot, Tag } from "@/types/photospotTypes";
 import useSWR, { useSWRConfig } from "swr";
 import { isPhotospot } from "@/utils/common/typeGuard";
 import { fetcher } from "@/utils/common/fetcher";
+import TagSelect from "../common/TagSelect";
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -32,9 +33,9 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 export const uploadPhotoshotSchema = z.object({
   //should add some better requirements for the location
-  name: z.string(),
-  recreate_text: z.string(),
-  //tags for later
+  name: z.string({ message: 'Please enter a name' }).min(1, 'Required'),
+  recreate_text: z.string({ message: 'Please enter a name' }).min(1, 'Required'),
+  tags: z.array(z.number()),
   photos: z
     .custom<FileList | null>(
       (val) => val instanceof FileList,
@@ -80,6 +81,7 @@ export default function PhotoshotUploadForm({
     resolver: zodResolver(uploadPhotoshotSchema),
     defaultValues: {
       name: "",
+      tags: [],
       recreate_text: "",
       photos: null,
     },
@@ -158,6 +160,22 @@ export default function PhotoshotUploadForm({
       handleSubmit();
     }
   };
+  const setSelectedTags = (selectedTags: Tag[]) => {
+    if (selectedTags) {
+      let selectedTagIds: number[] = []
+      selectedTags.forEach((tag) => { if (tag.id) { selectedTagIds.push(tag.id); } });
+      uploadPhotoshotForm.setValue("tags", selectedTagIds);
+    }
+  }
+  const setTagError = (tagError: Error) => {
+    console.log("tagError", tagError);
+    if (tagError) {
+      uploadPhotoshotForm.setError("tags", { type: 'manual', message: tagError.message });
+    }
+    else {
+      uploadPhotoshotForm.clearErrors("tags");
+    }
+  }
 
   const clearForm = () => {
     //need to figure out how to properly clear the photos section
@@ -187,6 +205,23 @@ export default function PhotoshotUploadForm({
               </FormItem>
             )}
           />
+          <FormField
+            control={uploadPhotoshotForm.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tags:</FormLabel>
+                <FormControl>
+                  <TagSelect setSelectedTags={setSelectedTags} setTagError={setTagError} />
+                </FormControl>
+                <FormDescription>
+                  Upload tags for this shot here
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
 
           <FormField
             control={uploadPhotoshotForm.control}

@@ -47,7 +47,7 @@ export type Photoshot = {
   owner?: boolean;
 };
 export type Tag = {
-  id: number;
+  id?: number;
   name?: string;
   created_at?: string;
   tag_id?: number;

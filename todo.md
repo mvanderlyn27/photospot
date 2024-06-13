@@ -83,7 +83,9 @@
   - need to look into smtp providers mayeb smtp2go
   - reenable email on account creation after this
 - *figure out migration for DB, and seperating environments
-
+- nsfw text/image upload protection, also better user input validation for all fields
+  - https://github.com/infinitered/nsfwjs/
+  - https://github.com/infinitered/nsfwjs/issues/796
 # After launch of MVP
 
 - setup geocoding via backend functions, and postgres tiger geocoding
