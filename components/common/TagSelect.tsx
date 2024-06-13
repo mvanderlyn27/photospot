@@ -88,6 +88,21 @@ export default function TagSelect({ tagValues, setTagValues, setSelectedTags, se
             blurInputOnSelect
             loadOptions={debouncedSearch}
             value={tagValues}
+            styles={{
+                control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: '#f7f4e9',
+                }),
+                menu: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: '#f7f4e9',
+                }),
+                option: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: state.isFocused ? '#FAC898' : '#f7f4e9',
+                }),
+            }}
+
         />
     )
 }
