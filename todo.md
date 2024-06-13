@@ -36,14 +36,19 @@
 
 - Most important
   - create page
+    - tagging
+      - style tag select box
+      - fix editing photoshot functionality
+        - cache issues rn
+      - clear field needs to clear tag field propery
+    - implement fancier file upload component 
+      - https://github.com/m-inan/react-upload-gallery
+    - implement obscenity filter on all text fields
     - viewing photospot may have some jank
     - photoshot upload fix
       - have location_name be editable, if its not good, users should be able to update it
       - maybe add new option to suggest name updates for photospots on this page/photospot page
-        - can suggest updated name, updated location, or that the spot doesn't exist anymore, admin will have to go in and update the info
-        - upate top photo on photospot creation, and when likes are updated, grab the most liked picture for photospot photoshot, also most liked picture should be most liked photoshot
-      - add tag creation/selection to create photoshot tab
-    - see if we can update searchbox when cleared to clear selectedLocation
+   - see if we can update searchbox when cleared to clear selectedLocation
     - see if its possible to improve searchbox searches
   - explore page
   - home (timeline)
@@ -56,6 +61,10 @@
     - fix navbar to show which page you're on
   - photospot page
     -images loading in have a skeleton, then switch to alt text, then image
+    - add ability to suggest updated name for photospot, updated location, or that the spot doesn't exist anymore, admin will have to go in and update the info
+    - upate top photo on photospot creation, and when likes are updated, grab the most liked picture for photospot photoshot, also most liked picture should be most liked photoshot
+      - add tag creation/selection to create photoshot tab
+ 
   - general fixes
     - don't show photospots with no photoshots
       - maybe when you delete last photoshot in a photospot it removes the spot?

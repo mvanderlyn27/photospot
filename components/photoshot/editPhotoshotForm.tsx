@@ -23,7 +23,8 @@ import { NewPhotospotInfo, Photoshot, Photospot, Tag } from "@/types/photospotTy
 import useSWR, { useSWRConfig } from "swr";
 import { isPhotospot } from "@/utils/common/typeGuard";
 import { fetcher } from "@/utils/common/fetcher";
-import TagSelect from "../common/TagSelect";
+import TagSelect, { TagOption, createOption } from "../common/TagSelect";
+import { MultiValue } from "react-select";
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = [
     "image/jpeg",
@@ -81,6 +82,8 @@ export default function EditPhotoshotForm({
     const { data: photospots, mutate: mutatePhotoshots } = useSWR('/api/photospot/' + photoshot.photospot_id + '/photoshots', fetcher);
     const [loading, setLoading] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
+    const initialTags = photoshot.tags ? photoshot.tags.map(tag => (createOption(tag))) : null;
+    const [tagValues, setTagValues] = useState<MultiValue<TagOption> | null>(initialTags);
     const editPhotoshotForm = useForm<z.infer<typeof editPhotoshotSchema>>({
         resolver: zodResolver(editPhotoshotSchema),
         defaultValues: {
@@ -172,6 +175,7 @@ export default function EditPhotoshotForm({
     const cancelEdit = () => {
         //need to figure out how to properly clear the photos section
         editPhotoshotForm.reset();
+        setTagValues(initialTags);
         setEditMode(false);
     };
     const handleRemovePicture = (photo: string) => {
@@ -281,7 +285,7 @@ export default function EditPhotoshotForm({
                             <FormItem>
                                 <FormLabel>Tags:</FormLabel>
                                 <FormControl>
-                                    <TagSelect setSelectedTags={setSelectedTags} setTagError={setTagError} initialSelectedTags={photoshot.tags} />
+                                    <TagSelect tagValues={tagValues} setTagValues={setTagValues} setSelectedTags={setSelectedTags} setTagError={setTagError} />
                                 </FormControl>
                                 <FormDescription>
                                     Upload tags for this shot here

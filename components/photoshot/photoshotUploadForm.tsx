@@ -23,7 +23,8 @@ import { NewPhotospotInfo, Photoshot, Photospot, Tag } from "@/types/photospotTy
 import useSWR, { useSWRConfig } from "swr";
 import { isPhotospot } from "@/utils/common/typeGuard";
 import { fetcher } from "@/utils/common/fetcher";
-import TagSelect from "../common/TagSelect";
+import TagSelect, { TagOption } from "../common/TagSelect";
+import { MultiValue } from "react-select";
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -76,6 +77,7 @@ export default function PhotoshotUploadForm({
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [tagValues, setTagValues] = useState<MultiValue<TagOption> | null>(null);
   const { data: photoshots, mutate: mutatePhotoshots } = useSWR(isPhotospot(selectedLocation) ? "/api/photospot/" + selectedLocation.id + "/photoshots" : null, fetcher);
   const uploadPhotoshotForm = useForm<z.infer<typeof uploadPhotoshotSchema>>({
     resolver: zodResolver(uploadPhotoshotSchema),
@@ -177,6 +179,7 @@ export default function PhotoshotUploadForm({
   const clearForm = () => {
     //need to figure out how to properly clear the photos section
     uploadPhotoshotForm.reset();
+    setTagValues(null);
   };
 
   return (
@@ -209,7 +212,7 @@ export default function PhotoshotUploadForm({
               <FormItem>
                 <FormLabel>Tags:</FormLabel>
                 <FormControl>
-                  <TagSelect setSelectedTags={setSelectedTags} setTagError={setTagError} />
+                  <TagSelect tagValues={tagValues} setTagValues={setTagValues} setSelectedTags={setSelectedTags} setTagError={setTagError} />
                 </FormControl>
                 <FormDescription>
                   Upload tags for this shot here
