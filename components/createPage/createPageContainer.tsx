@@ -1,14 +1,9 @@
 "use client"
 import LeftWindow from "@/components/createPage/leftWindow";
 import PhotospotMap from "@/components/maps/map";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { NewPhotospotInfo, Photospot } from "@/types/photospotTypes";
-import { createClient } from "@/utils/supabase/client";
-import { User } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
-import { LngLat, LngLatBounds } from "mapbox-gl";
 import { MapProvider } from "react-map-gl";
-import { DialogContent, DialogTrigger } from "@radix-ui/react-dialog";
 import PhotospotsTooCloseDialog from "@/components/createPage/photospotsTooCloseDialog";
 // import mapboxgl from 'mapbox-gl';
 const INITIAL_LAT: number = 40.72377;

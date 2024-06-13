@@ -25,6 +25,7 @@ import { isPhotospot } from "@/utils/common/typeGuard";
 import { fetcher } from "@/utils/common/fetcher";
 import TagSelect, { TagOption } from "../common/TagSelect";
 import { MultiValue } from "react-select";
+import FileUploadDropzone from "../common/fileDropZone";
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -38,14 +39,14 @@ export const uploadPhotoshotSchema = z.object({
   recreate_text: z.string({ message: 'Please enter a name' }).min(1, 'Required'),
   tags: z.array(z.custom<Tag>(() => true, "")).optional(),
   photos: z
-    .custom<FileList | null>(
-      (val) => val instanceof FileList,
+    .custom<File[] | null>(
+      (val) => !val.some((v: File) => !(v instanceof File)),
       "Please upload a picture"
     )
     .refine((files) => (files ? files.length > 0 : false), `Required`)
     .refine(
-      (files) => (files ? files.length <= 4 : true),
-      `Maximum of 4 images are allowed.`
+      (files) => (files ? files.length <= 6 : true),
+      `Maximum of  images are allowed.`
     )
     .refine(
       (files) =>
@@ -53,6 +54,9 @@ export const uploadPhotoshotSchema = z.object({
           ? Array.from(files).every((file) => file.size <= MAX_FILE_SIZE)
           : true,
       `Each file size should be less than 5 MB.`
+    )
+    .refine((files) =>
+      files ? new Set(files.map((file: File) => file.name)).size === files.map((file: File) => file.name).length : true, "Please upload all unique images"
     )
     .refine(
       (files) =>
@@ -175,6 +179,10 @@ export default function PhotoshotUploadForm({
       uploadPhotoshotForm.clearErrors("tags");
     }
   }
+  const setPhotos = (photos: File[] | null) => {
+    console.log("setPhotos", photos);
+    uploadPhotoshotForm.setValue("photos", photos);
+  }
 
   const clearForm = () => {
     //need to figure out how to properly clear the photos section
@@ -242,18 +250,20 @@ export default function PhotoshotUploadForm({
           <FormField
             control={uploadPhotoshotForm.control}
             name="photos"
-            render={({ field: { onChange }, ...field }) => (
+            // render={({ field: { onChange }, ...field }) => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Photos</FormLabel>
                 <FormControl>
-                  <Input
+                  {/* <Input
                     {...field}
                     type="file"
                     multiple={true}
                     onChange={(e) => {
                       onChange(e.target.files);
                     }}
-                  />
+                  /> */}
+                  <FileUploadDropzone setPhotos={setPhotos} />
                 </FormControl>
                 <FormDescription>
                   Upload 1 or more cool photos from the spot

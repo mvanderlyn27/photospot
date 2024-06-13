@@ -36,7 +36,6 @@
 
 - Most important
   - create page
-    - tagging
     - implement fancier file upload component 
       - https://github.com/m-inan/react-upload-gallery
     - implement obscenity filter on all text fields
@@ -58,6 +57,7 @@
     -images loading in have a skeleton, then switch to alt text, then image
     - add ability to suggest updated name for photospot, updated location, or that the spot doesn't exist anymore, admin will have to go in and update the info
     - upate top photo on photospot creation, and when likes are updated, grab the most liked picture for photospot photoshot, also most liked picture should be most liked photoshot
+    - remove useQuery usage, and all serverActions
   - general fixes
     - don't show photospots with no photoshots
       - maybe when you delete last photoshot in a photospot it removes the spot?
