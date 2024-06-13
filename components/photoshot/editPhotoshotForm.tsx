@@ -79,7 +79,7 @@ export default function EditPhotoshotForm({
     handleSubmit?: any
 }) {
 
-    // const { mutate } = useSWRConfig();
+    const { mutate } = useSWRConfig();
     const { data: photoshot, mutate: updatePhotoshot, isLoading: photoshotLoading, error: photoshotError, } = useSWR("/api/photoshot/" + photoshotId, fetcher);
     const { data: photoshots, mutate: mutatePhotoshots } = useSWR(() => '/api/photospot/' + photoshot.photospot_id + '/photoshots', fetcher);
 
@@ -100,28 +100,6 @@ export default function EditPhotoshotForm({
     });
 
     const handleEdit = async (data: z.infer<typeof editPhotoshotSchema>) => {
-
-        // if (photoshot) {
-        //     let photos_form = new FormData();
-        //     if (data.photos) {
-        //         Array.from(data.photos).forEach((photo) => {
-        //             photos_form.append(`photoshot_pictures`, photo);
-        //         });
-        //     }
-        //     setLoading(true);
-        //     await editPhotoshot(
-        //         photoshot.id,
-        //         data,
-        //         photoshot.photospot_id,
-        //         photos_form
-        //     );
-        //     setLoading(false);
-        //     // await updatePhotoshots();
-        //     setEditMode(false);
-        //     toast({
-        //         title: "Edits Saved! :)",
-        //     });
-        // }
         let formData = new FormData();
         if (data.photos) {
             Array.from(data.photos).forEach((photo) => {
@@ -145,9 +123,7 @@ export default function EditPhotoshotForm({
     const onEdit = async (
         data: z.infer<typeof editPhotoshotSchema>
     ): Promise<void> => {
-        //TODO: fix optimistic data 
         setLoading(true);
-        //need to revalidate cache for photospot/id if existing photospot
         const tempPhotoshot: Photoshot = photoshot;
         if (data.name != undefined) {
             tempPhotoshot.name = data.name
@@ -156,24 +132,22 @@ export default function EditPhotoshotForm({
             tempPhotoshot.recreate_text = data.recreate_text;
         }
         if (data.tags != undefined) {
-            //either get the new tags from db here and await, or seperate tags?
-            // maybe get general info on main page, and more advanced info when opening dialog?
             tempPhotoshot.tags = data.tags;
 
         }
-        //issue here when adding new tags
-        //update new tag on photoshot route
-        //update photospot route
-        console.log('tempPhotoshot, for optimistic', tempPhotoshot);
+
         updatePhotoshot(handleEdit(data), {
             optimisticData: (currentPhotoshot: Photoshot) => ({ ...currentPhotoshot, ...tempPhotoshot }),
             populateCache: (currentPhotoshot: Photoshot) => ({ ...currentPhotoshot, ...tempPhotoshot }),
+        }).then(() => {
+            //could update optimistically, but lazy rn xD
+            // would need to see if there are other photoshots with this tag as well
+            // before removing
+            // adding, just add it to the existing tag list
+            mutate('/api/photospot/' + photoshot.photospot_id + '/tags');
         });
-        // mutatePhotoshots();
-        // mutatePhotoshots(handleEdit(data), {
-        //     optimisticData: (curPhotoshots: Photoshot[]) => replacePhotoshot(curPhotoshots, photoshot, tempPhotoshot),
-        //     populateCache: (updatedPhotoshot: Photoshot, curPhotoshots: Photoshot[]) => replacePhotoshot(curPhotoshots, photoshot, updatedPhotoshot),
-        // });
+
+
         toast({
             title: "Edited Photoshot",
         })
@@ -216,29 +190,17 @@ export default function EditPhotoshotForm({
         }
     }
     const handleDelete = async () => {
-        // if (photoshot && confirmDelete) {
-        //     setLoading(true);
-        //     await deletePhotobookPicture(photoshot);
-        //     // await updatePhotoshots();
-        //     setPhotoshotDialogOpen(false);
-        //     setLoading(false);
-        //     toast({
-        //         title: "Photobook Picture Deleted",
-        //     });
-        // }
         return fetch("/api/photoshot/" + photoshot.id + "/delete", {
             method: "DELETE",
         }).then(res => res.json());
 
     };
     const onDelete = async () => {
-        // updatePhotoshot(handleDelete(), {
-        //     optimisticData: (curPhotoshots: Photoshot[]) => removePhotoshot(curPhotoshots, photoshot),
-        //     // populateCache: (curPhotoshots: Photoshot[]) => removePhotoshot(curPhotoshots, photoshot),
-        // });
         mutatePhotoshots(handleDelete(), {
             optimisticData: () => removePhotoshot(photoshots, photoshot.id),
             populateCache: () => removePhotoshot(photoshots, photoshot.id),
+        }).then(() => {
+            mutate('/api/photospot/' + photoshot.photospot_id + '/tags');
         });
         setPhotoshotDialogOpen(false);
         toast({
@@ -247,10 +209,7 @@ export default function EditPhotoshotForm({
         if (handleSubmit) {
             handleSubmit();
         }
-
     }
-
-
     const setSelectedTags = (selectedTags: Tag[]) => {
         console.log('selectedTags', selectedTags);
         if (selectedTags) {
@@ -266,7 +225,6 @@ export default function EditPhotoshotForm({
             editPhotoshotForm.clearErrors("tags");
         }
     }
-
     return (
         <Form {...editPhotoshotForm}>
             <form
@@ -306,7 +264,6 @@ export default function EditPhotoshotForm({
                             </FormItem>
                         )}
                     />
-
                     <FormField
                         control={editPhotoshotForm.control}
                         name="recreate_text"

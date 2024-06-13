@@ -72,11 +72,12 @@ export default function PhotospotInfo({
     isLoading: savedLoading,
     error: savedError,
   } = useSWR("/api/photospot/" + id + "/isSaved", fetcher);
+  //in the future update tags to have a limit
   const {
     data: tags,
     isLoading: tagsLoading,
     error: tagsError,
-  } = useSWR("/api/photospot/" + id + "/tags?limit=" + TAG_LIMIT, fetcher);
+  } = useSWR("/api/photospot/" + id + "/tags", fetcher);
   const handleUpdateSaved = async () => {
     if (!photospot) return;
     if (isSaved) {

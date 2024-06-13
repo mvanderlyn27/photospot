@@ -36,7 +36,7 @@ export const uploadPhotoshotSchema = z.object({
   //should add some better requirements for the location
   name: z.string({ message: 'Please enter a name' }).min(1, 'Required'),
   recreate_text: z.string({ message: 'Please enter a name' }).min(1, 'Required'),
-  tags: z.array(z.number()),
+  tags: z.array(z.custom<Tag>(() => true, "")).optional(),
   photos: z
     .custom<FileList | null>(
       (val) => val instanceof FileList,
@@ -160,7 +160,7 @@ export default function PhotoshotUploadForm({
       handleSubmit();
     }
   };
-  const setSelectedTags = (selectedTags: number[]) => {
+  const setSelectedTags = (selectedTags: Tag[]) => {
     console.log('selectedTags', selectedTags);
     if (selectedTags) {
       uploadPhotoshotForm.setValue("tags", selectedTags);

@@ -37,14 +37,9 @@
 - Most important
   - create page
     - tagging
-      - style tag select box
-      - fix editing photoshot functionality
-        - cache issues rn
-      - clear field needs to clear tag field propery
     - implement fancier file upload component 
       - https://github.com/m-inan/react-upload-gallery
     - implement obscenity filter on all text fields
-    - viewing photospot may have some jank
     - photoshot upload fix
       - have location_name be editable, if its not good, users should be able to update it
       - maybe add new option to suggest name updates for photospots on this page/photospot page
@@ -63,8 +58,6 @@
     -images loading in have a skeleton, then switch to alt text, then image
     - add ability to suggest updated name for photospot, updated location, or that the spot doesn't exist anymore, admin will have to go in and update the info
     - upate top photo on photospot creation, and when likes are updated, grab the most liked picture for photospot photoshot, also most liked picture should be most liked photoshot
-      - add tag creation/selection to create photoshot tab
- 
   - general fixes
     - don't show photospots with no photoshots
       - maybe when you delete last photoshot in a photospot it removes the spot?
@@ -73,7 +66,7 @@
       - rn messed up on create page, and photospot page
 
 # Before launch of MVP
-
+- ensure all SWR cache are necessary, don't load uneccessary data
 - *design and implement all mobile views for website
   - fix all skeletons to looke better
 - clean up API to be efficient, remove console logs
@@ -185,17 +178,13 @@
 - add admin panel to app
 
 # Bugs
-
-- create photospot page, reseting the form doesn't clear the file input
-- having the watched photos lags the thing out, rn commenting it out
-- updating location on the left bar is kind of broken, text breaks it, and can't enter text over 2 digits
-- marker disappears on creation of photospot
-- bug with spamming space on the auto search, issue with promises where the clearing of the form happens before the searches previous finish
-  - look into using sessions to properly avoid this
-- bug on creating photospots, "photos is undefined" for the carosel in photo preview
-- some funkiness with moving map around, markers change position on mouse release
-- visiting a photospot right after making takes forever
-- visiting a photospot for the first time doesn't have the rotate animation
+- create page
+  - viewing photospot may have some jank
+  - create photospot page, reseting the form doesn't clear the file input
+  - some funkiness with moving map around, markers change position on mouse release
+  - visiting a photospot right after making takes forever
+- photospot page
+  - some bug with the editmode on the photoshot dialog, sometimes will have edit mode true when it shouldn't be, maybe after creation of new spot? need to investigate
 
 # Future Ideas
 

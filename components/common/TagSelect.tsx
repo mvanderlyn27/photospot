@@ -28,7 +28,7 @@ export default function TagSelect({ tagValues, setTagValues, setSelectedTags, se
     // CREATE SECTION
     const handleCreate = async (inputValue: string) => {
         setIsLoading(true);
-        if (!inputValue.match(/^[a-zA-Z]+$/)) {
+        if (!inputValue.match(/^[\w\-\s]+$/)) {
             console.log('invalid input');
             setTagError(new Error('Invalid tag name only strings allowed'));
             setIsLoading(false);
@@ -49,6 +49,7 @@ export default function TagSelect({ tagValues, setTagValues, setSelectedTags, se
         const newOption = createOption(tag);
         await updateTags();
         setTagValues(tagValues ? [...tagValues, newOption] : [newOption]);
+        setSelectedTags(tagValues ? [...tagValues, newOption].map((tag) => ({ id: tag.value, name: tag.label })) : [tag]);
         setIsLoading(false);
     }
     // SEARCH SECTION
@@ -72,11 +73,13 @@ export default function TagSelect({ tagValues, setTagValues, setSelectedTags, se
     const handleChange = (newValue: MultiValue<TagOption> | null) => {
         setTagError(null);
         setSelectedTags(newValue ? newValue.map((option) => ({ id: option.value, name: option.label })) : []);
+        console.log('change handled', newValue);
         setTagValues(newValue);
     }
     const debouncedSearch = useDebouncedCallback(_searchTags, 300);
     return (
         <AsyncCreatableSelect
+            maxMenuHeight={200}
             isClearable
             isMulti
             isDisabled={isLoading || tagLoading}

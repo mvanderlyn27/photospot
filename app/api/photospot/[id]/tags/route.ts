@@ -3,15 +3,10 @@ import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest, { params }: { params: { id: number } }) {
-    // 3 hourly next 5 days
+    //update to have an optional limit for responses
     const supabase = createClient()
     const id = params.id;
     let query = await supabase.rpc('get_tags_for_photospot', { 'photospotid': id }).select('*');
-    const searchParams = request.nextUrl.searchParams
-    const limitCount = searchParams.get('limit')
-    // if (limitCount) {
-    // query = query.limit(parseInt(limitCount))
-    // }
     const { data, error } = await query;
     if (error) {
         console.log(error);
