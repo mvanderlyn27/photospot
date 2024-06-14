@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "@/utils/supabase/server";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     const body = await request.json();
@@ -12,5 +13,5 @@ export async function POST(request: Request) {
         return new Response("error getting tags", { status: 500 });
     }
     console.log('res froms search for :', search, ' data:', data);
-    return Response.json(data);
+    return NextResponse.json(data);
 }
