@@ -69,8 +69,7 @@ export const editPhotoshotSchema = z.object({
                     : true,
             "Only these types are allowed .jpg, .jpeg, .png and .webp"
         ),
-    currentPhotos: z.string().array().optional(),
-    photosToRemove: z.string().array().optional(),
+    photosToRemove: z.array(z.string()).optional(),
 });
 
 export default function EditPhotoshotForm({
@@ -97,6 +96,7 @@ export default function EditPhotoshotForm({
     useEffect(() => {
         getInitialFiles().then((files) => setInitialFiles(files));
     }, [])
+    setInitialFiles
     const editPhotoshotForm = useForm<z.infer<typeof editPhotoshotSchema>>({
         resolver: zodResolver(editPhotoshotSchema),
         defaultValues: {
@@ -105,9 +105,7 @@ export default function EditPhotoshotForm({
             recreate_text: photoshot?.recreate_text || "",
             //photos to upload
             photos: null,
-            //
-            currentPhotos: photoshot?.photo_paths || [],
-            photosToRemove: [],
+            photosToRemove: photoshot?.photo_paths || null
         },
     });
     const handleEdit = async (data: z.infer<typeof editPhotoshotSchema>) => {
@@ -123,14 +121,7 @@ export default function EditPhotoshotForm({
             body: formData,
         }).then(res => res.json());
     };
-    const replacePhotoshot = (photoshots: Photoshot[], oldPhotoshot: Photoshot, newPhotoshot: Photoshot) => {
-        return photoshots.map((photoshot: Photoshot) => {
-            if (photoshot.id === oldPhotoshot.id) {
-                return newPhotoshot;
-            }
-            return photoshot;
-        });
-    }
+
     const onEdit = async (
         data: z.infer<typeof editPhotoshotSchema>
     ): Promise<void> => {
@@ -170,24 +161,9 @@ export default function EditPhotoshotForm({
     };
 
     const cancelEdit = () => {
-        //need to figure out how to properly clear the photos section
         editPhotoshotForm.reset();
         setTagValues(initialTags);
         setEditMode(false);
-    };
-    const handleRemovePicture = (photo: string) => {
-        //maybe async remove photo too ?
-        editPhotoshotForm.setValue(
-            "currentPhotos",
-            editPhotoshotForm.getValues("currentPhotos")?.filter((p) => p !== photo)
-        );
-        editPhotoshotForm.trigger("currentPhotos");
-        const updatedArray = editPhotoshotForm.getValues("photosToRemove");
-        if (updatedArray) {
-            updatedArray.push(photo.split("/").pop() as string);
-            editPhotoshotForm.setValue("photosToRemove", updatedArray);
-            editPhotoshotForm.trigger("photosToRemove");
-        }
     };
     const promptDelete = (setting: boolean) => {
         setConfirmDelete(setting);
@@ -237,8 +213,18 @@ export default function EditPhotoshotForm({
         }
     }
     const setPhotos = (photos: File[] | null) => {
-        console.log("setPhotos", photos);
-        editPhotoshotForm.setValue("photos", photos);
+        //use initial files to see what are new, and whats old
+        //will have an issue if a user uploads a diff file with the same name, won't upload pic 
+        if (photos) {
+
+            const curUrls = photos.map((p) => p.name);
+            console.log("setPhotos", photos);
+            const photos_to_remove = photoshot.photo_paths.filter((p: string) => !curUrls.includes(p));
+            const new_photos = photos.filter((p) => !photoshot.photo_paths.includes(p.name));
+            console.log('photos_to_remove', photos_to_remove, 'new_photos', new_photos);
+            editPhotoshotForm.setValue("photos", new_photos);
+            editPhotoshotForm.setValue("photosToRemove", photos_to_remove);
+        }
     }
     const getInitialFiles = async () => {
         let fileAr: File[] = [];
@@ -252,7 +238,6 @@ export default function EditPhotoshotForm({
         }
         return fileAr;
     }
-    //convert photo_paths to file objects
 
     return (
         <Form {...editPhotoshotForm}>

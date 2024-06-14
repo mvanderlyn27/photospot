@@ -69,9 +69,10 @@ export async function PUT(
                 supabase.storage.from(PHOTO_BUCKET).getPublicUrl(path).data.publicUrl
         );
     }
-    if (data.currentPhotos) {
+    if (photoshot.photo_paths) {
         console.log("fixing photo path");
-        filePaths = filePaths.concat(data.currentPhotos);
+        const old_photos = photoshot.photo_paths.filter((p) => !data.photosToRemove.includes(p))
+        filePaths = filePaths.concat(old_photos);
     }
     const { data: uploadData, error: uploadError } = await supabase
         .from("photoshots")
