@@ -180,6 +180,9 @@ export default function PhotoshotUploadForm({
     }
   }
   const setPhotos = (photos: File[] | null) => {
+    // add some custom logic to keep track of the files that exist that need to be removed, 
+    // and the new ones, revist backend logic, see if its easier if we keep track of both, 
+    // or if theres a better way
     console.log("setPhotos", photos);
     uploadPhotoshotForm.setValue("photos", photos);
   }
@@ -263,7 +266,7 @@ export default function PhotoshotUploadForm({
                       onChange(e.target.files);
                     }}
                   /> */}
-                  <FileUploadDropzone setPhotos={setPhotos} />
+                  <FileUploadDropzone curPhotos={[]} setPhotos={setPhotos} />
                 </FormControl>
                 <FormDescription>
                   Upload 1 or more cool photos from the spot

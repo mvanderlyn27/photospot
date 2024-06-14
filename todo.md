@@ -33,15 +33,19 @@
 -
 
 # Code Improvement
-
 - Most important
   - create page
     - implement fancier file upload component 
-      - https://github.com/m-inan/react-upload-gallery
+      - upload done, working on getting edit to work/load existing photos properly
+        - got image loading in component kind of jankily
+        - edit just needs to properly link into backend
+        - looks like we can simplify, already have original photo-paths in the backend
+        - can just look at what we have, and the new state to determine which paths to delete/add/keep on the backend side, only send the new files we want, and maybe the paths that exist that we want to keep
     - implement obscenity filter on all text fields
-    - photoshot upload fix
+    - photoshot edit reccomendations  
       - have location_name be editable, if its not good, users should be able to update it
       - maybe add new option to suggest name updates for photospots on this page/photospot page
+    - add some validation/form views for if photoshot name already exists for photospot
    - see if we can update searchbox when cleared to clear selectedLocation
     - see if its possible to improve searchbox searches
   - explore page
@@ -106,6 +110,8 @@
   - add minimize button for leftbar
   - add back in the photo view for uploading pics
 - photospot page
+  - have filters for photo section
+  - add ability to add photos to request to add your photos to an existing photoshot if you have cool photos for the same angle
   - phototime section section
     - weather
       - maybe look into other api's

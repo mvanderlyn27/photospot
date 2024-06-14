@@ -15,7 +15,7 @@ import { Textarea } from "../ui/textarea";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -25,6 +25,8 @@ import { isPhotospot } from "@/utils/common/typeGuard";
 import { fetcher } from "@/utils/common/fetcher";
 import TagSelect, { TagOption, createOption } from "../common/TagSelect";
 import { MultiValue } from "react-select";
+import FileUploadDropzone from "../common/fileDropZone";
+import { dataURLtoFile, imageToFile, toDataURL } from "@/utils/common/file";
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = [
     "image/jpeg",
@@ -40,12 +42,16 @@ export const editPhotoshotSchema = z.object({
     recreate_text: z.string().optional(),
     //tags for later
     photos: z
-        .custom<FileList | null>(() => true, "")
-        // photos: z.custom<FileList | null>((val) => val instanceof FileList || null, "Please upload a picture")
-        //     .refine((files) => files ? files.length > 0 : false, `Required`)
+        .custom<File[] | null>(
+            (val) => !val.some((v: File) => !(v instanceof File)),
+            "Please upload a picture"
+        )
         .refine(
-            (files) => (files ? files.length <= 4 : true),
-            `Maximum of 4 images are allowed.`
+            (files) => (files ? files.length <= 6 : true),
+            `Maximum of 6 images are allowed.`
+        )
+        .refine((files) =>
+            files ? new Set(files.map((file: File) => file.name)).size === files.map((file: File) => file.name).length : true, "Please upload all unique images"
         )
         .refine(
             (files) =>
@@ -87,18 +93,23 @@ export default function EditPhotoshotForm({
     const [confirmDelete, setConfirmDelete] = useState(false);
     const initialTags = photoshot?.tags ? photoshot.tags.map((tag: Tag) => (createOption(tag))) : null;
     const [tagValues, setTagValues] = useState<MultiValue<TagOption> | null>(initialTags);
+    const [initialFiles, setInitialFiles] = useState<File[]>([]);
+    useEffect(() => {
+        getInitialFiles().then((files) => setInitialFiles(files));
+    }, [])
     const editPhotoshotForm = useForm<z.infer<typeof editPhotoshotSchema>>({
         resolver: zodResolver(editPhotoshotSchema),
         defaultValues: {
             name: photoshot?.name || "",
             tags: [],
             recreate_text: photoshot?.recreate_text || "",
+            //photos to upload
             photos: null,
+            //
             currentPhotos: photoshot?.photo_paths || [],
             photosToRemove: [],
         },
     });
-
     const handleEdit = async (data: z.infer<typeof editPhotoshotSchema>) => {
         let formData = new FormData();
         if (data.photos) {
@@ -225,6 +236,24 @@ export default function EditPhotoshotForm({
             editPhotoshotForm.clearErrors("tags");
         }
     }
+    const setPhotos = (photos: File[] | null) => {
+        console.log("setPhotos", photos);
+        editPhotoshotForm.setValue("photos", photos);
+    }
+    const getInitialFiles = async () => {
+        let fileAr: File[] = [];
+        if (photoshot) {
+            const promiseAr: Promise<void>[] = photoshot.photo_paths.map(async (path: string) => {
+                return imageToFile(path).then((fileData: File) => {
+                    fileAr.push(fileData)
+                })
+            })
+            await Promise.all(promiseAr);
+        }
+        return fileAr;
+    }
+    //convert photo_paths to file objects
+
     return (
         <Form {...editPhotoshotForm}>
             <form
@@ -285,42 +314,25 @@ export default function EditPhotoshotForm({
                         name="photos"
                         render={({ field: { onChange }, ...field }) => (
                             <FormItem>
-                                <FormLabel>New Photos</FormLabel>
+                                <FormLabel>Update photos</FormLabel>
                                 <FormControl>
-                                    <Input
+                                    {/* <Input
                                         {...field}
                                         type="file"
                                         multiple={true}
                                         onChange={(e) => {
                                             onChange(e.target.files);
                                         }}
-                                    />
+                                    /> */}
+                                    <FileUploadDropzone curPhotos={initialFiles} setPhotos={setPhotos} />
                                 </FormControl>
                                 <FormDescription>
-                                    Add new photos here, view/remove existing photos below
+                                    add/remove photos for photoshot
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <h1> Current Photos: (click to remove) </h1>
-                    <div className="flex ">
-                        {editPhotoshotForm.getValues("currentPhotos")?.map((photo) => (
-                            <div
-                                className="flex flex-col cursor-pointer"
-                                key={photo}
-                                onClick={() => {
-                                    handleRemovePicture(photo);
-                                }}
-                            >
-                                <h1>Name: {photo.split("/").pop()}</h1>
-                                <img
-                                    className="h-40 w-40 object-cover rounded-md"
-                                    src={photo}
-                                />
-                            </div>
-                        ))}
-                    </div>
                 </CardContent>
 
                 <CardFooter className="flex-none flex-col gap-4">

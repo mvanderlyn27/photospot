@@ -7,13 +7,18 @@ import {
     FileUploaderItem,
 } from "@/components/ui/file-upload";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DropzoneOptions } from "react-dropzone";
 
 const MAX_FILE_SIZE = 5242880; //5MB
-const FileUploadDropzone = ({ setPhotos }: { setPhotos: any }) => {
-    const [files, setFiles] = useState<File[] | null>([]);
-
+//modifying so we can take in a string array of photos that exist already
+const FileUploadDropzone = ({ curPhotos, setPhotos }: { curPhotos: File[], setPhotos: any }) => {
+    console.log("curPhotos", curPhotos);
+    const [files, setFiles] = useState<File[] | null>(null);
+    console.log('files', files);
+    useEffect(() => {
+        setFiles(curPhotos);
+    }, [curPhotos])
     const dropzone = {
         accept: {
             "image/*": [".jpg", ".jpeg", ".png"],
