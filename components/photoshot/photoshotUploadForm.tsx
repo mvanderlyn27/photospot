@@ -26,6 +26,7 @@ import { fetcher } from "@/utils/common/fetcher";
 import TagSelect, { TagOption } from "../common/TagSelect";
 import { MultiValue } from "react-select";
 import FileUploadDropzone from "../common/fileDropZone";
+import { NSFWTextMatcher } from "@/utils/common/obscenity";
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -35,8 +36,8 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 export const uploadPhotoshotSchema = z.object({
   //should add some better requirements for the location
-  name: z.string({ message: 'Please enter a name' }).min(1, 'Required'),
-  recreate_text: z.string({ message: 'Please enter a name' }).min(1, 'Required'),
+  name: z.string({ message: 'Please enter a name' }).min(1, 'Required').refine((val) => NSFWTextMatcher.hasMatch(val), "No Profanity allowed ;)"),
+  recreate_text: z.string({ message: 'Please enter a name' }).min(1, 'Required').refine((val) => NSFWTextMatcher.hasMatch(val), "No Profanity allowed ;)"),
   tags: z.array(z.custom<Tag>(() => true, "")).optional(),
   photos: z
     .custom<File[] | null>(

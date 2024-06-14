@@ -27,6 +27,7 @@ import TagSelect, { TagOption, createOption } from "../common/TagSelect";
 import { MultiValue } from "react-select";
 import FileUploadDropzone from "../common/fileDropZone";
 import { imageToFile } from "@/utils/common/file";
+import { NSFWTextMatcher } from "@/utils/common/obscenity";
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = [
     "image/jpeg",
@@ -37,9 +38,9 @@ const ACCEPTED_IMAGE_TYPES = [
 export const editPhotoshotSchema = z.object({
     //should add some better requirements for the location
 
-    name: z.string().optional(),
+    name: z.string().refine((val) => NSFWTextMatcher.hasMatch(val), "No Profanity allowed ;)").optional(),
     tags: z.array(z.custom<Tag>(() => true, "")).optional(),
-    recreate_text: z.string().optional(),
+    recreate_text: z.string().refine((val) => NSFWTextMatcher.hasMatch(val), "No Profanity allowed ;)").optional(),
     //tags for later
     photos: z
         .custom<File[] | null>(
@@ -221,7 +222,6 @@ export default function EditPhotoshotForm({
             console.log("setPhotos", photos);
             const photos_to_remove = photoshot.photo_paths.filter((p: string) => !curUrls.includes(p));
             const new_photos = photos.filter((p) => !photoshot.photo_paths.includes(p.name));
-            console.log('photos_to_remove', photos_to_remove, 'new_photos', new_photos);
             editPhotoshotForm.setValue("photos", new_photos);
             editPhotoshotForm.setValue("photosToRemove", photos_to_remove);
         }

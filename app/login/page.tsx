@@ -21,10 +21,11 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { NSFWTextMatcher } from '@/utils/common/obscenity'
 const signupSchema = z.object({
   username: z.string().min(3, {
     message: "Username must be at least 3 characters.",
-  }),
+  }).refine((val) => NSFWTextMatcher.hasMatch(val), "No Profanity allowed ;)"),
   email: z.string()
     .min(1, { message: "This field has to be filled." })
     .email("This is not a valid email."),

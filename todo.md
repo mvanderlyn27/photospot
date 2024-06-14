@@ -35,12 +35,6 @@
 # Code Improvement
 - Most important
   - create page
-    - implement fancier file upload component 
-      - upload done, working on getting edit to work/load existing photos properly
-        - got image loading in component kind of jankily
-        - edit just needs to properly link into backend
-        - looks like we can simplify, already have original photo-paths in the backend
-        - can just look at what we have, and the new state to determine which paths to delete/add/keep on the backend side, only send the new files we want, and maybe the paths that exist that we want to keep
     - implement obscenity filter on all text fields
     - photoshot edit reccomendations  
       - have location_name be editable, if its not good, users should be able to update it
@@ -191,6 +185,7 @@
   - visiting a photospot right after making takes forever
 - photospot page
   - some bug with the editmode on the photoshot dialog, sometimes will have edit mode true when it shouldn't be, maybe after creation of new spot? need to investigate
+  - some other bug with editing photos, sometimes gets in weird state, esp with saving photos of the same name
 
 # Future Ideas
 
