@@ -26,7 +26,7 @@ import { fetcher } from "@/utils/common/fetcher";
 import TagSelect, { TagOption, createOption } from "../common/TagSelect";
 import { MultiValue } from "react-select";
 import FileUploadDropzone from "../common/fileDropZone";
-import { dataURLtoFile, imageToFile, toDataURL } from "@/utils/common/file";
+import { imageToFile } from "@/utils/common/file";
 const MAX_FILE_SIZE = 5242880; //5MB
 const ACCEPTED_IMAGE_TYPES = [
     "image/jpeg",
