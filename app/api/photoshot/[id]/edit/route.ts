@@ -31,7 +31,6 @@ export async function PUT(
   const photospotId = photoshot.photospot_id;
   const photoshotId = photoshot.id;
   // need to handle removing old photos here fromt he bucket
-  console.log(data);
   if (data?.photosToRemove && data.photosToRemove.length > 0) {
     let photo_path = data.photosToRemove.map(
       (name: string) => "/" + photospotId + "/" + photoshotId + "/" + name
