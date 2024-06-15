@@ -35,6 +35,7 @@
 # Code Improvement
 - Most important
   - fix delete policy for photoshot_tags based on user_id
+  - fix edit, rn deleting all photoshot_photo_paths
   - setup route handler for signin/signup
   - add logic on getting a photospot to list its top photo_image
   - create page
