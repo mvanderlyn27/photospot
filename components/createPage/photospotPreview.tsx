@@ -9,13 +9,22 @@ import { useEffect, useState } from "react";
 import { Badge } from "../ui/badge";
 import PhotoshotUploadDialog from "../photoshot/photoshotUploadDialog";
 import { isPhotospot } from "@/utils/common/typeGuard";
+import EditPhotospotDialog from "./editPhotospotDialog";
 
 export default function PhotospotPreview({ selectedLocation }: { selectedLocation: Photospot | NewPhotospotInfo | null }) {
     const [tags, setTags] = useState<string[]>([]);
+    const [locationName, setLocationName] = useState<string>(selectedLocation ? selectedLocation?.location_name : "");
+    const selectedPhotospot = isPhotospot(selectedLocation)
     const router = useRouter();
     const handleViewPhotospot = () => {
-        if (isPhotospot(selectedLocation)) {
+        if (selectedPhotospot) {
             router.push("/photospot/" + selectedLocation.id);
+        }
+    }
+    const setPhotospotName = (name: string) => {
+        if (selectedLocation) {
+            selectedLocation.location_name = name;
+            setLocationName(name);
         }
     }
     return (
@@ -38,14 +47,18 @@ export default function PhotospotPreview({ selectedLocation }: { selectedLocatio
                     </> :
                     <>
                         <img src={DefaultPhotospot} alt="" className="w-full lg:h-[300px] rounded-md" />
-                        <h1 className="text-3xl font-semibold">
-                            {selectedLocation?.location_name ? selectedLocation.location_name : selectedLocation?.location_name}
-                        </h1>
+                        <div className="flex flex-row gap-4">
+                            <h1 className="text-3xl font-semibold">
+                                {selectedLocation?.location_name ? selectedLocation.location_name : selectedLocation?.location_name}
+                            </h1>
+                            {selectedLocation && !selectedPhotospot && <EditPhotospotDialog photospotName={selectedLocation.location_name} setPhotospotName={setPhotospotName} />}
+                        </div>
+                        {!selectedPhotospot && <p className="text-xl">New Location, upload the first pic!</p>}
                     </>
                 }
                 <div className="flex justify-center flex-row gap-4">
                     <PhotoshotUploadDialog selectedLocation={selectedLocation} mapView={true} />
-                    {selectedLocation && isPhotospot(selectedLocation) &&
+                    {selectedPhotospot &&
                         <Button variant="outline" onClick={() => { handleViewPhotospot(); }}>
                             View Photospot
                         </Button>}

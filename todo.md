@@ -34,14 +34,12 @@
 
 # Code Improvement
 - Most important
+  - fix delete policy for photoshot_tags based on user_id
   - create page
-    - implement obscenity filter on all text fields
-    - photoshot edit reccomendations  
-      - have location_name be editable, if its not good, users should be able to update it
-      - maybe add new option to suggest name updates for photospots on this page/photospot page
-    - add some validation/form views for if photoshot name already exists for photospot
-   - see if we can update searchbox when cleared to clear selectedLocation
+    - add some validation/form error messages for if photoshot name already exists for photospot
+    - see if we can update searchbox when cleared to clear selectedLocation
     - see if its possible to improve searchbox searches
+  - setup route handler for signin/signup
   - explore page
   - home (timeline)
     - need logic to select correct photoshot picture for photospot
@@ -52,6 +50,8 @@
     - add username to returned values for getting current user
     - fix navbar to show which page you're on
   - photospot page
+    - photoshot edit reccomendations  
+      - maybe add new option to suggest name updates for photospots on this page/photospot page
     -images loading in have a skeleton, then switch to alt text, then image
     - add ability to suggest updated name for photospot, updated location, or that the spot doesn't exist anymore, admin will have to go in and update the info
     - upate top photo on photospot creation, and when likes are updated, grab the most liked picture for photospot photoshot, also most liked picture should be most liked photoshot
@@ -87,7 +87,7 @@
   - https://github.com/infinitered/nsfwjs/
   - https://github.com/infinitered/nsfwjs/issues/796
 # After launch of MVP
-
+- update autocomplete location, to have photospot names in results as well, for custom location_name
 - setup geocoding via backend functions, and postgres tiger geocoding
         -<https://postgis.net/docs/Extras.html>
 - add confetti into creating new photospot locations

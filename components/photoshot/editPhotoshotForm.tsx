@@ -38,9 +38,9 @@ const ACCEPTED_IMAGE_TYPES = [
 export const editPhotoshotSchema = z.object({
     //should add some better requirements for the location
 
-    name: z.string().refine((val) => NSFWTextMatcher.hasMatch(val), "No Profanity allowed ;)").optional(),
+    name: z.string().refine((val) => !NSFWTextMatcher.hasMatch(val), "No Profanity allowed ;)").optional(),
     tags: z.array(z.custom<Tag>(() => true, "")).optional(),
-    recreate_text: z.string().refine((val) => NSFWTextMatcher.hasMatch(val), "No Profanity allowed ;)").optional(),
+    recreate_text: z.string().refine((val) => !NSFWTextMatcher.hasMatch(val), "No Profanity allowed ;)").optional(),
     //tags for later
     photos: z
         .custom<File[] | null>(

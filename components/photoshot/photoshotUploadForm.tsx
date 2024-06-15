@@ -36,8 +36,8 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 export const uploadPhotoshotSchema = z.object({
   //should add some better requirements for the location
-  name: z.string({ message: 'Please enter a name' }).min(1, 'Required').refine((val) => NSFWTextMatcher.hasMatch(val), "No Profanity allowed ;)"),
-  recreate_text: z.string({ message: 'Please enter a name' }).min(1, 'Required').refine((val) => NSFWTextMatcher.hasMatch(val), "No Profanity allowed ;)"),
+  name: z.string({ message: 'Please enter a name' }).min(1, 'Required').refine((val) => !NSFWTextMatcher.hasMatch(val), "No Profanity allowed ;)"),
+  recreate_text: z.string({ message: 'Please enter a name' }).min(1, 'Required').refine((val) => !NSFWTextMatcher.hasMatch(val), "No Profanity allowed ;)"),
   tags: z.array(z.custom<Tag>(() => true, "")).optional(),
   photos: z
     .custom<File[] | null>(
@@ -84,6 +84,7 @@ export default function PhotoshotUploadForm({
   const [loading, setLoading] = useState(false);
   const [tagValues, setTagValues] = useState<MultiValue<TagOption> | null>(null);
   const { data: photoshots, mutate: mutatePhotoshots } = useSWR(isPhotospot(selectedLocation) ? "/api/photospot/" + selectedLocation.id + "/photoshots" : null, fetcher);
+  const [initialFiles, setInitialFiles] = useState<File[]>([]);
   const uploadPhotoshotForm = useForm<z.infer<typeof uploadPhotoshotSchema>>({
     resolver: zodResolver(uploadPhotoshotSchema),
     defaultValues: {
@@ -267,7 +268,7 @@ export default function PhotoshotUploadForm({
                       onChange(e.target.files);
                     }}
                   /> */}
-                  <FileUploadDropzone curPhotos={[]} setPhotos={setPhotos} />
+                  <FileUploadDropzone curPhotos={initialFiles} setPhotos={setPhotos} />
                 </FormControl>
                 <FormDescription>
                   Upload 1 or more cool photos from the spot
