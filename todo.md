@@ -35,11 +35,13 @@
 # Code Improvement
 - Most important
   - fix delete policy for photoshot_tags based on user_id
+  - setup route handler for signin/signup
+  - add logic on getting a photospot to list its top photo_image
   - create page
     - add some validation/form error messages for if photoshot name already exists for photospot
+      - added constraint, need to ensure good error messages show up on the frontend form
     - see if we can update searchbox when cleared to clear selectedLocation
     - see if its possible to improve searchbox searches
-  - setup route handler for signin/signup
   - explore page
   - home (timeline)
     - need logic to select correct photoshot picture for photospot
