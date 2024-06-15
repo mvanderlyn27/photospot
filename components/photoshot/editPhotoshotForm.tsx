@@ -143,7 +143,6 @@ export default function EditPhotoshotForm({
         formData.append(`photos`, photo);
       });
     }
-    console.log("data to submit", data);
     formData.append(`data`, JSON.stringify(data));
     return fetch("/api/photoshot/" + photoshot.id + "/edit", {
       method: "PUT",
@@ -252,18 +251,13 @@ export default function EditPhotoshotForm({
     //use initial files to see what are new, and whats old
     //will have an issue if a user uploads a diff file with the same name, won't upload pic
     if (photos) {
-      console.log("setting photos");
       const curUrls = photos.map((p) => p.name);
-      console.log("setPhotos", photos);
       const photos_to_remove = photoshot.photo_paths.filter(
         (p: string) => !curUrls.includes(p)
       );
       const new_photos = photos.filter(
         (p) => !photoshot.photo_paths.includes(p.name)
       );
-      console.log("original photos", photoshot.photo_paths);
-      console.log("photos_to_remove", photos_to_remove);
-      console.log("new_photos", new_photos);
       editPhotoshotForm.setValue("photos", new_photos);
       editPhotoshotForm.setValue("photosToRemove", photos_to_remove);
     }
