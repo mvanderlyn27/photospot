@@ -1,12 +1,55 @@
 "use client"
-import Link from "next/link";
-import { resetPasswordEmail } from '@/app/serverActions/auth/resetPasswordEmail'
+import { Button } from "@/components/ui/button"
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+} from "@/components/ui/tabs"
+import { NSFWTextMatcher } from '@/utils/common/obscenity'
+import Link from "next/link"
+
+const forgotPasswordSchema = z.object({
+    email: z.string()
+        .min(1, { message: "This field has to be filled." })
+        .email("This is not a valid email."),
+});
 export default function ForgotPasswordForm() {
+    const forgotPasswordForm = useForm<z.infer<typeof forgotPasswordSchema>>({
+        resolver: zodResolver(forgotPasswordSchema),
+        defaultValues: {
+            email: "",
+        },
+    })
+    const onSubmit = (values: z.infer<typeof forgotPasswordSchema>) => {
+        fetch(
+            '/api/auth/resetPasswordEmail',
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    email: values.email,
+                }),
+            }
+        )
+    }
     return (
         <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
             <Link
-                href="/"
-                className="absolute left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
+                href="/login"
+                className="absolute left-8 top-16 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -25,24 +68,38 @@ export default function ForgotPasswordForm() {
                 Back
             </Link>
 
-            <form
-                className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-                action={resetPasswordEmail}
-                method="post"
-            >
-                <label className="text-md" htmlFor="email">
-                    Email to send password reset link
-                </label>
-                <input
-                    className="rounded-md px-4 py-2 bg-inherit border mb-6"
-                    name="email"
-                    placeholder="you@example.com"
-                    required
-                />
-                <button className="bg-zinc-950 rounded px-4 py-2 text-white mb-2">
-                    Update Password
-                </button>
-            </form>
+            <Card className="w-[400px]">
+                <CardHeader>
+                    <CardTitle>Sign in to your account</CardTitle>
+                </CardHeader>
+
+                <form onSubmit={forgotPasswordForm.handleSubmit(onSubmit)} className="space-y-8">
+                    <CardContent>
+                        <Form {...forgotPasswordForm}>
+                            <FormField
+                                control={forgotPasswordForm.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email:</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="email@email.com" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Email for your account
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                        </Form>
+                    </CardContent>
+                    <CardFooter className="flex justify-center">
+                        <Button type="submit">Sign In</Button>
+                    </CardFooter>
+                </form>
+
+            </Card>
+
         </div>
     )
 }
