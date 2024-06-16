@@ -35,11 +35,12 @@
 # Code Improvement
 - Most important
   - setup route handler for signin/signup
-    - added routes, need to modify frontend to use, supabase email to use, and test
-    - need to update forms to use zod
+    - add confirmation notifications for when you send an email 
+    - ensure password reset works
   - add logic on getting a photospot to list its top photo_image
-    - need to have photospots look up their highest rated photoshots, and render have their first image
   - create page
+    - add some validation/form error messages for if photoshot name already exists for photospot
+      - added constraint, need to ensure good error messages show up on the frontend form
     - see if we can update searchbox when cleared to clear selectedLocation
     - see if its possible to improve searchbox searches
   - explore page
@@ -89,6 +90,9 @@
   - https://github.com/infinitered/nsfwjs/
   - https://github.com/infinitered/nsfwjs/issues/796
 # After launch of MVP
+- add nextjs parallel/interception for routing: 
+  - https://github.com/vercel/nextgram/tree/main/app
+  - https://nextjs.org/docs/app/building-your-application/routing/intercepting-routes
 - update autocomplete location, to have photospot names in results as well, for custom location_name
 - setup geocoding via backend functions, and postgres tiger geocoding
         -<https://postgis.net/docs/Extras.html>
@@ -190,7 +194,7 @@
   - some other bug with editing photos, sometimes gets in weird state, esp with saving photos of the same name
 
 # Future Ideas
-
+- have some way to analyze videos and detect existing photospots in the video 
 - have better features for planning when to go/getting notifications
 - have user enter pos, and direction of shot, and have an AR guide appear for taking new photos, maybe have ar stuff with the sun as well
 - extract info from imags with ai/metadata to create tags/ suggestions for users/ guide on how to recreate
