@@ -52,12 +52,15 @@ export default function ForgotPasswordForm() {
         console.log("email sent");
         toast({
           title: "Email sent",
+          description: "Check your email for further instructions.",
         });
         forgotPasswordForm.reset();
       })
       .catch((error) => {
         toast({
-          title: "Error, try again" + error.message,
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
         });
       });
   };
