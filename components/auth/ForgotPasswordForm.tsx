@@ -52,15 +52,12 @@ export default function ForgotPasswordForm() {
         console.log("email sent");
         toast({
           title: "Email sent",
-          description: "Check your email for further instructions.",
         });
         forgotPasswordForm.reset();
       })
       .catch((error) => {
         toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
+          title: "Error, try again" + error.message,
         });
       });
   };
@@ -118,7 +115,7 @@ export default function ForgotPasswordForm() {
               />
             </Form>
           </CardContent>
-          <CardFooter className="flex justify-center">
+          <CardFooter className="flex justify-center gap-4">
             <Button
               variant={"outline"}
               onClick={(e) => {
