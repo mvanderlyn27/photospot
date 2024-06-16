@@ -34,13 +34,8 @@
 
 # Code Improvement
 - Most important
-  - setup route handler for signin/signup
-    - add confirmation notifications for when you send an email 
-    - ensure password reset works
   - add logic on getting a photospot to list its top photo_image
   - create page
-    - add some validation/form error messages for if photoshot name already exists for photospot
-      - added constraint, need to ensure good error messages show up on the frontend form
     - see if we can update searchbox when cleared to clear selectedLocation
     - see if its possible to improve searchbox searches
   - explore page
@@ -90,6 +85,8 @@
   - https://github.com/infinitered/nsfwjs/
   - https://github.com/infinitered/nsfwjs/issues/796
 # After launch of MVP
+- set search to use proximity too as well 
+- add props to searchbox component interceptSearch to see if a query is a photospot first, before searching mapbox for a location
 - add nextjs parallel/interception for routing: 
   - https://github.com/vercel/nextgram/tree/main/app
   - https://nextjs.org/docs/app/building-your-application/routing/intercepting-routes
