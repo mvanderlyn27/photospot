@@ -3,17 +3,20 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
-export async function GET({ params }: { params: { id: number } }) {
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   const supabase = createClient();
-  const { data, error } = await supabase
-    .from("photoshots")
-    .select("photo_paths")
-    .eq("photospot_id", params.id)
-    .order("rating", { ascending: false })
-    .limit(1)
-    .single();
+  console.log("id", params);
+
+  const { data, error } = await supabase.rpc("find_most_liked_photoshot", {
+    input_id: parseInt(params.id),
+  });
   if (error) {
+    console.log("error getting top photoshot for " + params.id, error);
     return new Response(error.message, { status: 500 });
   }
+  console.log("top photoshot", data);
   return NextResponse.json(data);
 }

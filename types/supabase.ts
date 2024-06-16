@@ -445,6 +445,20 @@ export type Database = {
         }
         Returns: Record<string, unknown>
       }
+      find_most_liked_photoshot: {
+        Args: {
+          input_id: number
+        }
+        Returns: {
+          created_at: string
+          created_by: string | null
+          id: number
+          name: string
+          photo_paths: string[]
+          photospot_id: number
+          recreate_text: string
+        }
+      }
       find_photospot_by_lat_lng: {
         Args: {
           latitude: number

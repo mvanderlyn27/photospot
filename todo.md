@@ -34,7 +34,6 @@
 
 # Code Improvement
 - Most important
-  - add logic on getting a photospot to list its top photo_image
   - create page
     - see if we can update searchbox when cleared to clear selectedLocation
     - see if its possible to improve searchbox searches
