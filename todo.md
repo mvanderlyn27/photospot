@@ -34,13 +34,12 @@
 
 # Code Improvement
 - Most important
-  - fix delete policy for photoshot_tags based on user_id
-  - fix edit, rn deleting all photoshot_photo_paths
   - setup route handler for signin/signup
+    - added routes, need to modify frontend to use, supabase email to use, and test
+    - need to update forms to use zod
   - add logic on getting a photospot to list its top photo_image
+    - need to have photospots look up their highest rated photoshots, and render have their first image
   - create page
-    - add some validation/form error messages for if photoshot name already exists for photospot
-      - added constraint, need to ensure good error messages show up on the frontend form
     - see if we can update searchbox when cleared to clear selectedLocation
     - see if its possible to improve searchbox searches
   - explore page
