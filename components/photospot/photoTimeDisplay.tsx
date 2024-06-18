@@ -15,12 +15,13 @@ export default function PhotoTimeDisplay({
   lng,
   date,
   weather,
-
+  columnView
 }: {
   lat: number
   lng: number
   date: Date
   weather: ForecastWeather[]
+  columnView?: boolean
 }) {
   //need to figure out about adding weather/time of day
   const [info, setInfo] = useState<PhotoTimeDisplayInfo[]>([])
@@ -108,16 +109,16 @@ export default function PhotoTimeDisplay({
 
 
   return (
-    <div className="flex flex-col gap-4 pt-4">
+    <div className={`flex ${columnView ? 'flex-col' : 'flex-row'} gap-4 pt-4`}>
       {
-        info.map(info => <PhotoDisplayRow info={info} />)
+        info.map(info => <PhotoDisplayRow info={info} columnView={columnView} />)
       }
     </div>
 
   )
 }
 
-function PhotoDisplayRow({ info }: { info: PhotoTimeDisplayInfo }) {
+function PhotoDisplayRow({ info, columnView }: { info: PhotoTimeDisplayInfo, columnView?: boolean }) {
   const dateToString = (date: Date) => {
     return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })
   }
@@ -130,8 +131,7 @@ function PhotoDisplayRow({ info }: { info: PhotoTimeDisplayInfo }) {
     }
   }
   return (
-    <div className="flex flex-col gap-4 pt-4">
-
+    <div className={`flex flex-col gap-4 pt-4 ${columnView ? '' : 'border-2 border-black p-4 rounded-lg'}`}>
       < h1 className="font-semibold text-xl" > {timeLabelToString(info.time_label)}</h1 >
       <div className="flex flex-row gap-8">
         {info.weather ? <div className="align-center  p-4 rounded-md outline outline-2">

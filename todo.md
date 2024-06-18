@@ -33,26 +33,36 @@
 -
 
 # Code Improvement
-- Most important
-  - create page
-    - see if we can update searchbox when cleared to clear selectedLocation
-    - see if its possible to improve searchbox searches
-  - explore page
+  - Database
+    - setup script to generate test photospots easily 
   - home (timeline)
-    - need logic to select correct photoshot picture for photospot
-    - make mobile like instagram, and web view more like pinterest, or a scroll grid
+    - setup inifinite scroll of local images for now?
+    - setup infinite scroll, and modify to pull in photoshots instead of photospots at first
+    - Make it so you can save from the main page
+    - make it so clicking into an item brings you to the photospot page with the photoshot dialog open
+  - explore page
+    - want to be able to find photospots, or users here
+    - decide on what we want to do, def want to have ability to lookup photospots, do we want picture view too? 
+    - click into picture to see:
+      - what photospot its taken at, get a bit of info
+      - have a link to view that photospot
+      - ability to save photoshot 
   - profile page
     - add avatar pic to users
   - Navbar
     - add username to returned values for getting current user
     - fix navbar to show which page you're on
   - photospot page
+    - add nextjs parallel/interception for routing: 
+      - https://github.com/vercel/nextgram/tree/main/app
+      - https://nextjs.org/docs/app/building-your-application/routing/intercepting-routes
     - photoshot edit reccomendations  
       - maybe add new option to suggest name updates for photospots on this page/photospot page
     -images loading in have a skeleton, then switch to alt text, then image
     - add ability to suggest updated name for photospot, updated location, or that the spot doesn't exist anymore, admin will have to go in and update the info
     - upate top photo on photospot creation, and when likes are updated, grab the most liked picture for photospot photoshot, also most liked picture should be most liked photoshot
     - remove useQuery usage, and all serverActions
+  - create page
   - general fixes
     - don't show photospots with no photoshots
       - maybe when you delete last photoshot in a photospot it removes the spot?
@@ -61,6 +71,7 @@
       - rn messed up on create page, and photospot page
 
 # Before launch of MVP
+- add oauth login
 - ensure all SWR cache are necessary, don't load uneccessary data
 - *design and implement all mobile views for website
   - fix all skeletons to looke better
@@ -84,17 +95,16 @@
   - https://github.com/infinitered/nsfwjs/
   - https://github.com/infinitered/nsfwjs/issues/796
 # After launch of MVP
-- set search to use proximity too as well 
-- add props to searchbox component interceptSearch to see if a query is a photospot first, before searching mapbox for a location
-- add nextjs parallel/interception for routing: 
-  - https://github.com/vercel/nextgram/tree/main/app
-  - https://nextjs.org/docs/app/building-your-application/routing/intercepting-routes
-- update autocomplete location, to have photospot names in results as well, for custom location_name
-- setup geocoding via backend functions, and postgres tiger geocoding
-        -<https://postgis.net/docs/Extras.html>
+- setup ability to save a photospot to a specific folder
+  - kinda like IG, not just general save, otherwise whats point of saving vs. liking?
+- add ability to follow photospots/users
+- misc updates
 - add confetti into creating new photospot locations
 - add calculator page?
   - lookup any location find golden hour/weather there
+- create page
+  - see if we can update searchbox when cleared to clear selectedLocation
+  - see if its possible to improve searchbox searches
 - feed
   - display when golden hour is near you right now, maybe save location to profile?
   - have top location pics near you right now in feed
@@ -134,7 +144,12 @@
   - add link to google maps/apple maps to nav to location
   - add scheduler for getting to the location at golden hour
   - maybe make all photospot pics carousels
-- map improvements
+- map /searchbox improvements
+  - add props to searchbox component interceptSearch to see if a query is a photospot first, before searching mapbox for a location
+  - update autocomplete location, to have photospot names in results as well, for custom location_name
+  - setup geocoding via backend functions, and postgres tiger geocoding
+    -<https://postgis.net/docs/Extras.html>
+  - set search to use proximity too as well (search bar, for create/explore)
   - only render photospots/search photospots within view
     - update retrieve photospots in view (map bounds)rpc function when time, and make create and expore functiosn use it
     - any time bounds are updated, on end of move refresh the photospots visible? Or maybe grab them faster so it feels seamless?  

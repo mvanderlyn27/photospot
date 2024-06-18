@@ -14,7 +14,7 @@ export default function PhotoTimeWidget({ lat, lng }: { lat: number, lng: number
     const [date, setDate] = useState<Date>(today);
     return <div className="flex flex-col gap-4">
         <PhotoTimeSelector date={date} setDate={setDate} today={today} />
-        <PhotoTimeDisplay lat={lat} lng={lng} date={date} weather={weather} />
+        <PhotoTimeDisplay lat={lat} lng={lng} date={date} weather={weather} columnView={true} />
 
     </div>;
 }

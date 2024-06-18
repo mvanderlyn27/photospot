@@ -1,11 +1,16 @@
+"use client"
 import Link from "next/link";
 import LogoutButton from "../auth/LogoutButton";
 import { Button } from '@/components/ui/button';
+import { usePathname } from "next/navigation";
 
 export default function NavBar({ user }: { user: any }) {
     //get user logged in, render navbar
     const username = user?.user_metadata?.username
+    const pathname = usePathname();
+    const pathStart = pathname.split('/')[1];
     return (
+
         <nav className="w-full flex justify-center h-16">
             <div className="w-full  flex justify-between items-center p-3 pl-10 pr-10 text-foreground">
                 <Link href="/">
@@ -18,16 +23,16 @@ export default function NavBar({ user }: { user: any }) {
                         <div className="flex jusitfy-between items-center flex-row">
                             <Link
                                 href="/home"
-                                className={`${false ? 'active' : ''} py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`} > Home </Link>
+                                className={`${pathStart === 'home' ? 'font-bold' : ''} py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`} > Home </Link>
                             <Link
                                 href="/explore"
-                                className={`${false ? 'active' : ''} py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`} > Explore</Link>
+                                className={`${pathStart === 'explore' ? 'font-bold' : ''} py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`} > Explore</Link>
                             <Link
                                 href="/create"
-                                className={`${false ? 'active' : ''} py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`} > Create</Link>
+                                className={`${pathStart === 'create' ? 'font-bold' : ''} py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`} > Create</Link>
                             <Link
                                 href="/profile"
-                                className={`${false ? 'active' : ''} py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`} > Profile</Link>
+                                className={`${pathStart === 'profile' ? 'font-bold' : ''} py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`} > Profile</Link>
                             <LogoutButton />
                         </div>
                     </div>

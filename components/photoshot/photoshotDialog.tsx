@@ -162,7 +162,7 @@ export default function PhotoshotDialog({
               </div>
             </div>
           </DialogTrigger>
-          <DialogContent className="p-10 max-w-[50dvw]">
+          <DialogContent className="p-10 lg:max-w[50dvw] md:max-w-[70dvw] sm:max-w-[90dvw]">
             {!editMode && (
               <div className="flex flex-row">
                 <ImageCarousel

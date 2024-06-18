@@ -50,7 +50,7 @@ export default function PhotospotPreview({
       <CardContent className="flex flex-col gap-4">
         {selectedLocation && isPhotospot(selectedLocation) && (
           <>
-            {}
+            { }
             {topPhotoshot && (
               <img
                 src={topPhotoshot.photo_paths[0]}
@@ -59,7 +59,7 @@ export default function PhotospotPreview({
               />
             )}
             {topPhotoshotLoading && (
-              <Skeleton className="w-full lg:h-[300px] rounded-md" />
+              <Skeleton className="w-full lg:h-[300px] rounded-md bg-black/10" />
             )}
             <h1 className="text-3xl font-semibold">
               {selectedLocation?.location_name
