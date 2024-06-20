@@ -27,7 +27,6 @@ export default function LeftWindow({
             <>
                 <CardContent className="p-4">
                     <AutoComplete
-                        mapRef={photospotMap}
                         setSelectedLocation={setSelectedLocation}
                         selectedLocation={selectedLocation}
                     />
