@@ -25,6 +25,7 @@ export async function POST(request: Request) {
     const supabase = createClient();
     const { error } = await supabase.auth.signUp(data)
     if (error) {
+        console.log('error signingup', error);
         return new Response(error.message, { status: 400 })
     }
 

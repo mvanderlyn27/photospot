@@ -1,0 +1,224 @@
+[
+  {
+    "schemaName": "public",
+    "tableName": "betaEmailList",
+    "predictions": [
+      {
+        "input": "public beta_email_list email",
+        "column": "email",
+        "shape": "EMAIL",
+        "confidence": 0.9964523315429688,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "identities",
+    "predictions": [
+      {
+        "input": "auth identities provider",
+        "column": "provider",
+        "shape": "INTERNET_DOMAIN_NAME",
+        "confidence": 0.9332965016365051,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth identities provider_id",
+        "column": "provider_id",
+        "shape": "UUID",
+        "confidence": 0.9941206574440002,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "photoshots",
+    "predictions": [
+      {
+        "input": "public photoshots name",
+        "column": "name",
+        "shape": "SYSTEM_FILE_NAME",
+        "confidence": 0.2696256041526794,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public photoshots recreate_text",
+        "column": "recreate_text",
+        "shape": "POST_BODY",
+        "confidence": 0.3666380047798157,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "photospot_reviews",
+    "predictions": [
+      {
+        "input": "public photospot_reviews text",
+        "column": "text",
+        "shape": "POST_BODY",
+        "confidence": 0.8880795240402222,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "photospots",
+    "predictions": [
+      {
+        "input": "public photospots address",
+        "column": "address",
+        "shape": "FULL_ADDRESS",
+        "confidence": 0.7475507855415344,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public photospots location_name",
+        "column": "location_name",
+        "shape": "LOCATION_BUILDING_NUMBER",
+        "confidence": 0.9748685359954834,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public photospots neighborhood",
+        "column": "neighborhood",
+        "shape": "DATABASE_COLUMN",
+        "confidence": 0.1913373917341232,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "profiles",
+    "predictions": [
+      {
+        "input": "public profiles username",
+        "column": "username",
+        "shape": "USERNAME",
+        "confidence": 0.9713683724403381,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "sessions",
+    "predictions": [
+      {
+        "input": "auth sessions tag",
+        "column": "tag",
+        "shape": "PASSWORD",
+        "confidence": 0.5701985955238342,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth sessions user_agent",
+        "column": "user_agent",
+        "shape": "USER_AGENT",
+        "confidence": 0.9931508302688599,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "tags",
+    "predictions": [
+      {
+        "input": "public tags name",
+        "column": "name",
+        "shape": "COMMERCE_PRODUCT_NAME",
+        "confidence": 0.7373773455619812,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "users",
+    "predictions": [
+      {
+        "input": "auth users aud",
+        "column": "aud",
+        "shape": "AUTHENTICATION_PROVIDER",
+        "confidence": 0,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users confirmation_token",
+        "column": "confirmation_token",
+        "shape": "TOKEN",
+        "confidence": 0.9940432906150818,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users email",
+        "column": "email",
+        "shape": "EMAIL",
+        "confidence": 0.994260311126709,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users email_change",
+        "column": "email_change",
+        "shape": "EMAIL",
+        "confidence": 0.9721580743789673,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users email_change_token_new",
+        "column": "email_change_token_new",
+        "shape": "TOKEN",
+        "confidence": 0.9904540777206421,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users encrypted_password",
+        "column": "encrypted_password",
+        "shape": "PASSWORD",
+        "confidence": 0.9887174367904663,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users recovery_token",
+        "column": "recovery_token",
+        "shape": "TOKEN",
+        "confidence": 0.9935053586959839,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users role",
+        "column": "role",
+        "shape": "ROLE",
+        "confidence": 0.9707857370376587,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  }
+]
