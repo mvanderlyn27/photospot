@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "staging": "set NODE_ENV=staging && next dev",
+    "staging": "set ENV=staging&& next dev",
     "test": "jest",
     "build": "next build",
     "start": "next start"
