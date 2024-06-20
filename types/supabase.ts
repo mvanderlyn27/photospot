@@ -211,7 +211,6 @@ export type Database = {
         Row: {
           address: string | null
           created_at: string
-          created_by: string | null
           id: number
           location: unknown
           location_name: string
@@ -220,7 +219,6 @@ export type Database = {
         Insert: {
           address?: string | null
           created_at?: string
-          created_by?: string | null
           id?: number
           location: unknown
           location_name: string
@@ -229,7 +227,6 @@ export type Database = {
         Update: {
           address?: string | null
           created_at?: string
-          created_by?: string | null
           id?: number
           location?: unknown
           location_name?: string
@@ -490,6 +487,18 @@ export type Database = {
           lng: number
         }[]
       }
+      get_photoshots_with_highest_likes: {
+        Args: {
+          limit_count?: number
+          time_range?: unknown
+        }
+        Returns: {
+          id: number
+          total_likes: number
+          name: string
+          photo_paths: string[]
+        }[]
+      }
       get_photospot_by_id_lat_lng: {
         Args: {
           input_id: number
@@ -512,6 +521,20 @@ export type Database = {
           photospotid: number
         }
         Returns: string[]
+      }
+      nearby_photoshots: {
+        Args: {
+          latt: number
+          long: number
+          limit_count: number
+        }
+        Returns: {
+          id: number
+          name: string
+          photospot_id: number
+          photo_paths: string[]
+          dist_meters: number
+        }[]
       }
       nearby_photospots: {
         Args: {
@@ -545,6 +568,20 @@ export type Database = {
           name: string
           lat: number
           long: number
+        }[]
+      }
+      recommend_photoshots: {
+        Args: {
+          user_id: string
+          limit_count?: number
+          time_range?: unknown
+        }
+        Returns: {
+          id: number
+          name: string
+          photospot_id: number
+          photo_paths: string[]
+          created_at: string
         }[]
       }
       search_tags: {

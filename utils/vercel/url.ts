@@ -10,12 +10,7 @@ export const getURL = () => {
     return url
 }
 export const getDBURL = (): string => {
-    console.log('process.env.ENV',process.env.ENV);
-        if(process.env.ENV === 'production'){  // Set this to your site URL in production env.
-            return process.env.NEXT_PUBLIC_SUPABASE_PRODUCTION_URL!;
-        }
-        else if(process.env.ENV === 'staging'){  // Set this to your site URL in production env.
-            // return process.env.NEXT_PUBLIC_SUPABASE_STAGING_URL!;
+        if(process.env.ENV === 'production' || process.env.ENV === 'staging'){  // Set this to your site URL in production env.
             return process.env.NEXT_PUBLIC_SUPABASE_URL!;
         }
         else{

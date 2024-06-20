@@ -12,14 +12,12 @@ import { Tabs } from "../ui/tabs";
 
 export default function Timeline() {
     // const { data: myPhotospots, error, isLoading }: { data: Photospot[], error: any, isLoading: boolean } = useSWR('/api/photospot', fetcher);
-    const { data: myPhotoshots, error, isLoading }: { data: Photoshot[], error: any, isLoading: boolean } = useSWR('/api/photoshot/timeline', fetcher);
-    const [location, setLocation] = useState<{ latitude: number, longitude: number } | null>();
+    const [location, setLocation] = useState<{ latitude: number, longitude: number } | null>({ latitude: 40.74, longitude: -73.99 });
     useEffect(() => {
         if ('geolocation' in navigator) {
             // Retrieve latitude & longitude coordinates from `navigator.geolocation` Web API
             navigator.geolocation.getCurrentPosition(({ coords }) => {
                 const { latitude, longitude } = coords;
-                console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
                 setLocation({ latitude, longitude });
             })
         }
@@ -37,8 +35,7 @@ export default function Timeline() {
     return (
         <div className="flex flex-col justify-center gap-4">
             {/* <DailyPhotoTime lat={location ? location.latitude : 40.73} lng={location ? location.longitude : -73.94} /> */}
-            {isLoading && <p className="text-center">Loading...</p>}
-            {myPhotoshots && <div className="flex flex-col justify-center gap-4 p-8">            {
+            <div className="flex flex-col justify-center gap-4 p-8">            {
                 // myPhotospots.map(photospot => <PhotospotCard photospot={photospot} />)
                 <Tabs defaultValue="suggested">
                     <TabsList className="flex flex-row justify-center mb-8">
@@ -47,17 +44,17 @@ export default function Timeline() {
                         <TabsTrigger className="text-3xl" value="popular"> Popular </TabsTrigger>
                     </TabsList>
                     <TabsContent value="nearby">
-                        <PhotoshotTimelineGrid photoshots={myPhotoshots} />
+                        {location && <PhotoshotTimelineGrid photoshotPath={'/api/photoshot/timeline/nearby?lat=' + location.latitude + '&lng=' + location.longitude} />}
                     </TabsContent>
                     <TabsContent value="popular">
-                        <PhotoshotTimelineGrid photoshots={myPhotoshots} />
+                        <PhotoshotTimelineGrid photoshotPath={'api/photoshot/timeline/popular'} />
                     </TabsContent>
                     <TabsContent value="suggested">
-                        <PhotoshotTimelineGrid photoshots={myPhotoshots} />
+                        <PhotoshotTimelineGrid photoshotPath={'api/photoshot/timeline/suggested'} />
                     </TabsContent>
                 </Tabs>
             }
-            </div>}
+            </div>
 
         </div>
     )

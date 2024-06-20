@@ -23,11 +23,11 @@ const supabase = createClient<Database>(
 );
 
 const PASSWORD = "testuser";
-const USER_COUNT = 10;
+const USER_COUNT = 100;
 const main = async () => {
   const seed = await createSeedClient({dryRun: false});
   // Truncate all tables in the database
-  await seed.$resetDatabase();
+  await seed.$resetDatabase(["auth.users", "public.profiles", "public.priv_profiles"]);
   for (let i = 0; i < USER_COUNT; i++) {
   await supabase.auth.signUp({
       email: `user${i}@example.com`,

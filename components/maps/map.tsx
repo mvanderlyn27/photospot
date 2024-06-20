@@ -92,8 +92,8 @@ export default function PhotospotMap({
         ...viewState
       }}
       reuseMaps={true}
-      // mapStyle="mapbox://styles/mvanderlyn27/clc8gyohu000114pl9hy6zzdt"
-      mapStyle="mapbox://styles/mapbox/standard"
+      mapStyle="mapbox://styles/mvanderlyn27/clc8gyohu000114pl9hy6zzdt"
+      // mapStyle="mapbox://styles/mapbox/standard"
       mapboxAccessToken={mapBoxToken}
       cursor="auto"
       onClick={(e) => selectLocation(e, e.lngLat, null)}

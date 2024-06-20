@@ -12,10 +12,10 @@ let seen: number[][] = [];
 const getLocation = () => {
  const centerLat = 40.738;
  const centerLng = -73.993;
- const radius = 100;
+ const radius = 2000;
 let  latLngAr =  generateRandomPosition(centerLat, centerLng, radius, seen);
 // console.log('location',latLngAr);
-return 'Point(' + latLngAr[0] + ' ' + latLngAr[1] + ')';
+return 'Point(' + latLngAr[1] + ' ' + latLngAr[0] + ')';
 }
 
 const supabase = createClient<Database>(
@@ -35,7 +35,7 @@ const main = async () => {
 const profiles = databaseProfiles ??  [];
 // console.log('profiles',databaseProfiles, profiles);
   
-  const {photospots } = await seed.photospots((x) => x(10,({seed})=> ({
+  const {photospots } = await seed.photospots((x) => x(100,({seed})=> ({
       location: () => getLocation(),
       location_name : `Photospot ${seed}`,
   })));
@@ -50,6 +50,9 @@ const profiles = databaseProfiles ??  [];
       created_by: profiles[Math.floor(Math.random() * profiles.length)].id,
       rating: () => Math.floor(Math.random() * 5)+1
     }), {connect: {profiles}});
+    await seed.saved_photospots((x) => x({min: 0, max: 5}, {
+      photospot: p.id,
+    }), {connect: { profiles}});
     const {photoshots} = await seed.photoshots((x) => x(15, {
       photo_paths: ()=> [`https://picsum.photos/id/${Math.floor(Math.random()*1000)}/400/400`, `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/400/400`, `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/400/400`],
       photospot_id: p.id,
