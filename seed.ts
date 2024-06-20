@@ -45,7 +45,7 @@ const profiles = databaseProfiles ??  [];
   if (profiles.length){
     // console.log("photospots", photospots);
   for( const p of photospots){
-    await seed.photospot_reviews((x) => x({min: 1, max: 10}, {
+    await seed.photospot_reviews((x) => x({min: 1, max: 3}, {
       photospot_id: p.id,
       created_by: profiles[Math.floor(Math.random() * profiles.length)].id,
       rating: () => Math.floor(Math.random() * 5)+1
