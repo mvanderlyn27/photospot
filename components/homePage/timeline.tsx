@@ -1,4 +1,3 @@
-"use client"
 import PhotospotCard from "@/components/timeline/photospotCard";
 import { Photoshot, Photospot } from "@/types/photospotTypes";
 import { fetcher } from "@/utils/common/fetcher";
@@ -9,19 +8,12 @@ import PhotoshotTimelineGrid from "./photoshotTimelineGrid";
 import PhotoshotGrid from "../photoshot/photoshotGrid";
 import { TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Tabs } from "../ui/tabs";
+import NearbyPhotoshotTimelineContent from "./nearbyPhotoshotTimelineContent";
+import PopularPhotoshotTimelineContent from "./popularPhotoshotTimelineContent";
+import SuggestedPhotoshotTimelineContent from "./suggestedPhotoshotTimelineContent";
 
 export default function Timeline() {
     // const { data: myPhotospots, error, isLoading }: { data: Photospot[], error: any, isLoading: boolean } = useSWR('/api/photospot', fetcher);
-    const [location, setLocation] = useState<{ latitude: number, longitude: number } | null>({ latitude: 40.74, longitude: -73.99 });
-    useEffect(() => {
-        if ('geolocation' in navigator) {
-            // Retrieve latitude & longitude coordinates from `navigator.geolocation` Web API
-            navigator.geolocation.getCurrentPosition(({ coords }) => {
-                const { latitude, longitude } = coords;
-                setLocation({ latitude, longitude });
-            })
-        }
-    }, []);
     // layout options:
     //  - golden hour time
     //  - pinterest like layout of photoshots
@@ -44,13 +36,13 @@ export default function Timeline() {
                         <TabsTrigger className="text-3xl" value="popular"> Popular </TabsTrigger>
                     </TabsList>
                     <TabsContent value="nearby">
-                        {location && <PhotoshotTimelineGrid photoshotPath={'/api/photoshot/timeline/nearby?lat=' + location.latitude + '&lng=' + location.longitude} />}
+                        <NearbyPhotoshotTimelineContent />
                     </TabsContent>
                     <TabsContent value="popular">
-                        <PhotoshotTimelineGrid photoshotPath={'api/photoshot/timeline/popular'} />
+                        <PopularPhotoshotTimelineContent />
                     </TabsContent>
                     <TabsContent value="suggested">
-                        <PhotoshotTimelineGrid photoshotPath={'api/photoshot/timeline/suggested'} />
+                        <SuggestedPhotoshotTimelineContent />
                     </TabsContent>
                 </Tabs>
             }
