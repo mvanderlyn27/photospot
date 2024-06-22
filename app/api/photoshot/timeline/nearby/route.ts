@@ -13,9 +13,15 @@ export async function GET(request: NextRequest) {
         console.log("missing body info");
         return new Response(JSON.stringify({ error: 'missing location info' }), { status: 400 })
     }
+let pageCountRaw = searchParams.get('pageCount');
+    let pageCount = 1;
+    if (pageCountRaw) {
+        pageCount = parseInt(pageCountRaw);
+    }
     const supabase = createClient()
-    const { data: photoshots, error: photoshotError } = await supabase.rpc('nearby_photoshots', { latt: parseFloat(lat), long: parseFloat(lng), limit_count : 20 });
+    const { data: photoshots, error: photoshotError } = await supabase.rpc('nearby_photoshots', { latt: parseFloat(lat), long: parseFloat(lng), page_count: pageCount });
     if (photoshotError) {
+        console.log('photoshotNearbyError', photoshotError);
         return new Response(JSON.stringify(photoshotError), { status: 500 })
     }
     console.log('photoshots', photoshots);

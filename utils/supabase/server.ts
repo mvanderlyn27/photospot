@@ -6,7 +6,6 @@ import { getDBURL } from '../vercel/url'
 export function createClient() {
     const cookieStore = cookies()
 
-    console.log('getDBURL', getDBURL());
     return createServerClient<Database>(
         // process.env.NEXT_PUBLIC_SUPABASE_URL!,
         getDBURL(),

@@ -8,10 +8,23 @@ import { Skeleton } from "../ui/skeleton";
 import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { motion } from 'framer-motion'
+import useSWRInfinite from "swr/infinite";
 
 export default function PhotoshotTimelineGrid({ initialPhotospots, photoshotPath }: { initialPhotospots: Photoshot[], photoshotPath: string }) {
     console.log('path', photoshotPath);
     // const { data: photoshots, error, isLoading }: { data: Photoshot[], error: any, isLoading: boolean } = useSWR(photoshotPath ? photoshotPath : null, fetcher);
+    const {
+        data,
+        mutate,
+        size,
+        setSize,
+        isValidating,
+        isLoading: photoshotsLoading
+    } = useSWRInfinite(
+        (index) =>
+            `${photoshotPath}pageCount=${index + 1}`,
+        fetcher
+    );
     const PAGE_COUNT = 20
     const containerRef = useRef(null)
     const [loadedPhotoshots, setLoadedPhotoshots] = useState(initialPhotospots)
@@ -19,20 +32,27 @@ export default function PhotoshotTimelineGrid({ initialPhotospots, photoshotPath
     const [isLoading, setIsLoading] = useState(false)
     const [isInView, setIsInView] = useState(false)
     const [isLast, setIsLast] = useState(false)
+    const photoshots: Photoshot[] = data ? [].concat(...data) : [];
+    const isLoadingMore =
+        isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
+    const isEmpty = data?.[0]?.length === 0;
+    const isReachingEnd =
+        isEmpty || (data && data[data.length - 1]?.length < PAGE_COUNT);
+    const isRefreshing = isValidating && data && data.length === size;
     const handleScroll = () => {
         if (containerRef.current && typeof window !== 'undefined') {
             const container: any = containerRef.current
             const { bottom } = container.getBoundingClientRect()
             const { innerHeight } = window
-            setIsInView((prev) => bottom <= innerHeight)
+            setIsInView(() => bottom <= innerHeight)
         }
     }
 
+    const handleDebouncedScroll = useDebouncedCallback(() => !isLast && handleScroll(), 200)
     useEffect(() => {
-        const handleDebouncedScroll = useDebouncedCallback(() => !isLast && handleScroll(), 200)
-        window.addEventListener('scroll', handleScroll)
+        window.addEventListener('scroll', handleDebouncedScroll)
         return () => {
-            window.removeEventListener('scroll', handleScroll)
+            window.removeEventListener('scroll', handleDebouncedScroll)
         }
     }, [])
 
@@ -43,33 +63,15 @@ export default function PhotoshotTimelineGrid({ initialPhotospots, photoshotPath
     }, [isInView])
 
     const loadMoreTickets = async (offset: number) => {
-        setIsLoading(true)
-        setOffset((prev) => prev + 1)
-        const { data: newPhotoshots } = await fetchTickets(offset)
-        if (newPhotoshots.length < PAGE_COUNT) {
-            setIsLast(true)
-        }
-        setLoadedPhotoshots((prevPhotoshots) => [...prevPhotoshots, ...newPhotoshots])
-        setIsLoading(false)
+        setSize(size + 1);
     }
-
-    const fetchTickets = async (offset: number) => {
-        const from = offset * PAGE_COUNT
-        const to = from + PAGE_COUNT - 1
-
-        // const { data } = await supabase!
-        //     .from('my_tickets_table')
-        //     .select('*')
-        //     .range(from, to)
-        //     .order('createdAt', { ascending: false })
-        const data = await fetch(`${photoshotPath}from=${from}&to=${to}`).then((res) => res.json());
-
-        return data
-    }
+    useEffect(() => {
+        console.log('photoshots', photoshots);
+    }, [photoshots])
 
     return (
         <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-1 gap-4" ref={containerRef}>
-            {loadedPhotoshots && loadedPhotoshots.map((photoshot, i) => {
+            {photoshots && photoshots.map((photoshot, i) => {
                 const recalculatedDelay =
                     i >= PAGE_COUNT * 2 ? (i - PAGE_COUNT * (offset - 1)) / 15 : i / 15
 
@@ -84,13 +86,14 @@ export default function PhotoshotTimelineGrid({ initialPhotospots, photoshotPath
                             delay: recalculatedDelay,
                         }}
                     >
-                        <PhotoshotGridDialog photoshotId={photoshot.id} />
+                        <PhotoshotGridDialog photoshotId={photoshot.id} photoshotName={photoshot.name} photoshotPath={photoshot.photo_paths[0]} />
+                        {/* <Skeleton className="w-[300px] h-[300px] bg-black/10" /> */}
                     </motion.div>
                 )
             })
             }
             {/* {photoshots && photoshots.map(photoshot => <PhotoshotDialog photoshotId={photoshot.id} />)} */}
-            {isLoading && Array(20).fill(0).map(() => <Skeleton className="w-full h-full bg-black/10" />)}
+            {photoshotsLoading && Array(20).fill(0).map(() => <Skeleton className="w-full h-full bg-black/10" />)}
         </div>
     )
 }

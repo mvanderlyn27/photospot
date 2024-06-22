@@ -489,8 +489,9 @@ export type Database = {
       }
       get_photoshots_with_highest_likes: {
         Args: {
-          limit_count?: number
           time_range?: unknown
+          page_size?: number
+          page_count?: number
         }
         Returns: {
           id: number
@@ -526,7 +527,8 @@ export type Database = {
         Args: {
           latt: number
           long: number
-          limit_count: number
+          page_size?: number
+          page_count?: number
         }
         Returns: {
           id: number
@@ -573,8 +575,9 @@ export type Database = {
       recommend_photoshots: {
         Args: {
           user_id: string
-          limit_count?: number
           time_range?: unknown
+          page_size?: number
+          page_count?: number
         }
         Returns: {
           id: number

@@ -10,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
+    console.log('test');
     const searchParams = request.nextUrl.searchParams 
     console.log('searchParams', searchParams);
 
@@ -20,10 +21,17 @@ export async function GET(request: NextRequest) {
         console.log("missing user info");
         return new Response(JSON.stringify({ error: 'missing user info' }), { status: 400 })
     }
-    const { data: photoshots, error: photoshotError } = await supabase.rpc('recommend_photoshots', { user_id: user.data.user.id, limit_count : 20 });
+    let pageCountRaw = searchParams.get('pageCount');
+    let pageCount = 1;
+    if (pageCountRaw) {
+        pageCount = parseInt(pageCountRaw);
+    }
+
+    const { data: photoshots, error: photoshotError } = await supabase.rpc('recommend_photoshots', { user_id: user.data.user.id, page_count : pageCount });
     if (photoshotError) {
+        console.log('photoshotSuggestedError', photoshotError);
         return new Response(JSON.stringify(photoshotError), { status: 500 })
     }
-    console.log('photoshots', photoshots);
+    console.log('photoshots count', photoshots.length,);
     return new Response(JSON.stringify(photoshots), { status: 200 })
 }
