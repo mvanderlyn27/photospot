@@ -28,6 +28,7 @@ import useSWR from "swr";
 import Link from "next/link";
 import TimelineCard from "./timelineDialogCard";
 import TimelineDialogCard from "./timelineDialogCard";
+import { motion } from 'framer-motion'
 
 export default function PhotoshotGridDialog({
     photoshotId,
@@ -39,12 +40,12 @@ export default function PhotoshotGridDialog({
     photoshotPath: string;
 }) {
     const [dialogOpen, setDialogOpen] = useState(false);
-    const {
-        data: isLiked,
-        mutate: updateLiked,
-        isLoading: likedLoading,
-        error: likedError,
-    } = useSWR("/api/photoshot/" + photoshotId + "/isLiked", fetcher);
+    // const {
+    //     data: isLiked,
+    //     mutate: updateLiked,
+    //     isLoading: likedLoading,
+    //     error: likedError,
+    // } = useSWR("/api/photoshot/" + photoshotId + "/isLiked", fetcher);
 
     const like = () => {
         return fetch("/api/photoshot/" + photoshotId + "/like", {
@@ -59,25 +60,25 @@ export default function PhotoshotGridDialog({
     const handleLike = async () => {
         console.log("liking");
         // if (photoshot) {
-        if (isLiked) {
-            await updateLiked(unlike(), {
-                optimisticData: () => false,
-                populateCache: () => false,
-            });
-            // updatePhotoshot({
-            //   ...photoshot,
-            //   likes_count: photoshot.likes_count - 1,
-            // });
-        } else {
-            await updateLiked(like(), {
-                optimisticData: () => true,
-                populateCache: () => true,
-            });
-            // updatePhotoshot({
-            //   ...photoshot,
-            //   likes_count: photoshot.likes_count + 1,
-            // });
-        }
+        // if (isLiked) {
+        //     await updateLiked(unlike(), {
+        //         optimisticData: () => false,
+        //         populateCache: () => false,
+        //     });
+        // updatePhotoshot({
+        //   ...photoshot,
+        //   likes_count: photoshot.likes_count - 1,
+        // });
+        // } else {
+        //     await updateLiked(like(), {
+        //         optimisticData: () => true,
+        //         populateCache: () => true,
+        // });
+        // updatePhotoshot({
+        //   ...photoshot,
+        //   likes_count: photoshot.likes_count + 1,
+        // });
+        // }
         //not working, need to be able to update like count properly, maybe don't store in a veiw?
         // updatePhotoshot();
     }
@@ -96,9 +97,14 @@ export default function PhotoshotGridDialog({
                         key={photoshotName}
                         className=" cursor-pointer group"
                     >
+                        {/* <motion.div
+                            className="w-[300px] h-[300px] rounded overflow-hidden"
+                            whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
+                        > */}
+
                         {photoshotPath ? (
                             <img
-                                className="object-cover rounded w-full transition duration-300 ease-in-out group-hover:scale-130"
+                                className="object-cover rounded w-full flex-1"
                                 src={photoshotPath}
                                 alt={photoshotId ? photoshotId + '' : ""}
                                 onError={({ currentTarget }) => {
@@ -109,6 +115,8 @@ export default function PhotoshotGridDialog({
                         ) : (
                             <Skeleton className="bg-black/10 object-cover rounded w-full aspect-square " />
                         )}
+
+                        {/* </motion.div> */}
                         <div className="flex flex-row items-center">
                             <div className="font-bold flex gap-4 flex-row items-center">
                                 {photoshotName}
