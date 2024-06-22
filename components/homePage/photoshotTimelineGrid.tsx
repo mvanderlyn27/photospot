@@ -9,9 +9,17 @@ import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { motion } from 'framer-motion'
 import useSWRInfinite from "swr/infinite";
+import { chunkify } from "@/utils/common/array";
+import resolveConfig from 'tailwindcss/resolveConfig'
+import tailwindConfig from '@/tailwind.config.js'
+import { useBreakpoint } from "@/hooks/tailwind";
+const fullConfig = resolveConfig(tailwindConfig)
 
 export default function PhotoshotTimelineGrid({ initialPhotospots, photoshotPath }: { initialPhotospots: Photoshot[], photoshotPath: string }) {
     console.log('path', photoshotPath);
+
+    const { isMd } = useBreakpoint('md');
+    const { isLg } = useBreakpoint('lg');
     // const { data: photoshots, error, isLoading }: { data: Photoshot[], error: any, isLoading: boolean } = useSWR(photoshotPath ? photoshotPath : null, fetcher);
     const {
         data,
@@ -71,26 +79,35 @@ export default function PhotoshotTimelineGrid({ initialPhotospots, photoshotPath
 
     return (
         <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-1 gap-4" ref={containerRef}>
-            {photoshots && photoshots.map((photoshot, i) => {
-                const recalculatedDelay =
-                    i >= PAGE_COUNT * 2 ? (i - PAGE_COUNT * (offset - 1)) / 15 : i / 15
+            {photoshots &&
+                chunkify(photoshots, isLg ? 5 : isMd ? 3 : 1, true).map((photoshotChunk, i) => {
 
-                return (
-                    <motion.div
-                        key={photoshot.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                            duration: 0.4,
-                            ease: [0.25, 0.25, 0, 1],
-                            delay: recalculatedDelay,
-                        }}
-                    >
-                        <PhotoshotGridDialog photoshotId={photoshot.id} photoshotName={photoshot.name} photoshotPath={photoshot.photo_paths[0]} />
-                        {/* <Skeleton className="w-[300px] h-[300px] bg-black/10" /> */}
-                    </motion.div>
-                )
-            })
+                    return (
+                        <div className="grid gap-4" >
+                            {photoshotChunk.map((photoshot, i) => {
+                                const recalculatedDelay =
+                                    i >= PAGE_COUNT * 2 ? (i - PAGE_COUNT * (offset - 1)) / 15 : i / 15
+
+                                return (
+                                    <motion.div
+                                        className="h-auto max-w-full"
+                                        key={photoshot.id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{
+                                            duration: 0.4,
+                                            ease: [0.25, 0.25, 0, 1],
+                                            delay: recalculatedDelay,
+                                        }}
+                                    >
+                                        <PhotoshotGridDialog photoshotId={photoshot.id} photoshotName={photoshot.name} photoshotPath={photoshot.photo_paths[0]} />
+                                        {/* <Skeleton className="w-[300px] h-[300px] bg-black/10" /> */}
+                                    </motion.div>
+                                )
+                            })}
+                        </div>
+                    )
+                })
             }
             {/* {photoshots && photoshots.map(photoshot => <PhotoshotDialog photoshotId={photoshot.id} />)} */}
             {photoshotsLoading && Array(20).fill(0).map(() => <Skeleton className="w-full h-full bg-black/10" />)}

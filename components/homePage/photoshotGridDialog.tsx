@@ -56,32 +56,31 @@ export default function PhotoshotGridDialog({
             method: "post",
         }).then(() => false);
     };
-    // const handleLike = async () => {
-    //     console.log("liking");
-    //     if (photoshot) {
-    //         if (photoshot.is_liked) {
-    //             await updateLiked(unlike(), {
-    //                 optimisticData: () => false,
-    //                 populateCache: () => false,
-    //             });
-    //             // updatePhotoshot({
-    //             //   ...photoshot,
-    //             //   likes_count: photoshot.likes_count - 1,
-    //             // });
-    //         } else {
-    //             await updateLiked(like(), {
-    //                 optimisticData: () => true,
-    //                 populateCache: () => true,
-    //             });
-    //             // updatePhotoshot({
-    //             //   ...photoshot,
-    //             //   likes_count: photoshot.likes_count + 1,
-    //             // });
-    //         }
-    //         //not working, need to be able to update like count properly, maybe don't store in a veiw?
-    //         updatePhotoshot();
-    //     }
-    // };
+    const handleLike = async () => {
+        console.log("liking");
+        // if (photoshot) {
+        if (isLiked) {
+            await updateLiked(unlike(), {
+                optimisticData: () => false,
+                populateCache: () => false,
+            });
+            // updatePhotoshot({
+            //   ...photoshot,
+            //   likes_count: photoshot.likes_count - 1,
+            // });
+        } else {
+            await updateLiked(like(), {
+                optimisticData: () => true,
+                populateCache: () => true,
+            });
+            // updatePhotoshot({
+            //   ...photoshot,
+            //   likes_count: photoshot.likes_count + 1,
+            // });
+        }
+        //not working, need to be able to update like count properly, maybe don't store in a veiw?
+        // updatePhotoshot();
+    }
 
     return (
         <>
@@ -95,13 +94,17 @@ export default function PhotoshotGridDialog({
                 <DialogTrigger asChild>
                     <div
                         key={photoshotName}
-                        className=" cursor-pointer"
+                        className=" cursor-pointer group"
                     >
                         {photoshotPath ? (
                             <img
-                                className="object-cover rounded w-full transition duration-300 ease-in-out"
+                                className="object-cover rounded w-full transition duration-300 ease-in-out group-hover:scale-130"
                                 src={photoshotPath}
                                 alt={photoshotId ? photoshotId + '' : ""}
+                                onError={({ currentTarget }) => {
+                                    currentTarget.onerror = null;
+                                    currentTarget.src = "/placeholder.jpg";
+                                }}
                             />
                         ) : (
                             <Skeleton className="bg-black/10 object-cover rounded w-full aspect-square " />
