@@ -495,7 +495,7 @@ export type Database = {
         }
         Returns: {
           id: number
-          total_likes: number
+          like_count: number
           name: string
           photo_paths: string[]
         }[]
@@ -542,10 +542,13 @@ export type Database = {
         Args: {
           latt: number
           long: number
+          page_size: number
+          page_count: number
         }
         Returns: {
           id: number
           location_name: string
+          address: string
           neighborhood: string
           lat: number
           lng: number

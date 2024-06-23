@@ -30,18 +30,17 @@ import TimelineCard from "./timelineDialogCard";
 import TimelineDialogCard from "./timelineDialogCard";
 import { motion } from 'framer-motion'
 
-export default function PhotoshotGridDialog({
-    photoshotId,
-    photoshotName,
-    photoshotPath,
+export default function PhotospotGridDialog({
+    photospotId,
+    photospotName,
     extraInfo,
 }: {
-    photoshotId: number;
-    photoshotName: string;
-    photoshotPath: string;
+    photospotId: number;
+    photospotName: string;
     extraInfo?: string | undefined;
 }) {
     const [dialogOpen, setDialogOpen] = useState(false);
+    const { data: photoshot, isLoading: photoshotLoading } = useSWR("/api/photospot/" + photospotId + '/topPhotoshot', fetcher);
     // const {
     //     data: isLiked,
     //     mutate: updateLiked,
@@ -49,16 +48,16 @@ export default function PhotoshotGridDialog({
     //     error: likedError,
     // } = useSWR("/api/photoshot/" + photoshotId + "/isLiked", fetcher);
 
-    const like = () => {
-        return fetch("/api/photoshot/" + photoshotId + "/like", {
-            method: "post",
-        }).then(() => true);
-    };
-    const unlike = () => {
-        return fetch("/api/photoshot/" + photoshotId + "/unlike", {
-            method: "post",
-        }).then(() => false);
-    };
+    // const like = () => {
+    //     return fetch("/api/photoshot/" + photoshotId + "/like", {
+    //         method: "post",
+    //     }).then(() => true);
+    // };
+    // const unlike = () => {
+    //     return fetch("/api/photoshot/" + photoshotId + "/unlike", {
+    //         method: "post",
+    //     }).then(() => false);
+    // };
     const handleLike = async () => {
         console.log("liking");
         // if (photoshot) {
@@ -87,8 +86,8 @@ export default function PhotoshotGridDialog({
 
     return (
         <>
-            <Dialog
-                key={photoshotId}
+            {photoshot && <Dialog
+                key={photospotId}
                 open={dialogOpen}
                 onOpenChange={(open) => {
                     setDialogOpen(open);
@@ -96,7 +95,7 @@ export default function PhotoshotGridDialog({
             >
                 <DialogTrigger asChild>
                     <div
-                        key={photoshotName}
+                        key={photospotName}
                         className=" cursor-pointer group"
                     >
                         {/* <motion.div
@@ -104,11 +103,11 @@ export default function PhotoshotGridDialog({
                             whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
                         > */}
 
-                        {photoshotPath ? (
+                        {!photoshotLoading ? (
                             <img
                                 className="object-cover rounded w-full flex-1"
-                                src={photoshotPath}
-                                alt={photoshotId ? photoshotId + '' : ""}
+                                src={photoshot.photo_paths ? photoshot.photo_paths[0] : "/placeholder.png"}
+                                alt={photospotName ? photospotName + '' : ""}
                                 onError={({ currentTarget }) => {
                                     currentTarget.onerror = null;
                                     currentTarget.src = "/placeholder.png";
@@ -121,7 +120,7 @@ export default function PhotoshotGridDialog({
                         {/* </motion.div> */}
                         <div className="font-bold flex gap-4 flex-row items-center justify-between p-4">
                             <h1>
-                                {photoshotName}
+                                {photoshot ? photoshot.name : photospotName}
                             </h1>
                             {extraInfo && <h1>
                                 {extraInfo}
@@ -131,10 +130,11 @@ export default function PhotoshotGridDialog({
                     </div>
                 </DialogTrigger>
                 <DialogContent className="p-10 lg:max-w[50dvw] md:max-w-[70dvw] sm:max-w-[90dvw]">
-                    <TimelineDialogCard photoshotId={photoshotId} />
+                    {photoshot && <TimelineDialogCard photoshotId={photoshot.id} />}
 
                 </DialogContent>
             </Dialog >
+            }
         </>
     );
 }

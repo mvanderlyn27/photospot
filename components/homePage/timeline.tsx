@@ -31,8 +31,8 @@ export default function Timeline() {
                 // myPhotospots.map(photospot => <PhotospotCard photospot={photospot} />)
                 <Tabs defaultValue="suggested">
                     <TabsList className="flex flex-row justify-center mb-8">
-                        <TabsTrigger className="text-3xl" value="suggested"> For Me </TabsTrigger>
-                        <TabsTrigger className="text-3xl" value="nearby"> Near Me </TabsTrigger>
+                        <TabsTrigger className="text-3xl" value="suggested"> Your Feed </TabsTrigger>
+                        <TabsTrigger className="text-3xl" value="nearby"> Nearby </TabsTrigger>
                         <TabsTrigger className="text-3xl" value="popular"> Popular </TabsTrigger>
                     </TabsList>
                     <TabsContent value="nearby">

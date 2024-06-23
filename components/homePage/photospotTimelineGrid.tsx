@@ -1,6 +1,6 @@
 "use client"
-import { Photoshot } from "@/types/photospotTypes";
-import PhotoshotGridDialog from "./photoshotGridDialog";
+import { Photoshot, Photospot } from "@/types/photospotTypes";
+import PhotospotGridDialog from "./photospotGridDialog";
 import PhotoshotDialog from "../photoshot/photoshotDialog";
 import useSWR from "swr";
 import { fetcher } from "@/utils/common/fetcher";
@@ -17,8 +17,8 @@ import TextSpinnerLoader from "../common/Loading";
 import { round } from "@/utils/common/math";
 const fullConfig = resolveConfig(tailwindConfig)
 
-export default function PhotoshotTimelineGrid({ photoshotPath }: { initialPhotospots: Photoshot[], photoshotPath: string }) {
-    console.log('path', photoshotPath);
+export default function PhotospotTimelineGrid({ photospotPath }: { photospotPath: string }) {
+    console.log('path', photospotPath);
 
     const { isMd } = useBreakpoint('md');
     const { isLg } = useBreakpoint('lg');
@@ -32,23 +32,32 @@ export default function PhotoshotTimelineGrid({ photoshotPath }: { initialPhotos
         isLoading: photoshotsLoading
     } = useSWRInfinite(
         (index) =>
-            `${photoshotPath}pageCount=${index + 1}`,
+            `${photospotPath}pageCount=${index + 1}`,
         fetcher
     );
+    const updatePhotoshots = (photospots: Photospot[]) => {
+        let photoshotPromiseAr = photospots.map((photospot) => {
+            return fetch(`/api/photospot/${photospot.id}/topPhotoshot`)
+                .then((res) => res.json())
+        })
+
+        Promise.all(photoshotPromiseAr).then((res) => {
+            console.log("res", res);
+            setPhotoshots(res);
+        });
+    }
     const PAGE_COUNT = 20
     const containerRef = useRef(null)
-    const [offset, setOffset] = useState(1)
     const [isInView, setIsInView] = useState(false)
-    const photoshots: Photoshot[] = data ? [].concat(...data) : [];
+    const [photoshots, setPhotoshots] = useState<Photoshot[]>([])
+    const photospots: Photospot[] = data ? [].concat(...data) : [];
+    // updatePhotoshots(photospots);
     const isLoadingMore =
         photoshotsLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
     const isEmpty = data?.[0]?.length === 0;
     const isReachingEnd =
         isEmpty || (data && data[data.length - 1]?.length < PAGE_COUNT);
     const isRefreshing = isValidating && data && data.length === size;
-    const handleNewPhotoshot = () => {
-
-    }
     const handleScroll = () => {
         if (containerRef.current && typeof window !== 'undefined') {
             const container: any = containerRef.current
@@ -80,9 +89,6 @@ export default function PhotoshotTimelineGrid({ photoshotPath }: { initialPhotos
     const loadMoreTickets = () => {
         setSize(size + 1);
     }
-    useEffect(() => {
-        console.log('photoshots', photoshots);
-    }, [photoshots])
     const getExtraInfo = (photoshot: Photoshot) => {
         if (photoshot.dist_meters) {
             return round(photoshot.dist_meters, 1) + ' meters';
@@ -97,21 +103,21 @@ export default function PhotoshotTimelineGrid({ photoshotPath }: { initialPhotos
     }
     return (
         <>
-            {photoshots &&
+            {photospots && photoshots &&
                 <div className="grid   sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-8" ref={containerRef}>
                     {
                         // chunkify(photoshots, isLg ? 5 : isMd ? 3 : 1, true).map((photoshotChunk, i) => {
                         // return (
                         // <div className="grid gap-4" >
                         // {photoshotChunk.map((photoshot, i) => {
-                        photoshots.map((photoshot, i) => {
+                        photospots.map((photospot, i) => {
                             const recalculatedDelay =
-                                i >= PAGE_COUNT * 2 ? (i - PAGE_COUNT * (offset - 1)) / 15 : i / 15
+                                i >= PAGE_COUNT * 2 ? (i - PAGE_COUNT * (size - 1)) / 15 : i / 15
 
                             return (
                                 <motion.div
                                     className="h-auto max-w-full"
-                                    key={photoshot.id}
+                                    key={photospot.id}
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{
@@ -122,7 +128,7 @@ export default function PhotoshotTimelineGrid({ photoshotPath }: { initialPhotos
                                     }}
                                     whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
                                 >
-                                    <PhotoshotGridDialog photoshotId={photoshot.id} photoshotName={photoshot.name} photoshotPath={photoshot.photo_paths[0]} extraInfo={getExtraInfo(photoshot)} />
+                                    <PhotospotGridDialog photospotId={photospot.id} photospotName={photospot.location_name} extraInfo={photospot.dist_meters ? round(photospot.dist_meters, 1) + ' meters' : undefined} />
                                     {/* <Skeleton className="w-[300px] h-[300px] bg-black/10" /> */}
                                 </motion.div>
                             )

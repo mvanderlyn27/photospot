@@ -9,6 +9,7 @@ export type Photospot = {
   address: string;
   neighborhood?: string | null;
   rating?: number | null;
+  dist_meters?: number | null;
 };
 export interface NearbyPhotospot extends Photospot {
   dist_meters: number;
@@ -45,7 +46,8 @@ export type Photoshot = {
   is_saved?: boolean;
   is_liked?: boolean;
   owner?: boolean;
-  tags?: Tag[]
+  tags?: Tag[];
+  dist_meters?: number;
 };
 export type Tag = {
   id: number;

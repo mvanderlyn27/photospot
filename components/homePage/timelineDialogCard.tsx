@@ -9,6 +9,7 @@ import useSWR from "swr";
 import ImageCarousel from "../common/ImageCarousel";
 import { Badge } from "../ui/badge";
 import { Skeleton } from "../ui/skeleton";
+import TextSpinnerLoader from "../common/Loading";
 
 export default function TimelineDialogCard({ photoshotId }: { photoshotId: number }) {
     const {
@@ -17,7 +18,11 @@ export default function TimelineDialogCard({ photoshotId }: { photoshotId: numbe
         isLoading: photoshotLoading,
         error: photoshotError,
     } = useSWR("/api/photoshot/" + photoshotId, fetcher);
-
+    const {
+        data: photospot,
+        isLoading: photospotLoading,
+        error: photospotError,
+    } = useSWR("/api/photospot/" + photoshot?.photospot_id, fetcher);
     const {
         data: isLiked,
         mutate: updateLiked,
@@ -67,31 +72,31 @@ export default function TimelineDialogCard({ photoshotId }: { photoshotId: numbe
         }
     };
 
-    const save = () => {
-        return fetch("/api/photoshot/" + photoshotId + "/save", {
-            method: "post",
-        }).then(() => true);
-    };
-    const unsave = () => {
-        return fetch("/api/photoshot/" + photoshotId + "/unsave", {
-            method: "post",
-        }).then(() => false);
-    };
-    const handleSave = () => {
-        if (photoshot) {
-            if (photoshot.is_saved) {
-                updateSaved(unsave(), {
-                    optimisticData: () => false,
-                    populateCache: () => false,
-                });
-            } else {
-                updateSaved(save(), {
-                    optimisticData: () => true,
-                    populateCache: () => true,
-                });
-            }
-        }
-    };
+    // const save = () => {
+    //     return fetch("/api/photoshot/" + photoshotId + "/save", {
+    //         method: "post",
+    //     }).then(() => true);
+    // };
+    // const unsave = () => {
+    //     return fetch("/api/photoshot/" + photoshotId + "/unsave", {
+    //         method: "post",
+    //     }).then(() => false);
+    // };
+    // const handleSave = () => {
+    //     if (photoshot) {
+    //         if (photoshot.is_saved) {
+    //             updateSaved(unsave(), {
+    //                 optimisticData: () => false,
+    //                 populateCache: () => false,
+    //             });
+    //         } else {
+    //             updateSaved(save(), {
+    //                 optimisticData: () => true,
+    //                 populateCache: () => true,
+    //             });
+    //         }
+    //     }
+    // };
     return (
         <>
             {photoshot && <div className="flex flex-row">
@@ -105,13 +110,14 @@ export default function TimelineDialogCard({ photoshotId }: { photoshotId: numbe
                         <h1 className="text-3xl font-semibold text-left">
                             {photoshot.name}
                         </h1>
-                        <div className="flex flex-row gap-4">
+                        <div className="flex flex-row gap-4 items-center">
+                            <h1 className="font-semibold">{photoshot.like_count && photoshot.like_count == 1 ? "1 like" : photoshot.like_count + " likes"}</h1>
                             <Button onClick={() => handleLike()}>
                                 {isLiked ? <IoMdHeart /> : <IoMdHeartEmpty />}
                             </Button>
-                            <Button onClick={() => handleSave()}>
+                            {/* <Button onClick={() => handleSave()}>
                                 {isSaved ? <FaBookmark /> : <FaRegBookmark />}
-                            </Button>
+                            </Button> */}
                             <Link href={`/photospot/${photoshot.photospot_id}`}>
                                 <Button>
                                     Visit
@@ -122,6 +128,11 @@ export default function TimelineDialogCard({ photoshotId }: { photoshotId: numbe
                     <h1 className="text-xl  text-left">
                         Created by: {photoshot.username}
                     </h1>
+                    {photospot &&
+                        <h1 className="text-xl  text-left">
+                            Taken at: <b>{photospot.location_name}</b>
+                        </h1>
+                    }
                     <DialogDescription className="pt-4">
                         <div className=" flex flex-auto gap-2">
                             {photoshot.tags &&
@@ -138,7 +149,11 @@ export default function TimelineDialogCard({ photoshotId }: { photoshotId: numbe
                     </DialogDescription>
                 </div>
             </div>}
-            {photoshotLoading && <Skeleton className="w-[400px] h-[400px] rounded-md object-cover bg-black/10" />}
+            {photoshotLoading &&
+                <div className="flex flex-row justify-center">
+                    <TextSpinnerLoader text={"Loading Photo Shot"} />
+                </div>
+            }
         </>
     )
 }

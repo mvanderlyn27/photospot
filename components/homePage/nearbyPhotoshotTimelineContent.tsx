@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from "react";
-import PhotoshotTimelineGrid from "./photoshotTimelineGrid";
+import PhotospotTimelineGrid from "./photospotTimelineGrid";
 import { Photoshot } from "@/types/photospotTypes";
 //UPDATE TO LOAD FIRST 20-30 photoshots, then pass that down to the photoshotTimelineGrid, along with a path
 export default function NearbyPhotoshotTimelineContent() {
@@ -21,7 +21,7 @@ export default function NearbyPhotoshotTimelineContent() {
 
     return (
         <>
-            {location && <PhotoshotTimelineGrid initialPhotospots={initialPhotoshots} photoshotPath={`/api/photoshot/timeline/nearby?lat=${location ? location.latitude : 40.73}&lng=${location ? location.longitude : -73.94}&`} />}
+            {location && <PhotospotTimelineGrid photospotPath={`/api/photospot/getNearbyPhotospots?lat=${location ? location.latitude : 40.73}&lng=${location ? location.longitude : -73.94}&`} />}
         </>
     )
 }
