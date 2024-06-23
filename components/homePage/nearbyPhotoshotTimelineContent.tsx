@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import PhotospotTimelineGrid from "./photospotTimelineGrid";
 import { Photoshot } from "@/types/photospotTypes";
+import PhotoshotTimelineGrid from "./photoshotTimelineGrid";
 //UPDATE TO LOAD FIRST 20-30 photoshots, then pass that down to the photoshotTimelineGrid, along with a path
 export default function NearbyPhotoshotTimelineContent() {
     const [location, setLocation] = useState<{ latitude: number, longitude: number } | null>({ latitude: 40.74, longitude: -73.99 });
@@ -22,6 +23,7 @@ export default function NearbyPhotoshotTimelineContent() {
     return (
         <>
             {location && <PhotospotTimelineGrid photospotPath={`/api/photospot/getNearbyPhotospots?lat=${location ? location.latitude : 40.73}&lng=${location ? location.longitude : -73.94}&`} />}
+            {/* {location && <PhotoshotTimelineGrid photoshotPath={`/api/photoshot/timeline/nearby?lat=${location ? location.latitude : 40.73}&lng=${location ? location.longitude : -73.94}&`} initialPhotospots={[]} />} */}
         </>
     )
 }

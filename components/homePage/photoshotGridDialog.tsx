@@ -106,7 +106,7 @@ export default function PhotoshotGridDialog({
             <Link href={`/photoshot/${photoshotId}`}>
                 {photoshotPath ? (
                     <img
-                        className="object-cover rounded w-full flex-1"
+                        className="object-cover rounded w-full "
                         src={photoshotPath}
                         alt={photoshotId ? photoshotId + '' : ""}
                         onError={({ currentTarget }) => {

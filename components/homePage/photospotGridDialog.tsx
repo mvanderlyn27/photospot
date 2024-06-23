@@ -86,7 +86,7 @@ export default function PhotospotGridDialog({
 
     return (
         <>
-            {photoshot && <Dialog
+            {/* {photoshot && <Dialog
                 key={photospotId}
                 open={dialogOpen}
                 onOpenChange={(open) => {
@@ -97,43 +97,44 @@ export default function PhotospotGridDialog({
                     <div
                         key={photospotName}
                         className=" cursor-pointer group"
-                    >
-                        {/* <motion.div
+                    > */}
+            {/* <motion.div
                             className="w-[300px] h-[300px] rounded overflow-hidden"
                             whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
                         > */}
+            {photoshot && <Link href={`/photoshot/${photoshot.id}`}>
+                {!photoshotLoading ? (
+                    <img
+                        className="object-cover rounded w-full flex-1"
+                        src={photoshot.photo_paths ? photoshot.photo_paths[0] : "/placeholder.png"}
+                        alt={photospotName ? photospotName + '' : ""}
+                        onError={({ currentTarget }) => {
+                            currentTarget.onerror = null;
+                            currentTarget.src = "/placeholder.png";
+                        }}
+                    />
+                ) : (
+                    <Skeleton className="bg-black/10 object-cover rounded w-full aspect-square " />
+                )}
 
-                        {!photoshotLoading ? (
-                            <img
-                                className="object-cover rounded w-full flex-1"
-                                src={photoshot.photo_paths ? photoshot.photo_paths[0] : "/placeholder.png"}
-                                alt={photospotName ? photospotName + '' : ""}
-                                onError={({ currentTarget }) => {
-                                    currentTarget.onerror = null;
-                                    currentTarget.src = "/placeholder.png";
-                                }}
-                            />
-                        ) : (
-                            <Skeleton className="bg-black/10 object-cover rounded w-full aspect-square " />
-                        )}
-
-                        {/* </motion.div> */}
-                        <div className="font-bold flex gap-4 flex-row items-center justify-between p-4">
-                            <h1>
-                                {photoshot ? photoshot.name : photospotName}
-                            </h1>
-                            {extraInfo && <h1>
-                                {extraInfo}
-                            </h1>
-                            }
-                        </div>
-                    </div>
-                </DialogTrigger>
+                {/* </motion.div> */}
+                <div className="font-bold flex gap-4 flex-row items-center justify-between p-4">
+                    <h1>
+                        {photoshot ? photoshot.name : photospotName}
+                    </h1>
+                    {extraInfo && <h1>
+                        {extraInfo}
+                    </h1>
+                    }
+                </div>
+                {/* </div> */}
+                {/* </DialogTrigger>
                 <DialogContent className="p-10 lg:max-w[50dvw] md:max-w-[70dvw] sm:max-w-[90dvw]">
                     {photoshot && <TimelineDialogCard photoshotId={photoshot.id} />}
 
                 </DialogContent>
-            </Dialog >
+            </Dialog > */}
+            </Link>
             }
         </>
     );

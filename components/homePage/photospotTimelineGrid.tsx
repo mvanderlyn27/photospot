@@ -104,7 +104,7 @@ export default function PhotospotTimelineGrid({ photospotPath }: { photospotPath
     return (
         <>
             {photospots && photoshots &&
-                <div className="grid   sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-8" ref={containerRef}>
+                <div className="grid   sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-8 xl:pl-[10vw] xl:pr-[10vw]" ref={containerRef}>
                     {
                         // chunkify(photoshots, isLg ? 5 : isMd ? 3 : 1, true).map((photoshotChunk, i) => {
                         // return (
@@ -128,6 +128,7 @@ export default function PhotospotTimelineGrid({ photospotPath }: { photospotPath
                                     }}
                                     whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
                                 >
+                                    {/* COULD PROBABLY MOVE THE LOGIC TO GET TOP PHOTOSHOT OUT OF HERE , AND USE THE OTHER PHOTOSHOT COMP*/}
                                     <PhotospotGridDialog photospotId={photospot.id} photospotName={photospot.location_name} extraInfo={photospot.dist_meters ? round(photospot.dist_meters, 1) + ' meters' : undefined} />
                                     {/* <Skeleton className="w-[300px] h-[300px] bg-black/10" /> */}
                                 </motion.div>
