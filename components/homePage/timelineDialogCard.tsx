@@ -1,3 +1,4 @@
+"use client"
 import { Tag } from "@/types/photospotTypes";
 import { fetcher } from "@/utils/common/fetcher";
 import { DialogDescription } from "@radix-ui/react-dialog";
@@ -18,6 +19,7 @@ export default function TimelineDialogCard({ photoshotId }: { photoshotId: numbe
         isLoading: photoshotLoading,
         error: photoshotError,
     } = useSWR("/api/photoshot/" + photoshotId, fetcher);
+    console.log('photoshotid', photoshotId, 'photoshot', photoshot);
     const {
         data: photospot,
         isLoading: photospotLoading,

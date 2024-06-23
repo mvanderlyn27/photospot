@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/common/theme-provider";
 import NavBar from "@/components/common/NavBar";
 import { createClient } from "@/utils/supabase/server";
 import { Toaster } from "@/components/ui/toaster";
+import Transition from "./template";
 
 export const fontSans = FontSans({
   subsets: ["latin"],
