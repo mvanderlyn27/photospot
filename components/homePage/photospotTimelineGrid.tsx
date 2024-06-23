@@ -104,41 +104,43 @@ export default function PhotospotTimelineGrid({ photospotPath }: { photospotPath
     return (
         <>
             {photospots && photoshots &&
-                <div className="grid   sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-8 xl:pl-[10vw] xl:pr-[10vw]" ref={containerRef}>
-                    {
-                        // chunkify(photoshots, isLg ? 5 : isMd ? 3 : 1, true).map((photoshotChunk, i) => {
-                        // return (
-                        // <div className="grid gap-4" >
-                        // {photoshotChunk.map((photoshot, i) => {
-                        photospots.map((photospot, i) => {
-                            const recalculatedDelay =
-                                i >= PAGE_COUNT * 2 ? (i - PAGE_COUNT * (size - 1)) / 15 : i / 15
+                <div className="flex flex-col w-full">
+                    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 " ref={containerRef}>
+                        {
+                            // chunkify(photoshots, isLg ? 5 : isMd ? 3 : 1, true).map((photoshotChunk, i) => {
+                            // return (
+                            // <div className="grid gap-4" >
+                            // {photoshotChunk.map((photoshot, i) => {
+                            photospots.map((photospot, i) => {
+                                const recalculatedDelay =
+                                    i >= PAGE_COUNT * 2 ? (i - PAGE_COUNT * (size - 1)) / 15 : i / 15
 
-                            return (
-                                <motion.div
-                                    className="h-auto max-w-full"
-                                    key={photospot.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{
-                                        duration: 0.4,
-                                        ease: [0.25, 0.25, 0, 1],
-                                        // delay: recalculatedDelay,
-                                        delay: .2
-                                    }}
-                                    whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
-                                >
-                                    {/* COULD PROBABLY MOVE THE LOGIC TO GET TOP PHOTOSHOT OUT OF HERE , AND USE THE OTHER PHOTOSHOT COMP*/}
-                                    <PhotospotGridDialog photospotId={photospot.id} photospotName={photospot.location_name} extraInfo={photospot.dist_meters ? round(photospot.dist_meters, 1) + ' meters' : undefined} />
-                                    {/* <Skeleton className="w-[300px] h-[300px] bg-black/10" /> */}
-                                </motion.div>
-                            )
-                            // })}
-                            // </div>
-                            // )
-                        })
+                                return (
+                                    <motion.div
+                                        className="h-auto max-w-full"
+                                        key={photospot.id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{
+                                            duration: 0.4,
+                                            ease: [0.25, 0.25, 0, 1],
+                                            // delay: recalculatedDelay,
+                                            delay: .2
+                                        }}
+                                    // whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
+                                    >
+                                        {/* COULD PROBABLY MOVE THE LOGIC TO GET TOP PHOTOSHOT OUT OF HERE , AND USE THE OTHER PHOTOSHOT COMP*/}
+                                        <PhotospotGridDialog photospotId={photospot.id} photospotName={photospot.location_name} extraInfo={photospot.dist_meters ? round(photospot.dist_meters, 1) + ' meters' : undefined} />
+                                        {/* <Skeleton className="w-[300px] h-[300px] bg-black/10" /> */}
+                                    </motion.div>
+                                )
+                                // })}
+                                // </div>
+                                // )
+                            })
 
-                    }
+                        }
+                    </div>
                 </div>
             }
             {isEmpty && <TimelineEmpty />}

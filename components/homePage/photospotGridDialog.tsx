@@ -29,6 +29,7 @@ import Link from "next/link";
 import TimelineCard from "./timelineDialogCard";
 import TimelineDialogCard from "./timelineDialogCard";
 import { motion } from 'framer-motion'
+import Image from "next/image";
 
 export default function PhotospotGridDialog({
     photospotId,
@@ -104,15 +105,24 @@ export default function PhotospotGridDialog({
                         > */}
             {photoshot && <Link href={`/photoshot/${photoshot.id}`}>
                 {!photoshotLoading ? (
-                    <img
-                        className="object-cover rounded w-full flex-1"
-                        src={photoshot.photo_paths ? photoshot.photo_paths[0] : "/placeholder.png"}
-                        alt={photospotName ? photospotName + '' : ""}
-                        onError={({ currentTarget }) => {
-                            currentTarget.onerror = null;
-                            currentTarget.src = "/placeholder.png";
-                        }}
-                    />
+                    <div className=" sm:h-[500px] md:h-[400px] relative overflow-hidden">
+
+                        <Image
+                            // className="object-cover rounded w-full "
+                            src={photoshot.photo_paths ? photoshot.photo_paths[0] : "/placeholder.png"}
+                            alt={photoshot.name ? photoshot.name : ""}
+                            sizes="(max-width: 768px) 100vw ,(max-width: 1200px) 50vw, 33vw"
+                            loading="eager"
+                            fill={true}
+                            className="object-cover rounded-lg"
+                        //     onError={({ currentTarget }) => {
+                        //         currentTarget.onerror = null;
+                        //         currentTarget.src = "/placeholder.png";
+                        //     }}
+                        />
+
+                    </div>
+
                 ) : (
                     <Skeleton className="bg-black/10 object-cover rounded w-full aspect-square " />
                 )}

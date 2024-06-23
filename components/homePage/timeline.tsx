@@ -25,9 +25,8 @@ export default function Timeline() {
     // infinite scroll grid underneath
     //clicking into a photo brings you to the photospots page with the photoshot open?
     return (
-        <div className="flex flex-col justify-center gap-4">
-            {/* <DailyPhotoTime lat={location ? location.latitude : 40.73} lng={location ? location.longitude : -73.94} /> */}
-            <div className="flex flex-col justify-center gap-4 p-8">            {
+        <div className="flex flex-col justify-center gap-4 p-8
+        ">            {
                 // myPhotospots.map(photospot => <PhotospotCard photospot={photospot} />)
                 <Tabs defaultValue="suggested">
                     <TabsList className="flex flex-row justify-center mb-8">
@@ -46,8 +45,7 @@ export default function Timeline() {
                     </TabsContent>
                 </Tabs>
             }
-            </div>
-
         </div>
+
     )
 }

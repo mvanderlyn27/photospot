@@ -13,6 +13,8 @@ export default async function ResetPassword() {
     redirect("/login");
   }
   return (
-    <ResetPasswordForm />
+    <div className="absolute inset-0 h-screen flex items-center justify-center" >
+      <ResetPasswordForm />
+    </div>
   )
 }

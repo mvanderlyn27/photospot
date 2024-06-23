@@ -98,7 +98,8 @@ export default function PhotoshotTimelineGrid({ photoshotPath }: { initialPhotos
     return (
         <>
             {photoshots &&
-                <div className="grid   sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-8 xl:pl-[10vw] xl:pr-[10vw]" ref={containerRef}>
+
+                <div className="w-full grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8" ref={containerRef}>
                     {
                         // chunkify(photoshots, isLg ? 5 : isMd ? 3 : 1, true).map((photoshotChunk, i) => {
                         // return (

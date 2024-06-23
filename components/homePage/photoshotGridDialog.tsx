@@ -11,6 +11,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { IoMdHeart } from "react-icons/io";
+import Image from "next/image";
 import { FaRegBookmark } from "react-icons/fa";
 import { FaBookmark } from "react-icons/fa";
 import {
@@ -105,15 +106,23 @@ export default function PhotoshotGridDialog({
                         > */}
             <Link href={`/photoshot/${photoshotId}`}>
                 {photoshotPath ? (
-                    <img
-                        className="object-cover rounded w-full "
-                        src={photoshotPath}
-                        alt={photoshotId ? photoshotId + '' : ""}
-                        onError={({ currentTarget }) => {
-                            currentTarget.onerror = null;
-                            currentTarget.src = "/placeholder.png";
-                        }}
-                    />
+                    <div className=" sm:h-[500px] md:h-[400px] relative overflow-hidden">
+
+                        <Image
+                            // className="object-cover rounded w-full "
+                            src={photoshotPath}
+                            alt={photoshotId ? photoshotId + '' : ""}
+                            sizes="(max-width: 768px) 100vw ,(max-width: 1200px) 50vw, 33vw"
+                            loading="eager"
+                            fill={true}
+                            className="object-cover rounded-lg"
+                        //     onError={({ currentTarget }) => {
+                        //         currentTarget.onerror = null;
+                        //         currentTarget.src = "/placeholder.png";
+                        //     }}
+                        />
+
+                    </div>
                 ) : (
                     <Skeleton className="bg-black/10 object-cover rounded w-full aspect-square " />
                 )}
