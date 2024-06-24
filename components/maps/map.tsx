@@ -23,7 +23,7 @@ import { fetcher } from "@/utils/common/fetcher";
 import { GeocodingCore } from "@mapbox/search-js-core";
 const MINIMUM_PHOTOSPOT_DISTANCE = 2;
 // A circle of 5 mile radius of the Empire State Building
-const MAXBOUNDS = new LngLatBounds([-74.074, 40.68], [-73.82, 40.9]);
+const MAXBOUNDS = new LngLatBounds([-74.104, 39.98], [-73.82, 40.9]);
 export default function PhotospotMap({
   selectedLocation,
   setSelectedLocation,

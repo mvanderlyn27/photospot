@@ -44,6 +44,7 @@ import PhotoTimeWidget from "../photospot/photoTimeWidget";
 import useSWR from "swr";
 import { fetcher } from "@/utils/common/fetcher";
 import useSWRMutation from "swr/dist/mutation";
+import { round } from "@/utils/common/math";
 
 const TAG_LIMIT = 5;
 
@@ -139,7 +140,7 @@ export default function PhotospotInfo({
           </CardHeader>
           <CardContent className=" flex flex-col gap-4 ">
             <RatingDisplay
-              rating={stats?.rating_average ? stats.rating_average : 0}
+              rating={stats?.rating_average ? round(stats.rating_average, 1) : 0}
               count={stats?.rating_count ? stats.rating_count : 0}
             />
             <div className=" flex flex-auto gap-2">

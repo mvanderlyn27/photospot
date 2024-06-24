@@ -4,7 +4,9 @@ import { Badge } from "../ui/badge";
 import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
 import Image from "next/image";
+import { DefaultPhotoshot } from "@/utils/common/imageLinks";
 export default function PhotoshotGridImage({ photoshotId, photoshotName, photoshotPath, extraInfo }: { photoshotId: number, photoshotName: string, photoshotPath: string, extraInfo?: string }) {
+    const [hasError, setHasError] = useState(false);
     return (
         <>
             <Link href={`/photoshot/${photoshotId}`}>
@@ -12,10 +14,11 @@ export default function PhotoshotGridImage({ photoshotId, photoshotName, photosh
                     <div className=" sm:h-[500px] md:h-[400px] relative overflow-hidden">
 
                         <Image
-                            src={photoshotPath}
+                            src={hasError ? DefaultPhotoshot : photoshotPath}
                             alt={photoshotId ? photoshotId + '' : ""}
                             sizes="(max-width: 768px) 100vw ,(max-width: 1200px) 50vw, 33vw"
                             loading="eager"
+                            onError={() => !hasError && setHasError(true)}
                             fill={true}
                             className="object-cover rounded-lg"
                         />
