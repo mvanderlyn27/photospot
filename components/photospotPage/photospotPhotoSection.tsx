@@ -1,6 +1,6 @@
 "use client";
 import { fetcher } from "@/utils/common/fetcher";
-import PhotoshotGrid from "../photoshot/photoshotGrid";
+import PhotoshotGrid from "./photoshotGrid";
 import PhotoshotUploadDialog from "../photoshot/photoshotUploadDialog";
 import { Skeleton } from "../ui/skeleton";
 import useSWR from "swr";

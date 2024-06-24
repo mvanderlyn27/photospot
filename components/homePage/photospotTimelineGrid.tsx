@@ -127,7 +127,7 @@ export default function PhotospotTimelineGrid({ photospotPath }: { photospotPath
                                             // delay: recalculatedDelay,
                                             delay: .2
                                         }}
-                                    // whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
+                                        whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
                                     >
                                         {/* COULD PROBABLY MOVE THE LOGIC TO GET TOP PHOTOSHOT OUT OF HERE , AND USE THE OTHER PHOTOSHOT COMP*/}
                                         <PhotospotGridDialog photospotId={photospot.id} photospotName={photospot.location_name} extraInfo={photospot.dist_meters ? round(photospot.dist_meters, 1) + ' meters' : undefined} />

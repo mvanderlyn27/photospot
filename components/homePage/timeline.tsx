@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import DailyPhotoTime from "./dailyPhotoTime";
 import PhotoshotTimelineGrid from "./photoshotTimelineGrid";
-import PhotoshotGrid from "../photoshot/photoshotGrid";
+import PhotoshotGrid from "../photospotPage/photoshotGrid";
 import { TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Tabs } from "../ui/tabs";
 import NearbyPhotoshotTimelineContent from "./nearbyPhotoshotTimelineContent";
