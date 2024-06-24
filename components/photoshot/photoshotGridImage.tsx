@@ -20,6 +20,7 @@ export default function PhotoshotGridImage({ photoshotId, photoshotName, photosh
                             loading="eager"
                             onError={() => !hasError && setHasError(true)}
                             fill={true}
+                            blurDataURL={`/_next/image?url=${hasError ? DefaultPhotoshot : photoshotPath}&w=16&q=1`}
                             className="object-cover rounded-lg"
                         />
 
