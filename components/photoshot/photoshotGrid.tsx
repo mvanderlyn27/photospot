@@ -8,16 +8,16 @@ import { motion } from 'framer-motion';
 import PhotoshotGridImage from "./photoshotGridImage";
 
 export default function PhotoshotGrid({ photoshots, setSize, size, photoshotsLoading }: { photoshots: Photoshot[][], setSize: (num: number) => void, size: number, photoshotsLoading: boolean }) {
+    console.log('photoshots', photoshots);
     const PAGE_COUNT = 20
     const containerRef = useRef(null)
 
     const [isInView, setIsInView] = useState(false)
-
     const isLoadingMore =
         photoshotsLoading || (size > 0 && photoshots && typeof photoshots[size - 1] === "undefined");
     const isEmpty = photoshots?.[0]?.length === 0;
     const isReachingEnd =
-        photoshots[0].length == 0 || (photoshots && photoshots[photoshots.length - 1]?.length < PAGE_COUNT);
+        photoshots.length > 0 && (photoshots?.[0].length === 0 || (photoshots && photoshots[photoshots.length - 1]?.length < PAGE_COUNT));
     // const isRefreshing = isValidating && data && data.length === size;
     const handleNewPhotoshot = () => {
 
