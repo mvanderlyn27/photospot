@@ -144,7 +144,7 @@ export default function PhotospotInfo({
             />
             <div className=" flex flex-auto gap-2">
               {tags &&
-                tags.map((tag: string) => (
+                tags.slice(0, TAG_LIMIT).map((tag: string) => (
                   <Badge key={tag} variant="outline">
                     {tag}
                   </Badge>

@@ -19,12 +19,19 @@ export default async function PhotospotPage({
     redirect("/login");
   }
   return (
-    <div className="flex flex-col justify-center gap-8 w-full pl-20 pr-20">
-      <div className="flex flex-row gap-24 w-full justify-center h-[600px] ">
+    <div className="flex flex-col justify-center gap-8 w-full md:pl-5 md:pr-5 lg:pl-20 lg:pr-20">
+      <div className="hidden xl:flex flex-row gap-24 w-full justify-center h-[600px] ">
         <div className="flex-1 ">
           {user && <PhotospotInfo user={user} id={parseInt(params.photospotId)} />}
         </div>
         <div className="flex-1 ">
+          <PreviewMap id={parseInt(params.photospotId)} />
+        </div>
+      </div>
+      <div className="flex flex-col xl:hidden gap-4">
+
+        {user && <PhotospotInfo user={user} id={parseInt(params.photospotId)} />}
+        <div className="h-[600px]">
           <PreviewMap id={parseInt(params.photospotId)} />
         </div>
       </div>
