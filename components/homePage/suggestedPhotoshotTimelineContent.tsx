@@ -1,8 +1,8 @@
 "use client"
-import useSWRInfinite from "swr/infinite";
 import PhotoshotGrid from "../photoshot/photoshotGrid";
 import PhotoshotTimelineGrid from "./photoshotTimelineGrid";
 import { fetcher } from "@/utils/common/fetcher";
+import useSWRInfinite from "swr/infinite";
 
 export default function SuggestedPhotoshotTimelineContent() {
     const {

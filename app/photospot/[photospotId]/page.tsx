@@ -9,7 +9,7 @@ import { PhotospotPhotoSection } from "@/components/photospotPage/photospotPhoto
 export default async function PhotospotPage({
   params,
 }: {
-  params: { id: string };
+  params: { photospotId: string };
 }) {
   const supabase = createClient();
   const {
@@ -22,10 +22,10 @@ export default async function PhotospotPage({
     <div className="flex flex-col justify-center gap-8 w-full pl-20 pr-20">
       <div className="flex flex-row gap-24 w-full justify-center h-[600px] ">
         <div className="flex-1 ">
-          {user && <PhotospotInfo user={user} id={parseInt(params.id)} />}
+          {user && <PhotospotInfo user={user} id={parseInt(params.photospotId)} />}
         </div>
         <div className="flex-1 ">
-          <PreviewMap id={parseInt(params.id)} />
+          <PreviewMap id={parseInt(params.photospotId)} />
         </div>
       </div>
       <Tabs defaultValue="photos" className="w-full ">
@@ -38,10 +38,10 @@ export default async function PhotospotPage({
           </TabsTrigger>
         </TabsList>
         <TabsContent value="photos" className="flex flex-col gap-4">
-          <PhotospotPhotoSection id={parseInt(params.id)} />
+          <PhotospotPhotoSection id={parseInt(params.photospotId)} />
         </TabsContent>
         <TabsContent value="reviews">
-          <PhotospotReviewSection id={parseInt(params.id)} />
+          <PhotospotReviewSection id={parseInt(params.photospotId)} />
         </TabsContent>
       </Tabs>
     </div>
