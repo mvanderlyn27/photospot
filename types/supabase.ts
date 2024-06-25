@@ -236,20 +236,26 @@ export type Database = {
       }
       profiles: {
         Row: {
+          bio: string | null
           created_at: string
           id: string
+          photo_path: string | null
           private: boolean
           username: string | null
         }
         Insert: {
+          bio?: string | null
           created_at?: string
           id: string
+          photo_path?: string | null
           private?: boolean
           username?: string | null
         }
         Update: {
+          bio?: string | null
           created_at?: string
           id?: string
+          photo_path?: string | null
           private?: boolean
           username?: string | null
         }
@@ -382,6 +388,39 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      user_follows: {
+        Row: {
+          created_at: string
+          followee: string
+          follower: string
+        }
+        Insert: {
+          created_at?: string
+          followee: string
+          follower: string
+        }
+        Update: {
+          created_at?: string
+          followee?: string
+          follower?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_followes_followee_fkey"
+            columns: ["followee"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_followes_follower_fkey"
+            columns: ["follower"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

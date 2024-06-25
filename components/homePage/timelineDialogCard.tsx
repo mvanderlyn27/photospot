@@ -11,15 +11,26 @@ import ImageCarousel from "../common/ImageCarousel";
 import { Badge } from "../ui/badge";
 import { Skeleton } from "../ui/skeleton";
 import TextSpinnerLoader from "../common/Loading";
+import { useEffect, useState } from "react";
+import EditPhotoshotDialog from "../photoshot/editPhotoshotDialog";
+import EditPhotoshotForm from "../photoshot/editPhotoshotForm";
 
 export default function TimelineDialogCard({ photoshotId }: { photoshotId: number }) {
+    const [editMode, setEditMode] = useState(false);
+    const [owner, setOwner] = useState(false);
+    const { data: user } = useSWR("/api/user", fetcher);
     const {
         data: photoshot,
         mutate: updatePhotoshot,
         isLoading: photoshotLoading,
         error: photoshotError,
     } = useSWR("/api/photoshot/" + photoshotId, fetcher);
-    console.log('photoshotid', photoshotId, 'photoshot', photoshot);
+    useEffect(() => {
+        if (photoshot && user && photoshot.created_by === user.id) {
+            console.log("updating owner", photoshot.created_by, user.id);
+            setOwner(true);
+        }
+    }, [photoshot, user])
     const {
         data: photospot,
         isLoading: photospotLoading,
@@ -101,56 +112,65 @@ export default function TimelineDialogCard({ photoshotId }: { photoshotId: numbe
     // };
     return (
         <>
-            {photoshot && <div className="flex flex-row">
-                <ImageCarousel
-                    width={"600px"}
-                    height={"600px"}
-                    photos={photoshot.photo_paths}
-                />
-                <div className="flex-col p-8 gap-8  w-full">
-                    <div className="flex flex-row gap-4 justify-between">
-                        <h1 className="text-3xl font-semibold text-left">
-                            {photoshot.name}
-                        </h1>
-                        <div className="flex flex-row gap-4 items-center">
-                            <h1 className="font-semibold">{photoshot.like_count && photoshot.like_count == 1 ? "1 like" : photoshot.like_count + " likes"}</h1>
-                            <Button onClick={() => handleLike()}>
-                                {isLiked ? <IoMdHeart /> : <IoMdHeartEmpty />}
-                            </Button>
-                            {/* <Button onClick={() => handleSave()}>
+            {photoshot &&
+                <div>
+                    {!editMode ? <div className="flex flex-col lg:flex-row">
+                        <ImageCarousel
+                            width={"600px"}
+                            height={"600px"}
+                            photos={photoshot.photo_paths}
+                        />
+                        <div className="flex-col p-8 gap-8  w-full">
+                            <div className="flex flex-row gap-4 justify-between">
+                                <h1 className="text-3xl font-semibold text-left">
+                                    {photoshot.name}
+                                </h1>
+                                <div className="flex flex-row gap-4 items-center">
+                                    <h1 className="font-semibold">{photoshot.like_count && photoshot.like_count == 1 ? "1 like" : photoshot.like_count + " likes"}</h1>
+                                    <Button onClick={() => handleLike()}>
+                                        {isLiked ? <IoMdHeart /> : <IoMdHeartEmpty />}
+                                    </Button>
+                                    {/* <Button onClick={() => handleSave()}>
                                 {isSaved ? <FaBookmark /> : <FaRegBookmark />}
                             </Button> */}
-                            <Link href={`/photospot/${photoshot.photospot_id}`}>
-                                <Button>
-                                    Visit
-                                </Button>
-                            </Link>
+                                    {
+                                        owner && <Button onClick={() => setEditMode(true)}>Edit</Button>
+                                    }
+                                    <Link href={`/photospot/${photoshot.photospot_id}`}>
+                                        <Button>
+                                            Visit
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </div>
+                            <h1 className="text-xl  text-left">
+                                Created by: {photoshot.username}
+                            </h1>
+                            {photospot &&
+                                <h1 className="text-xl  text-left">
+                                    Taken at: <b>{photospot.location_name}</b>
+                                </h1>
+                            }
+                            <DialogDescription className="pt-4">
+                                <div className=" flex flex-auto gap-2">
+                                    {photoshot.tags &&
+                                        photoshot.tags.map((tag: Tag) => (
+                                            <Badge key={tag.id} variant="outline">
+                                                {tag.name}
+                                            </Badge>
+                                        ))}
+                                </div>
+                                <h1>
+                                    <b>How to take the shot: </b>
+                                    {photoshot.recreate_text}
+                                </h1>
+                            </DialogDescription>
                         </div>
                     </div>
-                    <h1 className="text-xl  text-left">
-                        Created by: {photoshot.username}
-                    </h1>
-                    {photospot &&
-                        <h1 className="text-xl  text-left">
-                            Taken at: <b>{photospot.location_name}</b>
-                        </h1>
+                        : <EditPhotoshotForm photoshotId={photoshot.id} setEditMode={setEditMode} />
                     }
-                    <DialogDescription className="pt-4">
-                        <div className=" flex flex-auto gap-2">
-                            {photoshot.tags &&
-                                photoshot.tags.map((tag: Tag) => (
-                                    <Badge key={tag.id} variant="outline">
-                                        {tag.name}
-                                    </Badge>
-                                ))}
-                        </div>
-                        <h1>
-                            <b>How to take the shot: </b>
-                            {photoshot.recreate_text}
-                        </h1>
-                    </DialogDescription>
                 </div>
-            </div>}
+            }
             {photoshotLoading &&
                 <div className="flex flex-row justify-center">
                     <TextSpinnerLoader text={"Loading Photo Shot"} />

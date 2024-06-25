@@ -66,7 +66,7 @@ export const editPhotoshotSchema = z.object({
       (files) =>
         files
           ? new Set(files.map((file: File) => file.name)).size ===
-            files.map((file: File) => file.name).length
+          files.map((file: File) => file.name).length
           : true,
       "Please upload all unique images"
     )
@@ -81,8 +81,8 @@ export const editPhotoshotSchema = z.object({
       (files) =>
         files
           ? Array.from(files).every((file) =>
-              ACCEPTED_IMAGE_TYPES.includes(file.type)
-            )
+            ACCEPTED_IMAGE_TYPES.includes(file.type)
+          )
           : true,
       "Only these types are allowed .jpg, .jpeg, .png and .webp"
     ),
@@ -91,15 +91,14 @@ export const editPhotoshotSchema = z.object({
 
 export default function EditPhotoshotForm({
   photoshotId,
-  setPhotoshotDialogOpen,
   setEditMode,
   handleSubmit,
 }: {
   photoshotId: number;
-  setPhotoshotDialogOpen: any;
   setEditMode: any;
   handleSubmit?: any;
 }) {
+  const router = useRouter();
   const { mutate } = useSWRConfig();
   const {
     data: photoshot,
@@ -222,7 +221,8 @@ export default function EditPhotoshotForm({
     }).then(() => {
       mutate("/api/photospot/" + photoshot.photospot_id + "/tags");
     });
-    setPhotoshotDialogOpen(false);
+    // setPhotoshotDialogOpen(false);
+    router.back();
     toast({
       title: "Photoshot Deleted",
     });

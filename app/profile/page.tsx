@@ -1,8 +1,8 @@
-export default function ProfilePage() {
+import { redirect } from "next/navigation";
 
+export default function ProfilePage() {
+    redirect('/profile/likedPhotoshots')
     return (
-        <div>
-            <h1>Profile page under construction</h1>
-        </div>
+        null
     )
 }
