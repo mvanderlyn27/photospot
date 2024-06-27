@@ -12,7 +12,7 @@ import { DropzoneOptions } from "react-dropzone";
 
 const MAX_FILE_SIZE = 5242880; //5MB
 //modifying so we can take in a string array of photos that exist already
-const FileUploadDropzone = ({ curPhotos, setPhotos }: { curPhotos: File[], setPhotos: any }) => {
+const FileUploadDropzone = ({ curPhotos, setPhotos, maxFiles }: { curPhotos: File[], setPhotos: any, maxFiles?: number }) => {
     console.log("curPhotos", curPhotos);
     const [files, setFiles] = useState<File[] | null>(null);
     console.log('files', files);

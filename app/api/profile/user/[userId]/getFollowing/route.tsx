@@ -2,7 +2,9 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-export async function GET({ req, params }: { req: NextRequest, params: { userId: string } }) {
+const PAGE_SIZE = 20;
+export async function GET(req: NextRequest, { params }: { params: { userId: string } }) {
+    const searchParams = req.nextUrl.searchParams;
     if (!params.userId) {
         return new Response(JSON.stringify({ error: 'missing user id' }), { status: 400 })
     }
@@ -13,7 +15,13 @@ export async function GET({ req, params }: { req: NextRequest, params: { userId:
         console.log('error', followIdError);
         return new Response(JSON.stringify({ error: 'gettting liked photoshot list' }), { status: 500 })
     }
-    const { data, error } = await supabase.from('profiles').select('*').in('id', followedUserIds.map((user) => user.followee));
+    let pageCountRaw = searchParams.get('pageCount');
+    let pageCount = 1;
+    if (pageCountRaw) {
+        pageCount = parseInt(pageCountRaw);
+    }
+    const { data, error } = await supabase.from('profiles').select('*').in('id', followedUserIds.map((user) => user.followee)).order('created_at', { ascending: false }).range((PAGE_SIZE * (pageCount - 1)), PAGE_SIZE * pageCount);
+
     if (error) {
         console.log('error', error);
         return new Response(JSON.stringify({ error: 'gettting photoshots' }), { status: 500 })

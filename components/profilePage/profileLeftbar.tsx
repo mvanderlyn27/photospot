@@ -8,7 +8,7 @@ export default function ProfileLeftbar({ profileSection }: { profileSection: str
     const { data: profileInfo } = useSWR("/api/profile", fetcher);
     return (
         <>
-            {profileInfo && <div className="flex flex-col items-center gap-8">
+            {profileInfo && <div className="flex flex-col items-center gap-8 p-8">
                 <h1 className="text-2xl font-semibold">@{profileInfo.username}</h1>
                 <div className="p-16 w-[300px] h-[300px] rounded-full relative overflow-hidden">
                     <Image src={profileInfo.photo_path ? profileInfo.photo_path : DefaultProfile} alt="profile" fill className="object-cover" />

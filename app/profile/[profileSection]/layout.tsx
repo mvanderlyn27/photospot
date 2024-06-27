@@ -9,10 +9,10 @@ export default async function Layout({ children, params }: { children: React.Rea
     return (
 
         <div className="flex flex-row gap-4">
-            <div className="flex md:w-1/3 flex-col">
+            <div className="flex md:w-1/5 flex-col">
                 <ProfileLeftbar profileSection={params.profileSection} />
             </div>
-            <div className="flex-1">
+            <div className="flex-1 p-4">
                 {children}
             </div>
         </div>

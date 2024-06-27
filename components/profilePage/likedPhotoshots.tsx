@@ -1,7 +1,27 @@
+"use client"
+
+import useSWRInfinite from "swr/infinite";
+import PhotoshotGrid from "../photoshot/photoshotGrid"
+import { fetcher } from "@/utils/common/fetcher";
+import useSWR from "swr";
+
 export default function LikedPhotoshots() {
+    const { data: user } = useSWR("/api/user", fetcher);
+    const {
+        data,
+        mutate,
+        size,
+        setSize,
+        isValidating,
+        isLoading: photoshotsLoading
+    } = useSWRInfinite(
+        (index) =>
+            `/api/photoshot/user/${user.id}/getLikedPhotoshots?pageCount=${index + 1}`,
+        fetcher
+    );
+
     return (
-        <div>
-            <h1>test</h1>
-        </div>
+        // <PhotoshotTimelineGrid initialPhotospots={[]} photoshotPath={`/api/photoshot/timeline/suggested?`} />
+        <PhotoshotGrid photoshots={data ? data : []} setSize={setSize} size={size} photoshotsLoading={photoshotsLoading} />
     )
 }

@@ -77,7 +77,7 @@ export default function PhotoshotGrid({ photoshots, setSize, size, photoshotsLoa
                         photoshots.flat().map((photoshot, i) => {
                             const recalculatedDelay =
                                 i >= PAGE_COUNT * 2 ? (i - PAGE_COUNT * (size - 1)) / 15 : i / 15
-
+                            console.log("photoshot", photoshot);
                             return (
                                 <motion.div
                                     className="h-auto max-w-full"
@@ -101,7 +101,7 @@ export default function PhotoshotGrid({ photoshots, setSize, size, photoshotsLoa
                 </div>
             }
             {isEmpty && <TimelineEmpty />}
-            {isReachingEnd && <TimelineEnd />}
+            {isReachingEnd && !isEmpty && <TimelineEnd />}
             {isLoadingMore && <TimelineLoading />}
         </>
     )

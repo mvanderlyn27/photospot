@@ -47,7 +47,7 @@ const profiles = databaseProfiles ??  [];
   for( const p of photospots){
     await seed.photospot_reviews((x) => x({min: 1, max: 3}, {
       photospot_id: p.id,
-      created_by: profiles[Math.floor(Math.random() * profiles.length)].id,
+      created_by:  profiles[Math.floor(Math.random() * profiles.length)].id,
       rating: () => Math.floor(Math.random() * 5)+1
     }), {connect: {profiles}});
     await seed.saved_photospots((x) => x({min: 0, max: 5}, {
@@ -56,7 +56,7 @@ const profiles = databaseProfiles ??  [];
     const {photoshots} = await seed.photoshots((x) => x(15, {
       photo_paths: ()=> [`https://picsum.photos/id/${Math.floor(Math.random()*1000)}/400/400`, `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/400/400`, `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/400/400`],
       photospot_id: p.id,
-      created_by: profiles[Math.floor(Math.random() * profiles.length)].id
+      // created_by: profiles[Math.floor(Math.random() * profiles.length)].id
     }), {connect: {profiles}});
     for(const photoshot of photoshots){
       await seed.photoshot_tags((x) => x({min: 1, max: 5}, {
