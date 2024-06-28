@@ -12,7 +12,7 @@ import { toast } from "../ui/use-toast";
 export const editUsernameSchema = z.object({
     username: z.string().min(3, "Please enter a username at least 3 characters long"),
 })
-export default function EditUsernameForm({ profileInfo }: { profileInfo: any }) {
+export default function SelectThemeForm({ profileInfo }: { profileInfo: any }) {
     const [loading, setLoading] = useState(false);
     const { mutate } = useSWRConfig();
     const editUsernameForm = useForm<z.infer<typeof editUsernameSchema>>({
@@ -39,10 +39,6 @@ export default function EditUsernameForm({ profileInfo }: { profileInfo: any }) 
         }
         else {
             mutate('/api/profile', { ...profileInfo, username: data.username });
-            toast({
-                title: "Success",
-                description: "Username updated successfully",
-            })
         }
         setLoading(false);
     }
@@ -79,4 +75,4 @@ export default function EditUsernameForm({ profileInfo }: { profileInfo: any }) 
 
         </div>
     )
-}   
+}

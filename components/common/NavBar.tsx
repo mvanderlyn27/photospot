@@ -8,7 +8,7 @@ import { fetcher } from "@/utils/common/fetcher";
 
 export default function NavBar() {
     //get user logged in, render navbar
-    const { data: user } = useSWR("/api/profile", fetcher);
+    const { data: user, isLoading: userLoading, error: userError } = useSWR("/api/profile", fetcher);
     const pathname = usePathname();
     const pathStart = pathname.split('/')[1];
     return (

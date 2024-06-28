@@ -13,8 +13,6 @@ export async function POST(request: Request) {
         return new Response(error.message, { status: 400 })
     }
 
-    revalidatePath('/', 'layout')
-    redirect('/')
-    // return new Response("success", { status: 200 })
+    return new Response("success", { status: 200 })
 
 }

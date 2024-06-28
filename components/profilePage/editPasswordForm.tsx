@@ -9,26 +9,26 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
 
-export const editUsernameSchema = z.object({
-    username: z.string().min(3, "Please enter a username at least 3 characters long"),
+export const editPasswordSchema = z.object({
+    password: z.string().min(3, "Please enter a password at least 3 characters long"),
 })
-export default function EditUsernameForm({ profileInfo }: { profileInfo: any }) {
+export default function EditPasswordForm({ profileInfo }: { profileInfo: any }) {
     const [loading, setLoading] = useState(false);
     const { mutate } = useSWRConfig();
-    const editUsernameForm = useForm<z.infer<typeof editUsernameSchema>>({
-        resolver: zodResolver(editUsernameSchema),
+    const editPasswordForm = useForm<z.infer<typeof editPasswordSchema>>({
+        resolver: zodResolver(editPasswordSchema),
         defaultValues: {
-            username: profileInfo.username
+            password: ''
         },
     });
-    const handleEdit = async (data: z.infer<typeof editUsernameSchema>) => {
-        if (data.username) {
-            return fetch('/api/profile/edit/username', { body: JSON.stringify({ username: data.username }), method: 'POST' }).then(res => res.json());
+    const handleEdit = async (data: z.infer<typeof editPasswordSchema>) => {
+        if (data.password) {
+            return fetch('/api/profile/edit/password', { body: JSON.stringify({ password: data.password }), method: 'POST' }).then(res => res.json());
         }
     }
-    const onEdit = async (data: z.infer<typeof editUsernameSchema>) => {
+    const onEdit = async (data: z.infer<typeof editPasswordSchema>) => {
         setLoading(true);
-        const newPath = await mutate('/api/profile/edit/username', handleEdit(data));
+        const newPath = await mutate('/api/profile/edit/password', handleEdit(data));
         console.log("new path", newPath);
         if (!newPath || newPath?.error) {
             toast({
@@ -38,33 +38,33 @@ export default function EditUsernameForm({ profileInfo }: { profileInfo: any }) 
             })
         }
         else {
-            mutate('/api/profile', { ...profileInfo, username: data.username });
+            mutate('/api/profile');
             toast({
                 title: "Success",
-                description: "Username updated successfully",
+                description: "Password updated successfully",
             })
         }
-        setLoading(false);
+        cancelEdit();
     }
     const cancelEdit = () => {
-        editUsernameForm.reset();
+        editPasswordForm.reset();
         setLoading(false);
     };
     return (
         <div className="flex flex-col gap-4 p-4">
-            <Form {...editUsernameForm}>
+            <Form {...editPasswordForm}>
                 <form
-                    onSubmit={editUsernameForm.handleSubmit(onEdit)}
+                    onSubmit={editPasswordForm.handleSubmit(onEdit)}
                 >
                     <FormField
-                        control={editUsernameForm.control}
-                        name="username"
+                        control={editPasswordForm.control}
+                        name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Update Username:</FormLabel>
+                                <FormLabel>Update Password:</FormLabel>
                                 <div className="flex-row flex gap-4">
                                     <FormControl>
-                                        <Input placeholder="Username" {...field} />
+                                        <Input type="password" placeholder="" {...field} />
                                     </FormControl>
                                     <Button type="submit" disabled={loading}>
                                         Save
@@ -79,4 +79,4 @@ export default function EditUsernameForm({ profileInfo }: { profileInfo: any }) 
 
         </div>
     )
-}   
+}

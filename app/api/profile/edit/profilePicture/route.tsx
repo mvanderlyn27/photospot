@@ -14,13 +14,13 @@ export async function POST(req: Request) {
         return new Response(JSON.stringify({ error: 'missing user' }), { status: 400 })
     }
     //checks if user is private
-    const { data: isPrivate, error: privateError } = await supabase.from('profiles').select('private').eq('id', user.data.user.id).single();
+    const { data: isPrivate, error: privateError } = await supabase.from('profiles').select('private_profile').eq('id', user.data.user.id).single();
     if (privateError) {
         console.log('error getting private info', privateError);
         return new Response(JSON.stringify({ error: 'gettting private' }), { status: 500 })
     }
     let pre_path = 'public';
-    if (isPrivate?.private) {
+    if (isPrivate?.private_profile) {
         pre_path = 'private';
     }
     let fileType = photo.name.split('.').pop();

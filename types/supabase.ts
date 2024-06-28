@@ -240,7 +240,7 @@ export type Database = {
           created_at: string
           id: string
           photo_path: string | null
-          private: boolean
+          private_profile: boolean
           username: string | null
         }
         Insert: {
@@ -248,7 +248,7 @@ export type Database = {
           created_at?: string
           id: string
           photo_path?: string | null
-          private?: boolean
+          private_profile?: boolean
           username?: string | null
         }
         Update: {
@@ -256,7 +256,7 @@ export type Database = {
           created_at?: string
           id?: string
           photo_path?: string | null
-          private?: boolean
+          private_profile?: boolean
           username?: string | null
         }
         Relationships: [
@@ -273,20 +273,20 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          role: Database["public"]["Enums"]["db_roles"]
           theme: Database["public"]["Enums"]["themes"]
+          user_role: Database["public"]["Enums"]["db_roles"]
         }
         Insert: {
           created_at?: string
           id: string
-          role?: Database["public"]["Enums"]["db_roles"]
           theme?: Database["public"]["Enums"]["themes"]
+          user_role?: Database["public"]["Enums"]["db_roles"]
         }
         Update: {
           created_at?: string
           id?: string
-          role?: Database["public"]["Enums"]["db_roles"]
           theme?: Database["public"]["Enums"]["themes"]
+          user_role?: Database["public"]["Enums"]["db_roles"]
         }
         Relationships: [
           {

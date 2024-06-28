@@ -16,6 +16,9 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { preload, useSWRConfig } from "swr";
+import { fetcher } from "@/utils/common/fetcher";
+import { toast } from "../ui/use-toast";
 const loginSchema = z.object({
   email: z
     .string()
@@ -27,6 +30,7 @@ const loginSchema = z.object({
 });
 export default function LoginForm() {
   const router = useRouter();
+  const { mutate } = useSWRConfig();
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -42,16 +46,23 @@ export default function LoginForm() {
       // fetch("/api/test", {
       method: "POST",
       body: JSON.stringify(values),
-      redirect: "follow",
-      //   method: "GET",
     })
-      .then(() => {
-        router.push("/home");
-        router.refresh();
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          toast({
+            title: "Error",
+            description: data,
+            variant: "destructive",
+          })
+        }
+        else {
+          console.log("data", data);
+          await mutate('/api/profile');
+          router.push("/home");
+          router.refresh();
+        }
       })
-      .catch((error) => {
-        router.push("/error=?" + error.message);
-      });
   }
 
   return (

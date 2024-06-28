@@ -9,26 +9,26 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
 
-export const editUsernameSchema = z.object({
-    username: z.string().min(3, "Please enter a username at least 3 characters long"),
+export const editEmailSchema = z.object({
+    email: z.string().min(1, 'need to enter an email to update').email("Need to enter a valid email"),
 })
-export default function EditUsernameForm({ profileInfo }: { profileInfo: any }) {
+export default function EditEmailForm({ profileInfo }: { profileInfo: any }) {
     const [loading, setLoading] = useState(false);
     const { mutate } = useSWRConfig();
-    const editUsernameForm = useForm<z.infer<typeof editUsernameSchema>>({
-        resolver: zodResolver(editUsernameSchema),
+    const editEmailForm = useForm<z.infer<typeof editEmailSchema>>({
+        resolver: zodResolver(editEmailSchema),
         defaultValues: {
-            username: profileInfo.username
+            email: profileInfo.email
         },
     });
-    const handleEdit = async (data: z.infer<typeof editUsernameSchema>) => {
-        if (data.username) {
-            return fetch('/api/profile/edit/username', { body: JSON.stringify({ username: data.username }), method: 'POST' }).then(res => res.json());
+    const handleEdit = async (data: z.infer<typeof editEmailSchema>) => {
+        if (data.email) {
+            return fetch('/api/profile/edit/email', { body: JSON.stringify({ email: data.email }), method: 'POST' }).then(res => res.json());
         }
     }
-    const onEdit = async (data: z.infer<typeof editUsernameSchema>) => {
+    const onEdit = async (data: z.infer<typeof editEmailSchema>) => {
         setLoading(true);
-        const newPath = await mutate('/api/profile/edit/username', handleEdit(data));
+        const newPath = await mutate('/api/profile/edit/email', handleEdit(data));
         console.log("new path", newPath);
         if (!newPath || newPath?.error) {
             toast({
@@ -38,33 +38,33 @@ export default function EditUsernameForm({ profileInfo }: { profileInfo: any }) 
             })
         }
         else {
-            mutate('/api/profile', { ...profileInfo, username: data.username });
+            mutate('/api/profile', { ...profileInfo, email: data.email });
             toast({
-                title: "Success",
-                description: "Username updated successfully",
+                title: "Email sent",
+                description: "Check email to confirm update",
             })
         }
         setLoading(false);
     }
     const cancelEdit = () => {
-        editUsernameForm.reset();
+        editEmailForm.reset();
         setLoading(false);
     };
     return (
         <div className="flex flex-col gap-4 p-4">
-            <Form {...editUsernameForm}>
+            <Form {...editEmailForm}>
                 <form
-                    onSubmit={editUsernameForm.handleSubmit(onEdit)}
+                    onSubmit={editEmailForm.handleSubmit(onEdit)}
                 >
                     <FormField
-                        control={editUsernameForm.control}
-                        name="username"
+                        control={editEmailForm.control}
+                        name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Update Username:</FormLabel>
+                                <FormLabel>Update Email:</FormLabel>
                                 <div className="flex-row flex gap-4">
                                     <FormControl>
-                                        <Input placeholder="Username" {...field} />
+                                        <Input placeholder="Email" {...field} />
                                     </FormControl>
                                     <Button type="submit" disabled={loading}>
                                         Save
@@ -79,4 +79,4 @@ export default function EditUsernameForm({ profileInfo }: { profileInfo: any }) 
 
         </div>
     )
-}   
+}

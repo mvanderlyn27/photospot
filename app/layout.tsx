@@ -22,9 +22,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
   return (
     <html lang="en">
       <body
@@ -40,7 +37,7 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <NavBar user={user} />
+            <NavBar />
             {children}
             <Toaster />
           </ThemeProvider>

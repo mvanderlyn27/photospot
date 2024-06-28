@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
 
   const { email, password } = body;
   if (!email || !password) {
-    return new Response("Missing email or password", { status: 400 });
+    return new Response(JSON.stringify("Missing email or password"), { status: 400 });
   }
   const supabase = createClient();
 
@@ -19,8 +19,9 @@ export async function POST(request: NextRequest) {
     password: password,
   });
   if (error) {
-    return new Response(error.message, { status: 400 });
+    console.log('error logging in');
+    return new Response(JSON.stringify(error.message), { status: 400 });
   }
 
-  return new Response("success", { status: 200 });
+  return new Response(JSON.stringify("success"), { status: 200 });
 }
