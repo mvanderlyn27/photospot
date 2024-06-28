@@ -4,7 +4,7 @@ import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
 
 export default function Followers() {
-    const { data: user } = useSWR("/api/user", fetcher);
+    const { data: user } = useSWR("/api/profile", fetcher);
     const {
         data,
         mutate,

@@ -26,7 +26,7 @@ export default function CreateReviewDialog({ id }: { id: number }) {
     isLoading: reviewsLoading,
     error: reviewsError,
   } = useSWR("/api/photospot/" + id + "/reviews", fetcher);
-  const user: User = useSWR("/api/user", fetcher).data;
+  const user = useSWR("/api/profile", fetcher).data;
   // const user = { id: 'test' };
   //    const reviews: Review[] = [{ created_by: 'test', rating: 5, text: 'test', created_at: 'test', photospot_id: 1 }];
   const [loading, setLoading] = useState(false);

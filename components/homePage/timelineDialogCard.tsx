@@ -18,7 +18,7 @@ import EditPhotoshotForm from "../photoshot/editPhotoshotForm";
 export default function TimelineDialogCard({ photoshotId }: { photoshotId: number }) {
     const [editMode, setEditMode] = useState(false);
     const [owner, setOwner] = useState(false);
-    const { data: user } = useSWR("/api/user", fetcher);
+    const { data: user } = useSWR("/api/profile", fetcher);
     const {
         data: photoshot,
         mutate: updatePhotoshot,

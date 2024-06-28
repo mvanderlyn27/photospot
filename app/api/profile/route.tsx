@@ -15,5 +15,11 @@ export async function GET() {
         console.log('error', profileError);
         return new Response(JSON.stringify({ error: 'gettting profile' }), { status: 500 })
     }
-    return NextResponse.json({ ...data.user, ...profile });
+
+    const { data: profilePriv, error: profilePrivError } = await supabase.from('profiles_priv').select('*').eq('id', data.user.id).single();
+    if (profilePrivError) {
+        console.log('error', profileError);
+        return new Response(JSON.stringify({ error: 'gettting profile' }), { status: 500 })
+    }
+    return NextResponse.json({ ...data.user, ...profilePriv, ...profile });
 }

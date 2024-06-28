@@ -5,7 +5,7 @@ import useSWRInfinite from "swr/infinite";
 import PhotoshotGrid from "../photoshot/photoshotGrid";
 
 export default function MyPhotoshots() {
-    const { data: user } = useSWR("/api/user", fetcher);
+    const { data: user } = useSWR("/api/profile", fetcher);
     const {
         data,
         mutate,

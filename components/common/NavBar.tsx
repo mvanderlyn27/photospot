@@ -3,10 +3,12 @@ import Link from "next/link";
 import LogoutButton from "../auth/LogoutButton";
 import { Button } from '@/components/ui/button';
 import { usePathname } from "next/navigation";
+import useSWR from "swr";
+import { fetcher } from "@/utils/common/fetcher";
 
-export default function NavBar({ user }: { user: any }) {
+export default function NavBar() {
     //get user logged in, render navbar
-    const username = user?.user_metadata?.username
+    const { data: user } = useSWR("/api/profile", fetcher);
     const pathname = usePathname();
     const pathStart = pathname.split('/')[1];
     return (
@@ -19,7 +21,7 @@ export default function NavBar({ user }: { user: any }) {
 
                 {user ? (
                     <div className="flex items-center gap-4">
-                        Hey, <b>{username ? username : user.email}!</b>
+                        Hey, <b>{user.username ? user.username : user.email}!</b>
                         <div className="flex jusitfy-between items-center flex-row">
                             <Link
                                 href="/home"

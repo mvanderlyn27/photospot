@@ -5,6 +5,6 @@ import SettingSection from "./settingSection";
 
 export default function MySettings() {
 
-    const { data: user } = useSWR("/api/user", fetcher);
+    const { data: user } = useSWR("/api/profile", fetcher);
     return <SettingSection user={user} />
 }

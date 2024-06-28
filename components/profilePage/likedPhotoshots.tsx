@@ -6,7 +6,7 @@ import { fetcher } from "@/utils/common/fetcher";
 import useSWR from "swr";
 
 export default function LikedPhotoshots() {
-    const { data: user } = useSWR("/api/user", fetcher);
+    const { data: user } = useSWR("/api/profile", fetcher);
     const {
         data,
         mutate,
