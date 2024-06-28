@@ -92,67 +92,69 @@ export default function EditProfilePicture({ profileInfo }: { profileInfo: any }
         editProfilePictureForm.setValue('photo', file);
     }
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger>
-                <motion.div className="cursor-pointer relative"
-                    whileHover="hover"
-                    initial="noHover"
-                //     onClick={() => {
-                //         console.log('open dialog');
-                //         setOpen(true);
-                //     }}
-                >
-                    <motion.div
-                        className="w-[300px] h-[300px] rounded-full overflow-hidden"
-                        variants={list}
+        <div className="flex flex-row justify-center">
+            <Dialog open={open} onOpenChange={setOpen} >
+                <DialogTrigger>
+                    <motion.div className="cursor-pointer relative"
+                        whileHover="hover"
+                        initial="noHover"
+                    //     onClick={() => {
+                    //         console.log('open dialog');
+                    //         setOpen(true);
+                    //     }}
                     >
-                        <Image src={profileInfo.photo_path ? profileInfo.photo_path : DefaultProfile} alt={""} fill className="object-cover" />
-                    </motion.div>
-                    <motion.div
-                        variants={item}
-                    >
-                        <div className="absolute top-0 right-0 bottom-0 left-0 flex flex-col items-center justify-center gap-4 text-white">
+                        <motion.div
+                            className="w-[300px] h-[300px] rounded-full overflow-hidden"
+                            variants={list}
+                        >
+                            <Image src={profileInfo.photo_path ? profileInfo.photo_path : DefaultProfile} alt={""} fill className="object-cover" />
+                        </motion.div>
+                        <motion.div
+                            variants={item}
+                        >
+                            <div className="absolute top-0 right-0 bottom-0 left-0 flex flex-col items-center justify-center gap-4 text-white">
 
-                            Edit Picture <FaEdit className="w-8 h-8 " />
-                        </div>
-                    </motion.div>
-                </motion.div>
-
-            </DialogTrigger>
-            <DialogContent>
-                <CardHeader>
-                    <CardTitle>Edit Profile Picture</CardTitle>
-                </CardHeader>
-                <Form {...editProfilePictureForm}>
-                    <form
-                        onSubmit={editProfilePictureForm.handleSubmit(onEdit)}
-                        className=" w-full flex flex-col"
-                    >
-
-                        <CardContent>
-                            <SingleFileUploadDropzone setPhoto={setPhoto} />
-
-                        </CardContent>
-                        <CardFooter className="flex-none flex-col gap-4">
-                            <div className="w-full flex flex-row gap-8 justify-center">
-                                <Button
-                                    variant="outline"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        cancelEdit();
-                                    }}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button type="submit" disabled={loading}>
-                                    Save Changes
-                                </Button>
+                                Edit Picture <FaEdit className="w-8 h-8 " />
                             </div>
-                        </CardFooter>
-                    </form>
-                </Form>
+                        </motion.div>
+                    </motion.div>
 
-            </DialogContent>
-        </Dialog>
+                </DialogTrigger>
+                <DialogContent>
+                    <CardHeader>
+                        <CardTitle>Edit Profile Picture</CardTitle>
+                    </CardHeader>
+                    <Form {...editProfilePictureForm}>
+                        <form
+                            onSubmit={editProfilePictureForm.handleSubmit(onEdit)}
+                            className=" w-full flex flex-col"
+                        >
+
+                            <CardContent>
+                                <SingleFileUploadDropzone setPhoto={setPhoto} />
+
+                            </CardContent>
+                            <CardFooter className="flex-none flex-col gap-4">
+                                <div className="w-full flex flex-row gap-8 justify-center">
+                                    <Button
+                                        variant="outline"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            cancelEdit();
+                                        }}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button type="submit" disabled={loading}>
+                                        Save Changes
+                                    </Button>
+                                </div>
+                            </CardFooter>
+                        </form>
+                    </Form>
+
+                </DialogContent>
+            </Dialog>
+        </div>
     )
 }

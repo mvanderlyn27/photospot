@@ -4,31 +4,31 @@ import { useForm } from "react-hook-form";
 import { useSWRConfig } from "swr";
 import { z } from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
+import { Textarea } from "../ui/textarea";
 
-export const editUsernameSchema = z.object({
-    username: z.string().min(3, "Please enter a username at least 3 characters long"),
+export const editBioSchema = z.object({
+    bio: z.string().min(3, "Please enter a bio at least 3 characters long"),
 })
-export default function EditUsernameForm({ profileInfo }: { profileInfo: any }) {
+export default function EditBioForm({ profileInfo }: { profileInfo: any }) {
     const [loading, setLoading] = useState(false);
     const { mutate } = useSWRConfig();
-    const editUsernameForm = useForm<z.infer<typeof editUsernameSchema>>({
-        resolver: zodResolver(editUsernameSchema),
+    const editBioForm = useForm<z.infer<typeof editBioSchema>>({
+        resolver: zodResolver(editBioSchema),
         defaultValues: {
-            username: profileInfo.username
+            bio: profileInfo.bio
         },
     });
-    const handleEdit = async (data: z.infer<typeof editUsernameSchema>) => {
-        if (data.username) {
-            return fetch('/api/profile/edit/username', { body: JSON.stringify({ username: data.username }), method: 'POST' }).then(res => res.json());
+    const handleEdit = async (data: z.infer<typeof editBioSchema>) => {
+        if (data.bio) {
+            return fetch('/api/profile/edit/bio', { body: JSON.stringify({ bio: data.bio }), method: 'POST' }).then(res => res.json());
         }
     }
-    const onEdit = async (data: z.infer<typeof editUsernameSchema>) => {
+    const onEdit = async (data: z.infer<typeof editBioSchema>) => {
         setLoading(true);
-        const newPath = await mutate('/api/profile/edit/username', handleEdit(data));
+        const newPath = await mutate('/api/profile/edit/bio', handleEdit(data));
         console.log("new path", newPath);
         if (!newPath || newPath?.error) {
             toast({
@@ -38,29 +38,29 @@ export default function EditUsernameForm({ profileInfo }: { profileInfo: any }) 
             })
         }
         else {
-            mutate('/api/profile', { ...profileInfo, username: data.username });
+            mutate('/api/profile', { ...profileInfo, bio: data.bio });
         }
         setLoading(false);
     }
     const cancelEdit = () => {
-        editUsernameForm.reset();
+        editBioForm.reset();
         setLoading(false);
     };
     return (
         <div className="flex flex-col gap-4 p-4">
-            <Form {...editUsernameForm}>
+            <Form {...editBioForm}>
                 <form
-                    onSubmit={editUsernameForm.handleSubmit(onEdit)}
+                    onSubmit={editBioForm.handleSubmit(onEdit)}
                 >
                     <FormField
-                        control={editUsernameForm.control}
-                        name="username"
+                        control={editBioForm.control}
+                        name="bio"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Update Username:</FormLabel>
+                                <FormLabel>Update Bio:</FormLabel>
                                 <div className="flex-row flex gap-4">
                                     <FormControl>
-                                        <Input placeholder="Username" {...field} />
+                                        <Textarea placeholder="about me.."  {...field} />
                                     </FormControl>
                                     <Button type="submit" disabled={loading}>
                                         Save
@@ -75,4 +75,4 @@ export default function EditUsernameForm({ profileInfo }: { profileInfo: any }) 
 
         </div>
     )
-}   
+}

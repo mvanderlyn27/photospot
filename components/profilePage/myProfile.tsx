@@ -7,6 +7,8 @@ import useSWR from "swr";
 import { DefaultProfile } from "@/utils/common/imageLinks";
 import { FaEdit } from "react-icons/fa";
 import EditProfilePicture from "./editProfilePicture";
+import EditUsernameForm from "./editUsernameForm";
+import EditBioForm from "./editBioForm";
 export default function MyProfile({ user }: { user: any }) {
     /*
     want picture change opportunity
@@ -27,9 +29,9 @@ export default function MyProfile({ user }: { user: any }) {
                             {/* Update picture form */}
                             <EditProfilePicture profileInfo={profileInfo} />
                             {/* Update username form */}
-                            <h1> {profileInfo.username}</h1>
+                            <EditUsernameForm profileInfo={profileInfo} />
                             {/* Update Bio form  */}
-                            <h1> {profileInfo.bio}</h1>
+                            <EditBioForm profileInfo={profileInfo} />
                         </div>
 
                     </CardContent>
