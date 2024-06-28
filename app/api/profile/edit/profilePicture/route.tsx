@@ -3,7 +3,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
-export default async function POST(req: Request) {
+const PHOTO_BUCKET = "profile_pictures";
+export async function POST(req: Request) {
     const supabase = createClient();
     const formData = await req.formData();
     const photo = formData.get('photo') as File;
@@ -15,7 +16,7 @@ export default async function POST(req: Request) {
     //checks if user is private
     const { data: isPrivate, error: privateError } = await supabase.from('profiles').select('private').eq('id', user.data.user.id).single();
     if (privateError) {
-        console.log('error', privateError);
+        console.log('error getting private info', privateError);
         return new Response(JSON.stringify({ error: 'gettting private' }), { status: 500 })
     }
     let pre_path = 'public';
@@ -24,11 +25,17 @@ export default async function POST(req: Request) {
     }
     let fileType = photo.name.split('.').pop();
     //uploads photo to correct folder
-    const { error: profilePicError } = await supabase.storage.from('profile_pics').upload(`${pre_path}/${user.data.user.id}.${fileType}`, photo, { upsert: true })
+    const { error: profilePicError } = await supabase.storage.from(PHOTO_BUCKET).upload(`${pre_path}/${user.data.user.id}.${fileType}`, photo, { upsert: true })
     if (profilePicError) {
-        console.log('error', profilePicError);
+        console.log('error uploading profile pic', profilePicError);
         return new Response(JSON.stringify({ error: 'uploading profile pic' }), { status: 500 })
     }
-    const url = supabase.storage.from('profile_pics').getPublicUrl(`${pre_path}/${user.data.user.id}.${fileType}`);
+
+    const url = supabase.storage.from(PHOTO_BUCKET).getPublicUrl(`${pre_path}/${user.data.user.id}.${fileType}?timestamp=${Date.now()}`);
+    const { error: profileUpdateError } = await supabase.from('profiles').update({ photo_path: url.data.publicUrl }).eq('id', user.data.user.id);
+    if (profileUpdateError) {
+        console.log('error updating profile', profileUpdateError);
+        return new Response(JSON.stringify({ error: 'updating profile path' }), { status: 500 })
+    }
     return NextResponse.json(url.data.publicUrl);
 }

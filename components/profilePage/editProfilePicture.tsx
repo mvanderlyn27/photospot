@@ -40,7 +40,7 @@ export const editProfilePictureSchema = z.object({
         ),
 })
 export default function EditProfilePicture({ profileInfo }: { profileInfo: any }) {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
 
@@ -64,19 +64,29 @@ export default function EditProfilePicture({ profileInfo }: { profileInfo: any }
         if (data.photo) {
             let formData = new FormData();
             formData.set("photo", data.photo);
-            return fetch('/api/profile/editProfilePicture', { body: formData, method: 'POST' }).then(res => res.json());
+            return fetch('/api/profile/edit/profilePicture', { body: formData, method: 'POST' }).then(res => res.json());
         }
     }
     const onEdit = async (data: z.infer<typeof editProfilePictureSchema>) => {
         setLoading(true);
         const newPath = await mutate('/api/profile/editProfilePicture', handleEdit(data));
-        mutate('/api/profile', { ...profileInfo, photo_path: newPath });
-        setOpen(false);
+        if (!newPath || newPath?.error) {
+            toast({
+                title: "Error",
+                description: newPath ? newPath.error : "Something went wrong, please try again",
+                variant: "destructive",
+            })
+        }
+        else {
+            mutate('/api/profile', { ...profileInfo, photo_path: newPath });
+            setOpen(false);
+        }
         setLoading(false);
     }
     const cancelEdit = () => {
         editProfilePictureForm.reset();
         setOpen(false);
+        setLoading(false);
     };
     const setPhoto = (file: File) => {
         editProfilePictureForm.setValue('photo', file);
