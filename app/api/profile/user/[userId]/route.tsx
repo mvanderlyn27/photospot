@@ -16,7 +16,7 @@ export async function GET(params: { params: { userId: string } }) {
     if (!profile) {
         return new Response(JSON.stringify({ error: 'user not found' }), { status: 404 })
     }
-    if (profile.private === true && profile.id !== user.data.user?.id) {
+    if (profile.private_profile === true && profile.id !== user.data.user?.id) {
         return new Response(JSON.stringify({ error: 'user is private' }), { status: 403 })
     }
     return NextResponse.json(profile);

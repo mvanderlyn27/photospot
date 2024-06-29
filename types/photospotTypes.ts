@@ -127,3 +127,8 @@ export enum PhotoTime {
   golden_hour_morning,
   golden_hour_evening,
 }
+export enum Themes {
+  light='light',
+  dark='dark',
+  device='device'
+}

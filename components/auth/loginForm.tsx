@@ -40,10 +40,7 @@ export default function LoginForm() {
   });
 
   function onLogin(values: z.infer<typeof loginSchema>) {
-    // login(values.email, values.password);
-    console.log("form submitted values", values);
     fetch("/api/auth/login", {
-      // fetch("/api/test", {
       method: "POST",
       body: JSON.stringify(values),
     })
@@ -57,7 +54,6 @@ export default function LoginForm() {
           })
         }
         else {
-          console.log("data", data);
           await mutate('/api/profile');
           router.push("/home");
           router.refresh();

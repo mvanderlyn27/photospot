@@ -2,6 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function POST(request: Request) {
     const body = await request.json();
@@ -15,10 +16,12 @@ export async function POST(request: Request) {
         console.log('no user logged in');
         return new Response(JSON.stringify({ error: 'missing user' }), { status: 400 })
     }
-    const { data, error } = await supabase.from('profiles_priv').upsert({ id: user.data.user.id, theme: theme }).select('*').single();
+    const { data, error } = await supabase.from('profiles_priv').update({ theme: theme }).eq('id', user.data.user.id).select('*').single();
     if (error) {
-        console.log('error updating email', error);
+        console.log('error updating field', error);
         return new Response(JSON.stringify(error.message), { status: 500 });
     }
+
+    revalidatePath('/', 'layout');
     return NextResponse.json(data);
 }

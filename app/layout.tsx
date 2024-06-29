@@ -21,7 +21,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createClient();
   return (
     <html lang="en">
       <body
@@ -33,8 +32,7 @@ export default async function RootLayout({
         <main className="min-h-screen bg-background flex flex-col items-center">
           <ThemeProvider
             attribute="class"
-            defaultTheme="light"
-            enableSystem
+            defaultTheme={"light"}
             disableTransitionOnChange
           >
             <NavBar />

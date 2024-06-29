@@ -5,10 +5,18 @@ import { Button } from '@/components/ui/button';
 import { usePathname } from "next/navigation";
 import useSWR from "swr";
 import { fetcher } from "@/utils/common/fetcher";
+import { useEffect } from "react";
+import { useTheme } from "next-themes";
 
 export default function NavBar() {
+    const { setTheme } = useTheme();
     //get user logged in, render navbar
     const { data: user, isLoading: userLoading, error: userError } = useSWR("/api/profile", fetcher);
+    useEffect(() => {
+        if (user?.theme) {
+            setTheme(user.theme)
+        }
+    }, [user?.theme])
     const pathname = usePathname();
     const pathStart = pathname.split('/')[1];
     return (

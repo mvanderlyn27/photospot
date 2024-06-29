@@ -8,60 +8,81 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
+import { Themes } from "@/types/photospotTypes";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useTheme } from "next-themes";
 
-export const editUsernameSchema = z.object({
-    username: z.string().min(3, "Please enter a username at least 3 characters long"),
+export const editThemeSchema = z.object({
+    theme: z.nativeEnum(Themes),
 })
 export default function SelectThemeForm({ profileInfo }: { profileInfo: any }) {
-    const [loading, setLoading] = useState(false);
+    const { setTheme } = useTheme()
     const { mutate } = useSWRConfig();
-    const editUsernameForm = useForm<z.infer<typeof editUsernameSchema>>({
-        resolver: zodResolver(editUsernameSchema),
+    const [loading, setLoading] = useState(false);
+    const editThemeForm = useForm<z.infer<typeof editThemeSchema>>({
+        resolver: zodResolver(editThemeSchema),
         defaultValues: {
-            username: profileInfo.username
+            theme: profileInfo.theme
         },
     });
-    const handleEdit = async (data: z.infer<typeof editUsernameSchema>) => {
-        if (data.username) {
-            return fetch('/api/profile/edit/username', { body: JSON.stringify({ username: data.username }), method: 'POST' }).then(res => res.json());
+    const handleEdit = async (data: z.infer<typeof editThemeSchema>) => {
+        if (data.theme) {
+            return fetch('/api/profile/edit/theme', { body: JSON.stringify({ theme: data.theme }), method: 'POST' }).then(res => res.json());
         }
     }
-    const onEdit = async (data: z.infer<typeof editUsernameSchema>) => {
+    const onEdit = async (data: z.infer<typeof editThemeSchema>) => {
         setLoading(true);
-        const newPath = await mutate('/api/profile/edit/username', handleEdit(data));
-        console.log("new path", newPath);
-        if (!newPath || newPath?.error) {
+        const updateInfo = await mutate('/api/profile/edit/theme', handleEdit(data));
+        if (!updateInfo || updateInfo?.error) {
             toast({
                 title: "Error",
-                description: newPath ? newPath.error : "Something went wrong, please try again",
+                description: updateInfo ? updateInfo.error : "Something went wrong, please try again",
                 variant: "destructive",
             })
         }
         else {
-            mutate('/api/profile', { ...profileInfo, username: data.username });
+            mutate('/api/profile', { ...profileInfo, theme: data.theme });
+            // setTheme(data.theme);
+            toast({
+                title: "Success",
+                description: "Theme updated successfully",
+            })
         }
         setLoading(false);
     }
     const cancelEdit = () => {
-        editUsernameForm.reset();
+        editThemeForm.reset();
         setLoading(false);
     };
     return (
         <div className="flex flex-col gap-4 p-4">
-            <Form {...editUsernameForm}>
+            <Form {...editThemeForm}>
                 <form
-                    onSubmit={editUsernameForm.handleSubmit(onEdit)}
+                    onSubmit={editThemeForm.handleSubmit(onEdit)}
                 >
                     <FormField
-                        control={editUsernameForm.control}
-                        name="username"
+                        control={editThemeForm.control}
+                        name="theme"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Update Username:</FormLabel>
+                                <FormLabel>Update Theme</FormLabel>
                                 <div className="flex-row flex gap-4">
-                                    <FormControl>
-                                        <Input placeholder="Username" {...field} />
-                                    </FormControl>
+                                    <Select onValueChange={(value) => {
+                                        setTheme(value);
+                                        field.onChange(value)
+                                    }}
+                                        defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a theme" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {
+                                                Object.keys(Themes).map(theme => <SelectItem key={theme} value={theme}>{theme}</SelectItem>)
+                                            }
+                                        </SelectContent>
+                                    </Select>
                                     <Button type="submit" disabled={loading}>
                                         Save
                                     </Button>
