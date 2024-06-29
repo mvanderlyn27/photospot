@@ -26,5 +26,6 @@ export async function GET(req: NextRequest, { params }: { params: { userId: stri
         console.log('error', error);
         return new Response(JSON.stringify({ error: 'gettting photoshots' }), { status: 500 })
     }
+    console.log('following', data);
     return NextResponse.json(data);
 }

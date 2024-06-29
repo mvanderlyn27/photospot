@@ -20,7 +20,7 @@ export default function MyProfile({ user }: { user: any }) {
     return (
         <>
             {profileInfo && user &&
-                <Card className="flex flex-col items-center w-[600px]">
+                <Card className="flex flex-col items-center w-[600px] h-full">
                     <CardHeader>
                         <CardTitle className="text-2xl">My Profile</CardTitle>
                     </CardHeader>

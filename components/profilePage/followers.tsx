@@ -14,12 +14,22 @@ export default function Followers() {
         isLoading: photoshotsLoading
     } = useSWRInfinite(
         (index) =>
-            `/api/photoshot/user/${user.id}/getPhotoshots?pageCount=${index + 1}`,
+            `/api/profile/user/${user.id}/getFollowers?pageCount=${index + 1}`,
         fetcher
     );
+    console.log('followers: ', data);
+    /*
+        Want to create a searchable followers list
+    */
     return (
         <div>
-            <h1>photoshots</h1>
+            <h1>Followers</h1>
+            {
+                data ? data.flat().map((follower) =>
+                    <h1>{follower.username}</h1>
+                ) :
+                    <h1>loading</h1>
+            }
         </div>
     )
 }

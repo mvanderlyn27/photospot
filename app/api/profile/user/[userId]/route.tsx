@@ -3,11 +3,11 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
-export async function GET(params: { params: { userId: string } }) {
+export async function GET({ params }: { params: { userId: string } }) {
     const supabase = createClient();
     const user = await supabase.auth.getUser();
 
-    const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', params.params.userId).single();
+    const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', params.userId).single();
     //maybe create new user object which stores user/profile info
     if (profileError) {
         console.log('error', profileError);

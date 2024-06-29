@@ -21,11 +21,14 @@ export default function ProfileLeftbar({ profileSection }: { profileSection: str
                     <Link href="/profile/following">
                         <h1 className={`text-xl ${profileSection === 'following' ? 'font-bold' : ''}`}>Following</h1>
                     </Link>
+                    <Link href="/profile/myPhotoshots">
+                        <h1 className={`text-xl ${profileSection === 'myPhotoshots' ? 'font-bold' : ''}`}>My Photoshots</h1>
+                    </Link>
                     <Link href="/profile/likedPhotoshots">
                         <h1 className={`text-xl ${profileSection === 'likedPhotoshots' ? 'font-bold' : ''}`}> Liked Photo Shots</h1>
                     </Link>
-                    <Link href="/profile/myPhotoshots">
-                        <h1 className={`text-xl ${profileSection === 'myPhotoshots' ? 'font-bold' : ''}`}>My Photoshots</h1>
+                    <Link href="/profile/savedPhotospots">
+                        <h1 className={`text-xl ${profileSection === 'savedPhotospots' ? 'font-bold' : ''}`}> Saved Locations</h1>
                     </Link>
                     <Link href="/profile/mySettings">
                         <h1 className={`text-xl ${profileSection === 'mySettings' ? 'font-bold' : ''}`}>My Settings </h1>

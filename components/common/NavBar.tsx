@@ -27,7 +27,7 @@ export default function NavBar() {
                     <h3 className="text-3xl font-semibold ">PhotoSpot</h3>
                 </Link>
 
-                {user ? (
+                {user && (
                     <div className="flex items-center gap-4">
                         Hey, <b>{user.username ? user.username : user.email}!</b>
                         <div className="flex jusitfy-between items-center flex-row">
@@ -46,7 +46,9 @@ export default function NavBar() {
                             <LogoutButton />
                         </div>
                     </div>
-                ) : (
+                )
+                }
+                {!user && !userLoading && (
                     <div>
 
                         <Link

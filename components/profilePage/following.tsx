@@ -14,12 +14,23 @@ export default function Following() {
         isLoading: photoshotsLoading
     } = useSWRInfinite(
         (index) =>
-            `/api/photoshot/user/${user.id}/getPhotoshots?pageCount=${index + 1}`,
+            `/api/profile/user/${user.id}/getFollowing?pageCount=${index + 1}`,
         fetcher
     );
+    console.log("following: ", data);
+    /*
+        Want to create a searchable following list
+        need to figure out how I want to handle followed users/locations 
+    */
     return (
         <div>
-            <h1>users</h1>
+            <h1>Following</h1>
+            {
+                data ? data.flat().map((following) =>
+                    <h1>{following.username}</h1>
+                ) :
+                    <h1>loading</h1>
+            }
         </div>
     )
 }
