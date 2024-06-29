@@ -64,7 +64,7 @@ export default function EditPasswordForm({ profileInfo }: { profileInfo: any }) 
                                 <FormLabel>Update Password:</FormLabel>
                                 <div className="flex-row flex gap-4">
                                     <FormControl>
-                                        <Input type="password" placeholder="" {...field} />
+                                        <Input type="password" placeholder="Enter new password" {...field} />
                                     </FormControl>
                                     <Button type="submit" disabled={loading}>
                                         Save

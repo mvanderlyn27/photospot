@@ -8,27 +8,28 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
-export const editUsernameSchema = z.object({
-    username: z.string().min(3, "Please enter a username at least 3 characters long"),
+export const editPrivateProfileSchema = z.object({
+    private_profile: z.boolean(),
 })
 export default function EditPrivacyForm({ profileInfo }: { profileInfo: any }) {
     const [loading, setLoading] = useState(false);
     const { mutate } = useSWRConfig();
-    const editUsernameForm = useForm<z.infer<typeof editUsernameSchema>>({
-        resolver: zodResolver(editUsernameSchema),
+    const editPrivateProfileForm = useForm<z.infer<typeof editPrivateProfileSchema>>({
+        resolver: zodResolver(editPrivateProfileSchema),
         defaultValues: {
-            username: profileInfo.username
+            private_profile: profileInfo.private_profile
         },
     });
-    const handleEdit = async (data: z.infer<typeof editUsernameSchema>) => {
-        if (data.username) {
-            return fetch('/api/profile/edit/username', { body: JSON.stringify({ username: data.username }), method: 'POST' }).then(res => res.json());
+    const handleEdit = async (data: z.infer<typeof editPrivateProfileSchema>) => {
+        if (data.private_profile !== undefined) {
+            return fetch('/api/profile/edit/privateProfile', { body: JSON.stringify({ private_profile: data.private_profile }), method: 'POST' }).then(res => res.json());
         }
     }
-    const onEdit = async (data: z.infer<typeof editUsernameSchema>) => {
+    const onEdit = async (data: z.infer<typeof editPrivateProfileSchema>) => {
         setLoading(true);
-        const newPath = await mutate('/api/profile/edit/username', handleEdit(data));
+        const newPath = await mutate('/api/profile/edit/privateProfile', handleEdit(data));
         console.log("new path", newPath);
         if (!newPath || newPath?.error) {
             toast({
@@ -38,30 +39,41 @@ export default function EditPrivacyForm({ profileInfo }: { profileInfo: any }) {
             })
         }
         else {
-            mutate('/api/profile', { ...profileInfo, username: data.username });
+            mutate('/api/profile', { ...profileInfo, private_profile: data.private_profile });
         }
         setLoading(false);
     }
     const cancelEdit = () => {
-        editUsernameForm.reset();
+        editPrivateProfileForm.reset();
         setLoading(false);
     };
     return (
         <div className="flex flex-col gap-4 p-4">
-            <Form {...editUsernameForm}>
+            <Form {...editPrivateProfileForm}>
                 <form
-                    onSubmit={editUsernameForm.handleSubmit(onEdit)}
+                    onSubmit={editPrivateProfileForm.handleSubmit(onEdit)}
                 >
                     <FormField
-                        control={editUsernameForm.control}
-                        name="username"
+                        control={editPrivateProfileForm.control}
+                        name="private_profile"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Update Username:</FormLabel>
+                                <FormLabel>Account Privacy</FormLabel>
                                 <div className="flex-row flex gap-4">
-                                    <FormControl>
-                                        <Input placeholder="Username" {...field} />
-                                    </FormControl>
+                                    <Select onValueChange={(value) => {
+                                        field.onChange(value === 'true')
+                                    }}
+                                        defaultValue={field.value.toString()}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a theme" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem key='public' value={'false'}>Public</SelectItem>
+                                            <SelectItem key='private' value={'true'}>Private</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                     <Button type="submit" disabled={loading}>
                                         Save
                                     </Button>

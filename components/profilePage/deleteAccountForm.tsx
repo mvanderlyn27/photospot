@@ -8,71 +8,78 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { useRouter } from "next/navigation";
 
-export const editUsernameSchema = z.object({
-    username: z.string().min(3, "Please enter a username at least 3 characters long"),
-})
+
 export default function DeleteAccountForm({ profileInfo }: { profileInfo: any }) {
-    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+    const [confirmDelete, setConfirmDelete] = useState(false);
     const { mutate } = useSWRConfig();
-    const editUsernameForm = useForm<z.infer<typeof editUsernameSchema>>({
-        resolver: zodResolver(editUsernameSchema),
+    const deleteUserSchema = z.object({
+        username: z.string().refine(val => val === profileInfo.username, "Username must match your account"),
+    })
+    const editPasswordForm = useForm<z.infer<typeof deleteUserSchema>>({
+        resolver: zodResolver(deleteUserSchema),
         defaultValues: {
-            username: profileInfo.username
+            username: ''
         },
     });
-    const handleEdit = async (data: z.infer<typeof editUsernameSchema>) => {
-        if (data.username) {
-            return fetch('/api/profile/edit/username', { body: JSON.stringify({ username: data.username }), method: 'POST' }).then(res => res.json());
-        }
+    const onDelete = async (data: z.infer<typeof deleteUserSchema>) => {
+        fetch('/api/auth/delete', { method: 'POST' }).then(async (res) => {
+            const result = await res.json();
+            if (res.ok) {
+                await mutate('/api/profile', null);
+                setConfirmDelete(false);
+                router.push('/');
+                router.refresh();
+            } else {
+                toast({
+                    title: "Error",
+                    description: `Error: ${result} , please try again`,
+                    variant: "destructive",
+                })
+            }
+        });
     }
-    const onEdit = async (data: z.infer<typeof editUsernameSchema>) => {
-        setLoading(true);
-        const newPath = await mutate('/api/profile/edit/username', handleEdit(data));
-        console.log("new path", newPath);
-        if (!newPath || newPath?.error) {
-            toast({
-                title: "Error",
-                description: newPath ? newPath.error : "Something went wrong, please try again",
-                variant: "destructive",
-            })
-        }
-        else {
-            mutate('/api/profile', { ...profileInfo, username: data.username });
-        }
-        setLoading(false);
-    }
-    const cancelEdit = () => {
-        editUsernameForm.reset();
-        setLoading(false);
+    const cancelDelete = () => {
+        setConfirmDelete(false);
     };
     return (
-        <div className="flex flex-col gap-4 p-4">
-            <Form {...editUsernameForm}>
-                <form
-                    onSubmit={editUsernameForm.handleSubmit(onEdit)}
-                >
-                    <FormField
-                        control={editUsernameForm.control}
-                        name="username"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Update Username:</FormLabel>
-                                <div className="flex-row flex gap-4">
-                                    <FormControl>
-                                        <Input placeholder="Username" {...field} />
-                                    </FormControl>
-                                    <Button type="submit" disabled={loading}>
-                                        Save
-                                    </Button>
-                                </div>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </form>
-            </Form>
-
-        </div>
+        <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+            <DialogTrigger asChild>
+                <Button variant="destructive">Delete Account</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Delete Account</DialogTitle>
+                    <DialogDescription>
+                        Are you sure you want to delete your account? This action is permanent.
+                    </DialogDescription>
+                </DialogHeader>
+                <Form {...editPasswordForm}>
+                    <form
+                        onSubmit={editPasswordForm.handleSubmit(onDelete)}
+                    >
+                        <div className="grid gap-2 py-4">
+                            <FormField
+                                control={editPasswordForm.control}
+                                name="username"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Username</FormLabel>
+                                        <Input placeholder={`type: ${profileInfo.username}`} {...field}></Input>
+                                        <FormDescription>
+                                            Please enter your username to confirm delete
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                            <Button type="submit" variant={"destructive"}>Confirm Delete</Button>
+                        </div>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
     )
 }

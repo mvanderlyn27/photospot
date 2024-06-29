@@ -22,6 +22,5 @@ export async function POST(request: NextRequest) {
     console.log('error logging in');
     return new Response(JSON.stringify(error.message), { status: 400 });
   }
-  revalidatePath('/', 'layout');
   return new Response(JSON.stringify("success"), { status: 200 });
 }

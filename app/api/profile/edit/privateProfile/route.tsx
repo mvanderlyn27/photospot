@@ -8,7 +8,7 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
     const body = await request.json();
     const { private_profile } = body;
-    if (!private_profile) {
+    if (private_profile === undefined) {
         return new Response(JSON.stringify({ error: 'missing value' }), { status: 500 })
     }
     const supabase = createClient();
@@ -42,5 +42,6 @@ export async function POST(request: Request) {
         console.log('error updating email', error);
         return new Response(JSON.stringify(error.message), { status: 500 });
     }
+    console.log('data', data);
     return NextResponse.json(data);
 }
