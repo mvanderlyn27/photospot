@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
 
-export default function ProfilePage({ params }: { params: { userId: string } }) {
-    redirect('/profile/user/' + params.userId + '/photoshots')
-    return (
-        null
-    )
+export default function ProfilePage({
+  params,
+}: {
+  params: { userId: string };
+}) {
+  redirect("/user/" + params.userId + "/usersPhotoshots");
 }

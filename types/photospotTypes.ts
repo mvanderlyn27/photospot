@@ -114,6 +114,17 @@ export type PhotoTimeDisplayInfo = {
   temp: number | undefined;
 };
 
+export type Profile = {
+  id: string;
+  username: string | null;
+  bio: string | null;
+  photo_path: string | null;
+  theme?: Themes;
+  private_profile?: boolean;
+  email?: string;
+  role?: string;
+}
+
 export enum Weather {
   sun = 1,
   clouds = 2,
