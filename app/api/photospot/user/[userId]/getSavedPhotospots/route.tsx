@@ -1,29 +1,35 @@
-"use server"
-
+"use server";
+import { Photoshot, Photospot } from "@/types/photospotTypes";
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-const PAGE_SIZE = 20;
-export async function GET(req: NextRequest, { params }: { params: { userId: string } }) {
-    const searchParams = req.nextUrl.searchParams;
-    if (!params.userId) {
-        return new Response(JSON.stringify({ error: 'missing user id' }), { status: 400 })
-    }
 
-    const supabase = createClient();
-    const { data: savedPhosopotIds, error: savedPhotospotIdsError } = await supabase.from('saved_photospots').select('photospot').eq('id', params.userId);
-    if (savedPhotospotIdsError) {
-        console.log('error', savedPhosopotIds);
-        return new Response(JSON.stringify({ error: 'gettting saved photospot list' }), { status: 500 })
-    }
-    let pageCountRaw = searchParams.get('pageCount');
-    let pageCount = 1;
-    if (pageCountRaw) {
-        pageCount = parseInt(pageCountRaw);
-    }
-    const { data, error } = await supabase.from('photospots').select('*').in('id', savedPhosopotIds.map((photoshot) => photoshot.photospot)).order('created_at', { ascending: false }).range((PAGE_SIZE * (pageCount - 1)), PAGE_SIZE * pageCount);
-    if (error) {
-        console.log('error', error);
-        return new Response(JSON.stringify({ error: 'gettting photoshots' }), { status: 500 })
-    }
-    return NextResponse.json(data);
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { userId: string } }
+) {
+  const queryParams = request.nextUrl.searchParams;
+
+  //create rpc function to get saved photospots, then return them with their top liked photoshots photo info
+  const supabase = createClient();
+  let pageCount = 1;
+  if (queryParams.get("pageCount")) {
+    pageCount = parseInt(queryParams.get("pageCount")!);
+  }
+  const { data: savedPhotospots, error: savedPhotospotError } =
+    await supabase.rpc("get_saved_photospots", {
+      user_id: params.userId,
+      page_count: pageCount,
+    });
+  if (savedPhotospotError) {
+    console.log("error", savedPhotospotError);
+    return new Response(
+      JSON.stringify({ error: "gettting saved photospots" }),
+      {
+        status: 500,
+      }
+    );
+  }
+  console.log("savedPhotospots: ", savedPhotospots);
+  return NextResponse.json(savedPhotospots);
 }
+//look at nearby photospots for example

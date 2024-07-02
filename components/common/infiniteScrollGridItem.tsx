@@ -21,10 +21,14 @@ export default function InfiniteScrollGridItem({
       {gridItemData &&
         (isPhotospot(gridItemData) ? (
           <Link href={`/photospot/${gridItemData.id}`}>
-            {gridItemData.topPhotoPath ? (
+            {gridItemData.top_photoshot_path ? (
               <div className=" sm:h-[500px] md:h-[400px] relative overflow-hidden">
                 <Image
-                  src={hasError ? DefaultPhotoshot : gridItemData.topPhotoPath}
+                  src={
+                    hasError
+                      ? DefaultPhotoshot
+                      : gridItemData.top_photoshot_path
+                  }
                   alt={gridItemData.id ? gridItemData.id + "" : ""}
                   sizes="(max-width: 768px) 100vw ,(max-width: 1200px) 50vw, 33vw"
                   loading="eager"

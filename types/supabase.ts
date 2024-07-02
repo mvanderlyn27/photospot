@@ -556,6 +556,23 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      get_saved_photospots: {
+        Args: {
+          user_id: string
+          page_size?: number
+          page_count?: number
+        }
+        Returns: {
+          top_photoshot_id: number
+          top_photoshot_path: string
+          photospot_id: number
+          lat: number
+          lng: number
+          neighborhood: string
+          location_name: string
+          address: string
+        }[]
+      }
       get_tags_for_photospot: {
         Args: {
           photospotid: number

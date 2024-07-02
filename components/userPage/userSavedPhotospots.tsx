@@ -2,7 +2,7 @@
 import { fetcher } from "@/utils/common/fetcher";
 import { useEffect } from "react";
 import useSWRInfinite from "swr/infinite";
-import PhotoshotGrid from "../photoshot/photoshotGrid";
+import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 
 export default function UserSavedPhotospots({ userId }: { userId: string }) {
   const {
@@ -22,11 +22,11 @@ export default function UserSavedPhotospots({ userId }: { userId: string }) {
     //get top photoshots for all photospots
   }, [data]);
   return (
-    <PhotoshotGrid
-      photoshots={data ? data : []}
+    <InfiniteScrollGrid
+      gridData={data ? data : []}
       setSize={setSize}
       size={size}
-      photoshotsLoading={photospotsLoading}
+      dataLoading={photospotsLoading}
     />
   );
 }

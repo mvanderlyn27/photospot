@@ -1,3 +1,3 @@
-export default function UserSavedPhotospots({ userId }: { userId: string }) {
-  return <div>UserSavedPhotospots</div>;
+export default function UserFollowers({ userId }: { userId: string }) {
+  return <div>User Followers</div>;
 }
