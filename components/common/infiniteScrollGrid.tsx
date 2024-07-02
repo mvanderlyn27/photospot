@@ -14,12 +14,24 @@ export default function InfiniteScrollGrid({
   size,
   dataLoading,
   pageSize = 20,
+  loadingMessage = "Loading...   Loading...",
+  emptyMessage = "Nothing here, check back later",
+  loadingAnimation = true,
+  messageOnLastItem = false,
+  messageOnEmpty = true,
+  lastItemMessage = "Reached the end, check back for more later",
 }: {
   gridData: Photoshot[][] | Photospot[][] | undefined;
   setSize: (num: number) => void;
   size: number;
   dataLoading: boolean;
   pageSize?: number;
+  loadingMessage?: string;
+  emptyMessage?: string;
+  lastItemMessage?: string;
+  loadingAnimation?: boolean;
+  messageOnLastItem?: boolean;
+  messageOnEmpty?: boolean;
 }) {
   const containerRef = useRef(null);
 
@@ -113,37 +125,35 @@ export default function InfiniteScrollGrid({
           })}
         </div>
       )}
-      {isEmpty && <TimelineEmpty />}
-      {isReachingEnd && !isEmpty && <TimelineEnd />}
-      {isLoadingMore && <TimelineLoading />}
+      {messageOnEmpty && isEmpty && <TimelineEmpty message={emptyMessage} />}
+      {messageOnLastItem && isReachingEnd && !isEmpty && (
+        <TimelineEnd message={lastItemMessage} />
+      )}
+      {loadingAnimation && isLoadingMore && (
+        <TimelineLoading message={loadingMessage} />
+      )}
     </>
   );
 }
 
-const TimelineLoading = () => {
+const TimelineLoading = ({ message }: { message: string }) => {
   return (
     <div id="loading" className="flex flex-col items-center p-10">
-      <TextSpinnerLoader text={"Loading Photos"} />
+      <TextSpinnerLoader text={message} />
     </div>
   );
 };
-const TimelineEnd = () => {
+const TimelineEnd = ({ message }: { message: string }) => {
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-3xl font-semibold">
-        {" "}
-        No more photos, check back soon!
-      </h1>
+      <h1 className="text-3xl font-semibold">{message}</h1>
     </div>
   );
 };
-const TimelineEmpty = () => {
+const TimelineEmpty = ({ message }: { message: string }) => {
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-3xl font-semibold">
-        {" "}
-        No photos right now, check back soon!
-      </h1>
+      <h1 className="text-3xl font-semibold">{message}</h1>
     </div>
   );
 };

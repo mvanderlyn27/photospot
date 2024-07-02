@@ -1,7 +1,10 @@
+"use client";
 import Image from "next/image";
 import { DefaultProfile } from "@/utils/common/imageLinks";
 import Link from "next/link";
 import { Profile } from "@/types/photospotTypes";
+import useSWR from "swr";
+import { fetcher } from "@/utils/common/fetcher";
 export default function UserLeftBar({
   profileSection,
   profile,

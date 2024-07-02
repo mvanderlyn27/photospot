@@ -1,6 +1,6 @@
 "use client";
 import { Modal } from "@/components/common/modal";
-import TimelineDialogCard from "@/components/homePage/timelineDialogCard";
+import PhotoshotCard from "@/components/homePage/photoshotCard";
 import { Dialog } from "@/components/ui/dialog";
 import { fetcher } from "@/utils/common/fetcher";
 import { useEffect, useState } from "react";
@@ -40,7 +40,7 @@ export default function PhotoshotModal({
       <Card className="p-8">
         <Dialog>
           <div className="pl-20 pr-20">
-            <TimelineDialogCard photoshotId={parseInt(photoshotId)} />
+            <PhotoshotCard photoshotId={parseInt(photoshotId)} />
           </div>
         </Dialog>
       </Card>
@@ -49,6 +49,7 @@ export default function PhotoshotModal({
         setSize={setSize}
         size={size}
         dataLoading={photoshotsLoading}
+        loadingAnimation={false}
       />
     </div>
   );
