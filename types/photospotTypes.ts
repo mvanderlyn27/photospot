@@ -10,6 +10,7 @@ export type Photospot = {
   neighborhood?: string | null;
   rating?: number | null;
   dist_meters?: number | null;
+  topPhotoPath?: string;
 };
 export interface NearbyPhotospot extends Photospot {
   dist_meters: number;

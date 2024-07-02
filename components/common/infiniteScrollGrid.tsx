@@ -1,36 +1,38 @@
 "use client";
-import { Photoshot } from "@/types/photospotTypes";
+import { Photoshot, Photospot } from "@/types/photospotTypes";
 import TextSpinnerLoader from "../common/Loading";
 import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { round } from "@/utils/common/math";
 import { motion } from "framer-motion";
-import PhotoshotGridImage from "./photoshotGridImage";
+import InfiniteScrollGridItem from "./infiniteScrollGridItem";
+import { isPhotoshot } from "@/utils/common/typeGuard";
 
-export default function PhotoshotGrid({
-  photoshots,
+export default function InfiniteScrollGrid({
+  gridData,
   setSize,
   size,
-  photoshotsLoading,
+  dataLoading,
+  pageSize = 20,
 }: {
-  photoshots: Photoshot[][];
+  gridData: Photoshot[][] | Photospot[][] | undefined;
   setSize: (num: number) => void;
   size: number;
-  photoshotsLoading: boolean;
+  dataLoading: boolean;
+  pageSize?: number;
 }) {
-  console.log("photoshots", photoshots);
-  const PAGE_COUNT = 20;
   const containerRef = useRef(null);
 
   const [isInView, setIsInView] = useState(false);
   const isLoadingMore =
-    photoshotsLoading ||
-    (size > 0 && photoshots && typeof photoshots[size - 1] === "undefined");
-  const isEmpty = photoshots?.[0]?.length === 0;
+    dataLoading ||
+    (size > 0 && gridData && typeof gridData[size - 1] === "undefined");
+  const isEmpty = gridData?.[0]?.length === 0;
   const isReachingEnd =
-    photoshots.length > 0 &&
-    (photoshots?.[0].length === 0 ||
-      (photoshots && photoshots[photoshots.length - 1]?.length < PAGE_COUNT));
+    gridData &&
+    gridData.length > 0 &&
+    (gridData?.[0].length === 0 ||
+      (gridData && gridData[gridData.length - 1]?.length < pageSize));
   // const isRefreshing = isValidating && data && data.length === size;
   const handleNewPhotoshot = () => {};
   const handleScroll = () => {
@@ -69,34 +71,29 @@ export default function PhotoshotGrid({
   const loadMoreTickets = () => {
     setSize(size + 1);
   };
-  useEffect(() => {
-    console.log("photoshots", photoshots);
-  }, [photoshots]);
-  const getExtraInfo = (photoshot: Photoshot) => {
-    if (photoshot.dist_meters) {
-      return round(photoshot.dist_meters, 1) + " meters";
-    } else if (photoshot.like_count) {
-      return photoshot.like_count + " ❤";
-    } else {
-      //want to get shared tags/photospots for the suggested feed
-      return undefined;
+  const getExtraInfo = (data: Photoshot | Photospot | undefined) => {
+    if (data) {
+      if (data.dist_meters) {
+        return round(data.dist_meters, 1) + " meters";
+      } else if (isPhotoshot(data) && data.like_count) {
+        return data.like_count + " ❤";
+      }
     }
   };
   return (
     <>
-      {photoshots && (
+      {gridData && (
         <div
           className="w-full grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8"
           ref={containerRef}
         >
-          {photoshots.flat().map((photoshot, i) => {
+          {gridData.flat().map((gridItem, i) => {
             const recalculatedDelay =
-              i >= PAGE_COUNT * 2 ? (i - PAGE_COUNT * (size - 1)) / 15 : i / 15;
-            console.log("photoshot", photoshot);
+              i >= pageSize * 2 ? (i - pageSize * (size - 1)) / 15 : i / 15;
             return (
               <motion.div
                 className="h-auto max-w-full"
-                key={photoshot.id}
+                key={gridItem.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -107,9 +104,9 @@ export default function PhotoshotGrid({
                 }}
                 whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
               >
-                <PhotoshotGridImage
-                  photoshot={photoshot}
-                  extraInfo={getExtraInfo(photoshot)}
+                <InfiniteScrollGridItem
+                  gridItemData={gridItem}
+                  extraInfo={getExtraInfo(gridItem)}
                 />
               </motion.div>
             );

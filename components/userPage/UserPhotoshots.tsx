@@ -3,6 +3,7 @@ import { fetcher } from "@/utils/common/fetcher";
 import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
 import PhotoshotGrid from "../photoshot/photoshotGrid";
+import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 
 export default function MyPhotoshots({ userId }: { userId: string }) {
   const {
@@ -19,12 +20,11 @@ export default function MyPhotoshots({ userId }: { userId: string }) {
   );
 
   return (
-    // <PhotoshotTimelineGrid initialPhotospots={[]} photoshotPath={`/api/photoshot/timeline/suggested?`} />
-    <PhotoshotGrid
-      photoshots={data ? data : []}
+    <InfiniteScrollGrid
+      gridData={data}
       setSize={setSize}
       size={size}
-      photoshotsLoading={photoshotsLoading}
+      dataLoading={photoshotsLoading}
     />
   );
 }

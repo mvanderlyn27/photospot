@@ -4,6 +4,7 @@ import useSWRInfinite from "swr/infinite";
 import PhotoshotGrid from "../photoshot/photoshotGrid";
 import { fetcher } from "@/utils/common/fetcher";
 import useSWR from "swr";
+import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 
 export default function UserLikedPhotoshots({ userId }: { userId: string }) {
   const {
@@ -21,11 +22,11 @@ export default function UserLikedPhotoshots({ userId }: { userId: string }) {
 
   return (
     // <PhotoshotTimelineGrid initialPhotospots={[]} photoshotPath={`/api/photoshot/timeline/suggested?`} />
-    <PhotoshotGrid
-      photoshots={data ? data : []}
+    <InfiniteScrollGrid
+      gridData={data ? data : []}
       setSize={setSize}
       size={size}
-      photoshotsLoading={photoshotsLoading}
+      dataLoading={photoshotsLoading}
     />
   );
 }
