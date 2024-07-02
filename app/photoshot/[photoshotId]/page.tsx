@@ -44,9 +44,6 @@ export default function PhotoshotModal({
           </div>
         </Dialog>
       </Card>
-      {/* Need to update to pull in other photoshots besides this one */}
-      {/* {photoshot && <PhotoshotTimelineGrid initialPhotospots={[]} photoshotPath={`/api/photospot/${photoshot.photospot_id}/photoshots?`} />} */}
-
       <InfiniteScrollGrid
         gridData={photoshots}
         setSize={setSize}
