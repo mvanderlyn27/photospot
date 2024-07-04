@@ -7,8 +7,9 @@ import { fetcher } from "@/utils/common/fetcher";
 import useSWR, { useSWRConfig } from "swr";
 import { toast } from "../ui/use-toast";
 export default function FollowerCard({ user }: { user: any }) {
+  const { data: profile } = useSWR(`/api/profile/`, fetcher);
+  const { mutate, cache } = useSWRConfig();
   //need to check if we follow this user or not
-  const { mutate } = useSWRConfig();
   const {
     data: follower,
     mutate: updateFollowing,
@@ -16,21 +17,38 @@ export default function FollowerCard({ user }: { user: any }) {
   } = useSWR(`/api/profile/user/${user.id}/follower`, fetcher);
   //probably want to figure out which caches to reset, and how to do it
   //for this one we want instant update
+  const handleRemoveFollower = async () => {
+    return fetch(`/api/profile/user/${user.id}/removeFollower`, {
+      method: "POST",
+    }).then(async (res) => {
+      if (!res.ok) {
+        toast({
+          title: "Failed to remove follower :(",
+          variant: "destructive",
+        });
+        throw new Error("Failed to remove follower:(");
+      } else {
+        return false;
+      }
+    });
+  };
   const handleClick = async (e: any) => {
     e.preventDefault();
-    if (follower) {
-      fetch("/api/profile/user/" + user.id + "/removeFollower", {
-        method: "POST",
-      }).then(async (res) => {
-        if (!res.ok) {
-          toast({ title: "Failed to remove", variant: "destructive" });
-        } else {
-          await updateFollowing(false);
-          await mutate(`/api/profile/user/${user.id}/getFollowers`);
-          toast({ title: "Removed Follower" });
-        }
-      });
-    }
+    await updateFollowing(handleRemoveFollower, {
+      optimisticData: false,
+    });
+    Array.from(cache.keys()).forEach((key) => {
+      console.log(
+        "cache key",
+        key,
+        `/api/profile/user/${user.id}/getFollowers?`
+      );
+      if (key.includes(`/api/profile/user/${profile.id}/getFollowers?`)) {
+        console.log("mutating:", key);
+        mutate(key); // With this you can revalidate whatever the key is. (with @, $inf$ or whatever)
+      }
+    });
+    toast({ title: "Removed Follower" });
   };
   return (
     <Link className="flex flex-row gap-4 p-4" href={`/user/${user.id}`}>
