@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Profile } from "@/types/photospotTypes";
 import useSWR from "swr";
 import { fetcher } from "@/utils/common/fetcher";
+import FollowButton from "./followButton";
 export default function UserLeftBar({
   profileSection,
   profile,
@@ -26,6 +27,7 @@ export default function UserLeftBar({
                 className="object-cover"
               />
             </div>
+            <FollowButton userId={profile.id} />
             <p className="text-center">{profile.bio}</p>
             <div className="flex flex-col gap-10">
               <Link href={`/user/${profile.id}/followers`}>

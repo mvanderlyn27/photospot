@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 import useSWR from "swr";
+import { GridTypes } from "@/types/photospotTypes";
 
 export default function MySavedPhotospots() {
   const { data: profileInfo } = useSWR("/api/profile", fetcher);
@@ -28,6 +29,7 @@ export default function MySavedPhotospots() {
   return (
     <InfiniteScrollGrid
       gridData={data ? data : []}
+      gridType={GridTypes.photospot}
       setSize={setSize}
       size={size}
       dataLoading={photospotsLoading}

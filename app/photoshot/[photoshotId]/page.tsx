@@ -6,7 +6,7 @@ import { fetcher } from "@/utils/common/fetcher";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
-import { Photoshot } from "@/types/photospotTypes";
+import { GridTypes, Photoshot } from "@/types/photospotTypes";
 import { Card } from "@/components/ui/card";
 import InfiniteScrollGrid from "@/components/common/infiniteScrollGrid";
 export default function PhotoshotModal({
@@ -46,6 +46,7 @@ export default function PhotoshotModal({
       </Card>
       <InfiniteScrollGrid
         gridData={photoshots}
+        gridType={GridTypes.photoshot}
         setSize={setSize}
         size={size}
         dataLoading={photoshotsLoading}

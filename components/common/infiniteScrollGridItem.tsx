@@ -4,22 +4,34 @@ import { Badge } from "../ui/badge";
 import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
 import Image from "next/image";
-import { DefaultPhotoshot } from "@/utils/common/imageLinks";
-import { Photoshot, Photospot } from "@/types/photospotTypes";
-import { isPhotospot } from "@/utils/common/typeGuard";
+import { DefaultPhotoshot, DefaultProfile } from "@/utils/common/imageLinks";
+import {
+  GridTypes,
+  Photoshot,
+  Photospot,
+  Profile,
+} from "@/types/photospotTypes";
+import { isPhotoshot, isPhotospot, isProfile } from "@/utils/common/typeGuard";
+import { Button } from "../ui/button";
+import UserCard from "../profilePage/followingCard";
+import FollowerCard from "../profilePage/followerCard";
+import FollowingCard from "../profilePage/followingCard";
 export default function InfiniteScrollGridItem({
   gridItemData,
+  gridType,
   extraInfo,
 }: {
-  gridItemData: Photoshot | Photospot;
+  gridItemData: Photoshot | Photospot | Profile;
+  gridType: GridTypes;
   extraInfo?: string;
 }) {
   const [hasError, setHasError] = useState(false);
-  console.log("grid item", gridItemData);
+
   return (
     <>
       {gridItemData &&
-        (isPhotospot(gridItemData) ? (
+        isPhotospot(gridItemData) &&
+        gridType === GridTypes.photospot && (
           <Link href={`/photospot/${gridItemData.id}`}>
             {gridItemData.top_photoshot_path ? (
               <div className=" sm:h-[500px] md:h-[400px] relative overflow-hidden">
@@ -46,7 +58,10 @@ export default function InfiniteScrollGridItem({
               {extraInfo && <h1>{extraInfo}</h1>}
             </div>
           </Link>
-        ) : (
+        )}
+      {gridItemData &&
+        isPhotoshot(gridItemData) &&
+        gridType === GridTypes.photoshot && (
           <Link href={`/photoshot/${gridItemData.id}`}>
             {gridItemData.photo_paths[0] ? (
               <div className=" sm:h-[500px] md:h-[400px] relative overflow-hidden">
@@ -74,7 +89,17 @@ export default function InfiniteScrollGridItem({
               {extraInfo && <h1>{extraInfo}</h1>}
             </div>
           </Link>
+        )}
+      {gridItemData &&
+        isProfile(gridItemData) &&
+        (gridType === GridTypes.follower ? (
+          <FollowerCard user={gridItemData} />
+        ) : (
+          <FollowingCard user={gridItemData} />
         ))}
+      {!gridItemData && (
+        <Skeleton className="bg-black/10 object-cover rounded w-full aspect-square " />
+      )}
     </>
   );
 }

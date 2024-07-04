@@ -4,6 +4,7 @@ import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
 import PhotoshotGrid from "../photoshot/photoshotGrid";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
+import { GridTypes } from "@/types/photospotTypes";
 
 export default function MyPhotoshots({ userId }: { userId: string }) {
   const {
@@ -22,6 +23,7 @@ export default function MyPhotoshots({ userId }: { userId: string }) {
   return (
     <InfiniteScrollGrid
       gridData={data}
+      gridType={GridTypes.photoshot}
       setSize={setSize}
       size={size}
       dataLoading={photoshotsLoading}

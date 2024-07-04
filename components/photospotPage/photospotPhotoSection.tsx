@@ -1,7 +1,7 @@
 "use client";
 import { fetcher } from "@/utils/common/fetcher";
 import PhotoshotUploadDialog from "../photoshot/photoshotUploadDialog";
-import { Photoshot } from "@/types/photospotTypes";
+import { GridTypes, Photoshot } from "@/types/photospotTypes";
 import { Skeleton } from "../ui/skeleton";
 import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
@@ -38,6 +38,7 @@ export function PhotospotPhotoSection({ id }: { id: number }) {
       </div>
       <InfiniteScrollGrid
         gridData={photoshots}
+        gridType={GridTypes.photospot}
         setSize={setSize}
         size={size}
         dataLoading={photoshotsLoading}

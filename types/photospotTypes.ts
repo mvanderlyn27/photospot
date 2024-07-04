@@ -73,16 +73,6 @@ export type ReviewGridInput = {
   review?: string;
 };
 
-export type PublicProfile = {
-  id: number;
-  username: string;
-  private?: boolean;
-  role?: string;
-  theme?: string;
-  profile_pic_url?: string;
-  email?: string;
-  password?: string;
-};
 export type PhotospotReview = {
   created_by: string;
   photospot_id: number;
@@ -144,4 +134,11 @@ export enum Themes {
   light='light',
   dark='dark',
   device='device'
+}
+export enum GridTypes {
+  photospot = "photospot",
+  photoshot = "photoshot",
+  review = "review", 
+  follower = "follower",
+  following = "following",
 }

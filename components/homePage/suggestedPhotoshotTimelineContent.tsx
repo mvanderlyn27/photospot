@@ -2,6 +2,7 @@
 import { fetcher } from "@/utils/common/fetcher";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
+import { GridTypes } from "@/types/photospotTypes";
 
 export default function SuggestedPhotoshotTimelineContent() {
   const {
@@ -20,6 +21,7 @@ export default function SuggestedPhotoshotTimelineContent() {
     // <PhotoshotGrid photoshots={data ? data : []} setSize={setSize} size={size} photoshotsLoading={photoshotsLoading} />
     <InfiniteScrollGrid
       gridData={data}
+      gridType={GridTypes.photoshot}
       setSize={setSize}
       size={size}
       dataLoading={photoshotsLoading}

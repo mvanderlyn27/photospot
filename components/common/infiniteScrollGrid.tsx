@@ -1,5 +1,5 @@
 "use client";
-import { Photoshot, Photospot } from "@/types/photospotTypes";
+import { GridTypes, Photoshot, Photospot } from "@/types/photospotTypes";
 import TextSpinnerLoader from "../common/Loading";
 import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -14,6 +14,7 @@ export default function InfiniteScrollGrid({
   size,
   dataLoading,
   pageSize = 20,
+  gridType = GridTypes.photoshot,
   loadingMessage = "Loading...   Loading...",
   emptyMessage = "Nothing here, check back later",
   loadingAnimation = true,
@@ -26,6 +27,7 @@ export default function InfiniteScrollGrid({
   size: number;
   dataLoading: boolean;
   pageSize?: number;
+  gridType?: GridTypes;
   loadingMessage?: string;
   emptyMessage?: string;
   lastItemMessage?: string;
@@ -118,6 +120,7 @@ export default function InfiniteScrollGrid({
               >
                 <InfiniteScrollGridItem
                   gridItemData={gridItem}
+                  gridType={gridType}
                   extraInfo={getExtraInfo(gridItem)}
                 />
               </motion.div>

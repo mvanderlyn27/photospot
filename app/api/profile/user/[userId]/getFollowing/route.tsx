@@ -47,6 +47,5 @@ export async function GET(
       status: 500,
     });
   }
-  console.log("following", data);
   return NextResponse.json(data);
 }

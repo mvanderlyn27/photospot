@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Photoshot } from "@/types/photospotTypes";
+import { GridTypes, Photoshot } from "@/types/photospotTypes";
 import TextSpinnerLoader from "../common/Loading";
 import useSWRInfinite from "swr/infinite";
 import { fetcher } from "@/utils/common/fetcher";
@@ -51,6 +51,7 @@ export default function NearbyPhotoshotTimelineContent() {
     <>
       <InfiniteScrollGrid
         gridData={data ? data : []}
+        gridType={GridTypes.photoshot}
         setSize={setSize}
         size={size}
         dataLoading={photoshotsLoading}
