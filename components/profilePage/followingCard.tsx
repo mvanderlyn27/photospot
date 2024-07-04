@@ -14,33 +14,42 @@ export default function FollowingCard({ user }: { user: any }) {
     mutate: updateFollower,
     isLoading: loadingFollowing,
   } = useSWR(`/api/profile/user/${user.id}/following`, fetcher);
-
+  const handleFollow = async () => {
+    return fetch(`/api/profile/user/${user.id}/follow`, {
+      method: "POST",
+    }).then(async (res) => {
+      if (!res.ok) {
+        toast({ title: "Failed to follow :(", variant: "destructive" });
+        throw new Error("Failed to follow :(");
+      } else {
+        return true;
+      }
+    });
+  };
+  const handleUnfollow = async () => {
+    return fetch(`/api/profile/user/${user.id}/unfollow`, {
+      method: "POST",
+    }).then(async (res) => {
+      if (!res.ok) {
+        toast({ title: "Failed to unfollow :(", variant: "destructive" });
+        throw new Error("Failed to unfollow :(");
+      } else {
+        return false;
+      }
+    });
+  };
   const handleClick = async (e: any) => {
     e.preventDefault();
     if (following) {
-      fetch(`/api/profile/user/${user.id}/unfollow`, {
-        method: "POST",
-      }).then(async (res) => {
-        if (!res.ok) {
-          toast({ title: "Failed to unfollow", variant: "destructive" });
-        } else {
-          //need to fix logic here
-          await updateFollower(false);
-          await mutate(`/api/profile/user/${user.id}/getFollowing`);
-          toast({ title: "Unfollowed" });
-        }
+      updateFollower(handleUnfollow, {
+        optimisticData: false,
       });
+      toast({ title: "Unfollowed" });
     } else {
-      fetch(`/api/profile/user/${user.id}/follow`, {
-        method: "POST",
-      }).then(async (res) => {
-        if (!res.ok) {
-          toast({ title: "Failed to follow :(", variant: "destructive" });
-        } else {
-          await mutate(`/api/profile/user/${user.id}/getFollowing`);
-          toast({ title: "Followed" });
-        }
+      updateFollower(handleFollow, {
+        optimisticData: true,
       });
+      toast({ title: "followed" });
     }
   };
   return (
