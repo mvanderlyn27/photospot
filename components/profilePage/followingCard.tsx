@@ -74,7 +74,7 @@ export default function FollowingCard({ user }: { user: any }) {
         <h1 className="text-xl">
           {isUser ? "Your Account" : "Username:" + user.username}
         </h1>
-        {!isUser && (
+        {!isUser && !loadingFollowing && (
           <Button
             variant={following ? "outline" : "default"}
             onClick={(e) => handleClick(e)}

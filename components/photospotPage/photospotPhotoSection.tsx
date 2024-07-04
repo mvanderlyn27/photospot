@@ -38,7 +38,7 @@ export function PhotospotPhotoSection({ id }: { id: number }) {
       </div>
       <InfiniteScrollGrid
         gridData={photoshots}
-        gridType={GridTypes.photospot}
+        gridType={GridTypes.photoshot}
         setSize={setSize}
         size={size}
         dataLoading={photoshotsLoading}
