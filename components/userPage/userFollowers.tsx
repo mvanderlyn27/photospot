@@ -22,7 +22,7 @@ export default function UserFollowers({ userId }: { userId: string }) {
     // <PhotoshotTimelineGrid initialPhotospots={[]} photoshotPath={`/api/photoshot/timeline/suggested?`} />
     <InfiniteScrollGrid
       gridData={data ? data : []}
-      gridType={GridTypes.follower}
+      gridType={GridTypes.following}
       setSize={setSize}
       size={size}
       dataLoading={photoshotsLoading}

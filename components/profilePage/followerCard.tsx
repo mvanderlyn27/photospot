@@ -6,7 +6,9 @@ import { Button } from "../ui/button";
 import { fetcher } from "@/utils/common/fetcher";
 import useSWR, { useSWRConfig } from "swr";
 import { toast } from "../ui/use-toast";
+import { useEffect, useState } from "react";
 export default function FollowerCard({ user }: { user: any }) {
+  const [isUser, setIsUser] = useState(false);
   const { data: profile } = useSWR(`/api/profile/`, fetcher);
   const { mutate, cache } = useSWRConfig();
   //need to check if we follow this user or not
@@ -15,6 +17,9 @@ export default function FollowerCard({ user }: { user: any }) {
     mutate: updateFollowing,
     isLoading: loadingFollower,
   } = useSWR(`/api/profile/user/${user.id}/follower`, fetcher);
+  useEffect(() => {
+    setIsUser(profile?.id === user.id);
+  }, [profile, user]);
   //probably want to figure out which caches to reset, and how to do it
   //for this one we want instant update
   const handleRemoveFollower = async () => {
@@ -34,21 +39,18 @@ export default function FollowerCard({ user }: { user: any }) {
   };
   const handleClick = async (e: any) => {
     e.preventDefault();
+    toast({ title: "Removed Follower" });
     await updateFollowing(handleRemoveFollower, {
       optimisticData: false,
     });
     Array.from(cache.keys()).forEach((key) => {
-      console.log(
-        "cache key",
-        key,
-        `/api/profile/user/${user.id}/getFollowers?`
-      );
-      if (key.includes(`/api/profile/user/${profile.id}/getFollowers?`)) {
-        console.log("mutating:", key);
+      if (
+        key.includes(`/api/profile/user/${profile.id}/getFollowers?`) ||
+        key.includes(`/api/profile/user/${user.id}/getFollowing?`)
+      ) {
         mutate(key); // With this you can revalidate whatever the key is. (with @, $inf$ or whatever)
       }
     });
-    toast({ title: "Removed Follower" });
   };
   return (
     <Link className="flex flex-row gap-4 p-4" href={`/user/${user.id}`}>
@@ -64,8 +66,12 @@ export default function FollowerCard({ user }: { user: any }) {
 
       <div className="flex flex-col gap-4">
         <h1 className="text-xl">Username: {user.username}</h1>
-        {follower && (
-          <Button variant="outline" onClick={(e) => handleClick(e)}>
+        {follower && !isUser && (
+          <Button
+            variant="outline"
+            onClick={(e) => handleClick(e)}
+            disabled={loadingFollower}
+          >
             Remove Follower
           </Button>
         )}

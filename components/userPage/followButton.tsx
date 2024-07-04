@@ -5,7 +5,8 @@ import { toast } from "../ui/use-toast";
 import { useDebouncedCallback } from "use-debounce";
 
 export default function FollowButton({ userId }: { userId: string }) {
-  const { mutate } = useSWRConfig();
+  const { mutate, cache } = useSWRConfig();
+  const { data: profile } = useSWR(`/api/profile/`, fetcher);
   const {
     data: following,
     mutate: updateFollower,
@@ -40,16 +41,24 @@ export default function FollowButton({ userId }: { userId: string }) {
   const handleClick = async (e: any) => {
     e.preventDefault();
     if (following) {
-      updateFollower(handleUnfollow, {
+      await updateFollower(handleUnfollow, {
         optimisticData: false,
       });
       toast({ title: "Unfollowed" });
     } else {
-      updateFollower(handleFollow, {
+      await updateFollower(handleFollow, {
         optimisticData: true,
       });
       toast({ title: "followed" });
     }
+    Array.from(cache.keys()).forEach((key) => {
+      if (
+        key.includes(`/api/profile/user/${profile.id}/getFollowing?`) ||
+        key.includes(`/api/profile/user/${userId}/getFollowers?`)
+      ) {
+        mutate(key); // With this you can revalidate whatever the key is. (with @, $inf$ or whatever)
+      }
+    });
   };
   const handleClickDebounced = useDebouncedCallback((e) => handleClick(e), 200);
   return (

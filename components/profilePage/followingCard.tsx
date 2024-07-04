@@ -6,7 +6,10 @@ import { Button } from "../ui/button";
 import { fetcher } from "@/utils/common/fetcher";
 import useSWR, { useSWRConfig } from "swr";
 import { toast } from "../ui/use-toast";
+import { useEffect, useState } from "react";
 export default function FollowingCard({ user }: { user: any }) {
+  const [isUser, setIsUser] = useState(false);
+  const { data: profile } = useSWR(`/api/profile/`, fetcher);
   //need to check if we follow this user or not
   const { mutate } = useSWRConfig();
   const {
@@ -14,6 +17,9 @@ export default function FollowingCard({ user }: { user: any }) {
     mutate: updateFollower,
     isLoading: loadingFollowing,
   } = useSWR(`/api/profile/user/${user.id}/following`, fetcher);
+  useEffect(() => {
+    setIsUser(profile?.id === user.id);
+  }, [profile, user]);
   const handleFollow = async () => {
     return fetch(`/api/profile/user/${user.id}/follow`, {
       method: "POST",
@@ -41,15 +47,15 @@ export default function FollowingCard({ user }: { user: any }) {
   const handleClick = async (e: any) => {
     e.preventDefault();
     if (following) {
-      updateFollower(handleUnfollow, {
+      toast({ title: "Unfollowed" });
+      await updateFollower(handleUnfollow, {
         optimisticData: false,
       });
-      toast({ title: "Unfollowed" });
     } else {
-      updateFollower(handleFollow, {
+      toast({ title: "followed" });
+      await updateFollower(handleFollow, {
         optimisticData: true,
       });
-      toast({ title: "followed" });
     }
   };
   return (
@@ -65,13 +71,18 @@ export default function FollowingCard({ user }: { user: any }) {
       </div>
 
       <div className="flex flex-col gap-4">
-        <h1 className="text-xl">Username: {user.username}</h1>
-        <Button
-          variant={following ? "outline" : "default"}
-          onClick={(e) => handleClick(e)}
-        >
-          {following ? "unfollow" : "follow"}
-        </Button>
+        <h1 className="text-xl">
+          {isUser ? "Your Account" : "Username:" + user.username}
+        </h1>
+        {!isUser && (
+          <Button
+            variant={following ? "outline" : "default"}
+            onClick={(e) => handleClick(e)}
+            disabled={loadingFollowing}
+          >
+            {following ? "unfollow" : "follow"}
+          </Button>
+        )}
       </div>
     </Link>
   );
