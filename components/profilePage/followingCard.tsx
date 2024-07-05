@@ -71,9 +71,7 @@ export default function FollowingCard({ user }: { user: any }) {
       </div>
 
       <div className="flex flex-col gap-4">
-        <h1 className="text-xl">
-          {isUser ? "Your Account" : "Username:" + user.username}
-        </h1>
+        <h1 className="text-xl">{isUser ? "Your Account" : user.username}</h1>
         {!isUser && (
           <Button
             variant={following ? "outline" : "default"}

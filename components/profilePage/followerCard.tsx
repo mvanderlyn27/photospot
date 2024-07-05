@@ -65,7 +65,7 @@ export default function FollowerCard({ user }: { user: any }) {
       </div>
 
       <div className="flex flex-col gap-4">
-        <h1 className="text-xl">Username: {user.username}</h1>
+        <h1 className="text-xl">{user.username}</h1>
         {follower && !isUser && (
           <Button
             variant="outline"
