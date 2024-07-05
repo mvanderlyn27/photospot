@@ -565,7 +565,7 @@ export type Database = {
         Returns: {
           top_photoshot_id: number
           top_photoshot_path: string
-          photospot_id: number
+          id: number
           lat: number
           lng: number
           neighborhood: string
@@ -644,6 +644,21 @@ export type Database = {
           photospot_id: number
           photo_paths: string[]
           created_at: string
+        }[]
+      }
+      search_profiles_by_username: {
+        Args: {
+          search_query: string
+          page_size?: number
+          page_count?: number
+        }
+        Returns: {
+          id: string
+          username: string
+          created_at: string
+          private_profile: boolean
+          photo_path: string
+          bio: string
         }[]
       }
       search_tags: {
