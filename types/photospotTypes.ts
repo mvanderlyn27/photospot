@@ -117,6 +117,13 @@ export type Profile = {
   role?: string;
 }
 
+export type GridColumns = {
+  sm: number;
+  md: number;
+  lg: number;
+  xl: number;
+}
+
 export enum Weather {
   sun = 1,
   clouds = 2,

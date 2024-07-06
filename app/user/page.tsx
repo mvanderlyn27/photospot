@@ -1,8 +1,9 @@
-import { redirect } from "next/navigation";
+import UserSearchSection from "@/components/userPage/userSearchSection";
 
-export default function ProfilePage({ params }: { params: { userId: string } }) {
-    redirect('/profile/myPhotoshots')
-    return (
-        null
-    )
+export default function ProfilePage({
+  params,
+}: {
+  params: { userId: string };
+}) {
+  return <UserSearchSection />;
 }

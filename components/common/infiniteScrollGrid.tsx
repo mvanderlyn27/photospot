@@ -1,5 +1,10 @@
 "use client";
-import { GridTypes, Photoshot, Photospot } from "@/types/photospotTypes";
+import {
+  GridColumns,
+  GridTypes,
+  Photoshot,
+  Photospot,
+} from "@/types/photospotTypes";
 import TextSpinnerLoader from "../common/Loading";
 import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -14,6 +19,7 @@ export default function InfiniteScrollGrid({
   size,
   dataLoading,
   pageSize = 20,
+  colCount = { sm: 1, md: 2, lg: 3, xl: 5 },
   gridType = GridTypes.photoshot,
   loadingMessage = "Loading...   Loading...",
   emptyMessage = "Nothing here, check back later",
@@ -27,6 +33,7 @@ export default function InfiniteScrollGrid({
   size: number;
   dataLoading: boolean;
   pageSize?: number;
+  colCount?: GridColumns;
   gridType?: GridTypes;
   loadingMessage?: string;
   emptyMessage?: string;
@@ -98,7 +105,12 @@ export default function InfiniteScrollGrid({
     <>
       {gridData && (
         <div
-          className="w-full grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8"
+          className={`w-full grid sm:grid-cols-${
+            colCount?.sm ? colCount?.sm : 1
+          } 
+          md:grid-cols-${colCount?.md ? colCount?.md : 2} 
+          lg:grid-cols-${colCount?.lg ? colCount?.lg : 3}
+           xl:grid-cols-${colCount?.xl ? colCount?.xl : 5} gap-8`}
           ref={containerRef}
         >
           {gridData.flat().map((gridItem, i) => {

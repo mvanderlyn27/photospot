@@ -9,11 +9,12 @@ export async function GET(request: NextRequest) {
   if (!user.data.user) {
     return new Response("not logged in", { status: 401 });
   }
-  const username_query = searchQuery.get("username_query");
   let pageCount = 1;
   if (searchQuery.get("page_count")) {
     pageCount = parseInt(searchQuery.get("page_count") as string);
   }
+  const username_query = searchQuery.get("username_query");
+  console.log("username_query", username_query);
   const query = supabase.rpc("search_profiles_by_username", {
     search_query: username_query ? username_query : "",
     page_count: pageCount,
@@ -24,4 +25,6 @@ export async function GET(request: NextRequest) {
     console.log(error);
     return new Response(error.message, { status: 500 });
   }
+  console.log("data", data);
+  return new Response(JSON.stringify(data), { status: 200 });
 }
