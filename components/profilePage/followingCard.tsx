@@ -59,9 +59,12 @@ export default function FollowingCard({ user }: { user: any }) {
     }
   };
   return (
-    <Link className="flex flex-row gap-4 p-4" href={`/user/${user.id}`}>
+    <Link
+      className="flex flex-row gap-4 p-4 items-center"
+      href={`/user/${user.id}`}
+    >
       {/* replace with shadcn avatar lol */}
-      <div className="relative rounded-full w-20 h-20 overflow-hidden m-auto">
+      <div className="relative rounded-full w-20 h-20 overflow-hidden ">
         <Image
           src={user.photo_path ? user.photo_path : DefaultProfile}
           fill
@@ -70,7 +73,7 @@ export default function FollowingCard({ user }: { user: any }) {
         />
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-row gap-4 justify-between flex-1">
         <h1 className="text-xl">{isUser ? "Your Account" : user.username}</h1>
         {!isUser && (
           <Button
