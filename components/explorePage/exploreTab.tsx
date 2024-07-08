@@ -1,4 +1,4 @@
-import TagSelect from "../common/TagSelect";
+import TagSelect from "../common/tagSelect";
 import {
   Accordion,
   AccordionContent,
@@ -98,12 +98,12 @@ export default function ExploreTab({
                 All
               </ToggleGroupItem>
             </ToggleGroup> */}
-            <Input placeholder="Name" />
+            <Input placeholder="Photospot Name" />
             <TagSelect
-              tagValues={tagValues}
-              setTagValues={setTagValues}
-              setSelectedTags={setSelectedTags}
-              setTagError={setTagError}
+            //   tagValues={tagValues}
+            //   setTagValues={setTagValues}
+            //   setSelectedTags={setSelectedTags}
+            //   setTagError={setTagError}
             />
 
             <div className="flex flex-row gap-4 justify-center items-center">

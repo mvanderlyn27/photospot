@@ -28,7 +28,10 @@ import {
 import useSWR, { useSWRConfig } from "swr";
 import { isPhotospot } from "@/utils/common/typeGuard";
 import { fetcher } from "@/utils/common/fetcher";
-import TagSelect, { TagOption, createOption } from "../common/TagSelect";
+import CreateTagSelect, {
+  TagOption,
+  createOption,
+} from "../common/createTagSelect";
 import { MultiValue } from "react-select";
 import FileUploadDropzone from "../common/fileDropZone";
 import { imageToFile } from "@/utils/common/file";
@@ -66,7 +69,7 @@ export const editPhotoshotSchema = z.object({
       (files) =>
         files
           ? new Set(files.map((file: File) => file.name)).size ===
-          files.map((file: File) => file.name).length
+            files.map((file: File) => file.name).length
           : true,
       "Please upload all unique images"
     )
@@ -81,8 +84,8 @@ export const editPhotoshotSchema = z.object({
       (files) =>
         files
           ? Array.from(files).every((file) =>
-            ACCEPTED_IMAGE_TYPES.includes(file.type)
-          )
+              ACCEPTED_IMAGE_TYPES.includes(file.type)
+            )
           : true,
       "Only these types are allowed .jpg, .jpeg, .png and .webp"
     ),
@@ -307,7 +310,7 @@ export default function EditPhotoshotForm({
               <FormItem>
                 <FormLabel>Tags:</FormLabel>
                 <FormControl>
-                  <TagSelect
+                  <CreateTagSelect
                     tagValues={tagValues}
                     setTagValues={setTagValues}
                     setSelectedTags={setSelectedTags}

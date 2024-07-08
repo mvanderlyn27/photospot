@@ -28,7 +28,7 @@ import {
 import useSWR, { useSWRConfig } from "swr";
 import { isPhotospot } from "@/utils/common/typeGuard";
 import { fetcher } from "@/utils/common/fetcher";
-import TagSelect, { TagOption } from "../common/TagSelect";
+import CreateTagSelect, { TagOption } from "../common/createTagSelect";
 import { MultiValue } from "react-select";
 import FileUploadDropzone from "../common/fileDropZone";
 import { NSFWTextMatcher } from "@/utils/common/obscenity";
@@ -256,7 +256,7 @@ export default function PhotoshotUploadForm({
               <FormItem>
                 <FormLabel>Tags:</FormLabel>
                 <FormControl>
-                  <TagSelect
+                  <CreateTagSelect
                     tagValues={tagValues}
                     setTagValues={setTagValues}
                     setSelectedTags={setSelectedTags}
