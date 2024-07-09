@@ -28,6 +28,11 @@ export default function UserSearchSection() {
     router.push(`/user?search=${inputValue}`);
     setSearchQuery(inputValue);
   };
+  const handleClear = () => {
+    router.replace("/user");
+    setSearchQuery("");
+    setInputValue("");
+  };
   return (
     <div className="w-full flex flex-col items-center justify-center ">
       <Card className=" xl:w-1/5">
@@ -39,6 +44,9 @@ export default function UserSearchSection() {
             className="text-xl"
           />
           <Button onClick={() => handleSearch()}>Search</Button>
+          <Button onClick={() => handleClear()} variant="destructive">
+            Clear
+          </Button>
         </div>
       </Card>
       {searchQuery && (

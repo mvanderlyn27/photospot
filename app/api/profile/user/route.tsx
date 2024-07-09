@@ -10,9 +10,10 @@ export async function GET(request: NextRequest) {
     return new Response("not logged in", { status: 401 });
   }
   let pageCount = 1;
-  if (searchQuery.get("page_count")) {
-    pageCount = parseInt(searchQuery.get("page_count") as string);
+  if (searchQuery.get("pageCount")) {
+    pageCount = parseInt(searchQuery.get("pageCount") as string);
   }
+  console.log("pageCount", pageCount);
   const username_query = searchQuery.get("username_query");
   console.log("username_query", username_query);
   const query = supabase.rpc("search_profiles_by_username", {
