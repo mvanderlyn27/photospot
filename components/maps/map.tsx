@@ -13,7 +13,13 @@ import {
 } from "react-map-gl";
 import mapboxgl, { LngLatBounds, MarkerOptions } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
+import {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { distanceOnGlobe, round } from "@/utils/common/math";
 import { NewPhotospotInfo, Photospot } from "@/types/photospotTypes";
 import { toast } from "../ui/use-toast";
@@ -29,20 +35,25 @@ export default function PhotospotMap({
   setSelectedLocation,
   viewState,
   setViewState,
-  handlePhotospotTooClose
+  handlePhotospotTooClose,
 }: {
   selectedLocation: Photospot | NewPhotospotInfo | null;
   setSelectedLocation: any;
   viewState: any;
   setViewState: any;
-  handlePhotospotTooClose: any;
+  handlePhotospotTooClose?: any;
 }) {
   //api keys
-  const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ? process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN : "";
+  const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+    ? process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+    : "";
   const geocode = new GeocodingCore({ accessToken: mapBoxToken });
   mapboxgl.accessToken = mapBoxToken;
   //state
-  const { data: photospots, isLoading: isLoadingPhotospots } = useSWR('/api/photospot', fetcher);
+  const { data: photospots, isLoading: isLoadingPhotospots } = useSWR(
+    "/api/photospot",
+    fetcher
+  );
   const { photospotMap } = useMap();
   //hooks
   useEffect(() => {
@@ -52,16 +63,22 @@ export default function PhotospotMap({
       });
     }
   }, [selectedLocation, photospotMap]);
-  const selectLocation = async (e: any, loc: { lat: number, lng: number }, photospot: Photospot | null) => {
+  const selectLocation = async (
+    e: any,
+    loc: { lat: number; lng: number },
+    photospot: Photospot | null
+  ) => {
     e.originalEvent.stopPropagation();
     if (photospot) {
       setSelectedLocation(photospot);
-    }
-    else {
+    } else if (handlePhotospotTooClose) {
       // see if any locations are too close
       const photospotsTooClose: Photospot[] = [];
       photospots.forEach((photospot: Photospot) => {
-        const dist = distanceOnGlobe({ lat: loc.lat, lng: loc.lng }, { lat: photospot.lat, lng: photospot.lng });
+        const dist = distanceOnGlobe(
+          { lat: loc.lat, lng: loc.lng },
+          { lat: photospot.lat, lng: photospot.lng }
+        );
         if (dist < MINIMUM_PHOTOSPOT_DISTANCE) {
           photospotsTooClose.push(photospot);
         }
@@ -71,25 +88,31 @@ export default function PhotospotMap({
         return;
       }
       //otherwise reverse-geocode, and update selectedLocation
-      const reverseGeocode = await geocode.reverse({ lat: loc.lat, lng: loc.lng });
+      const reverseGeocode = await geocode.reverse({
+        lat: loc.lat,
+        lng: loc.lng,
+      });
       if (reverseGeocode.features) {
         const newPhotospotInfo = {
-          location_name: reverseGeocode.features[0].properties.name_preferred ? reverseGeocode.features[0].properties.name_preferred : reverseGeocode.features[0].properties.name,
+          location_name: reverseGeocode.features[0].properties.name_preferred
+            ? reverseGeocode.features[0].properties.name_preferred
+            : reverseGeocode.features[0].properties.name,
           address: reverseGeocode.features[0].properties.full_address,
-          neighborhood: reverseGeocode.features[0].properties.context.neighborhood?.name,
+          neighborhood:
+            reverseGeocode.features[0].properties.context.neighborhood?.name,
           lat: e.lngLat.lat,
-          lng: e.lngLat.lng
-        } as NewPhotospotInfo
+          lng: e.lngLat.lng,
+        } as NewPhotospotInfo;
         setSelectedLocation(newPhotospotInfo);
       }
     }
-  }
+  };
   return (
     <MapboxMap
       maxBounds={MAXBOUNDS}
       id="photospotMap"
       initialViewState={{
-        ...viewState
+        ...viewState,
       }}
       reuseMaps={true}
       mapStyle="mapbox://styles/mvanderlyn27/clc8gyohu000114pl9hy6zzdt"
@@ -97,17 +120,23 @@ export default function PhotospotMap({
       mapboxAccessToken={mapBoxToken}
       cursor="auto"
       onClick={(e) => selectLocation(e, e.lngLat, null)}
-      onMoveEnd={(e) => { setViewState({ ...viewState, ...e.target.getCenter() }) }}
+      onMoveEnd={(e) => {
+        setViewState({ ...viewState, ...e.target.getCenter() });
+      }}
     >
-      {selectedLocation && <Marker
-        longitude={selectedLocation.lng}
-        latitude={selectedLocation.lat}
-        anchor="bottom"
-        onClick={(e) => { e.originalEvent.stopPropagation(); setSelectedLocation(null) }}
-      >
-        <img className="w-10 h-10" src="/selectedPin.svg" />
-      </Marker>
-      }
+      {selectedLocation && (
+        <Marker
+          longitude={selectedLocation.lng}
+          latitude={selectedLocation.lat}
+          anchor="bottom"
+          onClick={(e) => {
+            e.originalEvent.stopPropagation();
+            setSelectedLocation(null);
+          }}
+        >
+          <img className="w-10 h-10" src="/selectedPin.svg" />
+        </Marker>
+      )}
       {photospots &&
         photospots.map((photospot: Photospot) => {
           return (
@@ -116,7 +145,13 @@ export default function PhotospotMap({
               longitude={photospot.lng}
               latitude={photospot.lat}
               anchor="bottom"
-              onClick={(e) => { selectLocation(e, { lng: photospot.lng, lat: photospot.lat }, photospot) }}
+              onClick={(e) => {
+                selectLocation(
+                  e,
+                  { lng: photospot.lng, lat: photospot.lat },
+                  photospot
+                );
+              }}
             >
               <img key={photospot.id} className="w-10 h-10" src="/pin.svg" />
             </Marker>

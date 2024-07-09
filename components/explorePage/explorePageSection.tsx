@@ -4,34 +4,62 @@ import PhotospotMap from "../maps/map";
 import ExploreLeftBar from "./exploreLeftBar";
 import { Photospot } from "@/types/photospotTypes";
 import { useSearchParams } from "next/navigation";
+import { filterOptions } from "./exploreSearchForm";
 import ExploreTab from "./exploreTab";
 import { motion } from "framer-motion";
-export default function ExplorePageSection() {
-  // left bar with filters, and
-  //get values here
-  //pass to children
+const INITIAL_LAT = 40.7128;
+const INITIAL_LNG = -74.006;
+export default function ExplorePageSection({
+  searchParams,
+  availablePhotospots,
+}: {
+  searchParams?: {
+    photospotNameQuery?: string;
+    searchMode?: string;
+    tags?: string[];
+    selectedPhotospotId?: string;
+  };
+  availablePhotospots: Photospot[];
+}) {
+  const [selectedLocation, setSelectedLocation] = useState<Photospot>();
+  const [viewState, setViewState] = useState({
+    longitude: INITIAL_LNG,
+    latitude: INITIAL_LAT,
+    zoom: 13,
+    bearing: 29,
+  });
+  console.log("searchParams", searchParams);
+  const massageTagData = (tags: string[]) => {
+    if (!Array.isArray(tags)) {
+      let num = parseInt(tags);
+      if (num === undefined) return [];
+      return [num];
+    }
+    if (Array.isArray(tags) && tags.length === 0) return [];
 
-  const [selectedLocation, setSelectedLocation] = useState<Photospot | null>(
-    null
-  );
-  const [photospotOptions, setPhotospotOptions] = useState<Photospot[]>([]);
-  //   const searchParams = useSearchParams();
-  //   const tab = searchParams.get("tab") ? searchParams.get("tab") : "";
-
+    return tags.map((tag) => parseInt(tag));
+  };
   return (
-    <div className="flex flex-row">
+    <div className="w-full flex flex-row overflow-hidden min-h-0">
       <ExploreTab
+        photospotNameQuery={searchParams?.photospotNameQuery ?? ""}
+        searchMode={
+          searchParams?.searchMode !== undefined &&
+          filterOptions.some((el) => el === searchParams?.searchMode)
+            ? searchParams.searchMode
+            : ""
+        }
+        tags={massageTagData(searchParams?.tags ?? [])}
         setSelectedLocation={setSelectedLocation}
-        setPhotospotOptions={setPhotospotOptions}
+        photospotOptions={availablePhotospots}
       />
-      <div className="h-[800px] w-[800px]">
-        {/* <PhotospotMap
-          selectedLocation={null}
-          setSelectedLocation={undefined}
-          viewState={undefined}
-          setViewState={undefined}
-          handlePhotospotTooClose={undefined}
-        /> */}
+      <div className="h-full w-full">
+        <PhotospotMap
+          selectedLocation={selectedLocation ? selectedLocation : null}
+          setSelectedLocation={setSelectedLocation}
+          viewState={viewState}
+          setViewState={setViewState}
+        />
       </div>
     </div>
   );
