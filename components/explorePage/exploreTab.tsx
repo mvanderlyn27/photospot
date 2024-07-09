@@ -47,6 +47,7 @@ export default function ExploreTab({
   setSelectedLocation: any;
   photospotOptions: Photospot[];
 }) {
+  console.log("photospotNameQuery", photospotNameQuery);
   //have filters for search, other ones don't have filters
   return (
     <div className="flex flex-col w-[500px] p-4 gap-4 h-full min-h-0">

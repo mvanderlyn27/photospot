@@ -29,7 +29,7 @@ export default function UserSearchSection() {
     setSearchQuery(inputValue);
   };
   return (
-    <div className="flex flex-col gap-4 items-center justify-center ">
+    <div className="w-full flex flex-col items-center justify-center ">
       <Card className=" xl:w-1/5">
         <div className="flex flex-row gap-4 p-4">
           <Input
@@ -42,7 +42,7 @@ export default function UserSearchSection() {
         </div>
       </Card>
       {searchQuery && (
-        <div className="h-full xl:w-1/5">
+        <div className=" h-full xl:w-1/5">
           <InfiniteScrollGrid
             gridData={data}
             gridType={GridTypes.following}

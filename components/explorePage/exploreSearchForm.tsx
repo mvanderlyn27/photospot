@@ -45,6 +45,7 @@ export default function ExploreSearchForm({
   searchMode: string;
   tags: number[];
 }) {
+  console.log("photospotName", photospotName);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -59,9 +60,9 @@ export default function ExploreSearchForm({
   function onSubmit(values: z.infer<typeof formSchema>) {
     const params = new URLSearchParams(searchParams);
     if (values.photospotName) {
-      params.set("photospotQueryName", values.photospotName);
+      params.set("photospotNameQuery", values.photospotName);
     } else {
-      params.delete("photospotQueryName");
+      params.delete("photospotNameQuery");
     }
     if (values.searchMode) {
       params.set("searchMode", values.searchMode);
