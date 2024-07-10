@@ -27,6 +27,7 @@ import { reverseGeocodeLocation } from "@/app/serverActions/maps/reverseGeocodeL
 import useSWR from "swr";
 import { fetcher } from "@/utils/common/fetcher";
 import { GeocodingCore } from "@mapbox/search-js-core";
+import { useTheme } from "next-themes";
 const MINIMUM_PHOTOSPOT_DISTANCE = 2;
 // A circle of 5 mile radius of the Empire State Building
 const MAXBOUNDS = new LngLatBounds([-74.104, 39.98], [-73.82, 40.9]);
@@ -50,6 +51,7 @@ export default function PhotospotMap({
   const geocode = new GeocodingCore({ accessToken: mapBoxToken });
   mapboxgl.accessToken = mapBoxToken;
   //state
+  const { theme } = useTheme();
   const { data: photospots, isLoading: isLoadingPhotospots } = useSWR(
     "/api/photospot",
     fetcher
@@ -115,7 +117,11 @@ export default function PhotospotMap({
         ...viewState,
       }}
       reuseMaps={true}
-      mapStyle="mapbox://styles/mvanderlyn27/clc8gyohu000114pl9hy6zzdt"
+      mapStyle={
+        theme && theme === "dark"
+          ? "mapbox://styles/mapbox/dark-v11"
+          : "mapbox://styles/mvanderlyn27/clc8gyohu000114pl9hy6zzdt"
+      }
       // mapStyle="mapbox://styles/mapbox/standard"
       mapboxAccessToken={mapBoxToken}
       cursor="auto"

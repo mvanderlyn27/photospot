@@ -31,7 +31,7 @@ export default async function Layout({
     redirect("/profile/myPhotoshots");
   }
   return (
-    <div className="flex flex-row gap-4">
+    <div className="flex flex-row gap-4 w-full">
       <div className="flex md:w-1/5 flex-col">
         <UserLeftBar profileSection={params.profileSection} profile={profile} />
       </div>

@@ -646,6 +646,22 @@ export type Database = {
           created_at: string
         }[]
       }
+      search_photospots: {
+        Args: {
+          page_size?: number
+          page_count?: number
+          photospot_name?: string
+          tags?: number[]
+        }
+        Returns: {
+          address: string | null
+          created_at: string
+          id: number
+          location: unknown
+          location_name: string
+          neighborhood: string
+        }[]
+      }
       search_profiles_by_username: {
         Args: {
           search_query: string
