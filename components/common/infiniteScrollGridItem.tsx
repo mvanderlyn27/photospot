@@ -16,6 +16,8 @@ import { Button } from "../ui/button";
 import UserCard from "../profilePage/followingCard";
 import FollowerCard from "../profilePage/followerCard";
 import FollowingCard from "../profilePage/followingCard";
+import PhotospotCard from "../timeline/photospotCard";
+import PhotospotResult from "../explorePage/photospotResult";
 export default function InfiniteScrollGridItem({
   gridItemData,
   gridType,
@@ -97,6 +99,11 @@ export default function InfiniteScrollGridItem({
         ) : (
           <FollowingCard user={gridItemData} />
         ))}
+      {gridItemData &&
+        isPhotospot(gridItemData) &&
+        gridType === GridTypes.photospotSearch && (
+          <PhotospotResult photospot={gridItemData} />
+        )}
       {!gridItemData && (
         <Skeleton className="bg-black/10 object-cover rounded w-full aspect-square " />
       )}

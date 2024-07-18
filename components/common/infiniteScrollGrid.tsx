@@ -128,7 +128,7 @@ export default function InfiniteScrollGrid({
                   // delay: recalculatedDelay,
                   delay: 0.2,
                 }}
-                whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
+                // whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
               >
                 <InfiniteScrollGridItem
                   gridItemData={gridItem}
@@ -153,7 +153,10 @@ export default function InfiniteScrollGrid({
 
 const TimelineLoading = ({ message }: { message: string }) => {
   return (
-    <div id="loading" className="flex flex-col items-center p-10">
+    <div
+      id="loading"
+      className="flex flex-col items-center justify-center p-10 w-full"
+    >
       <TextSpinnerLoader text={message} />
     </div>
   );

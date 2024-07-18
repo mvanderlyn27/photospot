@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { Rating } from "react-simple-star-rating";
 
 export function RatingInput({
   initialVal,
   onChange,
 }: {
-  initialVal: number;
+  initialVal: number | undefined;
   onChange: any;
 }) {
-  const [rating, setRating] = useState(0);
-
+  const [value, setlVal] = useState(initialVal);
+  useEffect(() => {
+    setlVal(initialVal);
+  }, [initialVal]);
   // Catch Rating value
   const handleRating = (rate: number) => {
-    setRating(rate);
     onChange(rate);
   };
 
@@ -21,8 +23,8 @@ export function RatingInput({
       {/* set initial value */}
       <Rating
         onClick={handleRating}
-        initialValue={rating}
-        SVGclassName={"inline-block"}
+        initialValue={initialVal}
+        SVGstyle={{ display: "inline" }}
         transition={true}
         size={25}
       />

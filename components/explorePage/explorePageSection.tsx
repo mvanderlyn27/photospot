@@ -11,17 +11,23 @@ const INITIAL_LAT = 40.7128;
 const INITIAL_LNG = -74.006;
 export default function ExplorePageSection({
   searchParams,
-  availablePhotospots,
+  initialPhotospots,
+  initialSelectedPhotospot,
 }: {
   searchParams?: {
     photospotNameQuery?: string;
     searchMode?: string;
     tags?: string[];
     selectedPhotospotId?: string;
+    tab?: string;
   };
-  availablePhotospots: Photospot[];
+  initialPhotospots: Photospot[];
+  initialSelectedPhotospot?: Photospot;
 }) {
-  const [selectedLocation, setSelectedLocation] = useState<Photospot>();
+  const [photospots, setPhotospots] = useState<Photospot[]>([]);
+  const [selectedPhotospot, setSelectedPhotospot] = useState<
+    Photospot | undefined
+  >(initialSelectedPhotospot);
   const [viewState, setViewState] = useState({
     longitude: INITIAL_LNG,
     latitude: INITIAL_LAT,
@@ -50,13 +56,16 @@ export default function ExplorePageSection({
             : ""
         }
         tags={massageTagData(searchParams?.tags ?? [])}
-        setSelectedLocation={setSelectedLocation}
-        photospotOptions={availablePhotospots}
+        tab={searchParams?.tab ?? "search"}
+        selectedPhotospot={selectedPhotospot}
+        setSelectedPhotospot={setSelectedPhotospot}
+        photospots={photospots}
+        setPhotospots={setPhotospots}
       />
       <div className="h-full w-full">
         <PhotospotMap
-          selectedLocation={selectedLocation ? selectedLocation : null}
-          setSelectedLocation={setSelectedLocation}
+          selectedLocation={selectedPhotospot ? selectedPhotospot : null}
+          setSelectedLocation={setSelectedPhotospot}
           viewState={viewState}
           setViewState={setViewState}
         />

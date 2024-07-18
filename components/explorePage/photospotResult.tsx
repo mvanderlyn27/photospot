@@ -6,17 +6,13 @@ import { AspectRatio } from "../ui/aspect-ratio";
 
 export default function PhotospotResult({
   photospot,
-  setSelectedLocation,
 }: {
   photospot: Photospot;
-  setSelectedLocation: any;
 }) {
   return (
     <div
-      className="flex flex-row hover:bg-gray-100 cursor-pointer"
-      onClick={() => {
-        setSelectedLocation(photospot);
-      }}
+      className="flex flex-row hover:bg-gray-100 cursor-pointer gap-4"
+      onClick={() => {}}
     >
       <AspectRatio ratio={16 / 9}>
         <Image
@@ -29,6 +25,9 @@ export default function PhotospotResult({
       <div className="w-3/4 flex flex-col justify-center">
         <h1 className="text-xl font-bold">{photospot.location_name}</h1>
         <p className="text-sm">{photospot.address}</p>
+        <p className="text-sm">rating: {photospot.rating}</p>
+        <p className="text-sm">dist meters: {photospot.dist_meters}</p>
+        <p className="text-sm">created at: {photospot.created_at}</p>
       </div>
     </div>
   );

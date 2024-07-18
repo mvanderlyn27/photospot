@@ -58,7 +58,7 @@ export default function TagSelect({
       isMulti
       isClearable
       maxMenuHeight={200}
-      menuPlacement="top"
+      menuPlacement="bottom"
       isDisabled={isLoading || tagLoading}
       isLoading={isLoading || tagLoading}
       onChange={handleChange}

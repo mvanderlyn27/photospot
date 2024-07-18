@@ -646,22 +646,65 @@ export type Database = {
           created_at: string
         }[]
       }
-      search_photospots: {
+      search_nearby_photospots: {
         Args: {
+          latt: number
+          lngg: number
           page_size?: number
           page_count?: number
           photospot_name?: string
           tags?: number[]
         }
         Returns: {
-          address: string | null
-          created_at: string
           id: number
-          location: unknown
-          location_name: string
+          created_at: string
           neighborhood: string
+          location_name: string
+          address: string
+          lat: number
+          lng: number
+          distance: number
         }[]
       }
+      search_photospots:
+        | {
+            Args: {
+              page_size?: number
+              page_count?: number
+              photospot_name?: string
+              tags?: number[]
+            }
+            Returns: {
+              id: number
+              created_at: string
+              neighborhood: string
+              location_name: string
+              address: string
+              lat: number
+              lng: number
+            }[]
+          }
+        | {
+            Args: {
+              page_size?: number
+              page_count?: number
+              tags?: number[]
+              minimumrating?: number
+              maximumdistance?: number
+              latt?: number
+              lngg?: number
+              sort?: string
+            }
+            Returns: {
+              id: number
+              created_at: string
+              neighborhood: string
+              location_name: string
+              address: string
+              lat: number
+              lng: number
+            }[]
+          }
       search_profiles_by_username: {
         Args: {
           search_query: string
@@ -675,6 +718,24 @@ export type Database = {
           private_profile: boolean
           photo_path: string
           bio: string
+        }[]
+      }
+      search_saved_photospots: {
+        Args: {
+          page_size?: number
+          page_count?: number
+          photospot_name?: string
+          tags?: number[]
+          user_id?: string
+        }
+        Returns: {
+          id: number
+          created_at: string
+          neighborhood: string
+          location_name: string
+          address: string
+          lat: number
+          lng: number
         }[]
       }
       search_tags: {
