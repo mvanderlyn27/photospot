@@ -18,6 +18,7 @@ import SharePhotospotButton from "../photospot/sharePhotospotButton";
 import { Separator } from "../ui/separator";
 import PhotospotDirectionsButton from "../photospot/photospotDirectionsButton";
 import { Button } from "../ui/button";
+import { MdClose } from "react-icons/md";
 
 const TAG_LIMIT = 5;
 export default function PhotospotPreview({}) {
@@ -67,23 +68,33 @@ export default function PhotospotPreview({}) {
   const visitPhotospot = () => {
     push("/photospot/" + selectedPhotospot);
   };
+  const closePreview = () => {
+    params.delete("selectedPhotospot");
+    replace(`${pathname}?${params.toString()}`);
+  };
   /*
     show photospot name, and photoshots, and other info
   */
   return (
-    <div className="w-full h-full flex flex-col gap-4">
+    <div className="w-full h-full flex flex-col gap-4 relative">
       <Card className="border-none">
         <div className="w-full h-[400px] overflow-hidden relative">
           {topPhotoshot ? (
             <Image
               src={topPhotoshot.photo_paths ? topPhotoshot.photo_paths[0] : ""}
               alt="Image"
-              className="rounded-t-md object-cover"
+              className="rounded-t-md object-cover z-1"
               fill
             />
           ) : (
             <Skeleton className="bg-black/10 object-cover rounded w-full h-[400px]" />
           )}
+          <Button
+            onClick={closePreview}
+            className="absolute top-4 right-4 p-2 z-11 "
+          >
+            <MdClose className="w-6 h-6 z-11 fill-white" />
+          </Button>
         </div>
 
         <CardHeader>

@@ -42,7 +42,7 @@ export default function ExploreTabs() {
   };
   return (
     <Tabs
-      defaultValue={tab}
+      value={tab}
       onValueChange={(newTab) => handleTabChange(tab, newTab)}
       className="w-full h-full flex flex-col "
     >

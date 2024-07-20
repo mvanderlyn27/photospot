@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
   let sortRaw = searchParams.get("sort");
   if (sortRaw && ["rating", "nearby", "new"].includes(sortRaw)) {
     if (sortRaw === "rating") {
-      sortColumn = "rating";
+      sortColumn = "rating_average";
       sortDirection = "desc";
     } else if (sortRaw === "nearby") {
       sortColumn = "dist_meters";
