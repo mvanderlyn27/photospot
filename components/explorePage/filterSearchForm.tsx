@@ -162,13 +162,17 @@ export default function FilterSearchForm() {
   const clear = (e: any) => {
     const params = new URLSearchParams(searchParams);
     e.preventDefault();
+    form.setValue("maxDistance", "");
+    form.setValue("tags", []);
+    form.setValue("minRating", 0);
+    form.setValue("sort", "");
+    form.setValue("minRating", 0);
     params.delete("minRating");
     params.delete("maxDistance");
     params.delete("sortDir");
     params.delete("sort");
     params.delete("tags");
     replace(`${pathname}?${params.toString()}`);
-    form.reset();
     //double check this comes down and clears out
   };
 

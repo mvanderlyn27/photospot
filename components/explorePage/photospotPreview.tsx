@@ -96,7 +96,6 @@ export default function PhotospotPreview({}) {
             <MdClose className="w-6 h-6 z-11 fill-white" />
           </Button>
         </div>
-
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
             <div className="flex flex-row justify-between items-center">
