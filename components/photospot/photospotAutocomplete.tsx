@@ -38,7 +38,7 @@ export default function PhotospotAutocomplete() {
   const searchTags = async (inputValue: string) => {
     // setTagError(null);
     return fetch(`/api/photospot/search?photospotName=${inputValue}`, {
-      method: "POST",
+      method: "GET",
       cache: "no-store",
     }).then(async (res) => {
       let data = await res.json();

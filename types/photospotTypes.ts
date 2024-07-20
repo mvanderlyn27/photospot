@@ -8,7 +8,8 @@ export type Photospot = {
   location_name: string;
   address: string;
   neighborhood?: string | null;
-  rating?: number | null;
+  rating_average?: number | null;
+  rating_count?: number | null;
   dist_meters?: number | null;
   top_photoshot_id?: number;
   top_photoshot_path?: string;

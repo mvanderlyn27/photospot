@@ -25,7 +25,7 @@ export default function PhotospotResult({
       <div className="w-3/4 flex flex-col justify-center">
         <h1 className="text-xl font-bold">{photospot.location_name}</h1>
         <p className="text-sm">{photospot.address}</p>
-        <p className="text-sm">rating: {photospot.rating}</p>
+        <p className="text-sm">rating: {photospot.rating_average}</p>
         <p className="text-sm">dist meters: {photospot.dist_meters}</p>
         <p className="text-sm">created at: {photospot.created_at}</p>
       </div>

@@ -515,17 +515,34 @@ export type Database = {
         }
         Returns: string
       }
-      get_all_photospots_with_lat_lng: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          id: number
-          location_name: string
-          address: string
-          neighborhood: string
-          lat: number
-          lng: number
-        }[]
-      }
+      get_all_photospots_with_lat_lng:
+        | {
+            Args: Record<PropertyKey, never>
+            Returns: {
+              id: number
+              location_name: string
+              address: string
+              neighborhood: string
+              lat: number
+              lng: number
+            }[]
+          }
+        | {
+            Args: {
+              latt?: number
+              lngg?: number
+            }
+            Returns: {
+              id: number
+              location_name: string
+              address: string
+              neighborhood: string
+              lat: number
+              lng: number
+              dist_meters: number
+              rating: number
+            }[]
+          }
       get_photoshots_with_highest_likes: {
         Args: {
           time_range?: unknown
@@ -703,6 +720,49 @@ export type Database = {
               address: string
               lat: number
               lng: number
+              dist_meters: number
+              rating: number
+            }[]
+          }
+        | {
+            Args: {
+              tags?: number[]
+              minimumrating?: number
+              maximumdistance?: number
+              latt?: number
+              lngg?: number
+            }
+            Returns: {
+              id: number
+              created_at: string
+              neighborhood: string
+              location_name: string
+              address: string
+              lat: number
+              lng: number
+              dist_meters: number
+              rating: number
+            }[]
+          }
+        | {
+            Args: {
+              tags?: number[]
+              minimumrating?: number
+              maximumdistance?: number
+              latt?: number
+              lngg?: number
+              photospotname?: string
+            }
+            Returns: {
+              id: number
+              created_at: string
+              neighborhood: string
+              location_name: string
+              address: string
+              lat: number
+              lng: number
+              dist_meters: number
+              rating: number
             }[]
           }
       search_profiles_by_username: {

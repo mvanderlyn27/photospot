@@ -36,7 +36,7 @@ export default function PhotoshotModal({
     }
   }, [data]);
   return (
-    <div className="flex flex-col items-center gap-8 m-8">
+    <div className="flex flex-col items-center gap-8 m-8 w-full">
       <Card className="p-8">
         <Dialog>
           <div className="pl-20 pr-20">

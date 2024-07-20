@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { Map as MapboxMap } from "react-map-gl";
 import mapboxgl, { LngLatBounds } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-
+//update to get the photospots from the route url
 const MAXBOUNDS = new LngLatBounds([-74.104, 39.98], [-73.82, 40.9]);
 export default function ExploreMap() {
   const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN

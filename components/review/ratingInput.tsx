@@ -23,7 +23,9 @@ export function RatingInput({
       {/* set initial value */}
       <Rating
         onClick={handleRating}
-        initialValue={initialVal}
+        initialValue={
+          initialVal && initialVal > 0 && initialVal <= 5 ? initialVal : 0
+        }
         SVGstyle={{ display: "inline" }}
         transition={true}
         size={25}

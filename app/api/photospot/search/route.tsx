@@ -19,15 +19,17 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   let pageCount = 1;
   let pageSize = 20;
-  let sortColumn = "created_at";
-  let sortDirection = "desc";
+  let sortColumn = undefined;
+  let sortDirection = undefined;
   let args: {
+    photospotname?: string;
     tags?: number[];
     maximumdistance: number | null;
     minimumrating: number | null;
     latt: number | null;
     lngg: number | null;
   } = {
+    photospotname: undefined,
     tags: undefined,
     maximumdistance: null,
     minimumrating: null,
@@ -38,7 +40,10 @@ export async function GET(request: NextRequest) {
   if (pageCountRaw) {
     pageCount = parseInt(pageCountRaw);
   }
-
+  let photospotNameRaw = searchParams.get("photospotName");
+  if (photospotNameRaw) {
+    args.photospotname = photospotNameRaw;
+  }
   let tagsRaw = searchParams.getAll("tags");
   if (tagsRaw.length > 0) {
     args.tags = tagsRaw.map((tag) => parseInt(tag));
@@ -56,6 +61,9 @@ export async function GET(request: NextRequest) {
     } else if (sortRaw === "nearby") {
       sortColumn = "dist_meters";
       sortDirection = "asc";
+    } else {
+      sortColumn = "created_at";
+      sortDirection = "desc";
     }
   }
   let latRaw = searchParams.get("lat");
@@ -75,12 +83,14 @@ export async function GET(request: NextRequest) {
   }
   //depending on search mode
   console.log("args", args);
-  const { data, error } = await supabase
+  let query = supabase
     .rpc("search_photospots", args)
     .select("*")
-    .range((pageCount - 1) * pageSize, pageCount * pageSize - 1)
-    .order(sortColumn, { ascending: sortDirection === "asc" });
-
+    .range((pageCount - 1) * pageSize, pageCount * pageSize - 1);
+  if (sortColumn && sortDirection) {
+    query.order(sortColumn, { ascending: sortDirection === "asc" });
+  }
+  const { data, error } = await query;
   if (error) {
     console.log(error);
     return new Response(error.message, { status: 500 });

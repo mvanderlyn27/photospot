@@ -26,7 +26,6 @@ const { data, error } = await supabase
     console.log("error", error);
     return new Response(error.message, { status: 500 });
   }
-  console.log("photoshots", data);
   //move users to front and add owner tag
   return new Response(JSON.stringify(data), { status: 200 });
 }

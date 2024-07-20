@@ -45,6 +45,7 @@ import useSWR from "swr";
 import { fetcher } from "@/utils/common/fetcher";
 import useSWRMutation from "swr/dist/mutation";
 import { round } from "@/utils/common/math";
+import SavePhotospotButton from "../photospot/savePhotospotButton";
 
 const TAG_LIMIT = 5;
 
@@ -62,50 +63,20 @@ export default function PhotospotInfo({
     error: photospotError,
   } = useSWR("/api/photospot/" + id, fetcher);
   // const { data: stats, isLoading: statsLoading, error: statsError } = useQuery(getPhotospotStatsById(id));
-  const {
-    data: stats,
-    isLoading: statsLoading,
-    error: statsError,
-  } = useSWR("/api/photospot/" + id + "/stats", fetcher);
-  const {
-    data: isSaved,
-    mutate: updateSaved,
-    isLoading: savedLoading,
-    error: savedError,
-  } = useSWR("/api/photospot/" + id + "/isSaved", fetcher);
+
   //in the future update tags to have a limit
   const {
     data: tags,
     isLoading: tagsLoading,
     error: tagsError,
   } = useSWR("/api/photospot/" + id + "/tags", fetcher);
-  const handleUpdateSaved = async () => {
-    if (!photospot) return;
-    if (isSaved) {
-      console.log("un saveing ");
-      updateSaved(handleUnsave(), { optimisticData: false });
-    } else {
-      console.log("saving");
-      updateSaved(handleSave(), { optimisticData: true });
-    }
-  };
-  const handleSave = async () => {
-    return fetch("/api/photospot/" + id + "/save", { method: "post" }).then(
-      (res) => true
-    );
-  };
-  const handleUnsave = async () => {
-    return fetch("/api/photospot/" + id + "/unSave", { method: "post" }).then(
-      (res) => false
-    );
-  };
   return (
     //setup skeelton for loading
     <>
-      {(photospotLoading || statsLoading) && (
+      {photospotLoading && (
         <Skeleton className="h-full w-full bg-slate-800/10" />
       )}
-      {photospot && stats && (
+      {photospot && (
         <Card className={`h-full flex flex-col ${photospot ? "" : "hidden"}`}>
           <CardHeader className="flex-none">
             <div className="flex flex-row justify-between">
@@ -122,26 +93,21 @@ export default function PhotospotInfo({
                     </div>
                   </DialogTrigger>
                   <DialogContent>
-                    <SharePhotospotDialog />
+                    <SharePhotospotDialog id={id} />
                   </DialogContent>
                 </Dialog>
-                <Button
-                  onClick={() => handleUpdateSaved()}
-                  disabled={savedLoading}
-                >
-                  {isSaved ? (
-                    <FaBookmark className="w-6 h-6" />
-                  ) : (
-                    <FaRegBookmark className="w-6 h-6" />
-                  )}
-                </Button>
+                {user && <SavePhotospotButton id={id} />}
               </div>
             </div>
           </CardHeader>
           <CardContent className=" flex flex-col gap-4 ">
             <RatingDisplay
-              rating={stats?.rating_average ? round(stats.rating_average, 1) : 0}
-              count={stats?.rating_count ? stats.rating_count : 0}
+              rating={
+                photospot?.rating_average
+                  ? round(photospot.rating_average, 1)
+                  : 0
+              }
+              count={photospot?.rating_count ? photospot.rating_count : 0}
             />
             <div className=" flex flex-auto gap-2">
               {tags &&

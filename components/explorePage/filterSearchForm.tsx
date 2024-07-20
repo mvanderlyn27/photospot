@@ -35,7 +35,14 @@ export const sortOptions = ["rating", "nearby", "new", ""];
 const filterFormSchema = z.object({
   tags: z.array(z.number()),
   minRating: z.coerce.number().optional(),
-  maxDistance: z.coerce.number().optional(),
+  maxDistance: z
+    .string()
+    .refine((x) => x === "" || !isNaN(Number(x)), "enter a valid distance")
+    .refine(
+      (x) => x === "" || (!isNaN(Number(x)) && Number(x) > 0),
+      "must be greater than 0"
+    )
+    .optional(),
   sort: z.string().refine((x) => sortOptions.includes(x)),
   sortDir: z.string().refine((x) => ["asc", "desc", ""].includes(x)),
 });
@@ -84,11 +91,10 @@ export default function FilterSearchForm() {
     let sortRaw = params.get("sort");
     let sortDirRaw = params.get("sortDir");
     let tags = tagsRaw.map((x) => parseInt(x));
-    let minRating = minRatingRaw ? parseInt(minRatingRaw) : undefined;
-    let maxDistance = maxDistanceRaw ? parseInt(maxDistanceRaw) : undefined;
+    let minRating = minRatingRaw ? parseInt(minRatingRaw) : 0;
+    let maxDistance = maxDistanceRaw ? maxDistanceRaw : "";
     let sort = sortRaw ? sortRaw : "";
     let sortDir = sortDirRaw ? sortDirRaw : "";
-    console.log("vals", minRating, maxDistance, sort, sortDir, tags);
     return {
       tags: tags,
       minRating: minRating,
@@ -163,9 +169,6 @@ export default function FilterSearchForm() {
     params.delete("tags");
     replace(`${pathname}?${params.toString()}`);
     form.reset();
-    form.setValue("tags", []);
-    form.setValue("maxDistance", 0);
-    form.setValue("sort", "");
     //double check this comes down and clears out
   };
 
@@ -227,7 +230,14 @@ export default function FilterSearchForm() {
               <FormControl>
                 <RatingInput
                   initialVal={field.value}
-                  onChange={field.onChange}
+                  onChange={(rate: number | undefined) => {
+                    console.log("rate", rate, field.value);
+                    if (rate === field.value) {
+                      field.onChange(0);
+                    } else {
+                      field.onChange(rate);
+                    }
+                  }}
                 />
               </FormControl>
               <FormDescription>
