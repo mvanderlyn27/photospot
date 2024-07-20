@@ -11,13 +11,19 @@ import {
   Photospot,
   Profile,
 } from "@/types/photospotTypes";
-import { isPhotoshot, isPhotospot, isProfile } from "@/utils/common/typeGuard";
+import {
+  isPhotoshot,
+  isPhotospot,
+  isProfile,
+  isReview,
+} from "@/utils/common/typeGuard";
 import { Button } from "../ui/button";
 import UserCard from "../profilePage/followingCard";
 import FollowerCard from "../profilePage/followerCard";
 import FollowingCard from "../profilePage/followingCard";
 import PhotospotCard from "../timeline/photospotCard";
 import PhotospotResult from "../explorePage/photospotResult";
+import ReviewCard from "../review/review";
 export default function InfiniteScrollGridItem({
   gridItemData,
   gridType,
@@ -104,6 +110,9 @@ export default function InfiniteScrollGridItem({
         gridType === GridTypes.photospotSearch && (
           <PhotospotResult photospot={gridItemData} />
         )}
+      {gridItemData &&
+        isReview(gridItemData) &&
+        gridType === GridTypes.review && <ReviewCard review={gridItemData} />}
       {!gridItemData && (
         <Skeleton className="bg-black/10 object-cover rounded w-full aspect-square " />
       )}

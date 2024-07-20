@@ -1,18 +1,28 @@
+"use client";
 import Image from "next/image";
 import { Photospot } from "@/types/photospotTypes";
 import { DefaultPhotospot } from "@/utils/common/imageLinks";
 import { AspectRatioIcon } from "@radix-ui/react-icons";
 import { AspectRatio } from "../ui/aspect-ratio";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function PhotospotResult({
   photospot,
 }: {
   photospot: Photospot;
 }) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace, push } = useRouter();
+  const params = new URLSearchParams(searchParams);
+  const handleClick = () => {
+    params.set("selectedPhotospot", photospot.id.toString());
+    replace(`${pathname}?${params.toString()}`);
+  };
   return (
     <div
       className="flex flex-row hover:bg-gray-100 cursor-pointer gap-4"
-      onClick={() => {}}
+      onClick={handleClick}
     >
       <AspectRatio ratio={16 / 9}>
         <Image

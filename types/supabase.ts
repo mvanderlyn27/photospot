@@ -556,19 +556,70 @@ export type Database = {
           photo_paths: string[]
         }[]
       }
-      get_photospot_by_id_lat_lng: {
-        Args: {
-          input_id: number
-        }
-        Returns: {
-          id: number
-          location_name: string
-          address: string
-          neighborhood: string
-          lat: number
-          lng: number
-        }[]
-      }
+      get_photospot_by_id_lat_lng:
+        | {
+            Args: {
+              input_id: number
+            }
+            Returns: {
+              id: number
+              location_name: string
+              address: string
+              neighborhood: string
+              lat: number
+              lng: number
+            }[]
+          }
+        | {
+            Args: {
+              input_id: number
+              latt?: number
+              lngg?: number
+            }
+            Returns: {
+              id: number
+              location_name: string
+              address: string
+              neighborhood: string
+              lat: number
+              lng: number
+              rating_average: number
+              rating_count: number
+              dist_meters: number
+            }[]
+          }
+      get_photospot_reviews:
+        | {
+            Args: {
+              input_photospot_id: number
+              current_user_id: string
+            }
+            Returns: {
+              created_at: string
+              created_by: string
+              rating: number
+              text: string
+              photospot_id: number
+              edited: boolean
+              username: string
+              owner: boolean
+            }[]
+          }
+        | {
+            Args: {
+              photospotid: number
+            }
+            Returns: {
+              created_at: string
+              created_by: string
+              rating: number
+              text: string
+              photospot_id: number
+              edited: boolean
+              username: string
+              owner: boolean
+            }[]
+          }
       get_random_user: {
         Args: Record<PropertyKey, never>
         Returns: Json
@@ -762,7 +813,8 @@ export type Database = {
               lat: number
               lng: number
               dist_meters: number
-              rating: number
+              rating_average: number
+              rating_count: number
             }[]
           }
       search_profiles_by_username: {

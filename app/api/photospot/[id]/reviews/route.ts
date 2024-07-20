@@ -1,41 +1,42 @@
 "use server";
 import { Review } from "@/types/photospotTypes";
 import { createClient } from "@/utils/supabase/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 //get all reviews for photospot
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: number } }
 ) {
   console.log("trying to get reviews for photospot ", params.id);
+  const queryParams = request.nextUrl.searchParams;
+  let pageSize = 20;
+  let pageCount = 1;
+  if (queryParams.get("pageCount")) {
+    pageCount = parseInt(queryParams.get("pageCount")!);
+  }
+  let sort = "new";
+  if (queryParams.get("sort")) {
+    sort = queryParams.get("sort")!;
+  }
   const supabase = createClient();
   const { data: userData } = await supabase.auth.getUser();
-  const { data, error } = await supabase
-    .from("photospot_reviews")
-    .select("*, ...profiles(username)")
-    .eq("photospot_id", params.id);
+  let query = supabase.rpc("get_photospot_reviews", {photospotid: params.id }).select('*').order('owner', {ascending: false, nullsFirst: false});
+  if(sort==="new") {
+    query.order('created_at', {ascending: false});
+  }
+  if(sort==="high") {
+    query.order('rating', {ascending: false});
+  }
+  if(sort==="low") {
+    query.order('rating', {ascending: true});
+  }
+  query.range((pageCount - 1) * pageSize, pageCount * pageSize - 1);
+  const {data, error}  = await query;
   if (error) {
+    console.log('error', error)
     return new NextResponse(error.message, { status: 500 });
   }
-  //todo add photospot type
-  const { data: updateReviews, error: updateError } = await supabase
-    .from("photospot_reviews")
-    .select("*, ...profiles(username)")
-    .eq("photospot_id", params.id);
-  if (updateError) {
-    console.log("error getting reviews with username", updateError);
-    return new NextResponse(updateError.message, { status: 500 });
-  }
-  let userReview: Review | undefined = updateReviews.find(
-    (review: any) => review.created_by === userData.user?.id
-  );
-  let reviewAr = updateReviews as Review[];
-  if (userReview) {
-    const index = reviewAr.indexOf(userReview);
-    reviewAr.splice(index, 1);
-    userReview.owner = true;
-    reviewAr.unshift(userReview);
-  }
-  return NextResponse.json(reviewAr);
+  console.log("reviews: ", data);
+  return new NextResponse(JSON.stringify(data), { status: 200 });
 }
