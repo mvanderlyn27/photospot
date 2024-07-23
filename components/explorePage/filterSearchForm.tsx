@@ -109,6 +109,8 @@ export default function FilterSearchForm() {
   });
   const onSubmit = (values: z.infer<typeof filterFormSchema>) => {
     const params = new URLSearchParams(searchParams);
+    params.delete("page");
+    params.delete("selectedPhotospot");
     if (values.minRating) {
       params.set("minRating", values.minRating.toString());
     } else {
@@ -172,6 +174,8 @@ export default function FilterSearchForm() {
     params.delete("sortDir");
     params.delete("sort");
     params.delete("tags");
+    params.delete("page");
+    params.delete("selectedPhotospot");
     replace(`${pathname}?${params.toString()}`);
     //double check this comes down and clears out
   };

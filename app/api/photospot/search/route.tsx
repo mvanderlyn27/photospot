@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
     console.log(error);
     return new Response(error.message, { status: 500 });
   }
-  console.log("data", data);
+  console.log("page", pageCount, "data", data);
   return NextResponse.json(data);
 }
 

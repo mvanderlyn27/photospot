@@ -34,6 +34,7 @@ export default function ExploreTabs() {
         console.log("removing tags");
         params.delete("tags");
         params.delete("sort");
+        params.delete("page");
         params.delete("maxDistance");
         params.delete("minRating");
       }

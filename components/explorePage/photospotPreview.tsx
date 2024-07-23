@@ -19,18 +19,23 @@ import { Separator } from "../ui/separator";
 import PhotospotDirectionsButton from "../photospot/photospotDirectionsButton";
 import { Button } from "../ui/button";
 import { MdClose } from "react-icons/md";
+import { parseAsInteger, parseAsString, useQueryState } from "nuqs";
 
 const TAG_LIMIT = 5;
 export default function PhotospotPreview({}) {
+  const [selectedPhotospot, setSelectedPhotospot] = useQueryState(
+    "selectedPhotospot",
+    parseAsInteger
+  );
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace, push } = useRouter();
   const params = new URLSearchParams(searchParams);
-  const selectedPhotospotRaw = params.get("selectedPhotospot");
-  const selectedPhotospot = selectedPhotospotRaw
-    ? parseInt(selectedPhotospotRaw)
-    : undefined;
-
+  // const selectedPhotospotRaw = params.get("selectedPhotospot");
+  // const selectedPhotospot = selectedPhotospotRaw
+  // ? parseInt(selectedPhotospotRaw)
+  // : undefined;
+  const [tab, setTab] = useQueryState("tab", parseAsString);
   const latRaw = params.get("lat");
   const lat = latRaw ? parseFloat(latRaw) : undefined;
 
@@ -69,14 +74,19 @@ export default function PhotospotPreview({}) {
     push("/photospot/" + selectedPhotospot);
   };
   const closePreview = () => {
-    params.delete("selectedPhotospot");
-    replace(`${pathname}?${params.toString()}`);
+    // params.delete("selectedPhotospot");
+    // replace(`${pathname}?${params.toString()}`);
+    setSelectedPhotospot(null, { shallow: true });
   };
   /*
     show photospot name, and photoshots, and other info
   */
   return (
-    <div className="w-full h-full flex flex-col gap-4 relative">
+    <div
+      className={`w-full h-full flex flex-col gap-4 relative ${
+        selectedPhotospot !== null ? "" : "hidden"
+      }`}
+    >
       <Card className="border-none">
         <div className="w-full h-[400px] overflow-hidden relative">
           {topPhotoshot ? (

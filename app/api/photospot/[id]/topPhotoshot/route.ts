@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const supabase = createClient();
-  console.log("id", params);
+  // console.log("id", params);
 
   const { data, error } = await supabase.rpc("find_most_liked_photoshot", {
     input_id: parseInt(params.id),
@@ -17,6 +17,6 @@ export async function GET(
     console.log("error getting top photoshot for " + params.id, error);
     return new Response(error.message, { status: 500 });
   }
-  console.log("top photoshot", data);
+  // console.log("top photoshot", data);
   return NextResponse.json(data);
 }

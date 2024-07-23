@@ -49,7 +49,7 @@ export default async function ExplorePage({
       <div className="h-full w-[500px]">
         <ExploreLeftBar />
       </div>
-      {searchParams?.selectedPhotospot && (
+      {searchParams?.tab !== "search" && (
         <div className="absolute left-[525px] top-[25px] bottom-[25px] z-10 overflow-y-auto overflow-x-hidden w-[500px] rounded-xl">
           <PhotospotPreview />
         </div>
