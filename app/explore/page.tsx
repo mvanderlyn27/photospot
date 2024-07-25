@@ -42,6 +42,9 @@ export default async function ExplorePage({
       (photospot) => photospot.id === selectedId
     );
   }
+  if (searchParams && !searchParams.tab) {
+    searchParams.tab = "search";
+  }
   //fetch data with supabase
   return (
     <div className="w-full h-full flex flex-row overflow-hidden min-h-0 relative">

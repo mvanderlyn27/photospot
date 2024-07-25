@@ -12,6 +12,7 @@ import { round } from "@/utils/common/math";
 import { motion } from "framer-motion";
 import InfiniteScrollGridItem from "./infiniteScrollGridItem";
 import { isPhotoshot } from "@/utils/common/typeGuard";
+import useOnScreen from "@/hooks/react";
 
 export default function InfiniteScrollGrid({
   gridData,
@@ -42,9 +43,8 @@ export default function InfiniteScrollGrid({
   messageOnLastItem?: boolean;
   messageOnEmpty?: boolean;
 }) {
-  const containerRef = useRef(null);
-
-  const [isInView, setIsInView] = useState(false);
+  const ref = useRef(null);
+  let loadingVisible = useOnScreen(ref);
   const isLoadingMore =
     dataLoading ||
     (size > 0 && gridData && typeof gridData[size - 1] === "undefined");
@@ -55,39 +55,13 @@ export default function InfiniteScrollGrid({
     (gridData?.[0].length === 0 ||
       (gridData && gridData[gridData.length - 1]?.length < pageSize));
   // const isRefreshing = isValidating && data && data.length === size;
-  const handleNewPhotoshot = () => {};
-  const handleScroll = () => {
-    if (containerRef.current && typeof window !== "undefined") {
-      const container: any = containerRef.current;
-      const { bottom } = container.getBoundingClientRect();
-      const { innerHeight } = window;
-      setIsInView(() => bottom <= innerHeight);
-    }
-  };
-
-  const handleDebouncedScroll = useDebouncedCallback(
-    () => !isReachingEnd && handleScroll(),
-    200
-  );
-  useEffect(() => {
-    window.addEventListener("scroll", handleDebouncedScroll);
-    return () => {
-      window.removeEventListener("scroll", handleDebouncedScroll);
-    };
-  }, []);
 
   useEffect(() => {
-    if (isInView) {
+    console.log("visible?", loadingVisible);
+    if (loadingVisible && !isLoadingMore) {
       loadMoreTickets();
     }
-  }, [isInView]);
-  useEffect(() => {
-    if (isLoadingMore) {
-      document
-        .getElementById("loading")
-        ?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [isLoadingMore]);
+  }, [loadingVisible]);
 
   const loadMoreTickets = () => {
     setSize(size + 1);
@@ -102,7 +76,7 @@ export default function InfiniteScrollGrid({
     }
   };
   return (
-    <>
+    <div className="w-full flex flex-col">
       {gridData && (
         <div
           className={`w-full grid sm:grid-cols-${
@@ -111,7 +85,6 @@ export default function InfiniteScrollGrid({
           md:grid-cols-${colCount?.md ? colCount?.md : 2} 
           lg:grid-cols-${colCount?.lg ? colCount?.lg : 3}
            xl:grid-cols-${colCount?.xl ? colCount?.xl : 5} gap-8`}
-          ref={containerRef}
         >
           {gridData.flat().map((gridItem, i) => {
             const recalculatedDelay =
@@ -144,34 +117,33 @@ export default function InfiniteScrollGrid({
       {messageOnLastItem && isReachingEnd && !isEmpty && (
         <TimelineEnd message={lastItemMessage} />
       )}
-      {loadingAnimation && isLoadingMore && (
-        <TimelineLoading message={loadingMessage} />
-      )}
-    </>
+      <div ref={ref} className="w-full">
+        {loadingAnimation && !isReachingEnd && !isEmpty && (
+          <TimelineLoading message={loadingMessage} />
+        )}
+      </div>
+    </div>
   );
 }
 
 const TimelineLoading = ({ message }: { message: string }) => {
   return (
-    <div
-      id="loading"
-      className="flex flex-col items-center justify-center p-10 w-full"
-    >
+    <div className="flex flex-col items-center justify-center p-10 w-full">
       <TextSpinnerLoader text={message} />
     </div>
   );
 };
 const TimelineEnd = ({ message }: { message: string }) => {
   return (
-    <div className="flex flex-col items-center">
-      <h1 className="text-3xl font-semibold">{message}</h1>
+    <div className="flex flex-col items-center p-4">
+      <h1 className="text-xl font-semibold">{message}</h1>
     </div>
   );
 };
 const TimelineEmpty = ({ message }: { message: string }) => {
   return (
-    <div className="flex flex-col items-center">
-      <h1 className="text-3xl font-semibold">{message}</h1>
+    <div className="flex flex-col items-center p-4">
+      <h1 className="text-xl font-semibold">{message}</h1>
     </div>
   );
 };

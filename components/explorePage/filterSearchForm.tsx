@@ -31,6 +31,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import TextSpinnerLoader from "../common/Loading";
 import PhotospotAutocomplete from "../photospot/photospotAutocomplete";
 import { RatingInput } from "../review/ratingInput";
+import {
+  parseAsFloat,
+  parseAsInteger,
+  useQueryState,
+  useQueryStates,
+} from "nuqs";
 export const sortOptions = ["rating", "nearby", "new", ""];
 const filterFormSchema = z.object({
   tags: z.array(z.number()),
@@ -44,63 +50,75 @@ const filterFormSchema = z.object({
     )
     .optional(),
   sort: z.string().refine((x) => sortOptions.includes(x)),
-  sortDir: z.string().refine((x) => ["asc", "desc", ""].includes(x)),
 });
-export default function FilterSearchForm() {
-  const [loading, setLoading] = useState(false);
+export default function FilterSearchForm({
+  // loadMore,
+  // loading,
+  // setLoading,
+  tags,
+  maxDistance,
+  minRating,
+  sort,
+  // setLoadMore,
+  setTags,
+  setMaxDistance,
+  setMinRating,
+  setSort,
+  userLocation,
+  setUserLocation,
+}: {
+  // loadMore: boolean;
+  // loading: boolean;
+  // setLoading: any;
+  tags: number[] | null;
+  maxDistance: number | null;
+  minRating: number | null;
+  sort: string;
+  // setLoadMore: any;
+  setTags: any;
+  setMaxDistance: any;
+  setMinRating: any;
+  setSort: any;
+  userLocation: any;
+  setUserLocation: any;
+}) {
   const [locationAvailable, setLocationAvailable] = useState(false);
+  const [selectedPhotospot, setSelectedPhotospot] = useQueryState(
+    "selectedPhotospot",
+    parseAsInteger
+  );
+
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams);
   const pathname = usePathname();
   const { replace } = useRouter();
   useEffect(() => {
-    if (params.get("lat") && params.get("lng")) {
+    if (userLocation) {
       setLocationAvailable(true);
     } else {
       getLocation();
     }
-    // fetch('/api/photospot/nearby?lat=40.73&lng=-73.94').then(res => res.json()).then(data => {
-    //     setInitialPhotoshots(data);
-    // })
   }, []);
   const getLocation = () => {
     if ("geolocation" in navigator) {
       // Retrieve latitude & longitude coordinates from `navigator.geolocation` Web API
-
       navigator.geolocation.getCurrentPosition(
         ({ coords }) => {
-          const { latitude, longitude } = coords;
-          console.log("lat", latitude, "long", longitude);
-          params.set("lat", latitude.toString());
-          params.set("lng", longitude.toString());
-          replace(`${pathname}?${params.toString()}`);
+          setUserLocation({ lat: coords.latitude, lng: coords.longitude });
           setLocationAvailable(true);
         },
         () => {
           setLocationAvailable(false);
-
-          //   setLocation({ latitude: 40.73, longitude: -73.94 });
         }
       );
     }
   };
   const getDefaults = () => {
-    let tagsRaw = params.getAll("tags");
-    let minRatingRaw = params.get("minRating");
-    let maxDistanceRaw = params.get("maxDistance");
-    let sortRaw = params.get("sort");
-    let sortDirRaw = params.get("sortDir");
-    let tags = tagsRaw.map((x) => parseInt(x));
-    let minRating = minRatingRaw ? parseInt(minRatingRaw) : 0;
-    let maxDistance = maxDistanceRaw ? maxDistanceRaw : "";
-    let sort = sortRaw ? sortRaw : "";
-    let sortDir = sortDirRaw ? sortDirRaw : "";
     return {
-      tags: tags,
-      minRating: minRating,
-      maxDistance: maxDistance,
-      sort: sort,
-      sortDir: sortDir,
+      tags: tags ? tags : [],
+      minRating: minRating != null ? minRating : undefined,
+      maxDistance: maxDistance !== null ? maxDistance.toString() : "",
+      sort: sort !== null ? sort : "",
     };
   };
   const form = useForm<z.infer<typeof filterFormSchema>>({
@@ -108,38 +126,30 @@ export default function FilterSearchForm() {
     defaultValues: getDefaults(),
   });
   const onSubmit = (values: z.infer<typeof filterFormSchema>) => {
-    const params = new URLSearchParams(searchParams);
-    params.delete("page");
-    params.delete("selectedPhotospot");
+    console.log("values", values);
+    setSelectedPhotospot(null);
     if (values.minRating) {
-      params.set("minRating", values.minRating.toString());
+      setMinRating(values.minRating);
     } else {
-      params.delete("minRating");
+      setMinRating(null);
     }
     if (values.maxDistance) {
-      params.set("maxDistance", values.maxDistance.toString());
+      setMaxDistance(values.maxDistance);
     } else {
-      params.delete("maxDistance");
+      setMaxDistance(null);
     }
     if (values.sort) {
-      params.set("sort", values.sort);
-      if (values.sortDir) {
-        params.set("sortDir", values.sortDir);
-      } else {
-        params.delete("sortDir");
-      }
+      setSort(values.sort);
     } else {
-      params.delete("sort");
-      params.delete("sortDir");
+      setSort(null);
     }
     if (values.tags) {
-      params.delete("tags");
-      values.tags.forEach((t) => params.append("tags", t.toString()));
+      setTags(values.tags);
     }
-    replace(`${pathname}?${params.toString()}`);
+    // setLoadMore(true);
+    // setLoading(true);
   };
   const setSelectedTags = (selectedTags: Tag[]) => {
-    console.log("selectedTags", selectedTags);
     if (selectedTags) {
       form.setValue(
         "tags",
@@ -151,7 +161,6 @@ export default function FilterSearchForm() {
     }
   };
   const setTagError = (tagError: Error) => {
-    console.log("tagError", tagError);
     if (tagError) {
       form.setError("tags", {
         type: "manual",
@@ -169,14 +178,23 @@ export default function FilterSearchForm() {
     form.setValue("minRating", 0);
     form.setValue("sort", "");
     form.setValue("minRating", 0);
-    params.delete("minRating");
-    params.delete("maxDistance");
-    params.delete("sortDir");
-    params.delete("sort");
-    params.delete("tags");
-    params.delete("page");
-    params.delete("selectedPhotospot");
-    replace(`${pathname}?${params.toString()}`);
+    setMinRating(null);
+    setMaxDistance(null);
+    setTags(null);
+    setSelectedPhotospot(null);
+    setSort(null);
+    // setLoadMore(null);
+    // setLoading(null);
+
+    // params.delete("maxDistance");
+    // params.delete("minRating");
+    // params.delete("maxDistance");
+    // params.delete("sortDir");
+    // params.delete("sort");
+    // params.delete("tags");
+    // params.delete("page");
+    // params.delete("selectedPhotospot");
+    // replace(`${pathname}?${params.toString()}`);
     //double check this comes down and clears out
   };
 

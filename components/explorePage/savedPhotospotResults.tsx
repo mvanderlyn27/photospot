@@ -1,15 +1,14 @@
 "use client";
 import { fetcher } from "@/utils/common/fetcher";
-import { useSearchParams } from "next/navigation";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 import { GridTypes } from "@/types/photospotTypes";
-import useSWR from "swr";
 
-export default function SavedSearchResults() {
-  const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams);
-  const { data: profile } = useSWR("api/profile", fetcher);
+export default function SavedSearchResults({
+  userId,
+}: {
+  userId: number | null;
+}) {
   const {
     data,
     mutate,
@@ -18,15 +17,22 @@ export default function SavedSearchResults() {
     isValidating,
     isLoading: photospotsLoading,
   } = useSWRInfinite(
-    (index) =>
-      `/api/photospot/user/${profile.id}/getSavedPhotospots?pageCount=${
-        index + 1
-      }&${params.toString()}`,
-    fetcher
+    (index) => {
+      return userId !== null
+        ? `/api/photospot/user/${userId}/getSavedPhotospots?pageCount=${
+            index + 1
+          }`
+        : null;
+    },
+    fetcher,
+    {
+      revalidateFirstPage: true,
+      revalidateIfStale: true,
+    }
   );
   console.log("search res", data);
   return (
-    <div className="">
+    <div className="w-full">
       <InfiniteScrollGrid
         gridData={data}
         gridType={GridTypes.photospotSearch}

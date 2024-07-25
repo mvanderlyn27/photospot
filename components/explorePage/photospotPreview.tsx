@@ -31,25 +31,24 @@ export default function PhotospotPreview({}) {
   const pathname = usePathname();
   const { replace, push } = useRouter();
   const params = new URLSearchParams(searchParams);
-  // const selectedPhotospotRaw = params.get("selectedPhotospot");
-  // const selectedPhotospot = selectedPhotospotRaw
-  // ? parseInt(selectedPhotospotRaw)
-  // : undefined;
   const [tab, setTab] = useQueryState("tab", parseAsString);
   const latRaw = params.get("lat");
   const lat = latRaw ? parseFloat(latRaw) : undefined;
 
   const lngRaw = params.get("lng");
   const lng = lngRaw ? parseFloat(lngRaw) : undefined;
-  console.log("selectedPhotospot", selectedPhotospot, lat, lng, latRaw, lngRaw);
   const { data: photospot } = useSWR(
-    `/api/photospot/${selectedPhotospot}${
-      lat && lng && `?lat=${lat}&lng=${lng}`
-    }`,
+    selectedPhotospot !== null
+      ? `/api/photospot/${selectedPhotospot}${
+          lat && lng && `?lat=${lat}&lng=${lng}`
+        }`
+      : null,
     fetcher
   );
   const { data: topPhotoshot } = useSWR(
-    `/api/photospot/${selectedPhotospot}/topPhotoshot`,
+    selectedPhotospot !== null
+      ? `/api/photospot/${selectedPhotospot}/topPhotoshot`
+      : null,
     fetcher
   );
   const { data: profile } = useSWR(`/api/profile/`, fetcher);
@@ -57,7 +56,12 @@ export default function PhotospotPreview({}) {
     data: tags,
     isLoading: tagsLoading,
     error: tagsError,
-  } = useSWR(`/api/photospot/${selectedPhotospot}/tags`, fetcher);
+  } = useSWR(
+    selectedPhotospot !== null
+      ? `/api/photospot/${selectedPhotospot}/tags`
+      : null,
+    fetcher
+  );
   const {
     data: photoshots,
     mutate,
@@ -67,7 +71,11 @@ export default function PhotospotPreview({}) {
     isLoading: photoshotsLoading,
   } = useSWRInfinite(
     (index) =>
-      `/api/photospot/${selectedPhotospot}/photoshots?pageCount=${index + 1}`,
+      selectedPhotospot !== null
+        ? `/api/photospot/${selectedPhotospot}/photoshots?pageCount=${
+            index + 1
+          }`
+        : null,
     fetcher
   );
   const visitPhotospot = () => {

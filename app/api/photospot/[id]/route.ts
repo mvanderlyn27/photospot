@@ -2,14 +2,18 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: { id: number } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string} }) {
 const searchParams = request.nextUrl.searchParams;
+if (!params.id || params.id === 'null' || isNaN(parseInt(params.id))) {
+    console.log('no id');
+    return new Response('no id', { status: 500 });
+}
 let latRaw = searchParams.get('lat');
 let lngRaw = searchParams.get('lng');
 let arg : {latt: number | null, lngg: number | null, input_id: number}= {
     latt: null,
     lngg: null,
-    input_id : params.id
+    input_id : parseInt(params.id)
 };
 if(latRaw && lngRaw){
     console.log(latRaw, lngRaw);

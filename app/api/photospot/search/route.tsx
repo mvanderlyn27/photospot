@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     latt: null,
     lngg: null,
   };
-  let pageCountRaw = searchParams.get("pageCount");
+  let pageCountRaw = searchParams.get("page");
   if (pageCountRaw) {
     pageCount = parseInt(pageCountRaw);
   }
@@ -44,9 +44,9 @@ export async function GET(request: NextRequest) {
   if (photospotNameRaw) {
     args.photospotname = photospotNameRaw;
   }
-  let tagsRaw = searchParams.getAll("tags");
-  if (tagsRaw.length > 0) {
-    args.tags = tagsRaw.map((tag) => parseInt(tag));
+  let tagsRaw = searchParams.get("tags");
+  if (tagsRaw) {
+    args.tags = tagsRaw.split(",").map((tag) => parseInt(tag));
   }
 
   let minimumRatingRaw = searchParams.get("minRating");

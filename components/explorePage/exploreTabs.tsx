@@ -12,6 +12,8 @@ import PhotospotSearchForm from "./photospotSearchForm";
 import PhotospotSearchResults from "./photospotSearchResults";
 import PhotospotPreview from "./photospotPreview";
 import SavedPhotospotResults from "./savedPhotospotResults";
+import FilterTab from "./filterTab";
+import SavedTab from "./savedTab";
 
 export default function ExploreTabs() {
   const searchParams = useSearchParams();
@@ -71,25 +73,10 @@ export default function ExploreTabs() {
           </div>
         </TabsContent>
         <TabsContent value="filter">
-          <Accordion
-            type="single"
-            collapsible
-            defaultValue="item-1"
-            className="flex flex-none w-full p-4"
-          >
-            <AccordionItem value="item-1" className="w-full ">
-              <AccordionTrigger>Current Search</AccordionTrigger>
-              <AccordionContent>
-                <FilterSearchForm />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-          <div className="flex flex-1 min-h-0">
-            <PhotospotSearchResults />
-          </div>
+          <FilterTab />
         </TabsContent>
         <TabsContent value="saved">
-          <SavedPhotospotResults />
+          <SavedTab />
         </TabsContent>
       </div>
     </Tabs>
