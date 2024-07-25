@@ -46,6 +46,7 @@ export default async function ExplorePage({
     searchParams.tab = "search";
   }
   //fetch data with supabase
+  //create a client comp that controls all search data
   return (
     <div className="w-full h-full flex flex-row overflow-hidden min-h-0 relative">
       {/* <div className="w-full flex flex-row "> */}

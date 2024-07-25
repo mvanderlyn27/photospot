@@ -17,19 +17,6 @@ import FilterSearchForm from "./filterSearchForm";
 import PhotospotSearchResults from "./photospotSearchResults";
 
 export default function FilterTab() {
-  //   const [loadMore, setLoadMore] = useQueryState(
-  //     "loadMore",
-  //     parseAsBoolean.withDefault(true)
-  //   );
-  //   const [loading, setLoading] = useQueryState(
-  //     "loading",
-  //     parseAsBoolean.withDefault(false)
-  //   );
-  const [end, setEnd] = useQueryState("end", parseAsBoolean.withDefault(false));
-  const [empty, setEmpty] = useQueryState(
-    "empty",
-    parseAsBoolean.withDefault(false)
-  );
   const [maxDistance, setMaxDistance] = useQueryState(
     "maxDistance",
     parseAsFloat
