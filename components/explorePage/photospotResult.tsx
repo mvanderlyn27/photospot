@@ -6,7 +6,7 @@ import { AspectRatioIcon } from "@radix-ui/react-icons";
 import { AspectRatio } from "../ui/aspect-ratio";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { fetcher } from "@/utils/common/fetcher";
-import useSWR from "swr";
+import useSWR, { preload } from "swr";
 import { Skeleton } from "../ui/skeleton";
 import RatingDisplay from "../review/ratingDisplay";
 import { round } from "@/utils/common/math";
@@ -37,6 +37,8 @@ export default function PhotospotResult({
 
   const handleClick = () => {
     setSelectedPhotospot(photospot.id, { shallow: true });
+    preload("/api/photospot/" + photospot.id + "/topPhotoshot", fetcher);
+    preload(`/api/photospot/${photospot.id}`, fetcher);
     // params.set("selectedPhotospot", photospot.id.toString());
     // replace(`${pathname}?${params.toString()}`, { scroll: true });
     // window.history.pushState(null, "", `?${params.toString()}`);

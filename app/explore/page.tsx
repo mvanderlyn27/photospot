@@ -50,18 +50,12 @@ export default async function ExplorePage({
   return (
     <div className="w-full h-full flex flex-row overflow-hidden min-h-0 relative">
       {/* <div className="w-full flex flex-row "> */}
-      <div className="h-full w-[500px]">
-        <ExploreLeftBar />
-      </div>
       {searchParams?.tab !== "search" && (
         <div className="absolute left-[525px] top-[25px] bottom-[25px] z-10 overflow-y-auto overflow-x-hidden w-[500px] rounded-xl">
           <PhotospotPreview />
         </div>
       )}
-
-      <div className="h-full flex-1">
-        <ExploreMap />
-      </div>
+      <ExplorePageSection />
     </div>
   );
 }

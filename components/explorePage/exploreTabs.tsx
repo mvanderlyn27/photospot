@@ -14,38 +14,33 @@ import PhotospotPreview from "./photospotPreview";
 import SavedPhotospotResults from "./savedPhotospotResults";
 import FilterTab from "./filterTab";
 import SavedTab from "./savedTab";
+import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
 
 export default function ExploreTabs() {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
-  const params = new URLSearchParams(searchParams);
-  const tabRaw = params.get("tab");
-  const tab = tabRaw ? tabRaw : "search";
-  const selectedPhotospotRaw = params.get("selectedPhotospot");
-  const selectedPhotospot = selectedPhotospotRaw
-    ? parseInt(selectedPhotospotRaw)
-    : undefined;
-  const handleTabChange = (oldTab: string, newTab: string) => {
+  const [tab, setTab] = useQueryState(
+    "tab",
+    parseAsStringLiteral(["search", "filter", "saved", ""])
+  );
+  const [selectedPhotospot, setSelectedPhotospot] = useQueryState(
+    "selectedPhotospot",
+    parseAsInteger
+  );
+  const handleTabChange = (oldTab: string | null, newTab: string) => {
     console.log("oldTab", oldTab, "newTab", newTab);
-    params.set("tab", newTab);
+    setTab(newTab);
+    setSelectedPhotospot(null);
+    //clear out selected photospot
     if (oldTab !== newTab) {
-      params.delete("selectedPhotospot");
       if (newTab !== "filter") {
         //figure out if we want to lose the filter info when switching tabs
         console.log("removing tags");
-        params.delete("tags");
-        params.delete("sort");
-        params.delete("page");
-        params.delete("maxDistance");
-        params.delete("minRating");
+        //clear out old tags
       }
     }
-    replace(`${pathname}?${params.toString()}`);
   };
   return (
     <Tabs
-      value={tab}
+      value={tab ? tab : "search"}
       onValueChange={(newTab) => handleTabChange(tab, newTab)}
       className="w-full h-full flex flex-col "
     >

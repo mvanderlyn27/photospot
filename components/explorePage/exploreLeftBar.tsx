@@ -1,6 +1,8 @@
 "use client";
+import { parseAsInteger, useQueryState } from "nuqs";
 import ExploreTabs from "./exploreTabs";
 import PhotospotSearchResults from "./photospotSearchResults";
+import { Button } from "../ui/button";
 // import { useSearchParams } from "next/navigation";
 export default function ExploreLeftBar() {
   //   const searchParams = useSearchParams();
