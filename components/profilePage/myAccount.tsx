@@ -34,7 +34,7 @@ export default function MyAccount({ user }: { user: any }) {
               {/* Update theme */}
               <SelectThemeForm profileInfo={profileInfo} />
               {/* Update private*/}
-              <EditPrivacyForm profileInfo={profileInfo} />
+              {/* <EditPrivacyForm profileInfo={profileInfo} /> */}
               {/* Delete account  */}
               <DeleteAccountForm profileInfo={profileInfo} />
             </div>

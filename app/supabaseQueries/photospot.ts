@@ -27,8 +27,7 @@ export const getUserSavedPhotospots = (user: User, id: number) => {
     or converted into one longer query
     
 */
-export async function getPhotospotById(arg: {latt: number | null, lngg: number | null, input_id: number}) {
-    console.log('arg', arg);
+export const getPhotospotById = async (arg: {latt: number | null, lngg: number | null, input_id: number}) => {
     const {data, error} = await supabase.rpc('get_photospot_by_id_lat_lng', arg).select('*').single();
     return {data, error};
 }

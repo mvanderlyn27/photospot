@@ -1,9 +1,5 @@
 "use client";
 import { useForm } from "react-hook-form";
-import TagSelect from "../common/tagSelect";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -18,7 +14,6 @@ import {
 import { IoMdLocate } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { Tag } from "@/types/photospotTypes";
-import { RatingInput } from "../review/ratingInput";
 import {
   parseAsArrayOf,
   parseAsFloat,
@@ -27,6 +22,11 @@ import {
   useQueryState,
   useQueryStates,
 } from "nuqs";
+import TagSelect from "../common/tagSelect";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { RatingInput } from "../review/ratingInput";
+import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 export const sortOptions = ["rating", "nearby", "new", ""];
 const filterFormSchema = z.object({
   tags: z.array(z.number()),

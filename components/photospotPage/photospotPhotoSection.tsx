@@ -34,7 +34,9 @@ export function PhotospotPhotoSection({ id }: { id: number }) {
     <div className="flex flex-col gap-4">
       {/* <Skeleton className="bg-balck/10 h-[600px] w-full" /> */}
       <div className="flex flex-row ">
-        <PhotoshotUploadDialog selectedLocation={photospot} mapView={false} />
+        {photospot && (
+          <PhotoshotUploadDialog selectedLocation={photospot} mapView={false} />
+        )}
       </div>
       <InfiniteScrollGrid
         gridData={photoshots}

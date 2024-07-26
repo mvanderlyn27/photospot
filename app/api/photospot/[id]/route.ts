@@ -1,9 +1,9 @@
 "use server"
-import { getPhotospotById } from "@/app/supabaseQueries/photospot";
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest, { params }: { params: { id: string} }) {
+const supabase = createClient();
 const searchParams = request.nextUrl.searchParams;
 if (!params.id || params.id === 'null' || isNaN(parseInt(params.id))) {
     console.log('no id');
@@ -21,7 +21,7 @@ if(latRaw && lngRaw){
     arg.latt = parseFloat(latRaw);
     arg.lngg = parseFloat(lngRaw);
 }
-    const { data, error } = await getPhotospotById(arg);
+    const { data, error } = await await supabase.rpc('get_photospot_by_id_lat_lng', arg).select('*').single();
     if (error) {
         console.log('error getting photospot', error);
         return new Response(error.message, { status: 500 });
