@@ -28,34 +28,23 @@ export default async function ExplorePage({
   if (!user.data.user) {
     throw new Error("not logged in");
   }
-  const { data: initialPhotospots, error } = await supabase.rpc(
-    "get_all_photospots_with_lat_lng"
-  );
-  if (error) {
-    console.log(error);
-    throw new Error(error.message);
-  }
-  let initialSelectedPhotospot = undefined;
-  if (searchParams?.selectedPhotospot !== undefined) {
-    const selectedId = searchParams.selectedPhotospot;
-    initialSelectedPhotospot = initialPhotospots.find(
-      (photospot) => photospot.id === selectedId
-    );
-  }
-  if (searchParams && !searchParams.tab) {
-    searchParams.tab = "search";
+
+  let initialPhotospots = [];
+  const { data: photospots, error: photospotsError } = await supabase
+    .rpc("search_photospots")
+    .order("rating_average", { ascending: false });
+  // .limit(20);
+  if (photospotsError) {
+    console.log(photospotsError);
   }
   //fetch data with supabase
   //create a client comp that controls all search data
   return (
     <div className="w-full h-full flex flex-row overflow-hidden min-h-0 relative">
-      {/* <div className="w-full flex flex-row "> */}
-      {searchParams?.tab !== "search" && (
-        <div className="absolute left-[525px] top-[25px] bottom-[25px] z-10 overflow-y-auto overflow-x-hidden w-[500px] rounded-xl">
-          <PhotospotPreview />
-        </div>
-      )}
-      <ExplorePageSection />
+      <ExplorePageSection
+        userId={user.data.user.id}
+        initialPhotospots={photospots}
+      />
     </div>
   );
 }

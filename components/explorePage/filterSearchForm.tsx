@@ -1,12 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
 import TagSelect from "../common/tagSelect";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../ui/accordion";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
@@ -22,18 +16,14 @@ import {
   FormMessage,
 } from "../ui/form";
 import { IoMdLocate } from "react-icons/io";
-import { TagOption } from "../common/createTagSelect";
 import { useEffect, useState } from "react";
-import { MultiValue } from "react-select";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Photospot, Tag } from "@/types/photospotTypes";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import TextSpinnerLoader from "../common/Loading";
-import PhotospotAutocomplete from "../photospot/photospotAutocomplete";
+import { Tag } from "@/types/photospotTypes";
 import { RatingInput } from "../review/ratingInput";
 import {
+  parseAsArrayOf,
   parseAsFloat,
   parseAsInteger,
+  parseAsStringLiteral,
   useQueryState,
   useQueryStates,
 } from "nuqs";
@@ -51,47 +41,27 @@ const filterFormSchema = z.object({
     .optional(),
   sort: z.string().refine((x) => sortOptions.includes(x)),
 });
-export default function FilterSearchForm({
-  // loadMore,
-  // loading,
-  // setLoading,
-  tags,
-  maxDistance,
-  minRating,
-  sort,
-  // setLoadMore,
-  setTags,
-  setMaxDistance,
-  setMinRating,
-  setSort,
-  userLocation,
-  setUserLocation,
-}: {
-  // loadMore: boolean;
-  // loading: boolean;
-  // setLoading: any;
-  tags: number[] | null;
-  maxDistance: number | null;
-  minRating: number | null;
-  sort: string;
-  // setLoadMore: any;
-  setTags: any;
-  setMaxDistance: any;
-  setMinRating: any;
-  setSort: any;
-  userLocation: any;
-  setUserLocation: any;
-}) {
+export default function FilterSearchForm({}: {}) {
   const [locationAvailable, setLocationAvailable] = useState(false);
   const [selectedPhotospot, setSelectedPhotospot] = useQueryState(
     "selectedPhotospot",
     parseAsInteger
   );
+  const [sort, setSort] = useQueryState(
+    "sort",
+    parseAsStringLiteral(sortOptions).withDefault("")
+  );
+  const [tags, setTags] = useQueryState("tags", parseAsArrayOf(parseAsInteger));
+  const [minRating, setMinRating] = useQueryState("minRating", parseAsFloat);
+  const [maxDistance, setMaxDistance] = useQueryState(
+    "maxDistance",
+    parseAsFloat
+  );
+  const [userLocation, setUserLocation] = useQueryStates({
+    lat: parseAsFloat.withDefault(40.73),
+    lng: parseAsFloat.withDefault(-73.94),
+  });
 
-  const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams);
-  const pathname = usePathname();
-  const { replace } = useRouter();
   useEffect(() => {
     if (userLocation) {
       setLocationAvailable(true);
@@ -134,7 +104,7 @@ export default function FilterSearchForm({
       setMinRating(null);
     }
     if (values.maxDistance) {
-      setMaxDistance(values.maxDistance);
+      setMaxDistance(parseFloat(values.maxDistance));
     } else {
       setMaxDistance(null);
     }
@@ -146,8 +116,6 @@ export default function FilterSearchForm({
     if (values.tags) {
       setTags(values.tags);
     }
-    // setLoadMore(true);
-    // setLoading(true);
   };
   const setSelectedTags = (selectedTags: Tag[]) => {
     if (selectedTags) {
@@ -171,7 +139,6 @@ export default function FilterSearchForm({
     }
   };
   const clear = (e: any) => {
-    const params = new URLSearchParams(searchParams);
     e.preventDefault();
     form.setValue("maxDistance", "");
     form.setValue("tags", []);
@@ -183,19 +150,6 @@ export default function FilterSearchForm({
     setTags(null);
     setSelectedPhotospot(null);
     setSort(null);
-    // setLoadMore(null);
-    // setLoading(null);
-
-    // params.delete("maxDistance");
-    // params.delete("minRating");
-    // params.delete("maxDistance");
-    // params.delete("sortDir");
-    // params.delete("sort");
-    // params.delete("tags");
-    // params.delete("page");
-    // params.delete("selectedPhotospot");
-    // replace(`${pathname}?${params.toString()}`);
-    //double check this comes down and clears out
   };
 
   return (

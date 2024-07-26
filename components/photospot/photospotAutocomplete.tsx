@@ -17,24 +17,25 @@ export const createOption = (photospot: Photospot): PhotospotOption => ({
   label: photospot.location_name ? photospot.location_name : "",
   value: photospot.id ? photospot.id : -1,
 });
-export default function PhotospotAutocomplete() {
-  const pathname = usePathname();
-  const { replace } = useRouter();
-  const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams);
-  const selectedPhotospotRaw = params.get("selectedPhotospot");
-  const selectedPhotospot = selectedPhotospotRaw
-    ? parseInt(selectedPhotospotRaw)
-    : undefined;
-  console.log("selectedPhotospot", selectedPhotospot);
-  const {
-    data: photospots,
-    isLoading: photospotsLoading,
-    mutate: updatePhotospots,
-    error: photospotsError,
-  } = useSWR("/api/photospot", fetcher);
+export default function PhotospotAutocomplete({
+  initialPhotospots,
+  photospotsLoading,
+  selectedPhotospot,
+  setSelectedPhotospot,
+}: {
+  initialPhotospots: Photospot[][] | null;
+  photospotsLoading: boolean;
+  selectedPhotospot: number | null;
+  setSelectedPhotospot: any;
+}) {
+  // const {
+  //   data: photospots,
+  //   isLoading: photospotsLoading,
+  //   mutate: updatePhotospots,
+  //   error: photospotsError,
+  // } = useSWR("/api/photospot", fetcher);
   // SEARCH SECTION
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(photospotsLoading);
   const searchTags = async (inputValue: string) => {
     // setTagError(null);
     return fetch(`/api/photospot/search?photospotName=${inputValue}`, {
@@ -55,11 +56,10 @@ export default function PhotospotAutocomplete() {
     // setTagError(null);
     console.log("updating", newValue);
     if (!newValue) {
-      params.delete("selectedPhotospot");
+      setSelectedPhotospot(null);
     } else {
-      params.set("selectedPhotospot", String(newValue?.value));
+      setSelectedPhotospot(newValue?.value);
     }
-    replace(`${pathname}?${params.toString()}`);
   };
   const debouncedSearch = useDebouncedCallback(_searchTags, 300);
   return (
@@ -67,20 +67,24 @@ export default function PhotospotAutocomplete() {
       isClearable
       maxMenuHeight={400}
       menuPlacement="bottom"
-      isDisabled={isLoading || photospotsLoading}
-      isLoading={isLoading || photospotsLoading}
+      isDisabled={isLoading}
+      isLoading={isLoading}
       onChange={handleChange}
       defaultOptions={
-        photospots
-          ? photospots.map((photospot: Photospot) => createOption(photospot))
+        initialPhotospots
+          ? initialPhotospots
+              .flat()
+              .map((photospot: Photospot) => createOption(photospot))
           : []
       }
       value={
-        photospots && selectedPhotospot !== undefined
+        initialPhotospots && selectedPhotospot !== null
           ? createOption(
-              photospots.filter(
-                (photospot: Photospot) => selectedPhotospot === photospot.id
-              )[0]
+              initialPhotospots
+                .flat()
+                .filter(
+                  (photospot: Photospot) => selectedPhotospot === photospot.id
+                )[0]
             )
           : []
       }

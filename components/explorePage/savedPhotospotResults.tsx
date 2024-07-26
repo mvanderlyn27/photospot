@@ -2,42 +2,24 @@
 import { fetcher } from "@/utils/common/fetcher";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
-import { GridTypes } from "@/types/photospotTypes";
+import { GridTypes, Photospot } from "@/types/photospotTypes";
 
 export default function SavedSearchResults({
-  userId,
+  photospots,
+  photospotsLoading,
+  setSize,
 }: {
-  userId: number | null;
+  photospots?: Photospot[][];
+  photospotsLoading: boolean;
+  setSize: any;
 }) {
-  const {
-    data,
-    mutate,
-    size,
-    setSize,
-    isValidating,
-    isLoading: photospotsLoading,
-  } = useSWRInfinite(
-    (index) => {
-      return userId !== null
-        ? `/api/photospot/user/${userId}/getSavedPhotospots?pageCount=${
-            index + 1
-          }`
-        : null;
-    },
-    fetcher,
-    {
-      revalidateFirstPage: true,
-      revalidateIfStale: true,
-    }
-  );
-  console.log("search res", data);
   return (
     <div className="w-full">
       <InfiniteScrollGrid
-        gridData={data}
+        gridData={photospots}
         gridType={GridTypes.photospotSearch}
         setSize={setSize}
-        size={size}
+        size={photospots ? photospots.length : 0}
         colCount={{
           sm: 1,
           md: 1,
@@ -45,6 +27,7 @@ export default function SavedSearchResults({
           xl: 1,
         }}
         dataLoading={photospotsLoading}
+        emptyMessage="No saved photospots"
       />
     </div>
   );

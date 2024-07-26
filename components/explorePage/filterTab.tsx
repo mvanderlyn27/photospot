@@ -1,13 +1,4 @@
 import {
-  parseAsArrayOf,
-  parseAsBoolean,
-  parseAsFloat,
-  parseAsInteger,
-  parseAsString,
-  useQueryState,
-  useQueryStates,
-} from "nuqs";
-import {
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -15,19 +6,17 @@ import {
 } from "../ui/accordion";
 import FilterSearchForm from "./filterSearchForm";
 import PhotospotSearchResults from "./photospotSearchResults";
+import { Photospot } from "@/types/photospotTypes";
 
-export default function FilterTab() {
-  const [maxDistance, setMaxDistance] = useQueryState(
-    "maxDistance",
-    parseAsFloat
-  );
-  const [sort, setSort] = useQueryState("sort", parseAsString.withDefault(""));
-  const [tags, setTags] = useQueryState("tags", parseAsArrayOf(parseAsInteger));
-  const [minRating, setMinRating] = useQueryState("minRating", parseAsFloat);
-  const [userLocation, setUserLocation] = useQueryStates({
-    lat: parseAsFloat.withDefault(40.73),
-    lng: parseAsFloat.withDefault(-73.94),
-  });
+export default function FilterTab({
+  photospots,
+  photospotsLoading,
+  setSize,
+}: {
+  photospots: Photospot[][] | null;
+  photospotsLoading: boolean;
+  setSize: any;
+}) {
   return (
     <div>
       <Accordion
@@ -39,39 +28,23 @@ export default function FilterTab() {
         <AccordionItem value="item-1" className="w-full ">
           <AccordionTrigger>Current Search</AccordionTrigger>
           <AccordionContent>
-            <FilterSearchForm
-              tags={tags}
-              setTags={setTags}
-              minRating={minRating}
-              setMinRating={setMinRating}
-              maxDistance={maxDistance}
-              setMaxDistance={setMaxDistance}
-              sort={sort}
-              setSort={setSort}
-              userLocation={userLocation}
-              setUserLocation={setUserLocation}
-            />
+            <FilterSearchForm />
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-      {(tags && tags.length > 0) ||
-      minRating !== null ||
-      maxDistance !== null ||
-      sort !== "" ? (
-        <div className="flex flex-1 min-h-0 w-full">
+      <div className="flex flex-1 min-h-0 w-full">
+        {!photospots && !photospotsLoading ? (
+          <h1 className="w-full text-xl text-center font-semibold p-4">
+            Start a search above
+          </h1>
+        ) : (
           <PhotospotSearchResults
-            tags={tags}
-            minRating={minRating}
-            maxDistance={maxDistance}
-            sort={sort}
-            userLocation={userLocation}
+            photospots={photospots ? photospots : undefined}
+            setSize={setSize}
+            photospotsLoading={photospotsLoading}
           />
-        </div>
-      ) : (
-        <h1 className="text-xl font-semibold text-center w-full">
-          Search for a photospot above
-        </h1>
-      )}
+        )}
+      </div>
     </div>
   );
 }

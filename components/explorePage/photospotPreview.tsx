@@ -11,7 +11,7 @@ import RatingDisplay from "../review/ratingDisplay";
 import { Badge } from "../ui/badge";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
-import { GridTypes } from "@/types/photospotTypes";
+import { GridTypes, Photospot } from "@/types/photospotTypes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import ReviewGrid from "../review/reviewGrid";
 import SharePhotospotButton from "../photospot/sharePhotospotButton";
@@ -22,7 +22,11 @@ import { MdClose } from "react-icons/md";
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs";
 
 const TAG_LIMIT = 5;
-export default function PhotospotPreview({}) {
+export default function PhotospotPreview({
+  photospotInfo,
+}: {
+  photospotInfo: Photospot;
+}) {
   const [selectedPhotospot, setSelectedPhotospot] = useQueryState(
     "selectedPhotospot",
     parseAsInteger
@@ -37,14 +41,7 @@ export default function PhotospotPreview({}) {
 
   const lngRaw = params.get("lng");
   const lng = lngRaw ? parseFloat(lngRaw) : undefined;
-  const { data: photospot } = useSWR(
-    selectedPhotospot !== null
-      ? `/api/photospot/${selectedPhotospot}${
-          lat && lng && `?lat=${lat}&lng=${lng}`
-        }`
-      : null,
-    fetcher
-  );
+
   const { data: topPhotoshot } = useSWR(
     selectedPhotospot !== null
       ? `/api/photospot/${selectedPhotospot}/topPhotoshot`
@@ -90,11 +87,7 @@ export default function PhotospotPreview({}) {
     show photospot name, and photoshots, and other info
   */
   return (
-    <div
-      className={`w-full h-full flex flex-col gap-4 relative ${
-        selectedPhotospot !== null ? "" : "hidden"
-      }`}
-    >
+    <div className={`w-full h-full flex flex-col gap-4 relative`}>
       <Card className="border-none">
         <div className="w-full h-[400px] overflow-hidden relative">
           {topPhotoshot ? (
@@ -117,22 +110,24 @@ export default function PhotospotPreview({}) {
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
             <div className="flex flex-row justify-between items-center">
-              {photospot && photospot.location_name}
-              {photospot && <Button onClick={visitPhotospot}>Visit</Button>}
+              {photospotInfo && photospotInfo.location_name}
+              {photospotInfo && <Button onClick={visitPhotospot}>Visit</Button>}
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
           <RatingDisplay
             rating={
-              photospot?.rating_average ? round(photospot.rating_average, 1) : 0
+              photospotInfo?.rating_average
+                ? round(photospotInfo.rating_average, 1)
+                : 0
             }
-            count={photospot?.rating_count ? photospot.rating_count : 0}
+            count={photospotInfo?.rating_count ? photospotInfo.rating_count : 0}
           />
-          {photospot?.dist_meters && (
+          {photospotInfo?.dist_meters && (
             <h1 className="text-l">
-              <b>{photospot.neighborhood} </b>
-              {" " + round(photospot?.dist_meters, 0) + " meters away"}
+              <b>{photospotInfo.neighborhood} </b>
+              {" " + round(photospotInfo?.dist_meters, 0) + " meters away"}
             </h1>
           )}
           {/* 
@@ -155,11 +150,11 @@ export default function PhotospotPreview({}) {
               className="w-full flex flex-col gap-6"
             >
               <Separator className="w-full" />
-              {photospot && (
+              {photospotInfo && (
                 <div className="flex flex-row justify-center gap-4">
-                  <PhotospotDirectionsButton id={photospot.id} />
-                  <SharePhotospotButton id={photospot.id} />
-                  {profile && <SavePhotospotButton id={photospot.id} />}
+                  <PhotospotDirectionsButton id={photospotInfo.id} />
+                  <SharePhotospotButton id={photospotInfo.id} />
+                  {profile && <SavePhotospotButton id={photospotInfo.id} />}
                 </div>
               )}
 
@@ -183,7 +178,7 @@ export default function PhotospotPreview({}) {
 
               <h1 className="text-l">
                 <b>Address: </b>
-                {photospot && photospot.address}
+                {photospotInfo && photospotInfo.address}
               </h1>
             </TabsContent>
             <TabsContent value="photoshot">
