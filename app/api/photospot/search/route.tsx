@@ -1,20 +1,7 @@
 "use server";
-import { sortOptions } from "@/components/explorePage/filterSearchForm";
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-/*
-UDPATES:
-- need to update search so that it only takes in filters
-    - tags
-    - maximum distance
-    - minimum rating
-    - sort type
-    - direction
-    -lat
-    -lng
-
-*/
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   let pageCount = 1;
@@ -97,13 +84,4 @@ export async function GET(request: NextRequest) {
   }
   console.log("page", pageCount, "data", data);
   return NextResponse.json(data);
-}
-
-export async function searchPhotospots(
-  name?: string,
-  searchMode?: string,
-  tags?: number[]
-) {
-  //TODO: implement searchk
-  return [];
 }

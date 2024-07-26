@@ -5,29 +5,17 @@ import {
   NavigationControl,
   Marker,
   useMap,
-  MarkerEvent,
-  ViewStateChangeEvent,
-  LngLat,
-  MapEvent,
-  MapRef,
 } from "react-map-gl";
-import mapboxgl, { LngLatBounds, MarkerOptions } from "mapbox-gl";
+import mapboxgl, { LngLatBounds } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import {
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { distanceOnGlobe, round } from "@/utils/common/math";
+
+import { distanceOnGlobe } from "@/utils/common/math";
 import { NewPhotospotInfo, Photospot } from "@/types/photospotTypes";
-import { toast } from "../ui/use-toast";
-import { reverseGeocodeLocation } from "@/app/serverActions/maps/reverseGeocodeLocation";
 import useSWR from "swr";
 import { fetcher } from "@/utils/common/fetcher";
 import { GeocodingCore } from "@mapbox/search-js-core";
 import { useTheme } from "next-themes";
+import { isPhotoshot } from "@/utils/common/typeGuard";
 const MINIMUM_PHOTOSPOT_DISTANCE = 2;
 // A circle of 5 mile radius of the Empire State Building
 const MAXBOUNDS = new LngLatBounds([-74.104, 39.98], [-73.82, 40.9]);
@@ -58,13 +46,13 @@ export default function PhotospotMap({
   );
   const { photospotMap } = useMap();
   //hooks
-  useEffect(() => {
-    if (selectedLocation && photospotMap) {
-      photospotMap.flyTo({
-        center: [selectedLocation.lng, selectedLocation.lat],
-      });
-    }
-  }, [selectedLocation, photospotMap]);
+  // useEffect(() => {
+  //   if (selectedLocation && photospotMap) {
+  //     photospotMap.flyTo({
+  //       center: [selectedLocation.lng, selectedLocation.lat],
+  //     });
+  //   }
+  // }, [selectedLocation, photospotMap]);
   const selectLocation = async (
     e: any,
     loc: { lat: number; lng: number },
@@ -130,7 +118,7 @@ export default function PhotospotMap({
         setViewState({ ...viewState, ...e.target.getCenter() });
       }}
     >
-      {selectedLocation && (
+      {selectedLocation && !isPhotoshot(selectedLocation) && (
         <Marker
           longitude={selectedLocation.lng}
           latitude={selectedLocation.lat}
@@ -159,7 +147,17 @@ export default function PhotospotMap({
                 );
               }}
             >
-              <img key={photospot.id} className="w-10 h-10" src="/pin.svg" />
+              {selectedLocation &&
+              isPhotoshot(selectedLocation) &&
+              selectedLocation.id === photospot.id ? (
+                <img
+                  key={photospot.id}
+                  className="w-10 h-10"
+                  src="/selectedPin.svg"
+                />
+              ) : (
+                <img key={photospot.id} className="w-10 h-10" src="/pin.svg" />
+              )}
             </Marker>
           );
         })}

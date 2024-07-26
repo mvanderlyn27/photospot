@@ -24,7 +24,11 @@ export default function EditPhotoshotDialog({
         Show off your artsy side, and help other users learn how to make better
         shots
       </DialogDescription>
-      <EditPhotoshotForm photoshotId={photoshot.id} setEditMode={setEditMode} setPhotoshotDialogOpen={setPhotoshotDialogOpen} />
+      <EditPhotoshotForm
+        photoshotId={photoshot.id}
+        setEditMode={setEditMode}
+        handleSubmit={setPhotoshotDialogOpen(false)}
+      />
     </div>
   );
 }

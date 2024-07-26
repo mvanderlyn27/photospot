@@ -13,6 +13,8 @@ import { Skeleton } from "../ui/skeleton";
 import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
 import { getPhotospotById } from "@/app/supabaseQueries/photospot";
 import PhotospotDirectionsButton from "../photospot/photospotDirectionsButton";
+import useSWR from "swr";
+import { fetcher } from "@/utils/common/fetcher";
 
 export default function PreviewMap({ id }: { id: number }) {
   const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
@@ -45,7 +47,8 @@ export default function PreviewMap({ id }: { id: number }) {
     data: photospot,
     isLoading: photospotLoading,
     error: photospotError,
-  } = useQuery(getPhotospotById(id));
+  } = useSWR("/api/photospot/" + id, fetcher);
+
   const initialMapState = {
     zoom: 16,
     bearing: 29,

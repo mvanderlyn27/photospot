@@ -1,13 +1,10 @@
-import LandingPageSection from '@/components/landingPage/landingPageSection'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import LandingPageSection from "@/components/landingPage/landingPageSection";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function Index() {
-  const supabase = createServerComponentClient({ cookies })
+  const supabase = createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser()
-  return (
-    <LandingPageSection />
-  )
+  } = await supabase.auth.getUser();
+  return <LandingPageSection />;
 }

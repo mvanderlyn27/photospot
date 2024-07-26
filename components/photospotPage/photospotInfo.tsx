@@ -1,49 +1,19 @@
 "use client";
-import { Photospot, PhotospotStats } from "@/types/photospotTypes";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import GoldenHourDisplay from "../photospot/photoTimeSelector";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
-import { useEffect, useState } from "react";
-import { Button, buttonVariants } from "../ui/button";
+import { buttonVariants } from "../ui/button";
 import { FaShareAlt } from "react-icons/fa";
-import { FaRegBookmark } from "react-icons/fa";
-import { FaBookmark } from "react-icons/fa";
-import { FaEdit } from "react-icons/fa";
-import { FaDirections } from "react-icons/fa";
-import { savePhotospot } from "@/app/serverActions/photospots/savePhotospot";
-import { getSavedPhotospot } from "@/app/serverActions/photospots/getSavedPhotospots";
-import { unsavePhotospot } from "@/app/serverActions/photospots/unsavePhotospot";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
+
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { cn } from "@/lib/utils";
 import SharePhotospotDialog from "../photospot/sharePhotospotDialog";
 import RatingDisplay from "../review/ratingDisplay";
-import PhotoTimes from "../photospot/photoTimeSelector";
 import { Skeleton } from "../ui/skeleton";
-import {
-  getPhotospotById,
-  getPhotospotStatsById,
-  getUserSavedPhotospots,
-} from "@/app/supabaseQueries/photospot";
-import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
-import { UserIdentity, UserResponse } from "@supabase/supabase-js";
+
 import { User } from "@supabase/supabase-js";
 import PhotoTimeWidget from "../photospot/photoTimeWidget";
 import useSWR from "swr";
 import { fetcher } from "@/utils/common/fetcher";
-import useSWRMutation from "swr/dist/mutation";
 import { round } from "@/utils/common/math";
 import SavePhotospotButton from "../photospot/savePhotospotButton";
 

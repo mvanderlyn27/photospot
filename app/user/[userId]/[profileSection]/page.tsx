@@ -1,23 +1,12 @@
-import Followers from "@/components/profilePage/myFollowers";
-import Following from "@/components/profilePage/myFollowing";
-import LikedPhotoshots from "@/components/profilePage/myLikedPhotoshots";
-import MyPhotoshots from "@/components/profilePage/myPhotoshots";
-import SavedPhotospots from "@/components/profilePage/mySavedPhotospots";
-import { Skeleton } from "@/components/ui/skeleton";
-import UserLeftBar from "@/components/userPage/userLeftBar";
 import UserLikedPhotoshots from "@/components/userPage/userLikedPhotoshots";
 import UserPhotoshots from "@/components/userPage/userPhotoshots";
 import UserSavedPhotospots from "@/components/userPage/userSavedPhotospots";
 import UserFollowers from "@/components/userPage/userFollowers";
 import UserFollowing from "@/components/userPage/userFollowing";
-import { createClient } from "@/utils/supabase/server";
-import { getURL } from "@/utils/vercel/url";
-import { notFound, redirect } from "next/navigation";
 
-export default async function ProfileSection({
+export default function ProfileSection({
   params,
 }: {
-  children: React.ReactNode;
   params: { userId: string; profileSection: string };
 }) {
   return (

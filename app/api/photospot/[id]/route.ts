@@ -1,4 +1,5 @@
 "use server"
+import { getPhotospotById } from "@/app/supabaseQueries/photospot";
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -28,9 +29,4 @@ if(latRaw && lngRaw){
     return NextResponse.json(data);
 }
 
-export async function getPhotospotById(arg: {latt: number | null, lngg: number | null, input_id: number}) {
-    const supabase = createClient();
-    console.log('arg', arg);
-    const {data, error} = await supabase.rpc('get_photospot_by_id_lat_lng', arg).select('*').single();
-    return {data, error};
-}
+

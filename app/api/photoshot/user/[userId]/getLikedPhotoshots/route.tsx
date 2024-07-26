@@ -11,7 +11,7 @@ export async function GET(
   if (!params.userId) {
     // return new Response(JSON.stringify({ error: 'missing user id' }), { status: 400 })
     console.log("missing user id");
-    return new Error("missing user id", { cause: 400 });
+    return new Response("missing user id", { status: 400 });
   }
 
   const supabase = createClient();

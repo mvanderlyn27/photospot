@@ -50,7 +50,7 @@ export default function PhotospotPreview({
       <CardContent className="flex flex-col gap-4">
         {selectedLocation && isPhotospot(selectedLocation) && (
           <>
-            { }
+            {}
             {topPhotoshot && (
               <img
                 src={topPhotoshot.photo_paths[0]}
@@ -66,8 +66,8 @@ export default function PhotospotPreview({
                 ? selectedLocation.location_name
                 : selectedLocation?.location_name}
             </h1>
-            {selectedLocation?.rating && (
-              <RatingDisplay rating={selectedLocation.rating} />
+            {selectedLocation?.rating_average && (
+              <RatingDisplay rating={selectedLocation.rating_average} />
             )}
             <div className=" flex flex-auto gap-2">
               {tags.map((tag) => (

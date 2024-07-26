@@ -1,30 +1,15 @@
 "use client";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import {
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
+import { DialogDescription } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { IoMdHeart } from "react-icons/io";
 import { FaRegBookmark } from "react-icons/fa";
 import { FaBookmark } from "react-icons/fa";
-import {
-  Photoshot,
-  Review,
-  ReviewGridInput,
-  Tag,
-} from "@/types/photospotTypes";
+import { Tag } from "@/types/photospotTypes";
 import ImageCarousel from "../common/ImageCarousel";
 import { useEffect, useState } from "react";
-import UploadPhotobookPictureDialog from "./photoshotUploadDialog";
-import EditPhotobookPictureDialog from "./editPhotoshotDialog";
 import EditPhotoshotDialog from "./editPhotoshotDialog";
-import { getPhotoshotTags } from "@/app/serverActions/photoshots/getPhotoshotTags";
 import { Badge } from "../ui/badge";
 import { Skeleton } from "../ui/skeleton";
 import { fetcher } from "@/utils/common/fetcher";
