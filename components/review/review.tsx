@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Review } from "@/types/photospotTypes";
 import { Card } from "../ui/card";
 import { AvatarFallback } from "@radix-ui/react-avatar";
@@ -7,34 +7,25 @@ import { Avatar, AvatarImage } from "../ui/avatar";
 import RatingDisplay from "./ratingDisplay";
 import { Button } from "../ui/button";
 import { DialogContent, Dialog, DialogTrigger } from "../ui/dialog";
-import EditReviewDialog from "./editReviewDialog";
 import { useState } from "react";
+import EditReviewForm from "./editReviewForm";
+import EditReviewDialog from "./editReviewDialog";
 
-export default function ReviewCard({ review, owner, updateReviews }: { review: Review, owner: boolean, updateReviews: any }) {
-    const [editReviewDialogOpen, setEditReviewDialogOpen] = useState(false);
-    return (
-        <Card className="w-[40%]">
-            <div className="relative p-4 flex flex-col gap-4">
-                {owner && <Dialog open={editReviewDialogOpen} onOpenChange={setEditReviewDialogOpen}>
-                    <DialogTrigger>
-                        <Button variant="outline" className="absolute top-4 right-4">Edit</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <EditReviewDialog review={review} setEditReviewDialogOpen={setEditReviewDialogOpen} updateReviews={updateReviews} />
-                    </DialogContent>
-                </Dialog>}
-                <RatingDisplay rating={review.rating} />
-                <p>{review.text}</p>
-                <div className="flex flex-row gap-4 items-center">
-                    <Avatar>
-                        <AvatarImage src={DefaultProfile} />
-                        <AvatarFallback>?</AvatarFallback>
-                    </Avatar>
-                    <h1>{review.username}</h1>
-                </div>
-
-            </div>
-
-        </Card>
-    )
+export default function ReviewCard({ review }: { review: Review }) {
+  return (
+    <Card className="w-fulll">
+      <div className="relative p-4 flex flex-col gap-4">
+        {review?.owner && <EditReviewDialog review={review} />}
+        <RatingDisplay rating={review.rating} />
+        <p>{review.text}</p>
+        <div className="flex flex-row gap-4 items-center">
+          <Avatar>
+            <AvatarImage src={DefaultProfile} />
+            <AvatarFallback>?</AvatarFallback>
+          </Avatar>
+          <h1>{review.username}</h1>
+        </div>
+      </div>
+    </Card>
+  );
 }

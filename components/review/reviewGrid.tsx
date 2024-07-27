@@ -1,19 +1,43 @@
-import { Photospot, Review, ReviewGridInput } from '@/types/photospotTypes';
-import Image from 'next/image'
-import { Skeleton } from '../ui/skeleton';
-import { Dialog, DialogTrigger } from '@radix-ui/react-dialog';
-import PhotospotDialog from '../photospot/photospotDialog';
-import ReviewCard from './review';
-import { UserIdentity } from '@supabase/supabase-js';
-export default function ReviewGrid({ input, user, updateReviews }: { input: Review[], user: UserIdentity | null, updateReviews: any }) {
-    console.log('reviews', input);
-
-    return (
-        <div className=" w-full flex flex-col gap-4 items-center">
-            {
-                input && input?.map(review => {
-                    return <ReviewCard review={review} owner={user?.id === review.created_by} updateReviews={updateReviews} />
-                })}
-        </div>
-    )
+"use client";
+import { GridTypes, Review } from "@/types/photospotTypes";
+import { Skeleton } from "../ui/skeleton";
+import ReviewCard from "./review";
+import { fetcher } from "@/utils/common/fetcher";
+import useSWR from "swr";
+import { useSearchParams } from "next/navigation";
+import useSWRInfinite from "swr/infinite";
+import InfiniteScrollGrid from "../common/infiniteScrollGrid";
+export default function ReviewGrid({ id, sort }: { id: number; sort: string }) {
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+  const {
+    data,
+    mutate,
+    size,
+    setSize,
+    isValidating,
+    isLoading: photospotsLoading,
+  } = useSWRInfinite(
+    (index) =>
+      `/api/photospot/${id}/reviews?pageCount=${index + 1}&sort=${sort}`,
+    fetcher
+  );
+  console.log("search res", data);
+  return (
+    <div className="">
+      <InfiniteScrollGrid
+        gridData={data}
+        gridType={GridTypes.review}
+        setSize={setSize}
+        size={size}
+        colCount={{
+          sm: 1,
+          md: 1,
+          lg: 1,
+          xl: 1,
+        }}
+        dataLoading={photospotsLoading}
+      />
+    </div>
+  );
 }

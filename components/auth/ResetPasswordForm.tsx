@@ -1,60 +1,137 @@
-"use client"
+"use client";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { NSFWTextMatcher } from "@/utils/common/obscenity";
 import Link from "next/link";
-import { resetPassword } from '@/app/serverActions/auth/resetPassword';
+import { useRouter } from "next/navigation";
+import { toast } from "../ui/use-toast";
+
+const resetPasswordSchema = z
+  .object({
+    password: z.string().min(6, {
+      message: "password must be at least 6 characters.",
+    }),
+    confirmPassword: z.string(),
+  })
+  .superRefine(({ confirmPassword, password }, ctx) => {
+    if (confirmPassword !== password) {
+      ctx.addIssue({
+        path: ["confirmPassword"],
+        code: "custom",
+        message: "The passwords did not match",
+      });
+    }
+  });
+
 export default function ResetPasswordForm() {
-    /*    
+  const router = useRouter();
+  const resetPasswordForm = useForm<z.infer<typeof resetPasswordSchema>>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: {
+      password: "",
+      confirmPassword: "",
+    },
+  });
+  const onSubmit = (values: z.infer<typeof resetPasswordSchema>) => {
+    fetch("/api/auth/resetPasswordEmail", {
+      method: "POST",
+      body: JSON.stringify({
+        password: values.password,
+      }),
+    })
+      .then(() => {
+        toast({ title: "Password updated" });
+        router.push("/home");
+        router.refresh();
+      })
+      .catch((error) => {
+        router.push("/error=?" + error.message);
+      });
+  };
+  const handleCancel = () => {
+    resetPasswordForm.reset();
+    router.push("/login");
+  };
+  /*    
     should add in validation, and make prettier 
     */
-    return (
-        <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
-            <Link
-                href="/"
-                className="absolute left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1"
-                >
-                    <polyline points="15 18 9 12 15 6" />
-                </svg>{' '}
-                Back
-            </Link>
-
+  return (
+    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
+      <Card className="w-[400px]">
+        <CardHeader>
+          <CardTitle>Update your password</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form {...resetPasswordForm}>
             <form
-                className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-                action={resetPassword}
-                method="post"
+              onSubmit={resetPasswordForm.handleSubmit(onSubmit)}
+              className="space-y-8"
             >
-                <label className="text-md" htmlFor="password">
-                    New Password:
-                </label>
-                <input
-                    className="rounded-md px-4 py-2 bg-inherit border mb-6"
-                    name="password"
-                    placeholder="******"
-                    required
-                />
-                <label className="text-md" htmlFor="password-conf">
-                    Confirm Password:
-                </label>
-                <input
-                    className="rounded-md px-4 py-2 bg-inherit border mb-6"
-                    name="password-conf"
-                    placeholder="******"
-                    required
-                />
-                <button className="bg-zinc-950 rounded px-4 py-2 text-white mb-2">
-                    Update Password
-                </button>
+              <FormField
+                control={resetPasswordForm.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password:</FormLabel>
+                    <FormControl>
+                      <Input placeholder="******" {...field} />
+                    </FormControl>
+                    <FormDescription>Email for your account</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={resetPasswordForm.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password:</FormLabel>
+                    <FormControl>
+                      <Input placeholder="*****" {...field} />
+                    </FormControl>
+                    <FormDescription>Email for your account</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <CardFooter className="flex justify-center gap-4">
+                <Button
+                  variant={"outline"}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCancel();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit">Submit</Button>
+              </CardFooter>
             </form>
-        </div>
-    )
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

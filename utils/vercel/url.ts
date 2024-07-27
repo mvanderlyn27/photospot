@@ -9,3 +9,12 @@ export const getURL = () => {
     url = url.charAt(url.length - 1) === '/' ? url : `${url}/`
     return url
 }
+export const getDBURL = (): string => {
+        if(process.env.ENV === 'production' || process.env.ENV === 'staging'){  // Set this to your site URL in production env.
+            return process.env.NEXT_PUBLIC_SUPABASE_URL!;
+        }
+        else{
+        return 'http://127.0.0.1:54321';
+        }
+    // Make sure to include `https://` when not localhost.
+};

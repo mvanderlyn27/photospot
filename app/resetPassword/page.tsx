@@ -1,10 +1,8 @@
-import ResetPasswordForm from '@/components/auth/ResetPasswordForm'
-import { createClientComponentClient, createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
-import { useEffect } from 'react'
+import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 export default async function ResetPassword() {
-  const supabase = createServerComponentClient({ cookies })
+  const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -13,6 +11,8 @@ export default async function ResetPassword() {
     redirect("/login");
   }
   return (
-    <ResetPasswordForm />
-  )
+    <div className="absolute inset-0 h-screen flex items-center justify-center">
+      <ResetPasswordForm />
+    </div>
+  );
 }
