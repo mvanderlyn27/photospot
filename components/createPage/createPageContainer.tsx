@@ -10,6 +10,7 @@ import AutoComplete from "../maps/autocomplete";
 import PhotospotPreview from "./photospotPreview";
 import { Button } from "../ui/button";
 import { useBreakpoint } from "@/hooks/tailwind";
+import { MdOutlineClear } from "react-icons/md";
 import {
   Drawer,
   DrawerClose,
@@ -51,10 +52,10 @@ export default function CreatePageContainer() {
                   selectedLocation={selectedLocation}
                 />
                 <Button
-                  variant="outline"
+                  variant="destructive"
                   onClick={() => setSelectedLocation(null)}
                 >
-                  X
+                  <MdOutlineClear className="w-6 h-6 stroke-white" />
                 </Button>
               </div>
               {selectedLocation && isSmall.isSm && (
