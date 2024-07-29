@@ -47,11 +47,13 @@ export const editPhotospotSchema = z.object({
 export default function EditPhotospotForm({
   photospotName,
   setPhotospotName,
-  setEditPhotospotsDialogOpen,
+  handleCancel,
+  handleSubmit,
 }: {
   photospotName: string;
   setPhotospotName: any;
-  setEditPhotospotsDialogOpen: any;
+  handleCancel?: any;
+  handleSubmit?: any;
 }) {
   const editPhotospotForm = useForm<z.infer<typeof editPhotospotSchema>>({
     resolver: zodResolver(editPhotospotSchema),
@@ -61,7 +63,7 @@ export default function EditPhotospotForm({
   });
   const onSubmit = (data: z.infer<typeof editPhotospotSchema>) => {
     setPhotospotName(data.name);
-    setEditPhotospotsDialogOpen(false);
+    if (handleSubmit) handleSubmit();
   };
   const clearForm = () => {
     editPhotospotForm.reset();
@@ -72,7 +74,7 @@ export default function EditPhotospotForm({
         onSubmit={editPhotospotForm.handleSubmit(onSubmit)}
         className=" w-full flex flex-col"
       >
-        <CardContent className={`flex-1 overflow-auto mb-4 }`}>
+        <CardContent className={`flex-1 overflow-auto `}>
           <FormField
             control={editPhotospotForm.control}
             name="name"
@@ -93,13 +95,14 @@ export default function EditPhotospotForm({
         <CardFooter className="flex-none">
           <div className="w-full flex flex-row gap-8 justify-center">
             <Button
-              variant="outline"
+              variant="destructive"
               onClick={(e) => {
                 e.preventDefault();
                 clearForm();
+                if (handleCancel) handleCancel();
               }}
             >
-              Reset
+              Cancel
             </Button>
             <Button type="submit">Save</Button>
           </div>

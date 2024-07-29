@@ -89,11 +89,13 @@ export default function PhotoshotUploadForm({
   selectedLocation,
   setPhotoshotUploadDialogOpen,
   handleSubmit,
+  handleCancel,
   mapView,
 }: {
   selectedLocation: Photospot | NewPhotospotInfo;
-  setPhotoshotUploadDialogOpen: any;
+  setPhotoshotUploadDialogOpen?: any;
   handleSubmit?: any;
+  handleCancel?: any;
   mapView: boolean;
 }) {
   const router = useRouter();
@@ -164,7 +166,7 @@ export default function PhotoshotUploadForm({
           //happens on map view but selecting existing photospot
           router.push("/photospot/" + selectedLocation.id);
           setLoading(false);
-          setPhotoshotUploadDialogOpen(false);
+          if (setPhotoshotUploadDialogOpen) setPhotoshotUploadDialogOpen(false);
           toast({
             title: "Uploaded Photoshot",
           });
@@ -176,7 +178,7 @@ export default function PhotoshotUploadForm({
         //happens when new photospot selected from map
         router.push("/photospot/" + photoshot.photospot_id);
         setLoading(false);
-        setPhotoshotUploadDialogOpen(false);
+        if (setPhotoshotUploadDialogOpen) setPhotoshotUploadDialogOpen(false);
         toast({
           title: "Uploaded Photoshot",
         });
@@ -185,7 +187,7 @@ export default function PhotoshotUploadForm({
     if (!mapView) {
       //happens on photospot view page
       setLoading(false);
-      setPhotoshotUploadDialogOpen(false);
+      if (setPhotoshotUploadDialogOpen) setPhotoshotUploadDialogOpen(false);
       toast({
         title: "Uploaded Photoshot",
       });
@@ -320,13 +322,14 @@ export default function PhotoshotUploadForm({
         <CardFooter className="flex-none">
           <div className="w-full flex flex-row gap-8 justify-center">
             <Button
-              variant="outline"
+              variant="destructive"
               onClick={(e) => {
                 e.preventDefault();
                 clearForm();
+                if (handleCancel) handleCancel();
               }}
             >
-              Reset
+              Cancel
             </Button>
             <Button type="submit" disabled={loading}>
               Create

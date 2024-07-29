@@ -9,15 +9,18 @@ import { useEffect, useState } from "react";
 import { Badge } from "../ui/badge";
 import PhotoshotUploadDialog from "../photoshot/photoshotUploadDialog";
 import { isPhotospot } from "@/utils/common/typeGuard";
-import EditPhotospotDialog from "./editPhotospotDialog";
 import { fetcher } from "@/utils/common/fetcher";
 import useSWR from "swr";
 import { Skeleton } from "../ui/skeleton";
+import { useBreakpoint } from "@/hooks/tailwind";
+import Image from "next/image";
+import EditPhotospotForm from "./editPhotospotForm";
+import PhotoshotUploadForm from "../photoshot/photoshotUploadForm";
 
 export default function PhotospotPreview({
   selectedLocation,
 }: {
-  selectedLocation: Photospot | NewPhotospotInfo | null;
+  selectedLocation: Photospot | NewPhotospotInfo;
 }) {
   const {
     data: topPhotoshot,
@@ -28,10 +31,11 @@ export default function PhotospotPreview({
       : null,
     fetcher
   );
-  const [tags, setTags] = useState<string[]>([]);
   const [locationName, setLocationName] = useState<string>(
     selectedLocation ? selectedLocation?.location_name : ""
   );
+  const [editTitle, setEditTitle] = useState(false);
+  const [uploadPhotospot, setUploadPhotospot] = useState(false);
   const selectedPhotospot = isPhotospot(selectedLocation);
   const router = useRouter();
   const handleViewPhotospot = () => {
@@ -39,6 +43,7 @@ export default function PhotospotPreview({
       router.push("/photospot/" + selectedLocation.id);
     }
   };
+  const { isSm } = useBreakpoint("sm");
   const setPhotospotName = (name: string) => {
     if (selectedLocation) {
       selectedLocation.location_name = name;
@@ -48,79 +53,69 @@ export default function PhotospotPreview({
   return (
     <>
       <CardContent className="flex flex-col gap-4">
-        {selectedLocation && isPhotospot(selectedLocation) && (
+        {!editTitle && !uploadPhotospot && (
           <>
-            {}
-            {topPhotoshot && (
-              <img
-                src={topPhotoshot.photo_paths[0]}
-                alt=""
-                className="w-full lg:h-[300px] rounded-md"
-              />
+            {!topPhotoshotLoading && (
+              <div className="w-full h-[400px] lg:h-[300px] relative">
+                <Image
+                  src={
+                    !selectedPhotospot
+                      ? DefaultPhotospot
+                      : topPhotoshot?.photo_paths[0]!
+                  }
+                  alt=""
+                  fill
+                  className="object-fit rounded-md"
+                />
+              </div>
             )}
             {topPhotoshotLoading && (
               <Skeleton className="w-full lg:h-[300px] rounded-md bg-black/10" />
             )}
-            <h1 className="text-3xl font-semibold">
-              {selectedLocation?.location_name
-                ? selectedLocation.location_name
-                : selectedLocation?.location_name}
-            </h1>
-            {selectedLocation?.rating_average && (
-              <RatingDisplay rating={selectedLocation.rating_average} />
-            )}
-            <div className=" flex flex-auto gap-2">
-              {tags.map((tag) => (
-                <Badge key={tag} variant="outline">
-                  {tag}
-                </Badge>
-              ))}
+
+            <div className="flex flex-row gap-4">
+              <h1 className="text-3xl font-semibold">
+                {selectedLocation?.location_name
+                  ? selectedLocation.location_name
+                  : selectedLocation?.location_name}
+              </h1>
+              {!selectedPhotospot && (
+                <Button onClick={() => setEditTitle(true)}>Edit</Button>
+              )}
+            </div>
+            <div className="flex justify-center flex-row gap-4">
+              <Button onClick={() => setUploadPhotospot(true)}>
+                Upload a shot
+              </Button>
+
+              {selectedPhotospot && (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    handleViewPhotospot();
+                  }}
+                >
+                  View Photospot
+                </Button>
+              )}
             </div>
           </>
         )}
-        {selectedLocation &&
-          !topPhotoshotLoading &&
-          (!isPhotospot(selectedLocation) || !topPhotoshot) && (
-            <>
-              <img
-                src={DefaultPhotospot}
-                alt=""
-                className="w-full lg:h-[300px] rounded-md"
-              />
-              <div className="flex flex-row gap-4">
-                <h1 className="text-3xl font-semibold">
-                  {selectedLocation?.location_name
-                    ? selectedLocation.location_name
-                    : selectedLocation?.location_name}
-                </h1>
-                {selectedLocation && !selectedPhotospot && (
-                  <EditPhotospotDialog
-                    photospotName={selectedLocation.location_name}
-                    setPhotospotName={setPhotospotName}
-                  />
-                )}
-              </div>
-              {!selectedPhotospot && (
-                <p className="text-xl">New Location, upload the first pic!</p>
-              )}
-            </>
-          )}
-        <div className="flex justify-center flex-row gap-4">
-          <PhotoshotUploadDialog
+        {uploadPhotospot && (
+          <PhotoshotUploadForm
             selectedLocation={selectedLocation}
-            mapView={true}
+            mapView={false}
+            handleCancel={() => setUploadPhotospot(false)}
           />
-          {selectedPhotospot && (
-            <Button
-              variant="outline"
-              onClick={() => {
-                handleViewPhotospot();
-              }}
-            >
-              View Photospot
-            </Button>
-          )}
-        </div>
+        )}
+        {editTitle && (
+          <EditPhotospotForm
+            photospotName={selectedLocation.location_name}
+            setPhotospotName={setPhotospotName}
+            handleCancel={() => setEditTitle(false)}
+            handleSubmit={() => setEditTitle(false)}
+          />
+        )}
       </CardContent>
     </>
   );
