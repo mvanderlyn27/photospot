@@ -82,7 +82,7 @@ export default function EditPhotospotForm({
               <FormItem>
                 <FormLabel>Photospot name:</FormLabel>
                 <FormControl>
-                  <Input type="text" {...field} />
+                  <Input className="text-lg" type="text" {...field} />
                 </FormControl>
                 <FormDescription>
                   Update photospot if you know a better name

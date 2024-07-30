@@ -126,7 +126,7 @@ export default function PhotoshotUploadForm({
   ) => {
     let formData = new FormData();
     if (data.photos) {
-      Array.from(data.photos).forEach((photo) => {
+      Array.from(data.photos).forEach((photo: File) => {
         formData.append(`photos`, photo);
       });
     }
@@ -234,7 +234,7 @@ export default function PhotoshotUploadForm({
         onSubmit={uploadPhotoshotForm.handleSubmit(onCreate)}
         className=" w-full flex flex-col"
       >
-        <CardContent className={`flex-1 overflow-auto mb-4 }`}>
+        <CardContent className={`flex-1 overflow-auto`}>
           <FormField
             control={uploadPhotoshotForm.control}
             name="name"
@@ -242,7 +242,7 @@ export default function PhotoshotUploadForm({
               <FormItem>
                 <FormLabel>Name this shot:</FormLabel>
                 <FormControl>
-                  <Input type="text" {...field} />
+                  <Input className="text-lg" type="text" {...field} />
                 </FormControl>
                 <FormDescription>
                   Give a unique name for this type of picture at this spot
@@ -280,7 +280,7 @@ export default function PhotoshotUploadForm({
               <FormItem>
                 <FormLabel>How to:</FormLabel>
                 <FormControl>
-                  <Textarea {...field} />
+                  <Textarea className="text-lg" {...field} />
                 </FormControl>
                 <FormDescription>
                   Short description about how you got this awesome pic
