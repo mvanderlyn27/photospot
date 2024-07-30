@@ -119,17 +119,17 @@ export default function LandingPageSection() {
           </div>
         </div>
       </div>
-      <div className="w-[100dvw] h-[100dvh] md:hidden">
+      <div className="w-[100vw] h-[calc(100vh-64px)] md:hidden">
         <div className="w-full h-full relative">
           <Image
             src="https://vkfbzrfveygdqsqyiggk.supabase.co/storage/v1/object/public/website_pictures/manhattanSunset1.JPG"
             fill
             alt=""
-            className="object-cover shadow-lg dark:shadow-black/20"
+            className="object-cover "
           />
         </div>
         <div className="absolute inset-0 flex items-center justify-center flex-col gap-4">
-          <h1 className="text-background scroll-m-20 text-5xl font-semibold tracking-tight mt-48">
+          <h1 className="text-background scroll-m-20 text-5xl font-semibold tracking-tight mt-96">
             PhotoSpot
           </h1>
           <Link
@@ -142,9 +142,9 @@ export default function LandingPageSection() {
             Signup Now :)
           </Link>
         </div>
-        <div className="text-center">
+        <div className="text-center pt-4">
           <div className="grid items-center gap-4 p-4">
-            <h1 className=" text-5xl font-bold tracking-tight md:text-6xl xl:text-7xl">
+            <h1 className=" text-4xl font-bold tracking-tight md:text-6xl xl:text-7xl">
               Discover NYC's <br />
               <span className="text-primary">Most Captivating Spots</span>
             </h1>
@@ -161,7 +161,7 @@ export default function LandingPageSection() {
         </div>
         <div className="text-center">
           <div className="grid items-center gap-4 p-4">
-            <h1 className="text-5xl font-bold tracking-tight">
+            <h1 className="text-4xl font-bold tracking-tight">
               Get inpsired by other posts around{" "}
               <span className="text-primary">your city</span>
             </h1>
@@ -178,7 +178,7 @@ export default function LandingPageSection() {
         <div className="text-center">
           <div className="w-full ">
             <div className="grid items-center gap-4 p-4">
-              <h1 className="text-5xl font-bold tracking-tight">
+              <h1 className="text-4xl font-bold tracking-tight">
                 Share your favorite spots with your friends/community
               </h1>
               <div className=" relative w-full h-[400px] overflow-hidden">
