@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "../ui/button";
-import { CardContent, CardFooter } from "../ui/card";
+import { CardContent, CardFooter, CardTitle } from "../ui/card";
 import {
   Form,
   FormControl,
@@ -72,8 +72,11 @@ export default function EditPhotospotForm({
     <Form {...editPhotospotForm}>
       <form
         onSubmit={editPhotospotForm.handleSubmit(onSubmit)}
-        className=" w-full flex flex-col "
+        className=" w-full h-full flex flex-col "
       >
+        <CardTitle>
+          <h2 className="text-xl font-bold">Edit Location Name</h2>
+        </CardTitle>
         <CardContent className={`flex-1 overflow-auto `}>
           <FormField
             control={editPhotospotForm.control}

@@ -43,7 +43,11 @@ export default function CreatePageContainer() {
   return (
     <div className="h-[calc(100vh-64px)] w-screen">
       <MapProvider>
-        <div className="absolute top-[64px] left-0 lg:w-[450px] max-h-[calc(100vh-64px)] pl-4 pr-4 pt-4 z-50">
+        <div
+          className={`absolute top-[64px] ${
+            !isSmall.isSm ? "w-full" : "w-auto"
+          } left-0 lg:w-[450px] max-h-[calc(100vh-64px)] pl-4 pr-4 pt-4 z-50`}
+        >
           <Card>
             <CardContent className="p-4 flex flex-col gap-4">
               <AutoComplete

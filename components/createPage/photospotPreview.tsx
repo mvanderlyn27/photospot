@@ -59,7 +59,7 @@ export default function PhotospotPreview({
   }, [selectedLocation]);
   return (
     <>
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="flex flex-col h-full gap-4">
         {!editTitle && !uploadPhotospot && (
           <>
             {!topPhotoshotLoading && (
