@@ -119,16 +119,94 @@ export default function PhotoshotCard({
       {photoshot && (
         <div>
           {!editMode ? (
-            <div className="flex flex-col lg:flex-row">
-              <ImageCarousel
-                width={"600px"}
-                height={"600px"}
-                photos={photoshot.photo_paths}
-              />
-              <div className="flex-col p-8 gap-8  w-full">
-                <div className="flex flex-row gap-4 justify-between">
-                  <h1 className="text-3xl font-semibold text-left">
-                    {photoshot.name}
+            <>
+              <div className="hidden md:flex flex-col lg:flex-row">
+                <ImageCarousel
+                  width={"600px"}
+                  height={"600px"}
+                  photos={photoshot.photo_paths}
+                />
+                <div className="flex-col p-8 gap-8  w-full">
+                  <div className="flex flex-row gap-4 justify-between">
+                    <h1 className="text-3xl font-semibold text-left">
+                      {photoshot.name}
+                    </h1>
+                    <div className="flex flex-row gap-4 items-center">
+                      <h1 className="font-semibold">
+                        {photoshot.like_count && photoshot.like_count == 1
+                          ? "1 like"
+                          : photoshot.like_count + " likes"}
+                      </h1>
+                      <Button onClick={() => handleLike()}>
+                        {isLiked ? <IoMdHeart /> : <IoMdHeartEmpty />}
+                      </Button>
+                      {/* <Button onClick={() => handleSave()}>
+                                {isSaved ? <FaBookmark /> : <FaRegBookmark />}
+                            </Button> */}
+                      {owner && (
+                        <Button onClick={() => setEditMode(true)}>Edit</Button>
+                      )}
+                      <Link href={`/photospot/${photoshot.photospot_id}`}>
+                        <Button>Visit</Button>
+                      </Link>
+                    </div>
+                  </div>
+                  <h1 className="text-xl text-left ">
+                    Created by:
+                    <Link
+                      className=" p-2 font-medium text-primary dark:text-blue-500 hover:underline"
+                      href={`/user/${photoshot.created_by}`}
+                    >
+                      {photoshot.username}
+                    </Link>
+                  </h1>
+                  {photospot && (
+                    <h1 className="text-xl  text-left">
+                      Taken at: <b>{photospot.location_name}</b>
+                    </h1>
+                  )}
+                  <DialogDescription className="pt-4">
+                    <div className=" flex flex-auto gap-2">
+                      {photoshot.tags &&
+                        photoshot.tags.map((tag: Tag) => (
+                          <Badge key={tag.id} variant="outline">
+                            {tag.name}
+                          </Badge>
+                        ))}
+                    </div>
+                    <h1>
+                      <b>How to take the shot: </b>
+                      {photoshot.recreate_text}
+                    </h1>
+                  </DialogDescription>
+                </div>
+              </div>
+              <div className="w-full flex flex-col gap-2 md:hidden">
+                <h1 className="text-3xl font-semibold text-left">
+                  {photoshot.name}
+                </h1>
+                <div className=" flex flex-auto gap-2">
+                  {photoshot.tags &&
+                    photoshot.tags.map((tag: Tag) => (
+                      <Badge key={tag.id} variant="outline">
+                        {tag.name}
+                      </Badge>
+                    ))}
+                </div>
+                <ImageCarousel
+                  width={"100%"}
+                  height={"400px"}
+                  photos={photoshot.photo_paths}
+                />
+                <div className="flex flex-row gap-4 justify-between items-center">
+                  <h1 className="text-l text-left ">
+                    Created by:
+                    <Link
+                      className=" p-2 font-medium text-primary dark:text-blue-500 hover:underline"
+                      href={`/user/${photoshot.created_by}`}
+                    >
+                      {photoshot.username}
+                    </Link>
                   </h1>
                   <div className="flex flex-row gap-4 items-center">
                     <h1 className="font-semibold">
@@ -139,47 +217,30 @@ export default function PhotoshotCard({
                     <Button onClick={() => handleLike()}>
                       {isLiked ? <IoMdHeart /> : <IoMdHeartEmpty />}
                     </Button>
-                    {/* <Button onClick={() => handleSave()}>
-                                {isSaved ? <FaBookmark /> : <FaRegBookmark />}
-                            </Button> */}
                     {owner && (
                       <Button onClick={() => setEditMode(true)}>Edit</Button>
                     )}
-                    <Link href={`/photospot/${photoshot.photospot_id}`}>
-                      <Button>Visit</Button>
-                    </Link>
                   </div>
                 </div>
-                <h1 className="text-xl text-left ">
-                  Created by:
-                  <Link
-                    className=" p-2 font-medium text-primary dark:text-blue-500 hover:underline"
-                    href={`/user/${photoshot.created_by}`}
-                  >
-                    {photoshot.username}
-                  </Link>
-                </h1>
+
                 {photospot && (
-                  <h1 className="text-xl  text-left">
-                    Taken at: <b>{photospot.location_name}</b>
+                  <h1 className="text-l  text-left">
+                    Taken at:
+                    <Link
+                      href={`/photospot/${photoshot.photospot_id}`}
+                      className=" p-2 font-medium text-primary dark:text-blue-500 hover:underline"
+                    >
+                      {photospot.location_name}
+                    </Link>
                   </h1>
                 )}
-                <DialogDescription className="pt-4">
-                  <div className=" flex flex-auto gap-2">
-                    {photoshot.tags &&
-                      photoshot.tags.map((tag: Tag) => (
-                        <Badge key={tag.id} variant="outline">
-                          {tag.name}
-                        </Badge>
-                      ))}
-                  </div>
-                  <h1>
-                    <b>How to take the shot: </b>
-                    {photoshot.recreate_text}
-                  </h1>
-                </DialogDescription>
+
+                <h1>
+                  <b>How to take the shot: </b>
+                  {photoshot.recreate_text}
+                </h1>
               </div>
-            </div>
+            </>
           ) : (
             <EditPhotoshotForm
               photoshotId={photoshot.id}
