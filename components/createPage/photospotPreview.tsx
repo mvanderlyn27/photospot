@@ -104,7 +104,7 @@ export default function PhotospotPreview({
         {uploadPhotospot && (
           <PhotoshotUploadForm
             selectedLocation={selectedLocation}
-            mapView={false}
+            mapView={true}
             handleCancel={() => setUploadPhotospot(false)}
           />
         )}

@@ -128,7 +128,7 @@ export default function LandingPageSection() {
             className="object-cover "
           />
         </div>
-        <div className="absolute inset-0 flex items-center justify-center flex-col gap-4">
+        <div className="absolute inset-0 z-1 flex items-center justify-center flex-col gap-4">
           <h1 className="text-background scroll-m-20 text-5xl font-semibold tracking-tight mt-96">
             PhotoSpot
           </h1>

@@ -43,7 +43,7 @@ export default function UserSearchSection() {
         <div className="flex flex-row gap-4 p-4">
           <Input
             value={inputValue}
-            placeholder="Search for a user"
+            placeholder="User Search"
             onChange={(e) => {
               console.log("input", e.target.value, inputValue);
               setInputValue(e.target.value);

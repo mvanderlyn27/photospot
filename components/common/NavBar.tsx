@@ -39,7 +39,7 @@ export default function NavBar() {
   const pathname = usePathname();
   const pathStart = pathname.split("/")[1];
   return (
-    <nav className="w-full max-w-screen flex justify-center h-16">
+    <nav className="w-full max-w-screen flex justify-center h-16 z-50">
       <div className="w-full  flex justify-between items-center p-3 lg:pl-10 lg:pr-10 text-foreground">
         <Link href={user ? "/home" : "/"}>
           <h3 className="text-3xl font-semibold ">PhotoSpot</h3>
@@ -55,8 +55,7 @@ export default function NavBar() {
                   pathStart === "home" ? "font-bold" : ""
                 } cursor-pointer py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`}
               >
-                {" "}
-                Home{" "}
+                Home
               </Link>
               <Link
                 href="/explore"
@@ -64,7 +63,6 @@ export default function NavBar() {
                   pathStart === "explore" ? "font-bold" : ""
                 } cursor-pointer py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`}
               >
-                {" "}
                 Explore
               </Link>
               <Link
@@ -73,7 +71,6 @@ export default function NavBar() {
                   pathStart === "create" ? "font-bold" : ""
                 } cursor-pointer py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`}
               >
-                {" "}
                 Create
               </Link>
               <Link
@@ -82,8 +79,7 @@ export default function NavBar() {
                   pathStart === "user" ? "font-bold" : ""
                 } cursor-pointer py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`}
               >
-                {" "}
-                Users{" "}
+                Users
               </Link>
               <Link
                 href="/profile"
@@ -91,7 +87,6 @@ export default function NavBar() {
                   pathStart === "profile" ? "font-bold" : ""
                 } cursor-pointer py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`}
               >
-                {" "}
                 Profile
               </Link>
               <LogoutButton />
@@ -102,7 +97,7 @@ export default function NavBar() {
           <div>
             <Link
               href="/login"
-              className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover"
+              className="py-2 px-3 flex cursor-pointer rounded-md no-underline bg-btn-background hover:bg-btn-background-hover"
             >
               <Button>Login</Button>
             </Link>
@@ -123,7 +118,7 @@ export default function NavBar() {
                     pathStart === "home" ? "font-bold" : ""
                   } cursor-pointer py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`}
                 >
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
                     <IoHome className="mr-2 h-6 w-6" />
                     <span className="text-lg">Home</span>
                   </DropdownMenuItem>
@@ -135,7 +130,7 @@ export default function NavBar() {
                     pathStart === "explore" ? "font-bold" : ""
                   } cursor-pointer py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`}
                 >
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
                     <FaMapMarkedAlt className="mr-2 h-6 w-6" />
                     <span className="text-lg">Explore</span>
                   </DropdownMenuItem>
@@ -147,7 +142,7 @@ export default function NavBar() {
                     pathStart === "create" ? "font-bold" : ""
                   } cursor-pointer py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`}
                 >
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
                     <MdAddAPhoto className="mr-2 h-6 w-6" />
                     <span className="text-lg">Create</span>
                   </DropdownMenuItem>
@@ -159,7 +154,7 @@ export default function NavBar() {
                     pathStart === "user" ? "font-bold" : ""
                   } cursor-pointer py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`}
                 >
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
                     <FaUsers className="mr-2 h-6 w-6" />
                     <span className="text-lg">Users</span>
                   </DropdownMenuItem>
@@ -171,13 +166,13 @@ export default function NavBar() {
                     pathStart === "profile" ? "font-bold" : ""
                   } cursor-pointer py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover`}
                 >
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
                     <CgProfile className="mr-2 h-6 w-6" />
                     <span className="text-lg">Profile</span>
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
                   <LogoutButton />
                 </DropdownMenuItem>
               </DropdownMenuContent>
