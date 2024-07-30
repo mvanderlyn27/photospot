@@ -56,7 +56,7 @@ export default function PhotospotPreview({
         {!editTitle && !uploadPhotospot && (
           <>
             {!topPhotoshotLoading && (
-              <div className="w-full h-[300px] lg:h-[300px] relative">
+              <div className="w-full p-4 h-[300px] lg:h-[300px] relative">
                 <Image
                   src={
                     !selectedPhotospot
@@ -70,7 +70,7 @@ export default function PhotospotPreview({
               </div>
             )}
             {topPhotoshotLoading && (
-              <Skeleton className="w-full lg:h-[300px] rounded-md bg-black/10" />
+              <Skeleton className="w-full h-[300px]lg:h-[300px] rounded-md bg-black/10" />
             )}
 
             <div className="flex flex-row gap-4 justify-center items-center">

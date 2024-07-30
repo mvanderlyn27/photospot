@@ -67,7 +67,8 @@ export default function CreatePageContainer() {
         <Drawer
           open={selectedLocation !== null && !isSmall.isSm}
           onClose={() => setSelectedLocation(null)}
-          modal={true}
+          modal={false}
+          handleOnly={true}
         >
           <div className="h-full w-full">
             <PhotospotMap
