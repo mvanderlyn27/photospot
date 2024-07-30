@@ -72,19 +72,19 @@ export default function InfiniteScrollGridItem({
         gridType === GridTypes.photoshot && (
           <Link href={`/photoshot/${gridItemData.id}`}>
             {gridItemData.photo_paths[0] ? (
-              <div className=" sm:h-[500px] md:h-[400px] relative overflow-hidden">
+              <div className=" h-[400px] md:h-[400px] relative overflow-hidden">
                 <Image
                   src={
                     hasError ? DefaultPhotoshot : gridItemData.photo_paths[0]
                   }
                   alt={gridItemData.id ? gridItemData.id + "" : ""}
-                  sizes="(max-width: 768px) 100vw ,(max-width: 1200px) 50vw, 33vw"
-                  loading="eager"
+                  // sizes="(max-width: 768px) 100vw ,(max-width: 1200px) 50vw, 33vw"
+                  // loading="eager"
                   onError={() => !hasError && setHasError(true)}
                   fill={true}
-                  blurDataURL={`/_next/image?url=${
-                    hasError ? DefaultPhotoshot : gridItemData.photo_paths[0]
-                  }&w=16&q=1`}
+                  // blurDataURL={`/_next/image?url=${
+                  //   hasError ? DefaultPhotoshot : gridItemData.photo_paths[0]
+                  // }&w=16&q=1`}
                   className="object-cover rounded-lg"
                 />
               </div>

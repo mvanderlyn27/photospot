@@ -1,9 +1,3 @@
-import PhotospotCard from "@/components/timeline/photospotCard";
-import { Photoshot, Photospot } from "@/types/photospotTypes";
-import { fetcher } from "@/utils/common/fetcher";
-import { useEffect, useState } from "react";
-import useSWR from "swr";
-import DailyPhotoTime from "./dailyPhotoTime";
 import { TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Tabs } from "../ui/tabs";
 import NearbyPhotoshotTimelineContent from "./nearbyPhotoshotTimelineContent";
@@ -23,22 +17,18 @@ export default function Timeline() {
   // infinite scroll grid underneath
   //clicking into a photo brings you to the photospots page with the photoshot open?
   return (
-    <div
-      className="flex flex-col justify-center gap-4 p-8
-        "
-    >
-      {" "}
+    <div className="flex flex-col justify-center gap-4 p-8">
       {
         // myPhotospots.map(photospot => <PhotospotCard photospot={photospot} />)
         <Tabs defaultValue="suggested">
-          <TabsList className="flex flex-row justify-center mb-8">
-            <TabsTrigger className="text-3xl" value="suggested">
+          <TabsList className="w-full flex flex-row justify-center md:mb-8">
+            <TabsTrigger className="text-xl md:text-3xl" value="suggested">
               Your Feed
             </TabsTrigger>
-            <TabsTrigger className="text-3xl" value="nearby">
+            <TabsTrigger className="text-xl md:text-3xl" value="nearby">
               Nearby
             </TabsTrigger>
-            <TabsTrigger className="text-3xl" value="popular">
+            <TabsTrigger className="text-xl md:text-3xl" value="popular">
               Popular
             </TabsTrigger>
           </TabsList>

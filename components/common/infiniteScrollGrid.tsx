@@ -76,7 +76,7 @@ export default function InfiniteScrollGrid({
     }
   };
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col pt-4 md:p-0">
       {gridData && (
         <div
           className={`w-full grid sm:grid-cols-${

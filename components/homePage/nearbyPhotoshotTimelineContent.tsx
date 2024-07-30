@@ -54,6 +54,7 @@ export default function NearbyPhotoshotTimelineContent() {
         gridType={GridTypes.photoshot}
         setSize={setSize}
         size={size}
+        colCount={{ sm: 1, md: 2, lg: 5, xl: 5 }}
         dataLoading={photoshotsLoading}
       />
     </>
