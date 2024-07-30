@@ -56,7 +56,7 @@ export default function PhotospotPreview({
         {!editTitle && !uploadPhotospot && (
           <>
             {!topPhotoshotLoading && (
-              <div className="w-full h-[400px] lg:h-[300px] relative">
+              <div className="w-full h-[300px] lg:h-[300px] relative">
                 <Image
                   src={
                     !selectedPhotospot
@@ -73,14 +73,16 @@ export default function PhotospotPreview({
               <Skeleton className="w-full lg:h-[300px] rounded-md bg-black/10" />
             )}
 
-            <div className="flex flex-row gap-4">
-              <h1 className="text-3xl font-semibold">
+            <div className="flex flex-row gap-4 justify-center items-center">
+              <h1 className="text-xl font-semibold">
                 {selectedLocation?.location_name
                   ? selectedLocation.location_name
                   : selectedLocation?.location_name}
               </h1>
               {!selectedPhotospot && (
-                <Button onClick={() => setEditTitle(true)}>Edit</Button>
+                <Button onClick={() => setEditTitle(true)} variant="outline">
+                  Edit
+                </Button>
               )}
             </div>
             <div className="flex justify-center flex-row gap-4">

@@ -67,7 +67,7 @@ export default function CreatePageContainer() {
         <Drawer
           open={selectedLocation !== null && !isSmall.isSm}
           onClose={() => setSelectedLocation(null)}
-          modal={false}
+          modal={true}
         >
           <div className="h-full w-full">
             <PhotospotMap
@@ -89,6 +89,13 @@ export default function CreatePageContainer() {
             {selectedLocation && (
               <PhotospotPreview selectedLocation={selectedLocation} />
             )}
+            <Button
+              className="absolute top-0 right-0 p-0"
+              variant="ghost"
+              onClick={() => setSelectedLocation(null)}
+            >
+              <MdOutlineClear className="w-8 h-8 stroke-white" />
+            </Button>
           </DrawerContent>
         </Drawer>
       </MapProvider>
