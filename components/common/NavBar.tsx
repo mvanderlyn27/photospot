@@ -21,6 +21,7 @@ import { IoHome } from "react-icons/io5";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { MdAddAPhoto } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
+import { CiLogout } from "react-icons/ci";
 export default function NavBar() {
   const { setTheme } = useTheme();
   //get user logged in, render navbar
@@ -175,6 +176,10 @@ export default function NavBar() {
                     <span className="text-lg">Profile</span>
                   </DropdownMenuItem>
                 </Link>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <LogoutButton />
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
