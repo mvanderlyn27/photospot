@@ -65,7 +65,7 @@ export default function PhotospotPreview({
                   }
                   alt=""
                   fill
-                  className="object-fit rounded-md"
+                  className="object-cover rounded-md"
                 />
               </div>
             )}

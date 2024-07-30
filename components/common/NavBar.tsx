@@ -38,13 +38,13 @@ export default function NavBar() {
   const pathname = usePathname();
   const pathStart = pathname.split("/")[1];
   return (
-    <nav className="w-full flex justify-center h-16">
+    <nav className="w-full max-w-screen flex justify-center h-16">
       <div className="w-full  flex justify-between items-center p-3 lg:pl-10 lg:pr-10 text-foreground">
         <Link href={user ? "/home" : "/"}>
           <h3 className="text-3xl font-semibold ">PhotoSpot</h3>
         </Link>
 
-        {user && !small && (
+        {user && small.isSm && (
           <div className="flex items-center gap-4">
             Hey, <b>{user.username ? user.username : user.email}!</b>
             <div className="flex jusitfy-between items-center flex-row">
@@ -107,7 +107,7 @@ export default function NavBar() {
             </Link>
           </div>
         )}
-        {user && small && (
+        {user && !small.isSm && (
           <div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

@@ -8,6 +8,7 @@ import useSWRInfinite from "swr/infinite";
 import { GridTypes } from "@/types/photospotTypes";
 import { Button } from "../ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useBreakpoint } from "@/hooks/tailwind";
 
 //needs a search bar, and section to view results
 export default function UserSearchSection() {
@@ -25,22 +26,28 @@ export default function UserSearchSection() {
       fetcher
     );
   const handleSearch = () => {
-    router.push(`/user?search=${inputValue}`);
+    console.log("input entered", inputValue);
     setSearchQuery(inputValue);
+    router.push(`/user?search=${inputValue}`);
   };
   const handleClear = () => {
+    console.log("clearing");
     router.replace("/user");
     setSearchQuery("");
     setInputValue("");
   };
+  const { isSm } = useBreakpoint("sm");
   return (
-    <div className="w-full flex flex-col items-center justify-center ">
+    <div className="w-full flex flex-col items-center justify-start">
       <Card className=" xl:w-1/5">
         <div className="flex flex-row gap-4 p-4">
           <Input
             value={inputValue}
             placeholder="Search for a user"
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => {
+              console.log("input", e.target.value, inputValue);
+              setInputValue(e.target.value);
+            }}
             className="text-xl"
           />
           <Button onClick={() => handleSearch()}>Search</Button>
