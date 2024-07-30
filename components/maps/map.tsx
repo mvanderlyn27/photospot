@@ -161,8 +161,8 @@ export default function PhotospotMap({
             </Marker>
           );
         })}
-      <GeolocateControl position="top-right" showAccuracyCircle={false} />
-      <NavigationControl position="top-right" />
+      <GeolocateControl position="bottom-right" showAccuracyCircle={false} />
+      {/* <NavigationControl position="top-right" /> */}
     </MapboxMap>
   );
 }

@@ -72,7 +72,7 @@ export default function EditPhotospotForm({
     <Form {...editPhotospotForm}>
       <form
         onSubmit={editPhotospotForm.handleSubmit(onSubmit)}
-        className=" w-full flex flex-col"
+        className=" w-full flex flex-col "
       >
         <CardContent className={`flex-1 overflow-auto `}>
           <FormField

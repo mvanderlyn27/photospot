@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "../ui/button";
-import { CardContent, CardFooter } from "../ui/card";
+import { CardContent, CardFooter, CardTitle } from "../ui/card";
 import {
   Form,
   FormControl,
@@ -234,7 +234,10 @@ export default function PhotoshotUploadForm({
         onSubmit={uploadPhotoshotForm.handleSubmit(onCreate)}
         className=" w-full flex flex-col"
       >
-        <CardContent className={`flex-1 overflow-auto`}>
+        <CardTitle>
+          <h1 className="text-xl font-bold">Upload Photoshot</h1>
+        </CardTitle>
+        <CardContent className={` overflow-auto max-h-[40vh] md:max-h-[60vh] `}>
           <FormField
             control={uploadPhotoshotForm.control}
             name="name"
@@ -319,7 +322,7 @@ export default function PhotoshotUploadForm({
           />
         </CardContent>
 
-        <CardFooter className="flex-none">
+        <CardFooter className="flex-none p-4">
           <div className="w-full flex flex-row gap-8 justify-center">
             <Button
               variant="destructive"

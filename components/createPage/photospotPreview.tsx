@@ -35,6 +35,7 @@ export default function PhotospotPreview({
     selectedLocation ? selectedLocation?.location_name : ""
   );
   const [editTitle, setEditTitle] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [uploadPhotospot, setUploadPhotospot] = useState(false);
   const selectedPhotospot = isPhotospot(selectedLocation);
   const router = useRouter();
@@ -50,13 +51,19 @@ export default function PhotospotPreview({
       setLocationName(name);
     }
   };
+  useEffect(() => {
+    if (selectedLocation) {
+      setEditTitle(false);
+      setUploadPhotospot(false);
+    }
+  }, [selectedLocation]);
   return (
     <>
       <CardContent className="flex flex-col gap-4">
         {!editTitle && !uploadPhotospot && (
           <>
             {!topPhotoshotLoading && (
-              <div className="w-full p-4 h-[300px] lg:h-[300px] relative">
+              <div className="w-full h-[300px] lg:h-[300px] relative">
                 <Image
                   src={
                     !selectedPhotospot
@@ -65,12 +72,12 @@ export default function PhotospotPreview({
                   }
                   alt=""
                   fill
-                  className="object-cover rounded-md"
+                  className="object-cover rounded-md p-4"
                 />
               </div>
             )}
             {topPhotoshotLoading && (
-              <Skeleton className="w-full h-[300px]lg:h-[300px] rounded-md bg-black/10" />
+              <Skeleton className="w-full h-[300px] lg:h-[300px] rounded-md bg-black/10" />
             )}
 
             <div className="flex flex-row gap-4 justify-center items-center">
@@ -80,7 +87,11 @@ export default function PhotospotPreview({
                   : selectedLocation?.location_name}
               </h1>
               {!selectedPhotospot && (
-                <Button onClick={() => setEditTitle(true)} variant="outline">
+                <Button
+                  onClick={() => setEditTitle(true)}
+                  variant="outline"
+                  disabled={loading}
+                >
                   Edit
                 </Button>
               )}
@@ -92,8 +103,10 @@ export default function PhotospotPreview({
 
               {selectedPhotospot && (
                 <Button
+                  disabled={loading}
                   variant="outline"
                   onClick={() => {
+                    setLoading(true);
                     handleViewPhotospot();
                   }}
                 >

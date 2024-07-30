@@ -43,21 +43,19 @@ export default function CreatePageContainer() {
   return (
     <div className="h-[calc(100vh-64px)] w-screen">
       <MapProvider>
-        <div className="absolute top-[64px] left-0 lg:w-[450px] max-h-[calc(100vh-64px)] pl-4 pt-4 z-50">
+        <div className="absolute top-[64px] left-0 lg:w-[450px] max-h-[calc(100vh-64px)] pl-4 pr-4 pt-4 z-50">
           <Card>
             <CardContent className="p-4 flex flex-col gap-4">
-              <div className="flex flex-row gap-2">
-                <AutoComplete
-                  setSelectedLocation={setSelectedLocation}
-                  selectedLocation={selectedLocation}
-                />
-                <Button
+              <AutoComplete
+                setSelectedLocation={setSelectedLocation}
+                selectedLocation={selectedLocation}
+              />
+              {/* <Button
                   variant="destructive"
                   onClick={() => setSelectedLocation(null)}
                 >
                   <MdOutlineClear className="w-6 h-6 stroke-white" />
-                </Button>
-              </div>
+                </Button> */}
               {selectedLocation && isSmall.isSm && (
                 <PhotospotPreview selectedLocation={selectedLocation} />
               )}
@@ -86,7 +84,7 @@ export default function CreatePageContainer() {
             setSelectedLocation={setSelectedLocation}
           />
 
-          <DrawerContent>
+          <DrawerContent className="h-[55vh]">
             {selectedLocation && (
               <PhotospotPreview selectedLocation={selectedLocation} />
             )}
