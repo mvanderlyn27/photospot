@@ -9,6 +9,8 @@ import { GridTypes } from "@/types/photospotTypes";
 import { Button } from "../ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useBreakpoint } from "@/hooks/tailwind";
+import { CiSearch } from "react-icons/ci";
+import { MdClear } from "react-icons/md";
 
 //needs a search bar, and section to view results
 export default function UserSearchSection() {
@@ -38,7 +40,7 @@ export default function UserSearchSection() {
   };
   const { isSm } = useBreakpoint("sm");
   return (
-    <div className="w-full flex flex-col items-center justify-start">
+    <div className="w-full flex flex-col items-center justify-start m-4">
       <Card className=" xl:w-1/5">
         <div className="flex flex-row gap-4 p-4">
           <Input
@@ -50,9 +52,11 @@ export default function UserSearchSection() {
             }}
             className="text-xl"
           />
-          <Button onClick={() => handleSearch()}>Search</Button>
+          <Button onClick={() => handleSearch()}>
+            <CiSearch className="w-6 h-6 md:w-8 md:h-8" />
+          </Button>
           <Button onClick={() => handleClear()} variant="destructive">
-            Clear
+            <MdClear className="w-6 h-6 md:w-8 md:h-8" />
           </Button>
         </div>
       </Card>
