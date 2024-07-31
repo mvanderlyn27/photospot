@@ -19,8 +19,10 @@ export default function LogoutButton() {
       className="cursor-pointer py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover justify-center items-center"
       onClick={() => logout()}
     >
-      <CiLogout className="mr-2 h-6 w-6" />
-      <Button variant="outline">Logout</Button>
+      <Button variant="outline" className="flex flex-row gap-2 p-2 md:p-auto">
+        <CiLogout className="h-6 w-6" />
+        Logout
+      </Button>
     </div>
   );
 }

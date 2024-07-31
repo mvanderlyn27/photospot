@@ -120,13 +120,13 @@ export default function PhotoshotCard({
         <div>
           {!editMode ? (
             <>
-              <div className="hidden md:flex flex-col lg:flex-row">
+              <div className="hidden md:flex flex-col xl:flex-row">
                 <ImageCarousel
-                  width={"600px"}
+                  width={"100%"}
                   height={"600px"}
                   photos={photoshot.photo_paths}
                 />
-                <div className="flex-col p-8 gap-8  w-full">
+                <div className="flex-col p-8 gap-8 w-full">
                   <div className="flex flex-row gap-4 justify-between">
                     <h1 className="text-3xl font-semibold text-left">
                       {photoshot.name}
@@ -140,9 +140,6 @@ export default function PhotoshotCard({
                       <Button onClick={() => handleLike()}>
                         {isLiked ? <IoMdHeart /> : <IoMdHeartEmpty />}
                       </Button>
-                      {/* <Button onClick={() => handleSave()}>
-                                {isSaved ? <FaBookmark /> : <FaRegBookmark />}
-                            </Button> */}
                       {owner && (
                         <Button onClick={() => setEditMode(true)}>Edit</Button>
                       )}
@@ -185,7 +182,7 @@ export default function PhotoshotCard({
                 <h1 className="text-3xl font-semibold text-left">
                   {photoshot.name}
                 </h1>
-                <div className=" flex flex-auto gap-2">
+                <div className=" flex flex-row text-nowrap max-w-[300px] overflow-x-auto gap-2">
                   {photoshot.tags &&
                     photoshot.tags.map((tag: Tag) => (
                       <Badge key={tag.id} variant="outline">
@@ -193,11 +190,13 @@ export default function PhotoshotCard({
                       </Badge>
                     ))}
                 </div>
-                <ImageCarousel
-                  width={"100%"}
-                  height={"400px"}
-                  photos={photoshot.photo_paths}
-                />
+                <div>
+                  <ImageCarousel
+                    width={"100%"}
+                    height={"300px"}
+                    photos={photoshot.photo_paths}
+                  />
+                </div>
                 <div className="flex flex-row gap-4 justify-between items-center">
                   <h1 className="text-l text-left ">
                     Created by:

@@ -80,7 +80,7 @@ export default function PhotospotPageSection({
               Reviews
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="photos" className="flex flex-col gap-4 p-4">
+          <TabsContent value="photos" className="flex flex-col gap-4">
             <PhotospotPhotoSection id={photospotId} />
           </TabsContent>
           <TabsContent value="reviews">
