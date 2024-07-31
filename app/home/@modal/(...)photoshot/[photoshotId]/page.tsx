@@ -1,5 +1,5 @@
 import { Modal } from "@/components/common/modal";
-import PhotoshotCard from "@/components/homePage/photoshotCard";
+import PhotoshotCard from "@/components/homepage/photoshotCard";
 
 export default function PhotoshotModal({
   params: { photoshotId },

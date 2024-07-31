@@ -1,6 +1,6 @@
 "use client";
 import { Modal } from "@/components/common/modal";
-import PhotoshotCard from "@/components/homePage/photoshotCard";
+import PhotoshotCard from "@/components/homepage/photoshotCard";
 import { Dialog } from "@/components/ui/dialog";
 import { fetcher } from "@/utils/common/fetcher";
 import { useEffect, useState } from "react";

@@ -17,8 +17,6 @@ export default function SuggestedPhotoshotTimelineContent() {
     fetcher
   );
   return (
-    // <PhotoshotTimelineGrid initialPhotospots={[]} photoshotPath={`/api/photoshot/timeline/suggested?`} />
-    // <PhotoshotGrid photoshots={data ? data : []} setSize={setSize} size={size} photoshotsLoading={photoshotsLoading} />
     <InfiniteScrollGrid
       gridData={data}
       gridType={GridTypes.photoshot}

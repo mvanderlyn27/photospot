@@ -1,8 +1,6 @@
 "use client";
 import { fetcher } from "@/utils/common/fetcher";
-import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
-import PhotoshotGrid from "../photoshot/photoshotGrid";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 import { GridTypes } from "@/types/photospotTypes";
 
