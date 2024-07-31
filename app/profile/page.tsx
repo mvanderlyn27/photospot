@@ -1,8 +1,5 @@
-import { redirect } from "next/navigation";
+import ProfilePageSection from "@/components/profilePage/profilePageSection";
 
 export default function ProfilePage() {
-    redirect('/profile/myPhotoshots')
-    return (
-        null
-    )
+  return <ProfilePageSection />;
 }

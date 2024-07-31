@@ -131,7 +131,7 @@ export default function EditProfilePicture({
             //     }}
           >
             <motion.div
-              className="w-[300px] h-[300px] rounded-full overflow-hidden"
+              className="w-[150px] h-[150px] md:w-[300px] md:h-[300px] rounded-full overflow-hidden"
               variants={list}
             >
               <Image

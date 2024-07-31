@@ -119,10 +119,10 @@ export type Profile = {
 }
 
 export type GridColumns = {
-  sm: number;
-  md: number;
-  lg: number;
-  xl: number;
+  sm?: number;
+  md?: number;
+  lg?: number;
+  xl?: number;
 }
 
 export enum Weather {
@@ -145,7 +145,9 @@ export enum Themes {
 }
 export enum GridTypes {
   photospot = "photospot",
+  mobilePhotospot = "mobilePhotospot",
   photoshot = "photoshot",
+  mobilePhotoshot = "mobilePhotoshot",
   photospotSearch= "photoshotSearch",
   review = "review", 
   follower = "follower",

@@ -36,7 +36,11 @@ export default function SavePhotospotButton({ id }: { id: number }) {
     }
   };
   return (
-    <Button onClick={() => handleUpdateSaved()} disabled={savedLoading}>
+    <Button
+      className="h-full"
+      onClick={() => handleUpdateSaved()}
+      disabled={savedLoading}
+    >
       {isSaved ? (
         <FaBookmark className="w-6 h-6" />
       ) : (

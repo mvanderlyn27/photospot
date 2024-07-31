@@ -35,19 +35,15 @@ export function PhotospotPhotoSection({ id }: { id: number }) {
   return (
     <div className="flex flex-col p-4 md:gap-4">
       {/* <Skeleton className="bg-balck/10 h-[600px] w-full" /> */}
-      <div className="flex flex-row ">
-        {photospot && isSm && (
-          <PhotoshotUploadDialog selectedLocation={photospot} mapView={false} />
-        )}
-      </div>
+
       <InfiniteScrollGrid
         gridData={photoshots}
         gridType={GridTypes.photoshot}
         setSize={setSize}
         size={size}
         dataLoading={photoshotsLoading}
-        height={"200px"}
-        colCount={{ sm: 2, md: 2, lg: 4, xl: 4 }}
+        height={isSm ? "400px" : "200px"}
+        colCount={{ sm: 2 }}
       />
     </div>
   );

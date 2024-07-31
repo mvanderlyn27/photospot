@@ -70,7 +70,7 @@ export default function DeleteAccountForm({
   };
   return (
     <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild className="mt-4">
         <Button variant="destructive">Delete Account</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

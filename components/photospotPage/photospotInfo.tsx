@@ -1,7 +1,7 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
-import { buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { FaShareAlt } from "react-icons/fa";
 
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
@@ -58,28 +58,26 @@ export default function PhotospotInfo({
           className={`h-full flex flex-col ${photospot ? "" : "hidden"} m-4`}
         >
           <CardHeader className="flex-none">
-            <div className="flex flex-row justify-between">
-              <CardTitle className="text-2xl md:text-3xl">
-                <div className="flex flex-row gap-4 items-center justify-between">
-                  {photospot?.location_name}
-                  <div className="flex flex-row gap-4">
-                    <Dialog>
-                      <DialogTrigger>
-                        <div
-                          className={cn(buttonVariants({ variant: "default" }))}
-                        >
-                          <FaShareAlt className="w-6 h-6" />
-                        </div>
-                      </DialogTrigger>
-                      <DialogContent className="">
-                        <SharePhotospotDialog id={id} />
-                      </DialogContent>
-                    </Dialog>
-                    {user && <SavePhotospotButton id={id} />}
-                  </div>
-                </div>
-              </CardTitle>
-            </div>
+            <CardTitle className="text-2xl md:text-3xl flex flex-row items-center gap-2">
+              {photospot?.location_name}
+              {photospot && (
+                <PhotoshotUploadDialog
+                  selectedLocation={photospot}
+                  mapView={false}
+                />
+              )}
+              <Dialog>
+                <DialogTrigger className="h-full">
+                  <Button className="h-full">
+                    <FaShareAlt className="w-6 h-6" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="">
+                  <SharePhotospotDialog id={id} />
+                </DialogContent>
+              </Dialog>
+              {user && <SavePhotospotButton id={id} />}
+            </CardTitle>
           </CardHeader>
           <CardContent className=" flex flex-col gap-4 ">
             <RatingDisplay
@@ -117,10 +115,10 @@ export default function PhotospotInfo({
                 mapView={true}
               />
               <Dialog>
-                <DialogTrigger>
-                  <div className={cn(buttonVariants({ variant: "default" }))}>
+                <DialogTrigger className="h-full">
+                  <Button className="h-full">
                     <LuCalendarClock className="w-6 h-6 md:w-8 md:h-8" />
-                  </div>
+                  </Button>
                 </DialogTrigger>
                 <DialogContent className="p-4">
                   <DialogTitle>Golden Hour Times</DialogTitle>
@@ -128,10 +126,10 @@ export default function PhotospotInfo({
                 </DialogContent>
               </Dialog>
               <Dialog>
-                <DialogTrigger>
-                  <div className={cn(buttonVariants({ variant: "default" }))}>
+                <DialogTrigger className="h-full">
+                  <Button className="h-full">
                     <FaShareAlt className="w-6 h-6" />
-                  </div>
+                  </Button>
                 </DialogTrigger>
                 <DialogContent className="">
                   <SharePhotospotDialog id={id} />

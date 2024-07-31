@@ -5,6 +5,7 @@ import useSWRInfinite from "swr/infinite";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 import useSWR from "swr";
 import { GridTypes } from "@/types/photospotTypes";
+import { useBreakpoint } from "@/hooks/tailwind";
 
 export default function MySavedPhotospots() {
   const { data: profileInfo } = useSWR("/api/profile", fetcher);
@@ -26,14 +27,20 @@ export default function MySavedPhotospots() {
     console.log("data: ", data);
     //get top photoshots for all photospots
   }, [data]);
+
+  const { isSm } = useBreakpoint("sm");
   return (
     <InfiniteScrollGrid
       gridData={data ? data : []}
-      gridType={GridTypes.photospot}
+      gridType={!isSm ? GridTypes.mobilePhotospot : GridTypes.photospot}
       setSize={setSize}
       size={size}
       dataLoading={photospotsLoading}
       lastItemMessage={"No more photoshots"}
+      height="125px"
+      colCount={{
+        sm: 3,
+      }}
     />
   );
 }
