@@ -37,7 +37,6 @@ export default function MySavedPhotospots() {
       size={size}
       dataLoading={photospotsLoading}
       lastItemMessage={"No more photoshots"}
-      height="125px"
       colCount={{
         sm: 3,
       }}
