@@ -27,10 +27,12 @@ import ReviewCard from "../review/review";
 export default function InfiniteScrollGridItem({
   gridItemData,
   gridType,
+  height,
   extraInfo,
 }: {
   gridItemData: Photoshot | Photospot | Profile;
   gridType: GridTypes;
+  height?: string;
   extraInfo?: string;
 }) {
   const [hasError, setHasError] = useState(false);
@@ -42,7 +44,11 @@ export default function InfiniteScrollGridItem({
         gridType === GridTypes.photospot && (
           <Link href={`/photospot/${gridItemData.id}`}>
             {gridItemData.top_photoshot_path ? (
-              <div className=" sm:h-[500px] md:h-[400px] relative overflow-hidden">
+              <div
+                className={`${
+                  height ? "h-[" + height + "]" : "h-[400px]"
+                } relative overflow-hidden`}
+              >
                 <Image
                   src={
                     hasError
@@ -72,7 +78,11 @@ export default function InfiniteScrollGridItem({
         gridType === GridTypes.photoshot && (
           <Link href={`/photoshot/${gridItemData.id}`}>
             {gridItemData.photo_paths[0] ? (
-              <div className=" h-[400px] md:h-[400px] relative overflow-hidden">
+              <div
+                className={`${
+                  height ? "h-[" + height + "]" : "h-[400px]"
+                } relative overflow-hidden`}
+              >
                 <Image
                   src={
                     hasError ? DefaultPhotoshot : gridItemData.photo_paths[0]

@@ -7,6 +7,7 @@ import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
 import { useEffect, useState } from "react";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
+import { useBreakpoint } from "@/hooks/tailwind";
 export function PhotospotPhotoSection({ id }: { id: number }) {
   const [photoshots, setPhotoshots] = useState<Photoshot[][]>([]);
   const {
@@ -30,11 +31,12 @@ export function PhotospotPhotoSection({ id }: { id: number }) {
       setPhotoshots(data);
     }
   }, [data]);
+  const { isSm } = useBreakpoint("sm");
   return (
     <div className="flex flex-col gap-4">
       {/* <Skeleton className="bg-balck/10 h-[600px] w-full" /> */}
       <div className="flex flex-row ">
-        {photospot && (
+        {photospot && isSm && (
           <PhotoshotUploadDialog selectedLocation={photospot} mapView={false} />
         )}
       </div>
@@ -44,6 +46,8 @@ export function PhotospotPhotoSection({ id }: { id: number }) {
         setSize={setSize}
         size={size}
         dataLoading={photoshotsLoading}
+        height={"200px"}
+        colCount={{ sm: 2, md: 2, lg: 4, xl: 4 }}
       />
     </div>
   );

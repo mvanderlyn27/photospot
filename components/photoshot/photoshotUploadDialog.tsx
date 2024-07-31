@@ -14,10 +14,10 @@ import PhotoshotUploadForm from "./photoshotUploadForm";
 
 export default function PhotoshotUploadDialog({
   selectedLocation,
-  mapView = false
+  mapView = false,
 }: {
   selectedLocation: NewPhotospotInfo | Photospot | null;
-  mapView: boolean
+  mapView: boolean;
 }) {
   const [photoshotUploadDialogOpen, setPhotoshotUploadDialogOpen] =
     useState(false);
@@ -34,7 +34,7 @@ export default function PhotoshotUploadDialog({
               "text-2xl  " + cn(buttonVariants({ variant: "default" }))
             }
           >
-            Upload a shot
+            Upload
           </div>
         </DialogTrigger>
         <DialogContent>
@@ -46,7 +46,14 @@ export default function PhotoshotUploadDialog({
             Show off your artsy side, and help other users learn how to make
             better shots
           </DialogDescription>
-          {selectedLocation && <PhotoshotUploadForm selectedLocation={selectedLocation} setPhotoshotUploadDialogOpen={setPhotoshotUploadDialogOpen} mapView={mapView} />}
+          {selectedLocation && (
+            <PhotoshotUploadForm
+              selectedLocation={selectedLocation}
+              setPhotoshotUploadDialogOpen={setPhotoshotUploadDialogOpen}
+              mapView={mapView}
+              handleCancel={() => setPhotoshotUploadDialogOpen(false)}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>

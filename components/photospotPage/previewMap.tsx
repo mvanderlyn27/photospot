@@ -4,7 +4,7 @@ import { animated, useSpring } from "@react-spring/web";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef, useState } from "react";
-import { Map as MapboxMap, Marker } from "react-map-gl";
+import { Map as MapboxMap, Marker, NavigationControl } from "react-map-gl";
 import { Button, buttonVariants } from "../ui/button";
 import { FaDirections } from "react-icons/fa";
 import { Card } from "../ui/card";
@@ -89,7 +89,7 @@ export default function PreviewMap({ id }: { id: number }) {
   return (
     <div className="w-full h-full">
       {photospot && (
-        <Card className="w-full h-full flex flex-col relative">
+        <Card className="w-full h-full flex flex-col relative ">
           <div
             className={`flex-0 p-4 flex flex-row justify-between items-center ${
               mapLoaded ? "" : "invisible"
@@ -114,6 +114,8 @@ export default function PreviewMap({ id }: { id: number }) {
                 longitude: photospot.lng,
               }}
               dragRotate={true}
+              onDrag={(e) => {}}
+              scrollZoom={false}
               // zoom={18}
               // pitch={60}
               // onLoad={handleLoad}
@@ -131,6 +133,7 @@ export default function PreviewMap({ id }: { id: number }) {
               >
                 <img className="w-10 h-10" src="/selectedPin.svg" />
               </Marker>
+              <NavigationControl />
             </MapboxMap>
           </div>
 

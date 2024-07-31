@@ -20,6 +20,7 @@ export default function InfiniteScrollGrid({
   size,
   dataLoading,
   pageSize = 20,
+  height,
   colCount = { sm: 1, md: 2, lg: 3, xl: 5 },
   gridType = GridTypes.photoshot,
   loadingMessage = "Loading...   Loading...",
@@ -34,6 +35,7 @@ export default function InfiniteScrollGrid({
   size: number;
   dataLoading: boolean;
   pageSize?: number;
+  height?: string;
   colCount?: GridColumns;
   gridType?: GridTypes;
   loadingMessage?: string;
@@ -79,9 +81,7 @@ export default function InfiniteScrollGrid({
     <div className="w-full flex flex-col pt-4 md:p-0">
       {gridData && (
         <div
-          className={`w-full grid sm:grid-cols-${
-            colCount?.sm ? colCount?.sm : 1
-          } 
+          className={`w-full grid grid-cols-${colCount?.sm ? colCount?.sm : 1} 
           md:grid-cols-${colCount?.md ? colCount?.md : 2} 
           lg:grid-cols-${colCount?.lg ? colCount?.lg : 3}
            xl:grid-cols-${colCount?.xl ? colCount?.xl : 5} gap-8`}
@@ -106,6 +106,7 @@ export default function InfiniteScrollGrid({
                 <InfiniteScrollGridItem
                   gridItemData={gridItem}
                   gridType={gridType}
+                  height={height}
                   extraInfo={getExtraInfo(gridItem)}
                 />
               </motion.div>

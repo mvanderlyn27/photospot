@@ -21,7 +21,7 @@ export default function RatingDisplay({
   return (
     <div className="flex flex-row items-center">
       {count != 0 && (
-        <h2 className={`${font ? font : "text-xl"} text-gray-500 pr-4`}>
+        <h2 className={`${font ? font : "text-xl"} text-gray-500 pr-2 md:pr-4`}>
           {rating}
         </h2>
       )}
@@ -32,7 +32,7 @@ export default function RatingDisplay({
         size={size ? size : 25}
       />
       {count != undefined && (
-        <h2 className={`${font ? font : "text-xl"}text-xl text-gray-500 pl-4`}>
+        <h2 className={`${font ? font : "text-xl"} text-gray-500 pl-2 md:pl-4`}>
           {countString}
         </h2>
       )}

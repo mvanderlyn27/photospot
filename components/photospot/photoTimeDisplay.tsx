@@ -13,6 +13,7 @@ import { fetcher } from "@/utils/common/fetcher";
 import useSWR from "swr";
 import { ForecastWeather } from "openweather-api-node";
 import { useEffect, useState } from "react";
+import { useBreakpoint } from "@/hooks/tailwind";
 let SunCalc = require("suncalc3");
 export default function PhotoTimeDisplay({
   lat,
@@ -126,7 +127,6 @@ export default function PhotoTimeDisplay({
       ];
     } else return [];
   };
-
   return (
     <div className={`flex ${columnView ? "flex-col" : "flex-row"} gap-4 pt-4`}>
       {info.map((info) => (
@@ -164,46 +164,56 @@ function PhotoDisplayRow({
         return "Golden Hour Evening";
     }
   };
+  const { isSm } = useBreakpoint("sm");
   return (
     <div
-      className={`flex flex-col gap-4 pt-4 ${
+      className={`flex flex-col gap-4 p-0 md:pt-4 ${
         columnView ? "" : "border-2 border-black p-4 rounded-lg"
       }`}
     >
-      <h1 className="font-semibold text-xl">
+      <h1 className={`font-semibold ${!isSm ? "text-md" : "text-xl"}`}>
         {" "}
         {timeLabelToString(info.time_label)}
       </h1>
-      <div className="flex flex-row gap-8">
+      <div className="flex flex-row gap-4 md:gap-8">
         {weather && info.weather ? (
-          <div className="align-center  p-4 rounded-md outline outline-2">
+          <div className="align-center p-0 md:p-4 rounded-md outline outline-1 md:outline-2">
             {info.weather == Weather.sun && (
-              <TiWeatherSunny className="h-10 w-10" />
+              <TiWeatherSunny className="h-8 w-8 md:h-10 md:w-10" />
             )}
             {info.weather == Weather.clouds && (
-              <TiWeatherCloudy className="h-10 w-10" />
+              <TiWeatherCloudy className="h-8 w-8 md:h-10 md:w-10" />
             )}
             {info.weather == Weather.rain && (
-              <TiWeatherDownpour className="h-10 w-10" />
+              <TiWeatherDownpour className="h-8 w-8 md:h-10 md:w-10" />
             )}
           </div>
         ) : (
-          <Skeleton className="align-center bg-black/10 p-4 h-16 w-16 rounded-md outline outline-2" />
+          <Skeleton className="align-center bg-black/10 p-2 md:p-4 h-16 w-16 rounded-md outline outline-1 md:outline-2" />
         )}
         {weather && info.weather ? (
-          <div className="align-center  p-4 rounded-md outline outline-2">
+          <div className="align-center p-2 md:p-4 rounded-md outline outline-1 md:outline-2">
             {info.temp && (
-              <h1 className="text-left text-xl"> {Math.round(info.temp)} F°</h1>
+              <h1 className="text-left text-sm md:text-xl">
+                {" "}
+                {Math.round(info.temp)} F°
+              </h1>
             )}
           </div>
         ) : (
-          <Skeleton className="align-center bg-black/10 p-4 h-16 w-16 rounded-md outline outline-2" />
+          <Skeleton className="align-center bg-black/10 p-2 md:p-4 h-16 w-16 rounded-md outline outline-1 md:outline-2" />
         )}
-        <div className="align-center  p-4 rounded-md outline outline-2">
-          <h1 className="text-left text-xl"> {dateToString(info.start)}</h1>
+        <div className="align-center  p-2 md:p-4 rounded-md outline outline-1 md:outline-2">
+          <h1 className="text-left text-sm md:text-xl">
+            {" "}
+            {dateToString(info.start)}
+          </h1>
         </div>
-        <div className="align-center gap-2 p-4 rounded-md outline outline-2">
-          <h1 className="text-left text-xl"> {dateToString(info.end)}</h1>
+        <div className="align-center gap-2  p-2 md:p-4 rounded-md outline outline-1 md:outline-2">
+          <h1 className="text-left text-sm md:text-xl">
+            {" "}
+            {dateToString(info.end)}
+          </h1>
         </div>
       </div>
     </div>
