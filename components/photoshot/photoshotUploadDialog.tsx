@@ -11,6 +11,7 @@ import { buttonVariants } from "../ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import PhotoshotUploadForm from "./photoshotUploadForm";
+import { MdAddAPhoto } from "react-icons/md";
 
 export default function PhotoshotUploadDialog({
   selectedLocation,
@@ -34,7 +35,7 @@ export default function PhotoshotUploadDialog({
               "text-2xl  " + cn(buttonVariants({ variant: "default" }))
             }
           >
-            Upload
+            <MdAddAPhoto className="w-6 h-6 md:w-8 md:h-8" />
           </div>
         </DialogTrigger>
         <DialogContent>

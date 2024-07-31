@@ -21,6 +21,7 @@ import PhotoshotUploadDialog from "../photoshot/photoshotUploadDialog";
 import { Separator } from "../ui/separator";
 import { Label } from "../ui/label";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { LuCalendarClock } from "react-icons/lu";
 
 const TAG_LIMIT = 5;
 
@@ -118,7 +119,7 @@ export default function PhotospotInfo({
               <Dialog>
                 <DialogTrigger>
                   <div className={cn(buttonVariants({ variant: "default" }))}>
-                    Golden Hour
+                    <LuCalendarClock className="w-6 h-6 md:w-8 md:h-8" />
                   </div>
                 </DialogTrigger>
                 <DialogContent className="p-4">

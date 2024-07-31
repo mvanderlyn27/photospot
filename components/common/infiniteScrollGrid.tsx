@@ -78,13 +78,13 @@ export default function InfiniteScrollGrid({
     }
   };
   return (
-    <div className="w-full flex flex-col pt-4 md:p-0">
+    <div className="w-full flex flex-col md:pt-4 md:p-0">
       {gridData && (
         <div
           className={`w-full grid grid-cols-${colCount?.sm ? colCount?.sm : 1} 
           md:grid-cols-${colCount?.md ? colCount?.md : 2} 
           lg:grid-cols-${colCount?.lg ? colCount?.lg : 3}
-           xl:grid-cols-${colCount?.xl ? colCount?.xl : 5} gap-8`}
+           xl:grid-cols-${colCount?.xl ? colCount?.xl : 5} gap-4 md:gap-8`}
         >
           {gridData.flat().map((gridItem, i) => {
             const recalculatedDelay =

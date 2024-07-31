@@ -33,7 +33,7 @@ export function PhotospotPhotoSection({ id }: { id: number }) {
   }, [data]);
   const { isSm } = useBreakpoint("sm");
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col md:gap-4">
       {/* <Skeleton className="bg-balck/10 h-[600px] w-full" /> */}
       <div className="flex flex-row ">
         {photospot && isSm && (
