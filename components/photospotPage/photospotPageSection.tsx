@@ -56,10 +56,10 @@ export default function PhotospotPageSection({
         <Tabs defaultValue="info" className="w-full">
           <TabsList className="w-full justify-center gap-8">
             <TabsTrigger value="info" className="text-2xl">
-              Photospot Info
+              Info
             </TabsTrigger>
             <TabsTrigger value="map" className="text-2xl">
-              Map View
+              Map
             </TabsTrigger>
           </TabsList>
           <TabsContent value="info" className="flex flex-col gap-4">
