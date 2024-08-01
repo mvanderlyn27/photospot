@@ -20,6 +20,7 @@ import { fetcher } from "@/utils/common/fetcher";
 import { serializePhotospotSearch } from "@/utils/nuqs/urlSerializer";
 import useSWRInfinite from "swr/infinite";
 import useSWR from "swr";
+import { useBreakpoint } from "@/hooks/tailwind";
 const INITIAL_LAT = 40.7128;
 const INITIAL_LNG = -74.006;
 export default function ExplorePageSection({
@@ -140,27 +141,39 @@ export default function ExplorePageSection({
     1. Update immediately via useState
     2. Update query params so when page refresh it will show most recent info 
   */
+  const { isLg } = useBreakpoint("lg");
   return (
     <>
-      <div className="h-full w-[500px]">
-        <ExploreLeftBar
-          photospots={data}
-          photospotsLoading={photospotsLoading}
-          selectedPhotospotInfo={selectedPhotospotInfo}
-          setSize={setSize}
-        />
-      </div>
-      {tab !== "search" && selectedPhotospotInfo && (
-        <div className="absolute left-[525px] top-[25px] bottom-[25px] z-10 overflow-y-auto overflow-x-hidden w-[500px] rounded-xl">
-          <PhotospotPreview photospotInfo={selectedPhotospotInfo} />
+      <div className={`${isLg ? "flex" : "hidden"} w-full`}>
+        <div className="h-full w-[500px]">
+          <ExploreLeftBar
+            photospots={data}
+            photospotsLoading={photospotsLoading}
+            selectedPhotospotInfo={selectedPhotospotInfo}
+            setSize={setSize}
+          />
         </div>
-      )}
-      <div className="h-full flex-1">
-        <ExploreMap
-          photospots={data}
-          selectedPhotospotInfo={selectedPhotospotInfo}
-          initialViewState={viewState}
-        />
+        {tab !== "search" && selectedPhotospotInfo && (
+          <div className="absolute left-[525px] top-[25px] bottom-[25px] z-10 overflow-y-auto overflow-x-hidden w-[500px] rounded-xl">
+            <PhotospotPreview photospotInfo={selectedPhotospotInfo} />
+          </div>
+        )}
+        <div className="h-full flex-1">
+          <ExploreMap
+            photospots={data}
+            selectedPhotospotInfo={selectedPhotospotInfo}
+            initialViewState={viewState}
+          />
+        </div>
+      </div>
+      <div
+        className={`${
+          !isLg ? "flex" : "hidden"
+        } flex-col justify-center items-center w-full h-full`}
+      >
+        <h1 className="text-xl font-semibold">
+          Mobile page under construction
+        </h1>
       </div>
     </>
   );
