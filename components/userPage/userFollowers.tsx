@@ -27,6 +27,7 @@ export default function UserFollowers({ userId }: { userId: string }) {
       size={size}
       dataLoading={photoshotsLoading}
       emptyMessage="No followers yet"
+      colCount="grid-cols-1"
     />
   );
 }

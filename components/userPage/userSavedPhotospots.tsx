@@ -24,15 +24,16 @@ export default function UserSavedPhotospots({ userId }: { userId: string }) {
     console.log("data: ", data);
     //get top photoshots for all photospots
   }, [data]);
-  const { isSm } = useBreakpoint("sm");
+  const { isXl } = useBreakpoint("xl");
   return (
     <InfiniteScrollGrid
       gridData={data ? data : []}
-      gridType={!isSm ? GridTypes.mobilePhotospot : GridTypes.photospot}
+      gridType={GridTypes.squarePhotospot}
       setSize={setSize}
       size={size}
       dataLoading={photospotsLoading}
-      colCount={getCols({ sm: 3 })}
+      colCount={getCols({ sm: 3, md: 3, lg: 4, xl: 4 })}
+      showDetails={isXl}
     />
   );
 }

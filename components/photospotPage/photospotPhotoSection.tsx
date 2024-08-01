@@ -32,19 +32,19 @@ export function PhotospotPhotoSection({ id }: { id: number }) {
       setPhotoshots(data);
     }
   }, [data]);
-  const { isSm } = useBreakpoint("sm");
+  const { isXl } = useBreakpoint("xl");
   return (
     <div className="flex flex-col p-4 md:gap-4">
       {/* <Skeleton className="bg-balck/10 h-[600px] w-full" /> */}
 
       <InfiniteScrollGrid
-        gridData={photoshots}
-        gridType={!isSm ? GridTypes.mobilePhotoshot : GridTypes.photoshot}
+        gridData={data ? data : []}
+        gridType={GridTypes.squarePhotoshot}
         setSize={setSize}
         size={size}
         dataLoading={photoshotsLoading}
-        // height={isSm ? "400px" : "200px"}
-        colCount={getCols({ sm: 2 })}
+        colCount={getCols({ sm: 3, md: 3, lg: 4, xl: 4 })}
+        showDetails={isXl}
       />
     </div>
   );

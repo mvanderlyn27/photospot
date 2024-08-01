@@ -31,11 +31,13 @@ export default function InfiniteScrollGridItem({
   gridType,
   height,
   extraInfo,
+  showDetails,
 }: {
   gridItemData: Photoshot | Photospot | Profile;
   gridType: GridTypes;
   height?: string;
   extraInfo?: string;
+  showDetails?: boolean;
 }) {
   const [hasError, setHasError] = useState(false);
   const { data: top_photoshot } = useSWR(
@@ -61,7 +63,7 @@ export default function InfiniteScrollGridItem({
                     hasError ? DefaultPhotoshot : top_photoshot.photo_paths[0]
                   }
                   alt={gridItemData.id ? gridItemData.id + "" : ""}
-                  sizes="(max-width: 768px) 100vw ,(max-width: 1200px) 50vw, 33vw"
+                  // sizes="(max-width: 768px) 100vw ,(max-width: 1200px) 50vw, 33vw"
                   loading="eager"
                   onError={() => !hasError && setHasError(true)}
                   fill={true}
@@ -80,7 +82,7 @@ export default function InfiniteScrollGridItem({
         )}
       {gridItemData &&
         isPhotospot(gridItemData) &&
-        gridType === GridTypes.mobilePhotospot && (
+        gridType === GridTypes.squarePhotospot && (
           <Link href={`/photospot/${gridItemData.id}`}>
             {top_photoshot?.photo_paths ? (
               <div className={`w-full aspect-square relative overflow-hidden`}>
@@ -89,7 +91,7 @@ export default function InfiniteScrollGridItem({
                     hasError ? DefaultPhotoshot : top_photoshot.photo_paths[0]
                   }
                   alt={gridItemData.id ? gridItemData.id + "" : ""}
-                  sizes="(max-width: 768px) 100vw ,(max-width: 1200px) 50vw, 33vw"
+                  // sizes="(max-width: 768px) 100vw ,(max-width: 1200px) 50vw, 33vw"
                   loading="eager"
                   onError={() => !hasError && setHasError(true)}
                   fill={true}
@@ -98,6 +100,12 @@ export default function InfiniteScrollGridItem({
               </div>
             ) : (
               <Skeleton className="bg-black/10 object-cover rounded w-full aspect-square " />
+            )}
+            {showDetails && (
+              <div className="font-bold flex gap-4 flex-row items-center justify-between p-4">
+                <h1>{gridItemData.location_name}</h1>
+                {extraInfo && <h1>{extraInfo}</h1>}
+              </div>
             )}
           </Link>
         )}
@@ -138,7 +146,7 @@ export default function InfiniteScrollGridItem({
         )}
       {gridItemData &&
         isPhotoshot(gridItemData) &&
-        gridType === GridTypes.mobilePhotoshot && (
+        gridType === GridTypes.squarePhotoshot && (
           <Link href={`/photoshot/${gridItemData.id}`}>
             {gridItemData.photo_paths[0] ? (
               <div className={`fw-full relative overflow-hidden aspect-square`}>
@@ -159,6 +167,12 @@ export default function InfiniteScrollGridItem({
               </div>
             ) : (
               <Skeleton className="bg-black/10 object-cover rounded w-full aspect-square " />
+            )}
+            {showDetails && (
+              <div className="font-bold flex gap-4 flex-row items-center justify-between p-4">
+                <h1>{gridItemData.name}</h1>
+                {extraInfo && <h1>{extraInfo}</h1>}
+              </div>
             )}
           </Link>
         )}

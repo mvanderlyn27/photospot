@@ -26,20 +26,20 @@ export default function ProfilePageSection({
     <div className="w-full">
       {isLg && (
         <div className="flex flex-row gap-4 w-full">
-          <div className="flex md:w-1/5 flex-col">
+          <div className="flex  flex-col">
             <ProfileLeftbar initialProfileSection={profileSection} />
           </div>
           <div className="flex-1 p-4 h-[calc(100vh-64px)] overflow-auto">
             {profileSection === "followers" && (
-              <div className="flex flex-row justify-center">
-                <div className="w-[40%]">
+              <div className="flex flex-row justify-center md:pl-[10%] md:pr-[10%] lg:pl-[20%] lg:pr-[20%]">
+                <div className="w-full ">
                   <MyFollowers />
                 </div>
               </div>
             )}
             {profileSection === "following" && (
-              <div className="flex flex-row justify-center">
-                <div className="w-[40%]">
+              <div className="flex flex-row justify-center md:pl-[10%] md:pr-[10%] lg:pl-[20%] lg:pr-[20%]">
+                <div className="w-full">
                   <MyFollowing />
                 </div>
               </div>

@@ -145,9 +145,9 @@ export enum Themes {
 }
 export enum GridTypes {
   photospot = "photospot",
-  mobilePhotospot = "mobilePhotospot",
+  squarePhotospot = "squarePhotospot",
   photoshot = "photoshot",
-  mobilePhotoshot = "mobilePhotoshot",
+  squarePhotoshot = "squarePhotoshot",
   photospotSearch= "photoshotSearch",
   review = "review", 
   follower = "follower",

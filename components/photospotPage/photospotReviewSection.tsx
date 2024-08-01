@@ -4,7 +4,7 @@ import ReviewGrid from "../review/reviewGrid";
 export default function PhotospotReviewSection({ id }: { id: number }) {
   return (
     <div className="flex flex-col p-4 gap-4 items-center justify-center">
-      <div className="flex flex-row justify-center md:justify-end w-full">
+      <div className="flex flex-row justify-center lg:justify-end w-full">
         {/*button for making review/mutating review route */}
         <CreateReviewDialog id={id} />
       </div>

@@ -31,6 +31,7 @@ export default function MyFollowing() {
       size={size}
       dataLoading={photoshotsLoading}
       emptyMessage="Not following anyone yet, make some friends!"
+      colCount="grid-cols-1"
     />
   );
 }

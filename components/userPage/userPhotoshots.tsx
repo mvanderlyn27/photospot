@@ -19,15 +19,16 @@ export default function MyPhotoshots({ userId }: { userId: string }) {
       `/api/photoshot/user/${userId}/getPhotoshots?pageCount=${index + 1}`,
     fetcher
   );
-  const { isSm } = useBreakpoint("sm");
+  const { isXl } = useBreakpoint("xl");
   return (
     <InfiniteScrollGrid
-      gridData={data}
-      gridType={!isSm ? GridTypes.mobilePhotoshot : GridTypes.photoshot}
+      gridData={data ? data : []}
+      gridType={GridTypes.squarePhotoshot}
       setSize={setSize}
       size={size}
       dataLoading={photoshotsLoading}
-      colCount={getCols({ sm: 3 })}
+      colCount={getCols({ sm: 3, md: 3, lg: 4, xl: 4 })}
+      showDetails={isXl}
     />
   );
 }

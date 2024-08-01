@@ -46,37 +46,39 @@ export default function PhotospotInfo({
     isLoading: tagsLoading,
     error: tagsError,
   } = useSWR("/api/photospot/" + id + "/tags", fetcher);
-  const { isSm } = useBreakpoint("sm");
+  const { isLg } = useBreakpoint("lg");
   return (
     //setup skeelton for loading
     <>
       {photospotLoading && (
         <Skeleton className="h-full w-full bg-slate-800/10" />
       )}
-      {photospot && isSm && (
+      {photospot && isLg && (
         <Card
           className={`h-full flex flex-col ${photospot ? "" : "hidden"} m-4`}
         >
           <CardHeader className="flex-none">
-            <CardTitle className="text-2xl md:text-3xl flex flex-row items-center gap-2">
+            <CardTitle className="text-2xl md:text-3xl flex flex-row items-center justify-between">
               {photospot?.location_name}
-              {photospot && (
-                <PhotoshotUploadDialog
-                  selectedLocation={photospot}
-                  mapView={false}
-                />
-              )}
-              <Dialog>
-                <DialogTrigger className="h-full">
-                  <Button className="h-full">
-                    <FaShareAlt className="w-6 h-6" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="">
-                  <SharePhotospotDialog id={id} />
-                </DialogContent>
-              </Dialog>
-              {user && <SavePhotospotButton id={id} />}
+              <div className="flex flex-row gap-2 items-center">
+                {photospot && (
+                  <PhotoshotUploadDialog
+                    selectedLocation={photospot}
+                    mapView={false}
+                  />
+                )}
+                <Dialog>
+                  <DialogTrigger className="h-full">
+                    <Button className="h-full">
+                      <FaShareAlt className="w-6 h-6" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="">
+                    <SharePhotospotDialog id={id} />
+                  </DialogContent>
+                </Dialog>
+                {user && <SavePhotospotButton id={id} />}
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent className=" flex flex-col gap-4 ">
@@ -100,7 +102,7 @@ export default function PhotospotInfo({
           </CardContent>
         </Card>
       )}
-      {photospot && !isSm && (
+      {photospot && !isLg && (
         <Card
           className={`h-full flex flex-col ${photospot ? "" : "hidden"} m-4`}
         >

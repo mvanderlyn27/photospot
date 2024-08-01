@@ -39,10 +39,9 @@ export default function UserSearchSection() {
     setSearchQuery("");
     setInputValue("");
   };
-  const { isSm } = useBreakpoint("sm");
   return (
-    <div className="w-full flex flex-col items-center justify-start m-4">
-      <Card className=" xl:w-1/5">
+    <div className="w-full flex flex-col items-center justify-start m-4 md:pl-[10%] md:pr-[10%] lg:pl-[20%] lg:pr-[20%]">
+      <Card className="w-full">
         <div className="flex flex-row gap-4 p-4">
           <Input
             value={inputValue}
@@ -62,14 +61,14 @@ export default function UserSearchSection() {
         </div>
       </Card>
       {searchQuery && (
-        <div className=" h-full xl:w-1/5">
+        <div className=" h-full w-full p-4">
           <InfiniteScrollGrid
             gridData={data}
             gridType={GridTypes.following}
             setSize={setSize}
             size={size}
             dataLoading={isLoading}
-            colCount={getCols({ sm: 1, md: 1, lg: 1, xl: 1 })}
+            colCount={"grid-cols-1"}
           />
         </div>
       )}

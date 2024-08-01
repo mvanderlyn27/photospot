@@ -21,7 +21,7 @@ export default function InfiniteScrollGrid({
   dataLoading,
   pageSize = 20,
   height,
-  colCount = 1,
+  colCount = "",
   gridType = GridTypes.photoshot,
   loadingMessage = "Loading...   Loading...",
   emptyMessage = "Nothing here, check back later",
@@ -29,6 +29,7 @@ export default function InfiniteScrollGrid({
   messageOnLastItem = false,
   messageOnEmpty = true,
   lastItemMessage = "Reached the end, check back for more later",
+  showDetails = false,
 }: {
   gridData: Photoshot[][] | Photospot[][] | undefined;
   setSize: (num: number) => void;
@@ -36,7 +37,7 @@ export default function InfiniteScrollGrid({
   dataLoading: boolean;
   pageSize?: number;
   height?: string;
-  colCount?: number;
+  colCount?: string;
   gridType?: GridTypes;
   loadingMessage?: string;
   emptyMessage?: string;
@@ -44,6 +45,7 @@ export default function InfiniteScrollGrid({
   loadingAnimation?: boolean;
   messageOnLastItem?: boolean;
   messageOnEmpty?: boolean;
+  showDetails?: boolean;
 }) {
   const ref = useRef(null);
   let loadingVisible = useOnScreen(ref);
@@ -81,7 +83,7 @@ export default function InfiniteScrollGrid({
     <div className="w-full flex flex-col md:pt-4 md:p-0">
       {gridData && (
         <div
-          className={`w-full grid grid-cols-${colCount}
+          className={`w-full grid ${colCount}
            gap-4 md:gap-8`}
         >
           {gridData.flat().map((gridItem, i) => {
@@ -106,6 +108,7 @@ export default function InfiniteScrollGrid({
                   gridType={gridType}
                   height={height}
                   extraInfo={getExtraInfo(gridItem)}
+                  showDetails={showDetails}
                 />
               </motion.div>
             );

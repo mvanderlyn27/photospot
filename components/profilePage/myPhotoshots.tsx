@@ -21,16 +21,16 @@ export default function MyPhotoshots() {
       `/api/photoshot/user/${user.id}/getPhotoshots?pageCount=${index + 1}`,
     fetcher
   );
-  const { isSm } = useBreakpoint("sm");
+  const { isXl } = useBreakpoint("xl");
   return (
-    // <PhotoshotTimelineGrid initialPhotospots={[]} photoshotPath={`/api/photoshot/timeline/suggested?`} />
     <InfiniteScrollGrid
       gridData={data ? data : []}
-      gridType={!isSm ? GridTypes.mobilePhotoshot : GridTypes.photoshot}
+      gridType={GridTypes.squarePhotoshot}
       setSize={setSize}
       size={size}
       dataLoading={photoshotsLoading}
-      colCount={getCols({ sm: 3, md: 3, lg: 3 })}
+      colCount={getCols({ sm: 3, md: 3, lg: 4, xl: 4 })}
+      showDetails={isXl}
     />
   );
 }

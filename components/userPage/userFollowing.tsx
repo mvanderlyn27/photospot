@@ -27,6 +27,7 @@ export default function UserFollowing({ userId }: { userId: string }) {
       size={size}
       dataLoading={photoshotsLoading}
       emptyMessage="Not following anyone yet"
+      colCount="grid-cols-1"
     />
   );
 }

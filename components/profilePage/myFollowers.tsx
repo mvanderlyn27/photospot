@@ -30,6 +30,7 @@ export default function MyFollowers() {
       size={size}
       dataLoading={photoshotsLoading}
       emptyMessage="No followers yet, get out there! ;)"
+      colCount="grid-cols-1"
     />
   );
 }

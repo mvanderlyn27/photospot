@@ -12,13 +12,13 @@ import UserProfileHeader from "./userProfileHeader";
 import { Card, CardTitle } from "../ui/card";
 
 export default function UserPageSection({ userId }: { userId: string }) {
-  const { isSm } = useBreakpoint("sm");
+  const { isMd } = useBreakpoint("md");
   const [profileSection, setProfileSection] = useQueryState("profileSection");
   return (
     <div className="w-full">
-      {isSm && (
+      {isMd && (
         <div className="flex flex-row gap-4 w-full">
-          <div className="flex md:w-1/5 flex-col">
+          <div className="flex  flex-col">
             <UserLeftBar userId={userId} />
           </div>
           <div className="flex-1 p-4 h-[calc(100vh-64px)] overflow-auto">
@@ -48,7 +48,7 @@ export default function UserPageSection({ userId }: { userId: string }) {
           </div>
         </div>
       )}
-      {!isSm && (
+      {!isMd && (
         <div className="flex flex-col w-full">
           <UserProfileHeader userId={userId} />
           <div className="p-4">

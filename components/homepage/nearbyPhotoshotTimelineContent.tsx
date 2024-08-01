@@ -6,6 +6,7 @@ import useSWRInfinite from "swr/infinite";
 import { fetcher } from "@/utils/common/fetcher";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 import { getCols } from "@/utils/responsive/grids";
+import { useBreakpoint } from "@/hooks/tailwind";
 //UPDATE TO LOAD FIRST 20-30 photoshots, then pass that down to the photoshotTimelineGrid, along with a path
 export default function NearbyPhotoshotTimelineContent() {
   const [location, setLocation] = useState<{
@@ -47,16 +48,16 @@ export default function NearbyPhotoshotTimelineContent() {
     //     setInitialPhotoshots(data);
     // })
   }, []);
-
   return (
     <>
       <InfiniteScrollGrid
         gridData={data ? data : []}
-        gridType={GridTypes.photoshot}
         setSize={setSize}
         size={size}
-        colCount={getCols()}
         dataLoading={photoshotsLoading}
+        gridType={GridTypes.squarePhotoshot}
+        colCount={getCols({ sm: 2, md: 2, lg: 3, xl: 5 })}
+        showDetails={true}
       />
     </>
   );

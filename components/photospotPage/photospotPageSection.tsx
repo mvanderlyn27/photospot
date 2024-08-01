@@ -13,12 +13,12 @@ export default function PhotospotPageSection({
   user: any;
   photospotId: number;
 }) {
-  const { isSm } = useBreakpoint("sm");
+  const { isLg } = useBreakpoint("lg");
   return (
     <>
       <div
         className={`${
-          !isSm ? "hidden" : "flex"
+          !isLg ? "hidden" : "flex"
         } flex-col justify-center gap-8 w-full md:pl-5 md:pr-5 lg:pl-20 lg:pr-20`}
       >
         <div className="hidden xl:flex flex-row gap-24 w-full justify-center h-[600px] ">
@@ -52,7 +52,7 @@ export default function PhotospotPageSection({
           </TabsContent>
         </Tabs>
       </div>
-      <div className={`${isSm ? "hidden" : "flex"} flex-col justify-center `}>
+      <div className={`${isLg ? "hidden" : "flex"} flex-col justify-center `}>
         <Tabs defaultValue="info" className="w-full">
           <TabsList className="w-full justify-center gap-8">
             <TabsTrigger value="info" className="text-2xl">
