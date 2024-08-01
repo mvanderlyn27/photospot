@@ -42,7 +42,7 @@ export function PhotospotPhotoSection({ id }: { id: number }) {
         setSize={setSize}
         size={size}
         dataLoading={photoshotsLoading}
-        height={isSm ? "400px" : "200px"}
+        // height={isSm ? "400px" : "200px"}
         colCount={{ sm: 3 }}
       />
     </div>
