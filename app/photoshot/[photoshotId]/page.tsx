@@ -37,9 +37,7 @@ export default function PhotoshotModal({
       setPhotoshots(data);
     }
   }, [data]);
-  const { isSm } = useBreakpoint("sm");
-  const { isMd } = useBreakpoint("md");
-  const { isLg } = useBreakpoint("lg");
+  const { isXl } = useBreakpoint("xl");
   return (
     <div className="flex flex-col items-center gap-4 md:gap-8 p-4 md:m-8 w-full">
       <Card className="p-4 md:p-8">
@@ -52,12 +50,13 @@ export default function PhotoshotModal({
       <h1 className="text-2xl font-bold">Other Photos Taken Here:</h1>
       <InfiniteScrollGrid
         gridData={photoshots}
-        gridType={!isLg ? GridTypes.mobilePhotoshot : GridTypes.photoshot}
+        gridType={GridTypes.squarePhotoshot}
         setSize={setSize}
         size={size}
         dataLoading={photoshotsLoading}
         loadingAnimation={false}
-        colCount={getCols()}
+        colCount={getCols({ sm: 3, md: 3, lg: 4, xl: 4 })}
+        showDetails={isXl}
         // height={!isSm ? "200px" : "400px"}
       />
     </div>
