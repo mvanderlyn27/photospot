@@ -73,7 +73,7 @@ export default function InfiniteScrollGrid({
   const getExtraInfo = (data: Photoshot | Photospot | undefined) => {
     if (data) {
       if (data.dist_meters) {
-        return round(data.dist_meters, 1) + " meters";
+        return round(data.dist_meters, 1) + " m";
       } else if (isPhotoshot(data) && data.like_count) {
         return data.like_count + " ❤";
       }

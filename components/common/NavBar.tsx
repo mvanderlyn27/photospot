@@ -25,7 +25,6 @@ import { CiLogout } from "react-icons/ci";
 export default function NavBar() {
   const { setTheme } = useTheme();
   //get user logged in, render navbar
-  const small = useBreakpoint("sm");
   const {
     data: user,
     isLoading: userLoading,
@@ -38,6 +37,7 @@ export default function NavBar() {
   }, [user?.theme]);
   const pathname = usePathname();
   const pathStart = pathname.split("/")[1];
+  const { isLg } = useBreakpoint("lg");
   return (
     <nav className="w-full max-w-screen flex justify-center h-16 z-50">
       <div className="w-full  flex justify-between items-center p-3 lg:pl-10 lg:pr-10 text-foreground">
@@ -45,7 +45,7 @@ export default function NavBar() {
           <h3 className="text-3xl font-semibold ">PhotoSpot</h3>
         </Link>
 
-        {user && small.isSm && (
+        {user && isLg && (
           <div className="flex items-center gap-4">
             Hey, <b>{user.username ? user.username : user.email}!</b>
             <div className="flex jusitfy-between items-center flex-row">
@@ -103,7 +103,7 @@ export default function NavBar() {
             </Link>
           </div>
         )}
-        {user && !small.isSm && (
+        {user && !isLg && (
           <div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

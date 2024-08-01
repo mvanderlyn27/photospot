@@ -169,7 +169,7 @@ export default function InfiniteScrollGridItem({
               <Skeleton className="bg-black/10 object-cover rounded w-full aspect-square " />
             )}
             {showDetails && (
-              <div className="font-bold flex gap-4 flex-row items-center justify-between p-4">
+              <div className="font-bold flex gap-4 flex-wrap items-center justify-between p-4">
                 <h1>{gridItemData.name}</h1>
                 {extraInfo && <h1>{extraInfo}</h1>}
               </div>
