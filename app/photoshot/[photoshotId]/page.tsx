@@ -49,13 +49,13 @@ export default function PhotoshotModal({
       <h1 className="text-2xl font-bold">Other Photos Taken Here:</h1>
       <InfiniteScrollGrid
         gridData={photoshots}
-        gridType={GridTypes.photoshot}
+        gridType={!isSm ? GridTypes.mobilePhotoshot : GridTypes.photoshot}
         setSize={setSize}
         size={size}
         dataLoading={photoshotsLoading}
         loadingAnimation={false}
         colCount={{ sm: 2, md: 2, lg: 4, xl: 4 }}
-        height={!isSm ? "200px" : "400px"}
+        // height={!isSm ? "200px" : "400px"}
       />
     </div>
   );

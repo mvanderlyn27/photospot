@@ -107,9 +107,9 @@ export default function PhotospotInfo({
           <CardTitle className="text-2xl md:text-3xl p-4">
             {photospot.location_name}
           </CardTitle>
-          <CardContent className=" flex flex-col gap-4 ">
+          <CardContent className=" flex flex-col gap-2 ">
             <Separator />
-            <div className="flex flex-row justify-center items-center w-full p-4 gap-2">
+            <div className="flex flex-row justify-center items-center w-full p-2 gap-2">
               <PhotoshotUploadDialog
                 selectedLocation={photospot}
                 mapView={true}
@@ -138,28 +138,34 @@ export default function PhotospotInfo({
               {user && <SavePhotospotButton id={id} />}
             </div>
             <Separator />
-            <div>
-              <Label>Rating:</Label>
-              <RatingDisplay
-                rating={
-                  photospot?.rating_average
-                    ? round(photospot.rating_average, 1)
-                    : 0
-                }
-                font="text-sm"
-                size={20}
-                count={photospot?.rating_count ? photospot.rating_count : 0}
-              />
-            </div>
-            <div>
-              <Label>Tags: </Label>
-              <div className=" flex flex-auto gap-2 overflow-auto">
-                {tags &&
-                  tags.slice(0, TAG_LIMIT).map((tag: string) => (
-                    <Badge key={tag} variant="outline" className="text-nowrap">
-                      {tag}
-                    </Badge>
-                  ))}
+            <div className="flex flex-col gap-4 pt-4 pb-4">
+              <div className="flex flex-col gap-4">
+                <Label>Rating:</Label>
+                <RatingDisplay
+                  rating={
+                    photospot?.rating_average
+                      ? round(photospot.rating_average, 1)
+                      : 0
+                  }
+                  font="text-sm"
+                  size={20}
+                  count={photospot?.rating_count ? photospot.rating_count : 0}
+                />
+              </div>
+              <div className="flex flex-col gap-4">
+                <Label>Tags: </Label>
+                <div className=" flex flex-auto gap-2 overflow-auto">
+                  {tags &&
+                    tags.slice(0, TAG_LIMIT).map((tag: string) => (
+                      <Badge
+                        key={tag}
+                        variant="outline"
+                        className="text-nowrap"
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                </div>
               </div>
             </div>
           </CardContent>

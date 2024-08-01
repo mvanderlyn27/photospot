@@ -3,6 +3,7 @@ import { fetcher } from "@/utils/common/fetcher";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 import { GridTypes } from "@/types/photospotTypes";
+import { useBreakpoint } from "@/hooks/tailwind";
 
 export default function MyPhotoshots({ userId }: { userId: string }) {
   const {
@@ -17,14 +18,17 @@ export default function MyPhotoshots({ userId }: { userId: string }) {
       `/api/photoshot/user/${userId}/getPhotoshots?pageCount=${index + 1}`,
     fetcher
   );
-
+  const { isSm } = useBreakpoint("sm");
   return (
     <InfiniteScrollGrid
       gridData={data}
-      gridType={GridTypes.photoshot}
+      gridType={!isSm ? GridTypes.mobilePhotoshot : GridTypes.photoshot}
       setSize={setSize}
       size={size}
       dataLoading={photoshotsLoading}
+      colCount={{
+        sm: 3,
+      }}
     />
   );
 }
