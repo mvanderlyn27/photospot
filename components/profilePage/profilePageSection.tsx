@@ -16,13 +16,15 @@ export default function ProfilePageSection({
   initialProfileSection: string;
 }) {
   const { isSm } = useBreakpoint("sm");
+  const { isMd } = useBreakpoint("md");
+  const { isLg } = useBreakpoint("lg");
   const [profileSection, setProfileSection] = useQueryState(
     "profileSection",
     parseAsString.withDefault(initialProfileSection)
   );
   return (
     <div className="w-full">
-      {isSm && (
+      {isLg && (
         <div className="flex flex-row gap-4 w-full">
           <div className="flex md:w-1/5 flex-col">
             <ProfileLeftbar initialProfileSection={profileSection} />
@@ -51,7 +53,7 @@ export default function ProfilePageSection({
           </div>
         </div>
       )}
-      {!isSm && (
+      {!isLg && (
         <div className="flex flex-col w-full">
           <ProfileHeader />
           <div className="p-4">

@@ -30,7 +30,7 @@ export default function MyPhotoshots() {
       setSize={setSize}
       size={size}
       dataLoading={photoshotsLoading}
-      colCount={getCols({ sm: 3, md: 5, lg: 5 })}
+      colCount={getCols({ sm: 3, md: 3, lg: 3 })}
     />
   );
 }
