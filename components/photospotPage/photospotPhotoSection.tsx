@@ -38,12 +38,12 @@ export function PhotospotPhotoSection({ id }: { id: number }) {
 
       <InfiniteScrollGrid
         gridData={photoshots}
-        gridType={GridTypes.photoshot}
+        gridType={!isSm ? GridTypes.mobilePhotoshot : GridTypes.photoshot}
         setSize={setSize}
         size={size}
         dataLoading={photoshotsLoading}
         height={isSm ? "400px" : "200px"}
-        colCount={{ sm: 2 }}
+        colCount={{ sm: 3 }}
       />
     </div>
   );
