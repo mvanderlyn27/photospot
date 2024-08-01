@@ -5,6 +5,7 @@ import useSWRInfinite from "swr/infinite";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 import { GridTypes } from "@/types/photospotTypes";
 import { useBreakpoint } from "@/hooks/tailwind";
+import { getCols } from "@/utils/responsive/grids";
 
 export default function MyPhotoshots() {
   const { data: user } = useSWR("/api/profile", fetcher);
@@ -29,9 +30,7 @@ export default function MyPhotoshots() {
       setSize={setSize}
       size={size}
       dataLoading={photoshotsLoading}
-      colCount={{
-        sm: 3,
-      }}
+      colCount={getCols({ sm: 3, md: 5, lg: 5 })}
     />
   );
 }

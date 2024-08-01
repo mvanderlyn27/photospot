@@ -7,22 +7,41 @@ import MyPhotoshots from "./myPhotoshots";
 import MySavedPhotospots from "./mySavedPhotospots";
 import MySettings from "./mySettings";
 import { useBreakpoint } from "@/hooks/tailwind";
-import { useQueryState } from "nuqs";
+import { parseAsString, useQueryState } from "nuqs";
 import Image from "next/image";
 import ProfileHeader from "./profileHeader";
-export default function ProfilePageSection() {
+export default function ProfilePageSection({
+  initialProfileSection,
+}: {
+  initialProfileSection: string;
+}) {
   const { isSm } = useBreakpoint("sm");
-  const [profileSection, setProfileSection] = useQueryState("profileSection");
+  const [profileSection, setProfileSection] = useQueryState(
+    "profileSection",
+    parseAsString.withDefault(initialProfileSection)
+  );
   return (
     <div className="w-full">
       {isSm && (
         <div className="flex flex-row gap-4 w-full">
           <div className="flex md:w-1/5 flex-col">
-            <ProfileLeftbar />
+            <ProfileLeftbar initialProfileSection={profileSection} />
           </div>
           <div className="flex-1 p-4 h-[calc(100vh-64px)] overflow-auto">
-            {profileSection === "followers" && <MyFollowers />}
-            {profileSection === "following" && <MyFollowing />}
+            {profileSection === "followers" && (
+              <div className="flex flex-row justify-center">
+                <div className="w-[40%]">
+                  <MyFollowers />
+                </div>
+              </div>
+            )}
+            {profileSection === "following" && (
+              <div className="flex flex-row justify-center">
+                <div className="w-[40%]">
+                  <MyFollowing />
+                </div>
+              </div>
+            )}
             {profileSection === "savedPhotospots" && <MySavedPhotospots />}
             {(profileSection === "myPhotoshots" || !profileSection) && (
               <MyPhotoshots />

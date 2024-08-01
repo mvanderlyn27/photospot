@@ -9,6 +9,7 @@ import UserSavedPhotospots from "./userSavedPhotospots";
 import { useBreakpoint } from "@/hooks/tailwind";
 import UserPhotoshots from "./userPhotoshots";
 import UserProfileHeader from "./userProfileHeader";
+import { Card, CardTitle } from "../ui/card";
 
 export default function UserPageSection({ userId }: { userId: string }) {
   const { isSm } = useBreakpoint("sm");
@@ -22,10 +23,18 @@ export default function UserPageSection({ userId }: { userId: string }) {
           </div>
           <div className="flex-1 p-4 h-[calc(100vh-64px)] overflow-auto">
             {profileSection === "followers" && (
-              <UserFollowers userId={userId} />
+              <div className="flex flex-row justify-center">
+                <div className="w-[40%]">
+                  <UserFollowers userId={userId} />
+                </div>
+              </div>
             )}
             {profileSection === "following" && (
-              <UserFollowing userId={userId} />
+              <div className="flex flex-row justify-center">
+                <div className="w-[40%]">
+                  <UserFollowing userId={userId} />
+                </div>
+              </div>
             )}
             {profileSection === "savedPhotospots" && (
               <UserSavedPhotospots userId={userId} />

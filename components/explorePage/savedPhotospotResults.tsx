@@ -3,6 +3,7 @@ import { fetcher } from "@/utils/common/fetcher";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 import { GridTypes, Photospot } from "@/types/photospotTypes";
+import { getCols } from "@/utils/responsive/grids";
 
 export default function SavedSearchResults({
   photospots,
@@ -20,12 +21,7 @@ export default function SavedSearchResults({
         gridType={GridTypes.photospotSearch}
         setSize={setSize}
         size={photospots ? photospots.length : 0}
-        colCount={{
-          sm: 1,
-          md: 1,
-          lg: 1,
-          xl: 1,
-        }}
+        colCount={getCols()}
         dataLoading={photospotsLoading}
         emptyMessage="No saved photospots"
       />

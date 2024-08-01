@@ -6,6 +6,7 @@ import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 import useSWR from "swr";
 import { GridTypes } from "@/types/photospotTypes";
 import { useBreakpoint } from "@/hooks/tailwind";
+import { getCols } from "@/utils/responsive/grids";
 
 export default function MySavedPhotospots() {
   const { data: profileInfo } = useSWR("/api/profile", fetcher);
@@ -37,9 +38,7 @@ export default function MySavedPhotospots() {
       size={size}
       dataLoading={photospotsLoading}
       lastItemMessage={"No more photoshots"}
-      colCount={{
-        sm: 3,
-      }}
+      colCount={getCols({ sm: 3 })}
     />
   );
 }

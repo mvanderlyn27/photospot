@@ -4,6 +4,7 @@ import useSWRInfinite from "swr/infinite";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 import { GridTypes, Photospot } from "@/types/photospotTypes";
 import { serializePhotospotSearch } from "@/utils/nuqs/urlSerializer";
+import { getCols } from "@/utils/responsive/grids";
 
 export default function PhotospotSearchResults({
   photospots,
@@ -22,12 +23,7 @@ export default function PhotospotSearchResults({
         gridType={GridTypes.photospotSearch}
         setSize={setSize}
         size={photospots ? photospots.length : 0}
-        colCount={{
-          sm: 1,
-          md: 1,
-          lg: 1,
-          xl: 1,
-        }}
+        colCount={getCols()}
         dataLoading={photospotsLoading}
         messageOnLastItem={true}
         emptyMessage="No results found, try a different search"

@@ -7,6 +7,7 @@ import useSWR from "swr";
 import { useSearchParams } from "next/navigation";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
+import { getCols } from "@/utils/responsive/grids";
 export default function ReviewGrid({ id, sort }: { id: number; sort: string }) {
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams);
@@ -30,12 +31,7 @@ export default function ReviewGrid({ id, sort }: { id: number; sort: string }) {
         gridType={GridTypes.review}
         setSize={setSize}
         size={size}
-        colCount={{
-          sm: 1,
-          md: 1,
-          lg: 1,
-          xl: 1,
-        }}
+        colCount={getCols({ sm: 1, md: 1, lg: 1, xl: 1 })}
         dataLoading={photospotsLoading}
       />
     </div>

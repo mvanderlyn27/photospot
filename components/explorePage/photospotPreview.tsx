@@ -20,6 +20,8 @@ import PhotospotDirectionsButton from "../photospot/photospotDirectionsButton";
 import { Button } from "../ui/button";
 import { MdClose } from "react-icons/md";
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs";
+import { useBreakpoint } from "@/hooks/tailwind";
+import { getCols } from "@/utils/responsive/grids";
 
 const TAG_LIMIT = 5;
 export default function PhotospotPreview({
@@ -86,6 +88,7 @@ export default function PhotospotPreview({
   /*
     show photospot name, and photoshots, and other info
   */
+  const { isSm } = useBreakpoint("sm");
   return (
     <div className={`w-full h-full flex flex-col gap-4 relative`}>
       <Card className="border-none">
@@ -188,7 +191,7 @@ export default function PhotospotPreview({
                 setSize={setSize}
                 size={size}
                 dataLoading={photoshotsLoading}
-                colCount={{ sm: 1, md: 1, lg: 1, xl: 1 }}
+                colCount={getCols()}
               />
             </TabsContent>
             <TabsContent value="reviews">

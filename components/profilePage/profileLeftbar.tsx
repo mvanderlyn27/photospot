@@ -4,9 +4,16 @@ import { DefaultProfile } from "@/utils/common/imageLinks";
 import useSWR from "swr";
 import Image from "next/image";
 import Link from "next/link";
-import { useQueryState } from "nuqs";
-export default function ProfileLeftbar() {
-  const [profileSection, setProfileSection] = useQueryState("profileSection");
+import { parseAsString, useQueryState } from "nuqs";
+export default function ProfileLeftbar({
+  initialProfileSection,
+}: {
+  initialProfileSection: string;
+}) {
+  const [profileSection, setProfileSection] = useQueryState(
+    "profileSection",
+    parseAsString.withDefault(initialProfileSection)
+  );
   const { data: profileInfo } = useSWR("/api/profile", fetcher);
   return (
     <>

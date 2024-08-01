@@ -11,6 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useBreakpoint } from "@/hooks/tailwind";
 import { CiSearch } from "react-icons/ci";
 import { MdClear } from "react-icons/md";
+import { getCols } from "@/utils/responsive/grids";
 
 //needs a search bar, and section to view results
 export default function UserSearchSection() {
@@ -68,7 +69,7 @@ export default function UserSearchSection() {
             setSize={setSize}
             size={size}
             dataLoading={isLoading}
-            colCount={{ sm: 1, md: 1, lg: 1, xl: 1 }}
+            colCount={getCols({ sm: 1, md: 1, lg: 1, xl: 1 })}
           />
         </div>
       )}

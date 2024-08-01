@@ -21,7 +21,7 @@ export default function InfiniteScrollGrid({
   dataLoading,
   pageSize = 20,
   height,
-  colCount = { sm: 1, md: 2, lg: 3, xl: 5 },
+  colCount = 1,
   gridType = GridTypes.photoshot,
   loadingMessage = "Loading...   Loading...",
   emptyMessage = "Nothing here, check back later",
@@ -36,7 +36,7 @@ export default function InfiniteScrollGrid({
   dataLoading: boolean;
   pageSize?: number;
   height?: string;
-  colCount?: GridColumns;
+  colCount?: number;
   gridType?: GridTypes;
   loadingMessage?: string;
   emptyMessage?: string;
@@ -81,11 +81,8 @@ export default function InfiniteScrollGrid({
     <div className="w-full flex flex-col md:pt-4 md:p-0">
       {gridData && (
         <div
-          className={`w-full grid 
-          grid-cols-${colCount?.sm ? colCount?.sm : 1} 
-          md:grid-cols-${colCount?.md ? colCount?.md : 2} 
-          lg:grid-cols-${colCount?.lg ? colCount?.lg : 3}
-          xl:grid-cols-${colCount?.xl ? colCount?.xl : 5} gap-4 md:gap-8`}
+          className={`w-full grid grid-cols-${colCount}
+           gap-4 md:gap-8`}
         >
           {gridData.flat().map((gridItem, i) => {
             const recalculatedDelay =

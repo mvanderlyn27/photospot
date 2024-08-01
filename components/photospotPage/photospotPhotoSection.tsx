@@ -8,6 +8,7 @@ import useSWRInfinite from "swr/infinite";
 import { useEffect, useState } from "react";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 import { useBreakpoint } from "@/hooks/tailwind";
+import { getCols } from "@/utils/responsive/grids";
 export function PhotospotPhotoSection({ id }: { id: number }) {
   const [photoshots, setPhotoshots] = useState<Photoshot[][]>([]);
   const {
@@ -43,7 +44,7 @@ export function PhotospotPhotoSection({ id }: { id: number }) {
         size={size}
         dataLoading={photoshotsLoading}
         // height={isSm ? "400px" : "200px"}
-        colCount={{ sm: 2 }}
+        colCount={getCols({ sm: 2 })}
       />
     </div>
   );

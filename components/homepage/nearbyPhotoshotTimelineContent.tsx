@@ -5,6 +5,7 @@ import TextSpinnerLoader from "../common/Loading";
 import useSWRInfinite from "swr/infinite";
 import { fetcher } from "@/utils/common/fetcher";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
+import { getCols } from "@/utils/responsive/grids";
 //UPDATE TO LOAD FIRST 20-30 photoshots, then pass that down to the photoshotTimelineGrid, along with a path
 export default function NearbyPhotoshotTimelineContent() {
   const [location, setLocation] = useState<{
@@ -54,7 +55,7 @@ export default function NearbyPhotoshotTimelineContent() {
         gridType={GridTypes.photoshot}
         setSize={setSize}
         size={size}
-        colCount={{ sm: 1, md: 2, lg: 5, xl: 5 }}
+        colCount={getCols()}
         dataLoading={photoshotsLoading}
       />
     </>

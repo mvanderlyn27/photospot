@@ -53,7 +53,7 @@ export default function UserLeftBar({ userId }: { userId: string }) {
               }`}
               onClick={() => setProfileSection("myPhotoshots")}
             >
-              My Photoshots
+              Users Photoshots
             </h1>
             <h1
               className={`text-xl cursor-pointer ${

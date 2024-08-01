@@ -6,6 +6,7 @@ import useSWR from "swr";
 import InfiniteScrollGrid from "../common/infiniteScrollGrid";
 import { GridTypes } from "@/types/photospotTypes";
 import { useBreakpoint } from "@/hooks/tailwind";
+import { getCols } from "@/utils/responsive/grids";
 
 export default function MyLikedPhotoshots() {
   const { data: user } = useSWR("/api/profile", fetcher);
@@ -33,9 +34,9 @@ export default function MyLikedPhotoshots() {
       setSize={setSize}
       size={size}
       dataLoading={photoshotsLoading}
-      colCount={{
+      colCount={getCols({
         sm: 3,
-      }}
+      })}
     />
   );
 }
