@@ -1,7 +1,7 @@
 "use client";
 import LeftWindow from "@/components/createPage/leftWindow";
 import PhotospotMap from "@/components/maps/map";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { NewPhotospotInfo, Photospot } from "@/types/photospotTypes";
 import { MapProvider } from "react-map-gl";
 import PhotospotsTooCloseDialog from "@/components/createPage/photospotsTooCloseDialog";
@@ -18,6 +18,7 @@ import {
   DrawerFooter,
   DrawerTrigger,
 } from "../ui/drawer";
+import { FaLocationCrosshairs } from "react-icons/fa6";
 // import mapboxgl from 'mapbox-gl';
 const INITIAL_LAT: number = 40.72377;
 const INITIAL_LNG: number = -73.99837;
@@ -39,6 +40,7 @@ export default function CreatePageContainer() {
     setClosestPhotospots(photospots);
     setPhotospotsTooCloseDialogOpen(true);
   };
+  let geoLocationRef = useRef(null);
   const isSmall = useBreakpoint("sm");
   return (
     <div className="h-[calc(100vh-64px)] w-screen">
@@ -48,18 +50,23 @@ export default function CreatePageContainer() {
             !isSmall.isSm ? "w-full" : "w-auto"
           } left-0 lg:w-[450px] max-h-[calc(100vh-64px)] pl-4 pr-4 pt-4 z-50`}
         >
-          <Card>
-            <CardContent className="p-4 flex flex-col gap-4">
-              <AutoComplete
-                setSelectedLocation={setSelectedLocation}
-                selectedLocation={selectedLocation}
-              />
-              {/* <Button
-                  variant="destructive"
-                  onClick={() => setSelectedLocation(null)}
+          <Card className="">
+            <CardContent className="p-4 flex flex-col gap-4 ">
+              <div className="flex flex-row gap-2">
+                <AutoComplete
+                  setSelectedLocation={setSelectedLocation}
+                  selectedLocation={selectedLocation}
+                />
+                <Button
+                  variant="default"
+                  onClick={() => {
+                    if (geoLocationRef.current)
+                      (geoLocationRef.current as any).trigger();
+                  }}
                 >
-                  <MdOutlineClear className="w-6 h-6 stroke-white" />
-                </Button> */}
+                  <FaLocationCrosshairs className="w-6 h-6 md:w-8 md:h-8" />
+                </Button>
+              </div>
               {selectedLocation && isSmall.isSm && (
                 <PhotospotPreview selectedLocation={selectedLocation} />
               )}
@@ -79,6 +86,7 @@ export default function CreatePageContainer() {
               selectedLocation={selectedLocation}
               setSelectedLocation={setSelectedLocation}
               handlePhotospotTooClose={handlePhotospotTooClose}
+              geoLocationRef={geoLocationRef}
             />
           </div>
           <PhotospotsTooCloseDialog

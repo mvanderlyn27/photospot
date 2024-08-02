@@ -16,6 +16,7 @@ import { fetcher } from "@/utils/common/fetcher";
 import { GeocodingCore } from "@mapbox/search-js-core";
 import { useTheme } from "next-themes";
 import { isPhotoshot } from "@/utils/common/typeGuard";
+import { toast } from "../ui/use-toast";
 const MINIMUM_PHOTOSPOT_DISTANCE = 2;
 // A circle of 5 mile radius of the Empire State Building
 const MAXBOUNDS = new LngLatBounds([-74.104, 39.98], [-73.82, 40.9]);
@@ -25,12 +26,14 @@ export default function PhotospotMap({
   viewState,
   setViewState,
   handlePhotospotTooClose,
+  geoLocationRef,
 }: {
   selectedLocation: Photospot | NewPhotospotInfo | null;
   setSelectedLocation: any;
   viewState: any;
   setViewState: any;
   handlePhotospotTooClose?: any;
+  geoLocationRef: any;
 }) {
   //api keys
   const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
@@ -58,7 +61,9 @@ export default function PhotospotMap({
     loc: { lat: number; lng: number },
     photospot: Photospot | null
   ) => {
-    e.originalEvent.stopPropagation();
+    if (e?.originalEvent) {
+      e.originalEvent.stopPropagation();
+    }
     if (photospot) {
       setSelectedLocation(photospot);
     } else if (handlePhotospotTooClose) {
@@ -90,8 +95,8 @@ export default function PhotospotMap({
           address: reverseGeocode.features[0].properties.full_address,
           neighborhood:
             reverseGeocode.features[0].properties.context.neighborhood?.name,
-          lat: e.lngLat.lat,
-          lng: e.lngLat.lng,
+          lat: loc.lat,
+          lng: loc.lng,
         } as NewPhotospotInfo;
         setSelectedLocation(newPhotospotInfo);
       }
@@ -161,7 +166,31 @@ export default function PhotospotMap({
             </Marker>
           );
         })}
-      <GeolocateControl position="bottom-right" showAccuracyCircle={false} />
+      <GeolocateControl
+        position="top-right"
+        showAccuracyCircle={false}
+        showUserLocation={false}
+        trackUserLocation={false}
+        style={{ visibility: "hidden" }}
+        ref={geoLocationRef}
+        onGeolocate={(e) => {
+          console.log("onGeolocate", e);
+          let latt = e.coords.latitude;
+          let lngg = e.coords.longitude;
+          if (!MAXBOUNDS.contains({ lng: lngg, lat: latt })) {
+            toast({
+              title: "Location is out of bounds.",
+              duration: 2000,
+            });
+          } else {
+            selectLocation(
+              e,
+              { lat: e.coords.latitude, lng: e.coords.longitude },
+              null
+            );
+          }
+        }}
+      />
       {/* <NavigationControl position="top-right" /> */}
     </MapboxMap>
   );

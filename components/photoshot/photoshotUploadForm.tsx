@@ -237,7 +237,7 @@ export default function PhotoshotUploadForm({
         <CardTitle>
           <h1 className="text-xl font-bold">Upload Photoshot</h1>
         </CardTitle>
-        <CardContent className={` overflow-auto max-h-[40vh] md:max-h-[60vh] `}>
+        <CardContent className={` overflow-auto max-h-[70vh] `}>
           <FormField
             control={uploadPhotoshotForm.control}
             name="name"

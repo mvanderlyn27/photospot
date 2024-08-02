@@ -16,6 +16,7 @@ import { useBreakpoint } from "@/hooks/tailwind";
 import Image from "next/image";
 import EditPhotospotForm from "./editPhotospotForm";
 import PhotoshotUploadForm from "../photoshot/photoshotUploadForm";
+import { Dialog, DialogContent } from "../ui/dialog";
 
 export default function PhotospotPreview({
   selectedLocation,
@@ -117,11 +118,15 @@ export default function PhotospotPreview({
           </>
         )}
         {uploadPhotospot && (
-          <PhotoshotUploadForm
-            selectedLocation={selectedLocation}
-            mapView={true}
-            handleCancel={() => setUploadPhotospot(false)}
-          />
+          <Dialog open={true}>
+            <DialogContent className="max-w-[90vw] max-h-[90vh] md:max-w-[40vw] md:max-h-[50vh] flex flex-col justify-center ">
+              <PhotoshotUploadForm
+                selectedLocation={selectedLocation}
+                mapView={true}
+                handleCancel={() => setUploadPhotospot(false)}
+              />
+            </DialogContent>
+          </Dialog>
         )}
         {editTitle && (
           <EditPhotospotForm
