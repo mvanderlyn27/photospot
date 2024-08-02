@@ -13,7 +13,6 @@ export default function ProfilePage({
           params.profileSection ? params.profileSection : "myPhotoshots"
         }
       />
-      ;
     </Suspense>
   );
 }

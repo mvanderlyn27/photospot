@@ -43,22 +43,20 @@ export default function LoginForm() {
     fetch("/api/auth/login", {
       method: "POST",
       body: JSON.stringify(values),
-    })
-      .then(async (res) => {
-        const data = await res.json();
-        if (!res.ok) {
-          toast({
-            title: "Error",
-            description: data,
-            variant: "destructive",
-          })
-        }
-        else {
-          await mutate('/api/profile');
-          router.push("/home");
-          router.refresh();
-        }
-      })
+    }).then(async (res) => {
+      const data = await res.json();
+      if (!res.ok) {
+        toast({
+          title: "Error",
+          description: data,
+          variant: "destructive",
+        });
+      } else {
+        await mutate("/api/profile");
+        router.push("/home");
+        router.refresh();
+      }
+    });
   }
 
   return (
@@ -71,7 +69,11 @@ export default function LoginForm() {
             <FormItem>
               <FormLabel>Email:</FormLabel>
               <FormControl>
-                <Input placeholder="email@email.com" {...field} />
+                <Input
+                  className="text-lg"
+                  placeholder="email@email.com"
+                  {...field}
+                />
               </FormControl>
               <FormDescription>Email for your account</FormDescription>
               <FormMessage />
@@ -85,7 +87,12 @@ export default function LoginForm() {
             <FormItem>
               <FormLabel>password:</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="******" {...field} />
+                <Input
+                  className="text-lg"
+                  type="password"
+                  placeholder="******"
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
                 <Link
