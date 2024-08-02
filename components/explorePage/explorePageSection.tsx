@@ -166,14 +166,12 @@ export default function ExplorePageSection({
           />
         </div>
       </div>
-      <div
-        className={`${
-          !isLg ? "flex" : "hidden"
-        } flex-col justify-center items-center w-full h-full`}
-      >
-        <h1 className="text-xl font-semibold">
-          Mobile page under construction
-        </h1>
+      <div className={`${!isLg ? "flex" : "hidden"}  w-full h-full`}>
+        <ExploreMap
+          photospots={data}
+          selectedPhotospotInfo={selectedPhotospotInfo}
+          initialViewState={viewState}
+        />
       </div>
     </>
   );

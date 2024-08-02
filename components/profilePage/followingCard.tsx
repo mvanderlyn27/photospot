@@ -64,7 +64,7 @@ export default function FollowingCard({ user }: { user: any }) {
       href={`/user/${user.id}`}
     >
       {/* replace with shadcn avatar lol */}
-      <div className="relative rounded-full w-20 h-20 overflow-hidden ">
+      <div className="relative rounded-full w-12 h-12 md:w-20 md:h-20 overflow-hidden ">
         <Image
           src={user.photo_path ? user.photo_path : DefaultProfile}
           fill
