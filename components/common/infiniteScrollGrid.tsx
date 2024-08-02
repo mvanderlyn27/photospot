@@ -12,7 +12,7 @@ import { round } from "@/utils/common/math";
 import { motion } from "framer-motion";
 import InfiniteScrollGridItem from "./infiniteScrollGridItem";
 import { isPhotoshot } from "@/utils/common/typeGuard";
-import useOnScreen from "@/hooks/react";
+import { useInView } from "react-intersection-observer";
 
 export default function InfiniteScrollGrid({
   gridData,
@@ -47,8 +47,6 @@ export default function InfiniteScrollGrid({
   messageOnEmpty?: boolean;
   showDetails?: boolean;
 }) {
-  const ref = useRef(null);
-  let loadingVisible = useOnScreen(ref);
   const isLoadingMore =
     dataLoading ||
     (size > 0 && gridData && typeof gridData[size - 1] === "undefined");
@@ -59,13 +57,12 @@ export default function InfiniteScrollGrid({
     (gridData?.[0].length === 0 ||
       (gridData && gridData[gridData.length - 1]?.length < pageSize));
   // const isRefreshing = isValidating && data && data.length === size;
-
+  const { ref, inView, entry } = useInView({});
   useEffect(() => {
-    console.log("visible?", loadingVisible);
-    if (loadingVisible && !isLoadingMore) {
+    if (inView && !isLoadingMore) {
       loadMoreTickets();
     }
-  }, [loadingVisible]);
+  }, [inView]);
 
   const loadMoreTickets = () => {
     setSize(size + 1);

@@ -60,8 +60,10 @@ export default function ProfileHeader() {
                   <IoMdSettings className="w-6 h-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-[80vw] h-[100vh] overflow-auto">
-                <SettingSection user={profileInfo} />
+              <SheetContent className="w-[80vw] h-[100vh] flex flex-col justify-center ">
+                <div className="overflow-auto">
+                  <SettingSection user={profileInfo} />
+                </div>
               </SheetContent>
             </Sheet>
             {/*  sheet here */}
