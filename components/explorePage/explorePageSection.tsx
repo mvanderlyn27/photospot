@@ -28,6 +28,8 @@ import { Separator } from "../ui/separator";
 import PhotospotSearchResults from "./photospotSearchResults";
 import { Button } from "../ui/button";
 import { MdClose } from "react-icons/md";
+import { IoArrowBack } from "react-icons/io5";
+import { FaChevronDown } from "react-icons/fa";
 const INITIAL_LAT = 40.7128;
 const INITIAL_LNG = -74.006;
 export default function ExplorePageSection({
@@ -115,7 +117,7 @@ export default function ExplorePageSection({
   }, [accordionOpen]);
   useEffect(() => {
     if (drawerOpen) {
-      setActiveSnapPoint(0.6);
+      // setActiveSnapPoint(0.6);
       setAccordionOpen(false);
     }
   }, [drawerOpen]);
@@ -158,12 +160,13 @@ export default function ExplorePageSection({
   const { isLg } = useBreakpoint("lg");
   const { isXl } = useBreakpoint("xl");
   const handleScroll = (e: any) => {
-    console.log("scroll event", e);
+    // console.log("scroll event", e);
     if (e.target.scrollTop > oldScrollY) {
       setActiveSnapPoint(1);
-    } else if (e.target.scrollTop === oldScrollY) {
-      setActiveSnapPoint(0.6);
     }
+    //  else if (e.target.scrollTop === oldScrollY) {
+    //   setActiveSnapPoint(0.6);
+    // }
     setOldScrollY(e.target.scrollTop);
   };
   return (
@@ -208,13 +211,13 @@ export default function ExplorePageSection({
         </div>
         {photospotData && (
           <div className="absolute bottom-10 left-4 right-4 z-100">
-            <ExploreBottomBar setDrawerOpen={setDrawerOpen} />
+            <ExploreBottomBar setDrawerOpen={setDrawerOpen} setActiveSnapPoint={setActiveSnapPoint} />
           </div>
         )}
         <Drawer
           open={drawerOpen}
           modal={false}
-          // handleOnly={true}
+          handleOnly={true}
           onClose={() => setDrawerOpen(false)}
           snapPoints={[0.6, 1]}
           activeSnapPoint={activeSnapPoint}
@@ -223,13 +226,23 @@ export default function ExplorePageSection({
           {photospotData && !selectedPhotospot && (
             <div
               onClick={(e) => {
+                // if (!selectedPhotospot) {
                 e.stopPropagation();
+                // setActiveSnapPoint(activeSnapPoint === 1 ? 0.6 : 1);
                 setActiveSnapPoint(1);
+                // }
               }}>
               <DrawerContent className="pt-4 cursor-pointer">
-                {/* <div className="absolute top-0 left-0 right-0"> */}
-                {/* <Separator /> */}
-                {/* <ExploreBottomBar /> */}
+                <div className="absolute top-2 right-2">
+                  <Button
+                    variant="ghost"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDrawerOpen(false);
+                    }}>
+                    <FaChevronDown className="w-6 h-6 z-top " />
+                  </Button>
+                </div>
                 <div className="h-[60vh] overflow-auto p-4" onScroll={handleScroll}>
                   <PhotospotSearchResults
                     photospots={data ? data : undefined}
@@ -244,13 +257,20 @@ export default function ExplorePageSection({
           {selectedPhotospot && selectedPhotospotInfo && (
             <div
               onClick={(e) => {
-                e.stopPropagation();
-                setActiveSnapPoint(1);
+                if (selectedPhotospot) {
+                  e.stopPropagation();
+                  setActiveSnapPoint(1);
+                }
               }}>
               <DrawerContent className="h-auto p-4">
-                <div className="absolute top-2 right-2">
-                  <Button variant="ghost" onClick={() => setSelectedPhotospot(null)}>
-                    <MdClose className="w-6 h-6 z-top " />
+                <div className="absolute top-2 left-2">
+                  <Button
+                    variant="ghost"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedPhotospot(null);
+                    }}>
+                    <IoArrowBack className="w-6 h-6 z-top " />
                   </Button>
                 </div>
                 <div className="h-[60vh] overflow-auto p-2" onScroll={handleScroll}>
