@@ -23,7 +23,7 @@ export default function PhotospotSearchResults({
         gridType={GridTypes.photospotSearch}
         setSize={setSize}
         size={photospots ? photospots.length : 0}
-        colCount={getCols()}
+        colCount={getCols({ sm: 1 })}
         dataLoading={photospotsLoading}
         messageOnLastItem={true}
         emptyMessage="No results found, try a different search"

@@ -1,7 +1,12 @@
 "use client";
 import { GeocodingCore } from "@mapbox/search-js-core";
 import { useTheme } from "next-themes";
-import { Map as MapboxMap, Marker, useMap } from "react-map-gl";
+import {
+  AttributionControl,
+  Map as MapboxMap,
+  Marker,
+  useMap,
+} from "react-map-gl";
 import mapboxgl, { LngLatBounds } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import useSWRInfinite from "swr/infinite";
@@ -53,6 +58,7 @@ export default function ExploreMap({
   // }, [selectedPhotospotInfo, selectedPhotospotId]);
   return (
     <MapboxMap
+      attributionControl={false}
       maxBounds={MAXBOUNDS}
       id="photospotMap"
       initialViewState={initialViewState}

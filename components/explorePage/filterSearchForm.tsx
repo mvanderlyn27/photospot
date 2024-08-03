@@ -2,15 +2,7 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { IoMdLocate } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { Tag } from "@/types/photospotTypes";
@@ -34,29 +26,17 @@ const filterFormSchema = z.object({
   maxDistance: z
     .string()
     .refine((x) => x === "" || !isNaN(Number(x)), "enter a valid distance")
-    .refine(
-      (x) => x === "" || (!isNaN(Number(x)) && Number(x) > 0),
-      "must be greater than 0"
-    )
+    .refine((x) => x === "" || (!isNaN(Number(x)) && Number(x) > 0), "must be greater than 0")
     .optional(),
   sort: z.string().refine((x) => sortOptions.includes(x)),
 });
 export default function FilterSearchForm({}: {}) {
   const [locationAvailable, setLocationAvailable] = useState(false);
-  const [selectedPhotospot, setSelectedPhotospot] = useQueryState(
-    "selectedPhotospot",
-    parseAsInteger
-  );
-  const [sort, setSort] = useQueryState(
-    "sort",
-    parseAsStringLiteral(sortOptions).withDefault("")
-  );
+  const [selectedPhotospot, setSelectedPhotospot] = useQueryState("selectedPhotospot", parseAsInteger);
+  const [sort, setSort] = useQueryState("sort", parseAsStringLiteral(sortOptions).withDefault(""));
   const [tags, setTags] = useQueryState("tags", parseAsArrayOf(parseAsInteger));
   const [minRating, setMinRating] = useQueryState("minRating", parseAsFloat);
-  const [maxDistance, setMaxDistance] = useQueryState(
-    "maxDistance",
-    parseAsFloat
-  );
+  const [maxDistance, setMaxDistance] = useQueryState("maxDistance", parseAsFloat);
   const [userLocation, setUserLocation] = useQueryStates({
     lat: parseAsFloat.withDefault(40.73),
     lng: parseAsFloat.withDefault(-73.94),
@@ -154,7 +134,7 @@ export default function FilterSearchForm({}: {}) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 md:space-y-8">
         <FormField
           control={form.control}
           name="tags"
@@ -162,15 +142,9 @@ export default function FilterSearchForm({}: {}) {
             <FormItem>
               <FormLabel>Tags</FormLabel>
               <FormControl>
-                <TagSelect
-                  selectedTags={field.value}
-                  setSelectedTags={setSelectedTags}
-                  setTagError={setTagError}
-                />
+                <TagSelect selectedTags={field.value} setSelectedTags={setSelectedTags} setTagError={setTagError} />
               </FormControl>
-              <FormDescription>
-                Enter the name of the photospot you want to find.
-              </FormDescription>
+              <FormDescription>Enter the name of the photospot you want to find.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -184,19 +158,13 @@ export default function FilterSearchForm({}: {}) {
               <FormLabel>Maximum Distance (meters)</FormLabel>
               <FormControl>
                 <div className="flex flex-row gap-4">
-                  <Input
-                    disabled={!locationAvailable}
-                    placeholder="enter distance"
-                    {...field}
-                  />
+                  <Input disabled={!locationAvailable} placeholder="enter distance" {...field} />
                   <Button onClick={() => getLocation()}>
                     <IoMdLocate size={20} />
                   </Button>
                 </div>
               </FormControl>
-              <FormDescription>
-                Maximum distance away you want a location
-              </FormDescription>
+              <FormDescription>Maximum distance away you want a location</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -220,9 +188,7 @@ export default function FilterSearchForm({}: {}) {
                   }}
                 />
               </FormControl>
-              <FormDescription>
-                Minimum rating you want for results
-              </FormDescription>
+              <FormDescription>Minimum rating you want for results</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -240,29 +206,25 @@ export default function FilterSearchForm({}: {}) {
                   variant="outline"
                   className="w-full flex flex-row justify-between"
                   onValueChange={field.onChange}
-                  value={field.value}
-                >
+                  value={field.value}>
                   {/* <h1 className="text-xl font-bold pr-2">Filter: </h1> */}
                   <ToggleGroupItem
                     value="rating"
                     aria-label="toggle rating"
-                    className="hover:bg-transparent data-[state=on]:bg-primary data-[state=on]:text-white flex-1 "
-                  >
+                    className="hover:bg-transparent data-[state=on]:bg-primary data-[state=on]:text-white flex-1 ">
                     Rating
                   </ToggleGroupItem>
                   <ToggleGroupItem
                     disabled={!locationAvailable}
                     value="nearby"
                     aria-label="toggle nearby"
-                    className="hover:bg-transparent data-[state=on]:bg-primary data-[state=on]:text-white flex-1"
-                  >
+                    className="hover:bg-transparent data-[state=on]:bg-primary data-[state=on]:text-white flex-1">
                     Nearby
                   </ToggleGroupItem>
                   <ToggleGroupItem
                     value="new"
                     aria-label="toggle new"
-                    className="hover:bg-transparent data-[state=on]:bg-primary data-[state=on]:text-white flex-1"
-                  >
+                    className="hover:bg-transparent data-[state=on]:bg-primary data-[state=on]:text-white flex-1">
                     New
                   </ToggleGroupItem>
                 </ToggleGroup>
@@ -278,8 +240,7 @@ export default function FilterSearchForm({}: {}) {
             variant="destructive"
             onClick={(e) => {
               return clear(e);
-            }}
-          >
+            }}>
             Clear
           </Button>
           <Button className="text-xl" type="submit">

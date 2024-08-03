@@ -22,17 +22,11 @@ import { MdClose } from "react-icons/md";
 import { parseAsInteger, parseAsString, useQueryState } from "nuqs";
 import { useBreakpoint } from "@/hooks/tailwind";
 import { getCols } from "@/utils/responsive/grids";
+import { SelectSeparator } from "@radix-ui/react-select";
 
 const TAG_LIMIT = 5;
-export default function PhotospotPreview({
-  photospotInfo,
-}: {
-  photospotInfo: Photospot;
-}) {
-  const [selectedPhotospot, setSelectedPhotospot] = useQueryState(
-    "selectedPhotospot",
-    parseAsInteger
-  );
+export default function PhotospotPreview({ photospotInfo }: { photospotInfo: Photospot }) {
+  const [selectedPhotospot, setSelectedPhotospot] = useQueryState("selectedPhotospot", parseAsInteger);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace, push } = useRouter();
@@ -45,9 +39,7 @@ export default function PhotospotPreview({
   const lng = lngRaw ? parseFloat(lngRaw) : undefined;
 
   const { data: topPhotoshot } = useSWR(
-    selectedPhotospot !== null
-      ? `/api/photospot/${selectedPhotospot}/topPhotoshot`
-      : null,
+    selectedPhotospot !== null ? `/api/photospot/${selectedPhotospot}/topPhotoshot` : null,
     fetcher
   );
   const { data: profile } = useSWR(`/api/profile/`, fetcher);
@@ -55,12 +47,7 @@ export default function PhotospotPreview({
     data: tags,
     isLoading: tagsLoading,
     error: tagsError,
-  } = useSWR(
-    selectedPhotospot !== null
-      ? `/api/photospot/${selectedPhotospot}/tags`
-      : null,
-    fetcher
-  );
+  } = useSWR(selectedPhotospot !== null ? `/api/photospot/${selectedPhotospot}/tags` : null, fetcher);
   const {
     data: photoshots,
     mutate,
@@ -70,11 +57,7 @@ export default function PhotospotPreview({
     isLoading: photoshotsLoading,
   } = useSWRInfinite(
     (index) =>
-      selectedPhotospot !== null
-        ? `/api/photospot/${selectedPhotospot}/photoshots?pageCount=${
-            index + 1
-          }`
-        : null,
+      selectedPhotospot !== null ? `/api/photospot/${selectedPhotospot}/photoshots?pageCount=${index + 1}` : null,
     fetcher
   );
   const visitPhotospot = () => {
@@ -91,118 +74,195 @@ export default function PhotospotPreview({
   const { isSm } = useBreakpoint("sm");
   return (
     <div className={`w-full h-full flex flex-col gap-4 relative`}>
-      <Card className="border-none">
-        <div className="w-full h-[400px] overflow-hidden relative">
-          {topPhotoshot ? (
-            <Image
-              src={topPhotoshot.photo_paths ? topPhotoshot.photo_paths[0] : ""}
-              alt="Image"
-              className="rounded-t-md object-cover z-1"
-              fill
+      {isSm && (
+        <Card className="border-none">
+          <div className="w-full h-[400px] overflow-hidden relative">
+            {topPhotoshot ? (
+              <Image
+                src={topPhotoshot.photo_paths ? topPhotoshot.photo_paths[0] : ""}
+                alt="Image"
+                className="rounded-t-md object-cover z-1"
+                fill
+              />
+            ) : (
+              <Skeleton className="bg-black/10 object-cover rounded w-full h-[400px]" />
+            )}
+            <Button onClick={closePreview} className="absolute top-4 right-4 p-2 z-11 ">
+              <MdClose className="w-6 h-6 z-11 fill-white" />
+            </Button>
+          </div>
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold">
+              <div className="flex flex-row justify-between items-center">
+                {photospotInfo && photospotInfo.location_name}
+                {photospotInfo && <Button onClick={visitPhotospot}>Visit</Button>}
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-6">
+            <RatingDisplay
+              rating={photospotInfo?.rating_average ? round(photospotInfo.rating_average, 1) : 0}
+              count={photospotInfo?.rating_count ? photospotInfo.rating_count : 0}
             />
-          ) : (
-            <Skeleton className="bg-black/10 object-cover rounded w-full h-[400px]" />
-          )}
-          <Button
-            onClick={closePreview}
-            className="absolute top-4 right-4 p-2 z-11 "
-          >
-            <MdClose className="w-6 h-6 z-11 fill-white" />
-          </Button>
-        </div>
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">
-            <div className="flex flex-row justify-between items-center">
-              {photospotInfo && photospotInfo.location_name}
-              {photospotInfo && <Button onClick={visitPhotospot}>Visit</Button>}
-            </div>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-6">
-          <RatingDisplay
-            rating={
-              photospotInfo?.rating_average
-                ? round(photospotInfo.rating_average, 1)
-                : 0
-            }
-            count={photospotInfo?.rating_count ? photospotInfo.rating_count : 0}
-          />
-          {photospotInfo?.dist_meters && (
-            <h1 className="text-l">
-              <b>{photospotInfo.neighborhood} </b>
-              {" " + round(photospotInfo?.dist_meters, 0) + " meters away"}
-            </h1>
-          )}
-          {/* 
+            {photospotInfo?.dist_meters && (
+              <h1 className="text-l">
+                <b>{photospotInfo.neighborhood} </b>
+                {" " + round(photospotInfo?.dist_meters, 0) + " meters away"}
+              </h1>
+            )}
+            {/* 
           need to get photoshot lists
           */}
-          <Tabs defaultValue="photoshot" className="w-full">
-            <TabsList className="w-full">
-              <TabsTrigger className="text-xl" value="overview">
-                Overview
-              </TabsTrigger>
-              <TabsTrigger className="text-xl" value="photoshot">
-                Photos
-              </TabsTrigger>
-              <TabsTrigger className="text-xl" value="reviews">
-                Reviews
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent
-              value="overview"
-              className="w-full flex flex-col gap-6"
-            >
-              <Separator className="w-full" />
-              {photospotInfo && (
-                <div className="flex flex-row justify-center gap-4">
-                  <PhotospotDirectionsButton id={photospotInfo.id} />
-                  <SharePhotospotButton id={photospotInfo.id} />
-                  {profile && <SavePhotospotButton id={photospotInfo.id} />}
-                </div>
-              )}
-
-              <Separator className="w-full" />
-              {tags && (
-                <div className="flex flex-col gap-2 h-full">
-                  <h1 className="font-bold">Tags:</h1>
-                  <div className="flex flex-wrap gap-2">
-                    {tags.slice(0, TAG_LIMIT).map((tag: string) => (
-                      <Badge
-                        key={tag}
-                        variant="outline"
-                        className="whitespace-nowrap"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
+            <Tabs defaultValue="overview" className="w-full">
+              <TabsList className="w-full">
+                <TabsTrigger className="text-xl" value="overview">
+                  Overview
+                </TabsTrigger>
+                <TabsTrigger className="text-xl" value="photoshot">
+                  Photos
+                </TabsTrigger>
+                <TabsTrigger className="text-xl" value="reviews">
+                  Reviews
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview" className="w-full flex flex-col gap-6">
+                <Separator className="w-full" />
+                {photospotInfo && (
+                  <div className="flex flex-row justify-center gap-4">
+                    <PhotospotDirectionsButton id={photospotInfo.id} />
+                    <SharePhotospotButton id={photospotInfo.id} />
+                    {profile && <SavePhotospotButton id={photospotInfo.id} />}
                   </div>
-                </div>
-              )}
+                )}
 
-              <h1 className="text-l">
-                <b>Address: </b>
-                {photospotInfo && photospotInfo.address}
-              </h1>
-            </TabsContent>
-            <TabsContent value="photoshot">
-              <InfiniteScrollGrid
-                gridData={photoshots}
-                gridType={GridTypes.photoshot}
-                setSize={setSize}
-                size={size}
-                dataLoading={photoshotsLoading}
-                colCount={getCols()}
+                <Separator className="w-full" />
+                {tags && (
+                  <div className="flex flex-col gap-2 h-full">
+                    <h1 className="font-bold">Tags:</h1>
+                    <div className="flex flex-wrap gap-2">
+                      {tags.slice(0, TAG_LIMIT).map((tag: string) => (
+                        <Badge key={tag} variant="outline" className="whitespace-nowrap">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <h1 className="text-l">
+                  <b>Address: </b>
+                  {photospotInfo && photospotInfo.address}
+                </h1>
+              </TabsContent>
+              <TabsContent value="photoshot">
+                <InfiniteScrollGrid
+                  gridData={photoshots}
+                  gridType={GridTypes.squarePhotoshot}
+                  setSize={setSize}
+                  size={size}
+                  dataLoading={photoshotsLoading}
+                  colCount={getCols({})}
+                />
+              </TabsContent>
+              <TabsContent value="reviews">
+                {selectedPhotospot && <ReviewGrid id={selectedPhotospot} sort="high" />}
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+          {/* {photospot && photospot.location_name} */}
+        </Card>
+      )}
+
+      {!isSm && (
+        <div className="w-full flex flex-col gap-2">
+          <div className="text-2xl">{photospotInfo && photospotInfo.location_name}</div>
+          <Separator />
+          <div className="flex flex-row justify-center items-center w-full ">
+            {photospotInfo && (
+              <div className="flex flex-row justify-center items-center gap-4">
+                <Button onClick={visitPhotospot}>Visit</Button>
+                <PhotospotDirectionsButton id={photospotInfo.id} />
+                <SharePhotospotButton id={photospotInfo.id} />
+                {profile && <SavePhotospotButton id={photospotInfo.id} />}
+              </div>
+            )}
+          </div>
+          <Separator />
+          <div className="w-full aspect-square overflow-hidden relative">
+            {topPhotoshot ? (
+              <Image
+                src={topPhotoshot.photo_paths ? topPhotoshot.photo_paths[0] : ""}
+                alt="Image"
+                className="rounded-t-md object-cover z-1"
+                fill
               />
-            </TabsContent>
-            <TabsContent value="reviews">
-              {selectedPhotospot && (
-                <ReviewGrid id={selectedPhotospot} sort="high" />
-              )}
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-        {/* {photospot && photospot.location_name} */}
-      </Card>
+            ) : (
+              <Skeleton className="bg-black/10 object-cover rounded w-full h-[400px]" />
+            )}
+          </div>
+
+          <CardContent className="flex flex-col gap-6">
+            <RatingDisplay
+              rating={photospotInfo?.rating_average ? round(photospotInfo.rating_average, 1) : 0}
+              count={photospotInfo?.rating_count ? photospotInfo.rating_count : 0}
+            />
+            {photospotInfo?.dist_meters && (
+              <h1 className="text-l">
+                <b>{photospotInfo.neighborhood} </b>
+                {" " + round(photospotInfo?.dist_meters, 0) + " meters away"}
+              </h1>
+            )}
+            {/* 
+                      need to get photoshot lists
+                      */}
+            <Tabs defaultValue="photoshot" className="w-full">
+              <TabsList className="w-full">
+                <TabsTrigger className="text-xl" value="overview">
+                  Overview
+                </TabsTrigger>
+                <TabsTrigger className="text-xl" value="photoshot">
+                  Photos
+                </TabsTrigger>
+                <TabsTrigger className="text-xl" value="reviews">
+                  Reviews
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview" className="w-full flex flex-col gap-6">
+                {tags && (
+                  <div className="flex flex-col gap-2 h-full">
+                    <h1 className="font-bold">Tags:</h1>
+                    <div className="flex flex-wrap gap-2">
+                      {tags.slice(0, TAG_LIMIT).map((tag: string) => (
+                        <Badge key={tag} variant="outline" className="whitespace-nowrap">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <h1 className="text-l">
+                  <b>Address: </b>
+                  {photospotInfo && photospotInfo.address}
+                </h1>
+              </TabsContent>
+              <TabsContent value="photoshot">
+                <InfiniteScrollGrid
+                  gridData={photoshots}
+                  gridType={GridTypes.squarePhotoshot}
+                  setSize={setSize}
+                  size={size}
+                  dataLoading={photoshotsLoading}
+                  colCount={getCols({})}
+                />
+              </TabsContent>
+              <TabsContent value="reviews">
+                {selectedPhotospot && <ReviewGrid id={selectedPhotospot} sort="high" />}
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </div>
+      )}
     </div>
   );
 }
