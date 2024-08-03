@@ -175,7 +175,15 @@ export default function PhotospotPreview({ photospotInfo }: { photospotInfo: Pho
 
       {!isSm && (
         <div className="w-full flex flex-col gap-2">
-          <div className="text-2xl">{photospotInfo && photospotInfo.location_name}</div>
+          <div className="flex flex-col justify-start">
+            <div className="text-xl">{photospotInfo && photospotInfo.location_name}</div>
+            <RatingDisplay
+              rating={photospotInfo?.rating_average ? round(photospotInfo.rating_average, 1) : 0}
+              count={photospotInfo?.rating_count ? photospotInfo.rating_count : 0}
+              size={20}
+              font="text-md"
+            />
+          </div>
           <Separator />
           <div className="flex flex-row justify-center items-center w-full ">
             {photospotInfo && (
@@ -202,10 +210,6 @@ export default function PhotospotPreview({ photospotInfo }: { photospotInfo: Pho
           </div>
 
           <CardContent className="flex flex-col gap-6">
-            <RatingDisplay
-              rating={photospotInfo?.rating_average ? round(photospotInfo.rating_average, 1) : 0}
-              count={photospotInfo?.rating_count ? photospotInfo.rating_count : 0}
-            />
             {photospotInfo?.dist_meters && (
               <h1 className="text-l">
                 <b>{photospotInfo.neighborhood} </b>
@@ -215,7 +219,7 @@ export default function PhotospotPreview({ photospotInfo }: { photospotInfo: Pho
             {/* 
                       need to get photoshot lists
                       */}
-            <Tabs defaultValue="photoshot" className="w-full">
+            <Tabs defaultValue="overview" className="w-full">
               <TabsList className="w-full">
                 <TabsTrigger className="text-xl" value="overview">
                   Overview
