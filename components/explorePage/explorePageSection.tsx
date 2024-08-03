@@ -228,22 +228,25 @@ export default function ExplorePageSection({
               onClick={(e) => {
                 // if (!selectedPhotospot) {
                 e.stopPropagation();
-                // setActiveSnapPoint(activeSnapPoint === 1 ? 0.6 : 1);
-                setActiveSnapPoint(1);
+                setActiveSnapPoint(activeSnapPoint === 1 ? 0.6 : 1);
+                // setActiveSnapPoint(1);
                 // }
               }}>
               <DrawerContent className="pt-4 cursor-pointer">
-                <div className="absolute top-2 right-2">
+                <div className="absolute top-2 right-2 z-100">
                   <Button
                     variant="ghost"
                     onClick={(e) => {
                       e.stopPropagation();
                       setDrawerOpen(false);
                     }}>
-                    <FaChevronDown className="w-6 h-6 z-top " />
+                    <FaChevronDown className="w-6 h-6 " />
                   </Button>
                 </div>
-                <div className="h-[60vh] overflow-auto p-4" onScroll={handleScroll}>
+                <div
+                  className="h-[60vh] overflow-auto p-4"
+                  onClick={(e) => e.stopPropagation()}
+                  onScroll={handleScroll}>
                   <PhotospotSearchResults
                     photospots={data ? data : undefined}
                     setSize={setSize}
@@ -257,13 +260,13 @@ export default function ExplorePageSection({
           {selectedPhotospot && selectedPhotospotInfo && (
             <div
               onClick={(e) => {
-                if (selectedPhotospot) {
-                  e.stopPropagation();
-                  setActiveSnapPoint(1);
-                }
+                // if (selectedPhotospot) {
+                e.stopPropagation();
+                setActiveSnapPoint(activeSnapPoint === 1 ? 0.6 : 1);
+                // }
               }}>
               <DrawerContent className="h-auto p-4">
-                <div className="absolute top-2 left-2">
+                <div className="absolute top-2 left-2 z-100">
                   <Button
                     variant="ghost"
                     onClick={(e) => {
@@ -273,7 +276,10 @@ export default function ExplorePageSection({
                     <IoArrowBack className="w-6 h-6 z-top " />
                   </Button>
                 </div>
-                <div className="h-[60vh] overflow-auto p-2" onScroll={handleScroll}>
+                <div
+                  className="h-[60vh] overflow-auto p-2"
+                  onClick={(e) => e.stopPropagation()}
+                  onScroll={handleScroll}>
                   <PhotospotPreview photospotInfo={selectedPhotospotInfo} />
                 </div>
               </DrawerContent>
