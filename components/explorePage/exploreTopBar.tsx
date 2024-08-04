@@ -22,18 +22,17 @@ export default function ExploreTopBar({
   accordionOpen: boolean;
   setAccordionOpen: any;
 }) {
-  const [tab, setTab] = useQueryState("tab", parseAsStringLiteral(["search", "filter", "saved"]));
+  const [tab, setTab] = useQueryState("tab", parseAsStringLiteral(["search", "filter", "saved"]).withDefault("search"));
   const [selectedPhotospot, setSelectedPhotospot] = useQueryState("selectedPhotospot", parseAsInteger);
   const [maxDistance, setMaxDistance] = useQueryState("maxDistance", parseAsFloat);
   const [sort, setSort] = useQueryState("sort", parseAsStringLiteral(["top", "nearby", "new", ""]).withDefault(""));
   const [tags, setTags] = useQueryState("tags", parseAsArrayOf(parseAsInteger));
   const [minRating, setMinRating] = useQueryState("minRating", parseAsFloat);
-  const handleTabChange = (oldTab: string | null, newTab: string) => {
-    console.log("oldTab", oldTab, "newTab", newTab);
-    setTab(newTab);
-    setSelectedPhotospot(null);
-    //clear out selected photospot
-    if (oldTab !== newTab) {
+  const handleTabChange = (newTab: string) => {
+    if (selectedPhotospot) {
+      setSelectedPhotospot(null);
+    }
+    if (tab !== newTab) {
       if (newTab !== "filter") {
         //figure out if we want to lose the filter info when switching tabs
         setMinRating(null);
@@ -42,6 +41,7 @@ export default function ExploreTopBar({
         setTags(null);
         console.log("removing tags");
       }
+      setTab(newTab as "search" | "filter" | "saved");
     }
   };
 
@@ -50,7 +50,7 @@ export default function ExploreTopBar({
       <Tabs
         defaultValue="tab"
         value={tab ? tab : "search"}
-        onValueChange={(newTab) => handleTabChange(tab, newTab)}
+        onValueChange={(newTab: string) => handleTabChange(newTab)}
         className="w-full p-2 pl-4 pr-4">
         <TabsList className="w-full ">
           <TabsTrigger value="search" className="text-xl">
