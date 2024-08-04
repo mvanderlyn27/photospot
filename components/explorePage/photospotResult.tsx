@@ -71,7 +71,7 @@ export default function PhotospotResult({ photospot }: { photospot: Photospot })
         </div>
       )}
       {!isSm && (
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2" onClick={handleClick}>
           <div className="relative aspect-square w-full rounded">
             {topPhotoshot ? (
               <Image
