@@ -46,7 +46,7 @@ export default function ExploreTopBar({
   };
 
   return (
-    <Card className="bg-background flex flex-col">
+    <Card className="bg-background flex flex-col rounded-tl-none rounded-tr-none">
       <Tabs
         defaultValue="tab"
         value={tab ? tab : "search"}

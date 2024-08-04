@@ -103,27 +103,29 @@ export default function ExplorePageSection({
     revalidateFirstPage: false,
     revalidateIfStale: false,
   });
+  const { isSm } = useBreakpoint("sm");
   useEffect(() => {
-    if (photospotData) {
-      setActiveSnapPoint(0.6);
+    if (photospotData && !isSm) {
+      // setActiveSnapPoint(0.6);
       setDrawerOpen(true);
       setAccordionOpen(false);
     }
   }, [photospotData]);
   useEffect(() => {
-    if (accordionOpen) {
+    if (accordionOpen && !isSm) {
       setDrawerOpen(false);
     }
   }, [accordionOpen]);
   useEffect(() => {
-    if (drawerOpen) {
+    if (drawerOpen && !isSm) {
       // setActiveSnapPoint(0.6);
       setAccordionOpen(false);
     }
   }, [drawerOpen]);
   useEffect(() => {
-    if (selectedPhotospot) {
+    if (selectedPhotospot && !isSm) {
       setDrawerOpen(true);
+      setActiveSnapPoint(1);
       setAccordionOpen(false);
     }
   }, [selectedPhotospot]);
@@ -189,15 +191,17 @@ export default function ExplorePageSection({
           <ExploreMap photospots={data} selectedPhotospotInfo={selectedPhotospotInfo} initialViewState={viewState} />
         </div>
       </div>
-      <div
-        className={`${!isLg && !isXl ? "flex" : "hidden"}  w-full h-full relative`}
-        onClick={() => {
-          setActiveSnapPoint(0.6);
-        }}>
-        <ExploreMap photospots={data} selectedPhotospotInfo={selectedPhotospotInfo} initialViewState={viewState} />
+      <div className={`${!isLg && !isXl ? "flex" : "hidden"}  w-full h-full relative`}>
+        <ExploreMap
+          photospots={data}
+          selectedPhotospotInfo={selectedPhotospotInfo}
+          initialViewState={viewState}
+          setActiveSnapPoint={setActiveSnapPoint}
+          setAccordionOpen={setAccordionOpen}
+        />
 
         <div
-          className="absolute top-4 left-4 right-4"
+          className="absolute top-0 left-0 right-0"
           onClick={() => {
             setActiveSnapPoint(0.6);
           }}>
@@ -210,7 +214,7 @@ export default function ExplorePageSection({
           />
         </div>
         {photospotData && (
-          <div className="absolute bottom-10 left-4 right-4 z-100">
+          <div className="absolute bottom-0 left-0 right-0 p-4 z-100">
             <ExploreBottomBar setDrawerOpen={setDrawerOpen} setActiveSnapPoint={setActiveSnapPoint} />
           </div>
         )}
@@ -232,8 +236,8 @@ export default function ExplorePageSection({
                 // setActiveSnapPoint(1);
                 // }
               }}>
-              <DrawerContent className="pt-4 cursor-pointer">
-                <div className="absolute top-2 right-2 z-100">
+              <DrawerContent className="cursor-pointer">
+                {/* <div className="absolute top-2 right-2 z-100">
                   <Button
                     variant="ghost"
                     onClick={(e) => {
@@ -242,7 +246,7 @@ export default function ExplorePageSection({
                     }}>
                     <FaChevronDown className="w-6 h-6 " />
                   </Button>
-                </div>
+                </div> */}
                 <div
                   className="h-[60vh] overflow-auto p-4"
                   onClick={(e) => e.stopPropagation()}

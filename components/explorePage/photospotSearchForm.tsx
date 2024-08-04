@@ -11,10 +11,7 @@ export default function PhotospotSearchForm({
   photospots: Photospot[][] | null;
   photospotsLoading: boolean;
 }) {
-  const [selectedPhotospot, setSelectedPhotospot] = useQueryState(
-    "selectedPhotospot",
-    parseAsInteger
-  );
+  const [selectedPhotospot, setSelectedPhotospot] = useQueryState("selectedPhotospot", parseAsInteger);
   const setPhotospot = (id: number) => {
     setSelectedPhotospot(id);
   };
