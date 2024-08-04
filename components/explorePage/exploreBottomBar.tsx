@@ -14,13 +14,13 @@ export default function ExploreBottomBar({
 }) {
   return (
     <Card
-      className="cursor-pointer flex flex-row justify-between w-full p-4 "
+      className="cursor-pointer flex flex-row justify-between w-full p-4 pb-10 rounded-br-none rounded-bl-none"
       onClick={(e) => {
         e.stopPropagation();
         setActiveSnapPoint(1);
         setDrawerOpen(true);
       }}>
-      <h1>Show Results</h1>
+      <h1 className="text-lg underline ">Show Results</h1>
       <FaChevronUp className="w-6 h-6 z-top " />
     </Card>
   );

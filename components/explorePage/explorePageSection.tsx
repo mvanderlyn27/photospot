@@ -30,6 +30,7 @@ import { Button } from "../ui/button";
 import { MdClose } from "react-icons/md";
 import { IoArrowBack } from "react-icons/io5";
 import { FaChevronDown } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 const INITIAL_LAT = 40.7128;
 const INITIAL_LNG = -74.006;
 export default function ExplorePageSection({
@@ -214,7 +215,7 @@ export default function ExplorePageSection({
           />
         </div>
         {photospotData && (
-          <div className="absolute bottom-0 left-0 right-0 p-4 z-100">
+          <div className="absolute  bottom-0 left-0 right-0  z-100">
             <ExploreBottomBar setDrawerOpen={setDrawerOpen} setActiveSnapPoint={setActiveSnapPoint} />
           </div>
         )}
@@ -237,16 +238,16 @@ export default function ExplorePageSection({
                 // }
               }}>
               <DrawerContent className="cursor-pointer">
-                {/* <div className="absolute top-2 right-2 z-100">
+                <div className="absolute top-2 right-2 z-100">
                   <Button
                     variant="ghost"
                     onClick={(e) => {
                       e.stopPropagation();
                       setDrawerOpen(false);
                     }}>
-                    <FaChevronDown className="w-6 h-6 " />
+                    <IoMdClose className="w-6 h-6 " />
                   </Button>
-                </div> */}
+                </div>
                 <div
                   className="h-[60vh] overflow-auto p-4"
                   onClick={(e) => e.stopPropagation()}

@@ -80,10 +80,10 @@ export default function ExploreTopBar({
           value={accordionOpen ? "item-1" : ""}
           className="flex flex-none w-full p-4 pt-0">
           <AccordionItem value="item-1" className="w-full ">
-            <AccordionTrigger>Current Search</AccordionTrigger>
             <AccordionContent>
               <FilterSearchForm />
             </AccordionContent>
+            <AccordionTrigger>Current Search</AccordionTrigger>
           </AccordionItem>
         </Accordion>
       )}
