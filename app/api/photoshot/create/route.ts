@@ -33,8 +33,8 @@ export async function PUT(request: Request) {
         // const photospot = await createPhotospot(selectedLocation);
         const { data: photospotData, error: photospotError } = await supabase.rpc("create_photospot_with_lat_lng", {
             location_namein: selectedLocation.location_name,
-            addressin: selectedLocation.address,
-            neighborhoodin: selectedLocation.neighborhood,
+            addressin: selectedLocation.address ? selectedLocation.address : "",
+            neighborhoodin: selectedLocation.neighborhood ? selectedLocation.neighborhood : "",
             locationin: `POINT(${selectedLocation.lng} ${selectedLocation.lat})`,
         }).select("*").single()
 

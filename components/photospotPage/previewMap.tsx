@@ -17,9 +17,7 @@ import useSWR from "swr";
 import { fetcher } from "@/utils/common/fetcher";
 
 export default function PreviewMap({ id }: { id: number }) {
-  const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-    ? process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-    : "";
+  const mapBoxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ? process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN : "";
   // const [runAnimation, setRunAnimation] = useState(true);
   const [bearing, setBearing] = useState(0);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -56,9 +54,7 @@ export default function PreviewMap({ id }: { id: number }) {
   };
   const handleDirections = () => {
     if (photospot) {
-      window.open(
-        `https://www.google.com/maps?q=${photospot.lat},${photospot.lng}`
-      );
+      window.open(`https://www.google.com/maps?q=${photospot.lat},${photospot.lng}`);
     }
   };
   const handleReset = () => {
@@ -90,12 +86,10 @@ export default function PreviewMap({ id }: { id: number }) {
     <div className="w-full h-full">
       {photospot && (
         <Card className="w-full h-full flex flex-col relative ">
-          <div
-            className={`flex-0 p-4 flex flex-row justify-between items-center ${
-              mapLoaded ? "" : "invisible"
-            }`}
-          >
-            <h1 className="text-xl ">{toStreetAddress(photospot.address)}</h1>
+          <div className={`flex-0 p-4 flex flex-row justify-between items-center ${mapLoaded ? "" : "invisible"}`}>
+            <h1 className="text-xl ">
+              {toStreetAddress(photospot.address != "" ? photospot.address : photospot.location_name)}
+            </h1>
             <div className="flex flex-row gap-4">
               <Button onClick={handleReset}>Reset</Button>
               <PhotospotDirectionsButton id={id} />
@@ -124,13 +118,8 @@ export default function PreviewMap({ id }: { id: number }) {
               onLoad={(e) => {
                 handleMapLoad(e);
               }}
-              ref={mapRef}
-            >
-              <Marker
-                longitude={photospot.lng}
-                latitude={photospot.lat}
-                anchor="bottom"
-              >
+              ref={mapRef}>
+              <Marker longitude={photospot.lng} latitude={photospot.lat} anchor="bottom">
                 <img className="w-10 h-10" src="/selectedPin.svg" />
               </Marker>
               <NavigationControl />
@@ -138,9 +127,7 @@ export default function PreviewMap({ id }: { id: number }) {
           </div>
 
           <Skeleton
-            className={`bg-slate-800/10 absolute top-0 bottom-0 right-0 left-0 ${
-              !mapLoaded ? "" : "invisible"
-            }`}
+            className={`bg-slate-800/10 absolute top-0 bottom-0 right-0 left-0 ${!mapLoaded ? "" : "invisible"}`}
           />
         </Card>
       )}
