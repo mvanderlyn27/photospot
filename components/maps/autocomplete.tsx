@@ -25,10 +25,7 @@ export default function AutoComplete({
 }) {
   const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
   //can update to look only within the bounds of the map later
-  const { data: photospots, isLoading: isLoadingPhotospots } = useSWR(
-    "/api/photospot",
-    fetcher
-  );
+  const { data: photospots, isLoading: isLoadingPhotospots } = useSWR("/api/photospot", fetcher);
 
   //add mapbox map ref, and marker settings
   //
@@ -60,7 +57,7 @@ export default function AutoComplete({
   //can use the interceptSearch prop to look up if a photospot name already exists before searching for new location
   //can improve search with proximity too
   return (
-    <div>
+    <div className="w-full">
       {token && (
         <SearchBox
           accessToken={token}

@@ -18,23 +18,12 @@ import EditPhotospotForm from "./editPhotospotForm";
 import PhotoshotUploadForm from "../photoshot/photoshotUploadForm";
 import { Dialog, DialogContent } from "../ui/dialog";
 
-export default function PhotospotPreview({
-  selectedLocation,
-}: {
-  selectedLocation: Photospot | NewPhotospotInfo;
-}) {
-  const {
-    data: topPhotoshot,
-    isLoading: topPhotoshotLoading,
-  }: { data: Photoshot | null; isLoading: boolean } = useSWR(
-    isPhotospot(selectedLocation)
-      ? `/api/photospot/${selectedLocation?.id}/topPhotoshot`
-      : null,
+export default function PhotospotPreview({ selectedLocation }: { selectedLocation: Photospot | NewPhotospotInfo }) {
+  const { data: topPhotoshot, isLoading: topPhotoshotLoading }: { data: Photoshot | null; isLoading: boolean } = useSWR(
+    isPhotospot(selectedLocation) ? `/api/photospot/${selectedLocation?.id}/topPhotoshot` : null,
     fetcher
   );
-  const [locationName, setLocationName] = useState<string>(
-    selectedLocation ? selectedLocation?.location_name : ""
-  );
+  const [locationName, setLocationName] = useState<string>(selectedLocation ? selectedLocation?.location_name : "");
   const [editTitle, setEditTitle] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploadPhotospot, setUploadPhotospot] = useState(false);
@@ -64,43 +53,29 @@ export default function PhotospotPreview({
         {!editTitle && !uploadPhotospot && (
           <>
             {!topPhotoshotLoading && (
-              <div className="w-full h-[300px] lg:h-[300px] relative">
+              <div className="w-full h-[300px]  relative">
                 <Image
-                  src={
-                    !selectedPhotospot
-                      ? DefaultPhotospot
-                      : topPhotoshot?.photo_paths[0]!
-                  }
+                  src={!selectedPhotospot ? DefaultPhotospot : topPhotoshot?.photo_paths[0]!}
                   alt=""
                   fill
                   className="object-cover rounded-md p-4"
                 />
               </div>
             )}
-            {topPhotoshotLoading && (
-              <Skeleton className="w-full h-[300px] lg:h-[300px] rounded-md bg-black/10" />
-            )}
+            {topPhotoshotLoading && <Skeleton className="w-full h-[300px] lg:h-[300px] rounded-md bg-black/10" />}
 
             <div className="flex flex-row gap-4 justify-center items-center">
               <h1 className="text-xl font-semibold">
-                {selectedLocation?.location_name
-                  ? selectedLocation.location_name
-                  : selectedLocation?.location_name}
+                {selectedLocation?.location_name ? selectedLocation.location_name : selectedLocation?.location_name}
               </h1>
               {!selectedPhotospot && (
-                <Button
-                  onClick={() => setEditTitle(true)}
-                  variant="outline"
-                  disabled={loading}
-                >
+                <Button onClick={() => setEditTitle(true)} variant="outline" disabled={loading}>
                   Edit
                 </Button>
               )}
             </div>
             <div className="flex justify-center flex-row gap-4">
-              <Button onClick={() => setUploadPhotospot(true)}>
-                Upload a shot
-              </Button>
+              <Button onClick={() => setUploadPhotospot(true)}>Upload a shot</Button>
 
               {selectedPhotospot && (
                 <Button
@@ -109,8 +84,7 @@ export default function PhotospotPreview({
                   onClick={() => {
                     setLoading(true);
                     handleViewPhotospot();
-                  }}
-                >
+                  }}>
                   View Photospot
                 </Button>
               )}
@@ -119,7 +93,7 @@ export default function PhotospotPreview({
         )}
         {uploadPhotospot && (
           <Dialog open={true}>
-            <DialogContent className="max-w-[90vw] max-h-[90vh] md:max-w-[40vw] md:max-h-[50vh] flex flex-col justify-center ">
+            <DialogContent className="max-w-[90vw] max-h-[90vh] md:max-w-[40vw]  flex flex-col justify-center ">
               <PhotoshotUploadForm
                 selectedLocation={selectedLocation}
                 mapView={true}

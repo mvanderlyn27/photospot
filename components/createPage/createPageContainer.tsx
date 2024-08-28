@@ -11,13 +11,7 @@ import PhotospotPreview from "./photospotPreview";
 import { Button } from "../ui/button";
 import { useBreakpoint } from "@/hooks/tailwind";
 import { MdOutlineClear } from "react-icons/md";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerTrigger,
-} from "../ui/drawer";
+import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerTrigger } from "../ui/drawer";
 import { FaLocationCrosshairs } from "react-icons/fa6";
 // import mapboxgl from 'mapbox-gl';
 const INITIAL_LAT: number = 40.72377;
@@ -30,12 +24,9 @@ export default function CreatePageContainer() {
     zoom: 13,
     bearing: 29,
   });
-  const [selectedLocation, setSelectedLocation] = useState<
-    Photospot | NewPhotospotInfo | null
-  >(null);
+  const [selectedLocation, setSelectedLocation] = useState<Photospot | NewPhotospotInfo | null>(null);
   const [closestPhotospots, setClosestPhotospots] = useState<Photospot[]>([]);
-  const [photospotsTooCloseDialogOpen, setPhotospotsTooCloseDialogOpen] =
-    useState<boolean>(false);
+  const [photospotsTooCloseDialogOpen, setPhotospotsTooCloseDialogOpen] = useState<boolean>(false);
   const handlePhotospotTooClose = (photospots: Photospot[]) => {
     setClosestPhotospots(photospots);
     setPhotospotsTooCloseDialogOpen(true);
@@ -48,28 +39,20 @@ export default function CreatePageContainer() {
         <div
           className={`absolute top-[64px] ${
             !isSmall.isSm ? "w-full" : "w-auto"
-          } left-0 lg:w-[450px] max-h-[calc(100vh-64px)] pl-4 pr-4 pt-4 z-50`}
-        >
+          } left-0 lg:w-[450px] max-h-[calc(100vh-64px)] pl-4 pr-4 pt-4 z-50`}>
           <Card className="">
             <CardContent className="p-4 flex flex-col gap-4 ">
-              <div className="flex flex-row gap-2">
-                <AutoComplete
-                  setSelectedLocation={setSelectedLocation}
-                  selectedLocation={selectedLocation}
-                />
+              <div className="flex flex-row gap-2 w-full">
+                <AutoComplete setSelectedLocation={setSelectedLocation} selectedLocation={selectedLocation} />
                 <Button
                   variant="default"
                   onClick={() => {
-                    if (geoLocationRef.current)
-                      (geoLocationRef.current as any).trigger();
-                  }}
-                >
+                    if (geoLocationRef.current) (geoLocationRef.current as any).trigger();
+                  }}>
                   <FaLocationCrosshairs className="w-6 h-6 md:w-8 md:h-8" />
                 </Button>
               </div>
-              {selectedLocation && isSmall.isSm && (
-                <PhotospotPreview selectedLocation={selectedLocation} />
-              )}
+              {selectedLocation && isSmall.isSm && <PhotospotPreview selectedLocation={selectedLocation} />}
             </CardContent>
           </Card>
         </div>
@@ -77,8 +60,7 @@ export default function CreatePageContainer() {
           open={selectedLocation !== null && !isSmall.isSm}
           onClose={() => setSelectedLocation(null)}
           modal={false}
-          handleOnly={true}
-        >
+          handleOnly={true}>
           <div className="h-full w-full">
             <PhotospotMap
               viewState={viewState}
@@ -97,14 +79,8 @@ export default function CreatePageContainer() {
           />
 
           <DrawerContent className="h-[55vh]">
-            {selectedLocation && (
-              <PhotospotPreview selectedLocation={selectedLocation} />
-            )}
-            <Button
-              className="absolute top-0 right-0 p-0"
-              variant="ghost"
-              onClick={() => setSelectedLocation(null)}
-            >
+            {selectedLocation && <PhotospotPreview selectedLocation={selectedLocation} />}
+            <Button className="absolute top-0 right-0 p-0" variant="ghost" onClick={() => setSelectedLocation(null)}>
               <MdOutlineClear className="w-8 h-8 stroke-white" />
             </Button>
           </DrawerContent>
